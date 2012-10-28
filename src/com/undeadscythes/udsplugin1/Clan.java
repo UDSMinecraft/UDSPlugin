@@ -2,7 +2,7 @@ package com.undeadscythes.udsplugin1;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A group of players, used for handling PVP.
@@ -48,6 +48,7 @@ public class Clan implements Saveable {
     /**
      * @inheritDoc
      */
+    @Override
     public String getRecord() {
         ArrayList<String> record = new ArrayList<String>();
         record.add(name);

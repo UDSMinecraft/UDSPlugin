@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin1;
 
+import org.bukkit.ChatColor;
+
 /**
  * A player rank granting permission.
  * @author UndeadScythes
@@ -8,29 +10,39 @@ public enum Rank {
     /**
      * Basic player rank.
      */
-    DEFAULT,
+    DEFAULT(ChatColor.WHITE),
     /**
      * Player with build rights.
      */
-    MEMBER,
+    MEMBER(ChatColor.GREEN),
     /**
      * Donating or long term player.
      */
-    VIP,
+    VIP(ChatColor.DARK_PURPLE),
     /**
      * Trustee.
      */
-    WARDEN,
+    WARDEN(ChatColor.AQUA),
     /**
      * Player moderator.
      */
-    MOD,
+    MOD(ChatColor.DARK_AQUA),
     /**
      * Server administrator.
      */
-    ADMIN,
+    ADMIN(ChatColor.YELLOW),
     /**
      * Server owner.
      */
-    OWNER;
+    OWNER(ChatColor.GOLD);
+
+    ChatColor color;
+
+    Rank(ChatColor color) {
+        this.color = color;
+    }
+
+    public ChatColor color() {
+        return color;
+    }
 }

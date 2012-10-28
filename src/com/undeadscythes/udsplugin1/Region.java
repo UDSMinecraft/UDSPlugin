@@ -3,7 +3,8 @@ package com.undeadscythes.udsplugin1;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.apache.commons.lang.StringUtils;
+import java.util.HashSet;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -13,6 +14,37 @@ import org.bukkit.util.Vector;
  * @author UndeadScythes
  */
 public class Region implements Saveable {
+    public enum Flag {
+        PROTECTED(true),
+        BLOCK_MOBS(true),
+        BLOCK_ANIMALS(false),
+        LOCK_DOORS(true),
+        BLOCK_VINES(false),
+        BLOCK_SHROOMS(false),
+        BLOCK_FIRE(true),
+        BLOCK_SNOW(true),
+        BLOCK_PVP(true);
+
+        private boolean defaultValue;
+
+        Flag(boolean value) {
+            this.defaultValue = value;
+        }
+
+        public boolean getDefault() {
+            return defaultValue;
+        }
+    }
+
+    public enum Type {
+        ARBITRARY,
+        SHOP,
+        BASE,
+        QUARRY,
+        HOME,
+        CITY;
+    }
+
     /**
      * File name of region file.
      */
@@ -24,6 +56,9 @@ public class Region implements Saveable {
     private Location warp;
     private String owner;
     private ArrayList<String> members;
+    private String data;
+    private HashSet<Flag> flags;
+    private Type type;
 
     /**
      * Initialise a brand new region.
@@ -33,13 +68,21 @@ public class Region implements Saveable {
      * @param warp Warp location of the region.
      * @param owner Owner of the region.
      */
-    public Region(String name, Vector v1, Vector v2, Location warp, String owner) {
+    public Region(String name, Vector v1, Vector v2, Location warp, String owner, String data, Type type) {
         this.name = name;
         this.v1 = v1;
         this.v2 = v2;
         this.warp = warp;
         this.owner = owner;
         members = new ArrayList<String>();
+        this.data = data;
+        flags = new HashSet<Flag>();
+        for(Flag flag : Flag.values()) {
+            if(flag.getDefault()) {
+                flags.add(flag);
+            }
+        }
+        this.type = type;
     }
 
     /**
@@ -55,6 +98,12 @@ public class Region implements Saveable {
         warp = new ExtendedLocation(recordSplit[3]);
         owner = recordSplit[4];
         members = new ArrayList<String>(Arrays.asList(recordSplit[5].split(",")));
+        data = recordSplit[5];
+        flags = new HashSet<Flag>();
+        for(String flag : recordSplit[6].split(",")) {
+            flags.add(Flag.valueOf(flag));
+        }
+        type = Type.valueOf(recordSplit[7]);
     }
 
     /**
@@ -73,6 +122,7 @@ public class Region implements Saveable {
     /**
      * @inheritDoc
      */
+    @Override
     public String getRecord() {
         ArrayList<String> record = new ArrayList<String>();
         record.add(name);
@@ -81,6 +131,9 @@ public class Region implements Saveable {
         record.add(warp.toString());
         record.add(owner);
         record.add(StringUtils.join(members.toArray(), ","));
+        record.add(data);
+        record.add(StringUtils.join(flags.toArray(), ","));
+        record.add(type.toString());
         return StringUtils.join(record.toArray(), "\t");
     }
 
@@ -125,6 +178,10 @@ public class Region implements Saveable {
         }
     }
 
+    public Type getType() {
+        return type;
+    }
+
     /**
      * Get the warp location of this region.
      * @return Location of region warp point.
@@ -156,5 +213,37 @@ public class Region implements Saveable {
      */
     public void delMember(String name) {
         members.remove(name);
+    }
+
+    /**
+     * Get the regions minimum vector.
+     * @return Vector 1.
+     */
+    public Vector getV1() {
+        return v1;
+    }
+
+    /**
+     * Get the regions maximum vector.
+     * @return Vector 2.
+     */
+    public Vector getV2() {
+        return v2;
+    }
+
+    /**
+     * Get the world this region is in.
+     * @return The regions world.
+     */
+    public World getWorld() {
+        return warp.getWorld();
+    }
+
+    /**
+     * Get the data stored with this region.
+     * @return The region data.
+     */
+    public String getData() {
+        return data;
     }
 }

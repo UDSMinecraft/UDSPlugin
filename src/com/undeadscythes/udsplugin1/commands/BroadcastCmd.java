@@ -3,21 +3,22 @@ package com.undeadscythes.udsplugin1.commands;
 import com.undeadscythes.udsplugin1.Color;
 import com.undeadscythes.udsplugin1.ExtendedPlayer;
 import com.undeadscythes.udsplugin1.PlayerCommandExecutor;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 
 /**
- * Switches the current world to sunset.
+ * Broadcast a server wide message.
  * @author UndeadScythes
  */
-public class DayCmd extends PlayerCommandExecutor {
+public class BroadcastCmd extends PlayerCommandExecutor {
     /**
-     * @inheritDoc
+     * @inheritDocs
      */
     @Override
     public void playerExecute(ExtendedPlayer player, String[] args) {
-        if(hasPerm("day")) {
-            player.getWorld().setTime(0);
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " summoned the sun.");
+        if(hasPerm("broadcast")) {
+            Bukkit.broadcastMessage(Color.BROADCAST + StringUtils.join(args, " "));
         }
     }
+
 }

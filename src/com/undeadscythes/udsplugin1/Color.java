@@ -8,6 +8,10 @@ import org.bukkit.ChatColor;
  */
 public enum Color {
     /**
+     * Chat color for command success messages.
+     */
+    MESSAGE(ChatColor.YELLOW),
+    /**
      * Chat color for error messages.
      */
     ERROR(ChatColor.LIGHT_PURPLE),

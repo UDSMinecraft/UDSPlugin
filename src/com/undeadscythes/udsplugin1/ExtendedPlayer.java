@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Achievement;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
@@ -66,7 +66,15 @@ public class ExtendedPlayer implements Saveable, Player {
     private int bounty;
     private int money;
     private Rank rank;
-    private ExtendedLocation back;
+    private long vipTime;
+    private int vipSpawns;
+    private long jailTime;
+    private long jailSentence;
+    private String clan;
+    private Location back;
+    private boolean godMode;
+    private boolean lockdownPass;
+    private Channel channel = Channel.PUBLIC;
 
     /**
      * Initialise a brand new player extension.
@@ -86,12 +94,17 @@ public class ExtendedPlayer implements Saveable, Player {
         bounty = Integer.getInteger(recordSplit[2]);
         money = Integer.parseInt(recordSplit[3]);
         rank = Rank.valueOf(recordSplit[4]);
-        back = new ExtendedLocation(recordSplit[5]);
+        vipTime = Long.parseLong(recordSplit[5]);
+        vipSpawns = Integer.parseInt(recordSplit[6]);
+        jailTime = Long.parseLong(recordSplit[7]);
+        jailSentence = Long.parseLong(recordSplit[8]);
+        clan = recordSplit[9];
     }
 
     /**
      * @inheritDoc
      */
+    @Override
     public String getRecord() {
         ArrayList<String> record = new ArrayList<String>();
         record.add(getName());
@@ -99,8 +112,192 @@ public class ExtendedPlayer implements Saveable, Player {
         record.add(bounty + "");
         record.add(money + "");
         record.add(rank.toString());
-        record.add(back.toString());
+        record.add(vipTime + "");
+        record.add(vipSpawns + "");
+        record.add(jailTime + "");
+        record.add(jailSentence + "");
+        record.add(clan);
         return StringUtils.join(record.toArray(), "\t");
+    }
+
+    /**
+     * Warp an existing player with these extensions.
+     * @param player Player to wrap.
+     */
+    public void wrapPlayer(Player player) {
+        this.base = player;
+    }
+
+    /**
+     * Get the last recorded location of the player.
+     * @return The last recorded location of the player.
+     */
+    public Location getBack() {
+        return back;
+    }
+
+    /**
+     * Get a player current rank.
+     * @return Player rank.
+     */
+    public Rank getRank() {
+        return rank;
+    }
+
+    /**
+     * Set the player rank.
+     * @param rank The rank to set.
+     */
+    public void setRank(Rank rank) {
+        this.rank = rank;
+    }
+
+    /**
+     * Check to see if a player belongs to a clan.
+     * @return <code>true</code> if a player is in a clan, <code>false</code> otherwise.
+     */
+    public boolean isInClan() {
+        return !(clan.equals("") || clan == null);
+    }
+
+    /**
+     * Get the name of the clan the player is a member of.
+     * @return Clan name.
+     */
+    public String getClan() {
+        return clan;
+    }
+
+    /**
+     * Toggle the players chat channel.
+     * @param channel Channel to toggle.
+     * @return <code>true</code> if channel was toggled on, <code>false</code> if channel switched back to public.
+     */
+    public boolean toggleChannel(Channel channel) {
+        if(this.channel.equals(channel)) {
+            this.channel = Channel.PUBLIC;
+            return false;
+        } else {
+            this.channel = channel;
+            return true;
+        }
+    }
+
+    /**
+     * Check whether this player has a lockdown pass.
+     * @return Has player got lockdown pass.
+     */
+    public boolean hasLockdownPass() {
+        return lockdownPass;
+    }
+
+    /**
+     * Get the time when this player rented VIP status.
+     * @return When VIP was rented.
+     */
+    public long getVIPTime() {
+        return vipTime;
+    }
+
+    /**
+     * Set when a player rented VIP status.
+     * @param time Time to set.
+     */
+    public void setVIPTime(long time) {
+        vipTime = time;
+    }
+
+    /**
+     * Get the number of free item spawns this player has left.
+     * @return Number of spawns left.
+     */
+    public int getVIPSpawns() {
+        return vipSpawns;
+    }
+
+    /**
+     * Set the number of free VIP item spawns a player has remaining.
+     * @param spawns Number of spawns to set.
+     */
+    public void setVIPSpawns(int spawns) {
+        vipSpawns = spawns;
+    }
+
+    /**
+     * Get the time that this player was put in jail.
+     * @return Players jail time.
+     */
+    public long getJailTime() {
+        return jailTime;
+    }
+
+    /**
+     * Set when a player was put in jail.
+     * @param time Jail time.
+     */
+    public void setJailTime(long time) {
+        jailTime = time;
+    }
+
+    /**
+     * Get how long this player was sentenced to jail for.
+     * @return Players sentence.
+     */
+    public long getJailSentence() {
+        return jailSentence;
+    }
+
+    /**
+     * Set the length of a players jail sentence.
+     * @param sentence Length of sentence.
+     */
+    public void setJailSentence(long sentence) {
+        jailSentence = sentence;
+    }
+
+    /**
+     * Check if a player is currently in jail.
+     * @return <code>true</code> if a player is in jail, <code>false</code> otherwise.
+     */
+    public boolean isJailed() {
+        return (jailTime > 0);
+    }
+
+    /**
+     * Check if a player currently has god mode enabled.
+     * @return God mode setting.
+     */
+    public boolean hasGodMode() {
+        return godMode;
+    }
+
+    /**
+     * Toggle a players god mode.
+     * @return Players current god mode setting.
+     */
+    public boolean toggleGodMode() {
+        godMode ^= true;
+        return godMode;
+    }
+
+    /**
+     * Set a players god mode.
+     * @param mode God mode setting.
+     */
+    public void setGodMode(boolean mode) {
+        godMode = mode;
+    }
+
+    /**
+     * Send a message in a particular channel.
+     * @param channel Channel to send message in.
+     * @param message Message to send.
+     */
+    public void chat(Channel channel, String message) {
+        Channel temp = this.channel;
+        this.channel = channel;
+        chat(message);
+        this.channel = temp;
     }
 
     /**
@@ -133,13 +330,35 @@ public class ExtendedPlayer implements Saveable, Player {
         }
     }
 
-    public void sendMessage(Message message) {
-        base.sendMessage(message.toString());
+    /**
+     * Teleport a player but reserve pitch and yaw of player.
+     * @param location Location to teleport to.
+     */
+    public void move(Location location) {
+        Location destination = location;
+        destination.setPitch(getLocation().getPitch());
+        destination.setYaw(getLocation().getYaw());
+        teleport(destination);
+    }
+
+    /**
+     * Teleport a player but fail quietly if location is <code>null</code>.
+     * @param location Location to teleport player to.
+     * @return <code>true</code> if location is not <code>null</code>, <code>false</code> otherwise.
+     */
+    public boolean quietTeleport(Location location) {
+        if(location == null) {
+            return false;
+        } else {
+            teleport(location);
+            return true;
+        }
     }
 
     /**
      * @inheritDoc
      */
+    @Override
     public void setDisplayName(String name) {
         base.setDisplayName(name);
     }
@@ -147,6 +366,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public String getPlayerListName() {
         return getPlayerListName();
     }
@@ -154,6 +374,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setPlayerListName(String name) {
         base.setPlayerListName(name);
     }
@@ -161,6 +382,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setCompassTarget(Location loc) {
         base.setCompassTarget(loc);
     }
@@ -168,6 +390,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Location getCompassTarget() {
         return base.getCompassTarget();
     }
@@ -175,6 +398,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public InetSocketAddress getAddress() {
         return base.getAddress();
     }
@@ -182,6 +406,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void sendRawMessage(String message) {
         base.sendRawMessage(message);
     }
@@ -189,6 +414,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void kickPlayer(String message) {
         base.kickPlayer(message);
     }
@@ -196,6 +422,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void chat(String msg) {
         base.chat(msg);
     }
@@ -203,6 +430,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean performCommand(String command) {
         return base.performCommand(command);
     }
@@ -210,6 +438,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isSneaking() {
         return base.isSneaking();
     }
@@ -217,6 +446,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setSneaking(boolean sneak) {
         base.setSneaking(sneak);
     }
@@ -224,6 +454,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isSprinting() {
         return base.isSprinting();
     }
@@ -231,6 +462,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setSprinting(boolean sprinting) {
         base.setSprinting(sprinting);
     }
@@ -238,6 +470,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void saveData() {
         base.saveData();
     }
@@ -245,6 +478,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void loadData() {
         base.loadData();
     }
@@ -252,6 +486,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setSleepingIgnored(boolean isSleeping) {
         base.setSleepingIgnored(isSleeping);
     }
@@ -259,6 +494,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isSleepingIgnored() {
         return base.isSleepingIgnored();
     }
@@ -266,6 +502,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void playNote(Location loc, byte instrument, byte note) {
         base.playNote(loc, instrument, note);
     }
@@ -273,6 +510,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void playNote(Location loc, Instrument instrument, Note note) {
         base.playNote(loc, instrument, note);
     }
@@ -280,6 +518,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void playSound(Location location, Sound sound, float volume, float pitch) {
         base.playSound(location, sound, volume, pitch);
     }
@@ -287,6 +526,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void playEffect(Location loc, Effect effect, int data) {
         base.playEffect(loc, effect, data);
     }
@@ -294,6 +534,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public <T> void playEffect(Location loc, Effect effect, T data) {
         playEffect(loc, effect, data);
     }
@@ -301,6 +542,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void sendBlockChange(Location loc, Material material, byte data) {
         base.sendBlockChange(loc, material, data);
     }
@@ -308,6 +550,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data) {
         return base.sendChunkChange(loc, sx, sy, sz, data);
     }
@@ -315,6 +558,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void sendBlockChange(Location loc, int material, byte data) {
         base.sendBlockChange(loc, material, data);
     }
@@ -322,6 +566,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void sendMap(MapView map) {
         base.sendMap(map);
     }
@@ -329,6 +574,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void updateInventory() {
         base.updateInventory();
     }
@@ -336,6 +582,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void awardAchievement(Achievement achievement) {
         base.awardAchievement(achievement);
     }
@@ -343,6 +590,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void incrementStatistic(Statistic statistic) {
         base.incrementStatistic(statistic);
     }
@@ -350,6 +598,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void incrementStatistic(Statistic statistic, int amount) {
         base.incrementStatistic(statistic, amount);
     }
@@ -357,6 +606,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void incrementStatistic(Statistic statistic, Material material) {
         base.incrementStatistic(statistic, material);
     }
@@ -364,6 +614,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void incrementStatistic(Statistic statistic, Material material, int amount) {
         base.incrementStatistic(statistic, material, amount);
     }
@@ -371,6 +622,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setPlayerTime(long time, boolean relative) {
         base.setPlayerTime(time, relative);
     }
@@ -378,6 +630,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public long getPlayerTime() {
         return base.getPlayerTime();
     }
@@ -385,6 +638,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public long getPlayerTimeOffset() {
         return base.getPlayerTimeOffset();
     }
@@ -392,6 +646,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isPlayerTimeRelative() {
         return base.isPlayerTimeRelative();
     }
@@ -399,6 +654,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void resetPlayerTime() {
         base.resetPlayerTime();
     }
@@ -406,6 +662,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void giveExp(int amount) {
         base.giveExp(amount);
     }
@@ -413,6 +670,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public float getExp() {
         return base.getExp();
     }
@@ -420,6 +678,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setExp(float exp) {
         base.setExp(exp);
     }
@@ -427,6 +686,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getLevel() {
         return base.getLevel();
     }
@@ -434,6 +694,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setLevel(int level) {
         base.setLevel(level);
     }
@@ -441,6 +702,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getTotalExperience() {
         return base.getTotalExperience();
     }
@@ -448,6 +710,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setTotalExperience(int exp) {
         base.setTotalExperience(exp);
     }
@@ -455,6 +718,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public float getExhaustion() {
         return base.getExhaustion();
     }
@@ -462,6 +726,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setExhaustion(float value) {
         base.setExhaustion(value);
     }
@@ -469,6 +734,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public float getSaturation() {
         return base.getSaturation();
     }
@@ -476,6 +742,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setSaturation(float value) {
         base.setSaturation(value);
     }
@@ -483,6 +750,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getFoodLevel() {
         return base.getFoodLevel();
     }
@@ -490,6 +758,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setFoodLevel(int value) {
         base.setFoodLevel(value);
     }
@@ -497,6 +766,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Location getBedSpawnLocation() {
         return base. getBedSpawnLocation();
     }
@@ -504,6 +774,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setBedSpawnLocation(Location location) {
         base.setBedSpawnLocation(location);
     }
@@ -511,6 +782,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean getAllowFlight() {
         return base.getAllowFlight();
     }
@@ -518,6 +790,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setAllowFlight(boolean flight) {
         base.setAllowFlight(flight);
     }
@@ -525,6 +798,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void hidePlayer(Player player) {
         base.hidePlayer(player);
     }
@@ -532,6 +806,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void showPlayer(Player player) {
         base.showPlayer(player);
     }
@@ -539,6 +814,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean canSee(Player player) {
         return base.canSee(player);
     }
@@ -546,6 +822,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isFlying() {
         return base.isFlying();
     }
@@ -553,6 +830,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setFlying(boolean value) {
         base.setFlying(value);
     }
@@ -560,6 +838,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setFlySpeed(float value) throws IllegalArgumentException {
         base.setFlySpeed(value);
     }
@@ -567,6 +846,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setWalkSpeed(float value) throws IllegalArgumentException {
         base.setWalkSpeed(value);
     }
@@ -574,6 +854,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public float getFlySpeed() {
         return base.getFlySpeed();
     }
@@ -581,6 +862,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public float getWalkSpeed() {
         return base.getWalkSpeed();
     }
@@ -588,6 +870,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public String getName() {
         return base. getName();
     }
@@ -595,6 +878,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public PlayerInventory getInventory() {
         return base.getInventory();
     }
@@ -602,6 +886,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Inventory getEnderChest() {
         return base. getEnderChest();
     }
@@ -609,6 +894,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean setWindowProperty(Property prop, int value) {
         return base.setWindowProperty(prop, value);
     }
@@ -616,6 +902,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public InventoryView getOpenInventory() {
         return base.getOpenInventory();
     }
@@ -623,6 +910,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public InventoryView openInventory(Inventory inventory) {
         return base.openInventory(inventory);
     }
@@ -630,6 +918,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public InventoryView openWorkbench(Location location, boolean force) {
         return base.openWorkbench(location, force);
     }
@@ -637,6 +926,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public InventoryView openEnchanting(Location location, boolean force) {
         return base.openEnchanting(location, force);
     }
@@ -644,6 +934,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void openInventory(InventoryView inventory) {
         base.openInventory(inventory);
     }
@@ -651,6 +942,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void closeInventory() {
         base.closeInventory();
     }
@@ -658,6 +950,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public ItemStack getItemInHand() {
         return base.getItemInHand();
     }
@@ -665,6 +958,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setItemInHand(ItemStack item) {
         base.setItemInHand(item);
     }
@@ -672,6 +966,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public ItemStack getItemOnCursor() {
         return base.getItemOnCursor();
     }
@@ -679,6 +974,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setItemOnCursor(ItemStack item) {
         base.setItemOnCursor(item);
     }
@@ -686,6 +982,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isSleeping() {
         return base.isSleeping();
     }
@@ -693,6 +990,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getSleepTicks() {
         return base.getSleepTicks();
     }
@@ -700,6 +998,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public GameMode getGameMode() {
         return base.getGameMode();
     }
@@ -707,6 +1006,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setGameMode(GameMode mode) {
         base.setGameMode(mode);
     }
@@ -714,6 +1014,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isBlocking() {
         return base.isBlocking();
     }
@@ -721,6 +1022,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getExpToLevel() {
         return base.getExpToLevel();
     }
@@ -728,6 +1030,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getHealth() {
         return base.getHealth();
     }
@@ -735,6 +1038,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setHealth(int health) {
         base.setHealth(health);
     }
@@ -742,6 +1046,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getMaxHealth() {
         return base.getMaxHealth();
     }
@@ -749,6 +1054,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public double getEyeHeight() {
         return base.getEyeHeight();
     }
@@ -756,6 +1062,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public double getEyeHeight(boolean ignoreSneaking) {
         return base.getEyeHeight(ignoreSneaking);
     }
@@ -763,6 +1070,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Location getEyeLocation() {
         return base. getEyeLocation();
     }
@@ -770,6 +1078,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
         return base.getLineOfSight(transparent, maxDistance);
     }
@@ -777,6 +1086,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
         return base. getTargetBlock(transparent, maxDistance);
     }
@@ -784,6 +1094,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
         return base.getLastTwoTargetBlocks(transparent, maxDistance);
     }
@@ -791,6 +1102,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Egg throwEgg() {
         return base. throwEgg();
     }
@@ -798,6 +1110,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Snowball throwSnowball() {
         return base. throwSnowball();
     }
@@ -805,6 +1118,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Arrow shootArrow() {
         return base. shootArrow();
     }
@@ -812,6 +1126,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public <T extends Projectile> T launchProjectile(Class<? extends T> projectile) {
         return base.launchProjectile(projectile);
     }
@@ -819,6 +1134,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getRemainingAir() {
         return base.getRemainingAir();
     }
@@ -826,6 +1142,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setRemainingAir(int ticks) {
         base.setRemainingAir(ticks);
     }
@@ -833,6 +1150,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getMaximumAir() {
         return base.getMaximumAir();
     }
@@ -840,6 +1158,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setMaximumAir(int ticks) {
         base.setMaximumAir(ticks);
     }
@@ -847,6 +1166,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void damage(int amount) {
         base.damage(amount);
     }
@@ -854,6 +1174,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void damage(int amount, Entity source) {
         base.damage(amount, source);
     }
@@ -861,6 +1182,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getMaximumNoDamageTicks() {
         return base.getMaximumNoDamageTicks();
     }
@@ -868,6 +1190,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setMaximumNoDamageTicks(int ticks) {
         base.setMaximumNoDamageTicks(ticks);
     }
@@ -875,6 +1198,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getLastDamage() {
         return base.getLastDamage();
     }
@@ -882,6 +1206,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setLastDamage(int damage) {
         base.setLastDamage(damage);
     }
@@ -889,6 +1214,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getNoDamageTicks() {
         return base.getNoDamageTicks();
     }
@@ -896,6 +1222,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setNoDamageTicks(int ticks) {
         base.setNoDamageTicks(ticks);
     }
@@ -903,6 +1230,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Player getKiller() {
         return base. getKiller();
     }
@@ -910,6 +1238,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean addPotionEffect(PotionEffect effect) {
         return base.addPotionEffect(effect);
     }
@@ -917,6 +1246,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean addPotionEffect(PotionEffect effect, boolean force) {
         return base.addPotionEffect(effect, force);
     }
@@ -924,6 +1254,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean addPotionEffects(Collection<PotionEffect> effects) {
         return base.addPotionEffects(effects);
     }
@@ -931,6 +1262,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean hasPotionEffect(PotionEffectType type) {
         return base.hasPotionEffect(type);
     }
@@ -938,6 +1270,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void removePotionEffect(PotionEffectType type) {
         base.removePotionEffect(type);
     }
@@ -945,6 +1278,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Collection<PotionEffect> getActivePotionEffects() {
         return base.<PotionEffect> getActivePotionEffects();
     }
@@ -952,6 +1286,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean hasLineOfSight(Entity other) {
         return base.hasLineOfSight(other);
     }
@@ -959,6 +1294,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Location getLocation() {
         return base. getLocation();
     }
@@ -966,6 +1302,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setVelocity(Vector velocity) {
         base.setVelocity(velocity);
     }
@@ -973,6 +1310,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Vector getVelocity() {
         return base. getVelocity();
     }
@@ -980,6 +1318,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public World getWorld() {
         return base. getWorld();
     }
@@ -987,20 +1326,25 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean teleport(Location location) {
         return base.teleport(location);
     }
 
     /**
      * @inheritDoc
+     * @Override
      */
+    @Override
     public boolean teleport(Location location, TeleportCause cause) {
         return base.teleport(location, cause);
     }
 
     /**
+     *
      * @inheritDoc
      */
+    @Override
     public boolean teleport(Entity destination) {
         return base.teleport(destination);
     }
@@ -1008,6 +1352,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean teleport(Entity destination, TeleportCause cause) {
         return base.teleport(destination, cause);
     }
@@ -1015,6 +1360,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public List<Entity> getNearbyEntities(double x, double y, double z) {
         return base.getNearbyEntities(x, y, z);
     }
@@ -1022,6 +1368,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getEntityId() {
         return base.getEntityId();
     }
@@ -1029,6 +1376,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getFireTicks() {
         return base.getFireTicks();
     }
@@ -1036,6 +1384,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getMaxFireTicks() {
         return base.getMaxFireTicks();
     }
@@ -1043,6 +1392,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setFireTicks(int ticks) {
         base.setFireTicks(ticks);
     }
@@ -1050,6 +1400,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void remove() {
         base.remove();
     }
@@ -1057,6 +1408,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isDead() {
         return base.isDead();
     }
@@ -1064,6 +1416,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isValid() {
         return base.isValid();
     }
@@ -1071,6 +1424,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Server getServer() {
         return base. getServer();
     }
@@ -1078,6 +1432,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Entity getPassenger() {
         return base. getPassenger();
     }
@@ -1085,6 +1440,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean setPassenger(Entity passenger) {
         return base.setPassenger(passenger);
     }
@@ -1092,6 +1448,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isEmpty() {
         return base.isEmpty();
     }
@@ -1099,6 +1456,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean eject() {
         return base.eject();
     }
@@ -1106,6 +1464,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public float getFallDistance() {
         return base.getFallDistance();
     }
@@ -1113,6 +1472,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setFallDistance(float distance) {
         base.setFallDistance(distance);
     }
@@ -1120,6 +1480,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setLastDamageCause(EntityDamageEvent event) {
         base.setLastDamageCause(event);
     }
@@ -1127,6 +1488,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public EntityDamageEvent getLastDamageCause() {
         return base.getLastDamageCause();
     }
@@ -1134,6 +1496,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public UUID getUniqueId() {
         return base.getUniqueId();
     }
@@ -1141,6 +1504,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public int getTicksLived() {
         return base.getTicksLived();
     }
@@ -1148,6 +1512,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setTicksLived(int value) {
         base.setTicksLived(value);
     }
@@ -1155,6 +1520,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void playEffect(EntityEffect type) {
         base.playEffect(type);
     }
@@ -1162,6 +1528,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public EntityType getType() {
         return base.getType();
     }
@@ -1169,6 +1536,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isInsideVehicle() {
         return base.isInsideVehicle();
     }
@@ -1176,6 +1544,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean leaveVehicle() {
         return base.leaveVehicle();
     }
@@ -1183,6 +1552,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Entity getVehicle() {
         return base. getVehicle();
     }
@@ -1190,6 +1560,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
         base.setMetadata(metadataKey, newMetadataValue);
     }
@@ -1197,6 +1568,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public List<MetadataValue> getMetadata(String metadataKey) {
         return base.getMetadata(metadataKey);
     }
@@ -1204,6 +1576,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean hasMetadata(String metadataKey) {
         return base.hasMetadata(metadataKey);
     }
@@ -1211,6 +1584,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void removeMetadata(String metadataKey, Plugin owningPlugin) {
         base.removeMetadata(metadataKey, owningPlugin);
     }
@@ -1218,6 +1592,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isPermissionSet(String name) {
         return base.isPermissionSet(name);
     }
@@ -1225,6 +1600,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isPermissionSet(Permission perm) {
         return base.isPermissionSet(perm);
     }
@@ -1232,6 +1608,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean hasPermission(String name) {
         return base.hasPermission(name);
     }
@@ -1239,6 +1616,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean hasPermission(Permission perm) {
         return base.hasPermission(perm);
     }
@@ -1246,6 +1624,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
         return base.addAttachment(plugin, name, value);
     }
@@ -1253,6 +1632,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public PermissionAttachment addAttachment(Plugin plugin) {
         return base.addAttachment(plugin);
     }
@@ -1260,6 +1640,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
         return base.addAttachment(plugin, name, value, ticks);
     }
@@ -1267,6 +1648,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
         return base.addAttachment(plugin, ticks);
     }
@@ -1274,6 +1656,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void removeAttachment(PermissionAttachment attachment) {
         base.removeAttachment(attachment);
     }
@@ -1281,6 +1664,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void recalculatePermissions() {
         base.recalculatePermissions();
     }
@@ -1288,6 +1672,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Set<PermissionAttachmentInfo> getEffectivePermissions() {
         return base.<PermissionAttachmentInfo> getEffectivePermissions();
     }
@@ -1295,6 +1680,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isOp() {
         return base.isOp();
     }
@@ -1302,6 +1688,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setOp(boolean value) {
         base.setOp(value);
     }
@@ -1309,6 +1696,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isConversing() {
         return base.isConversing();
     }
@@ -1316,6 +1704,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void acceptConversationInput(String input) {
         base.acceptConversationInput(input);
     }
@@ -1323,6 +1712,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean beginConversation(Conversation conversation) {
         return base.beginConversation(conversation);
     }
@@ -1330,6 +1720,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void abandonConversation(Conversation conversation) {
         base.abandonConversation(conversation);
     }
@@ -1337,6 +1728,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void abandonConversation(Conversation conversation, ConversationAbandonedEvent details) {
         base.abandonConversation(conversation, details);
     }
@@ -1344,6 +1736,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void sendMessage(String message) {
         base.sendMessage(message);
     }
@@ -1351,6 +1744,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void sendMessage(String[] messages) {
         base.sendMessage(messages);
     }
@@ -1358,6 +1752,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isOnline() {
         return base.isOnline();
     }
@@ -1365,6 +1760,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isBanned() {
         return base.isBanned();
     }
@@ -1372,6 +1768,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setBanned(boolean banned) {
         base.setBanned(banned);
     }
@@ -1379,6 +1776,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean isWhitelisted() {
         return base.isWhitelisted();
     }
@@ -1386,6 +1784,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void setWhitelisted(boolean value) {
         base.setWhitelisted(value);
     }
@@ -1393,6 +1792,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Player getPlayer() {
         return base.getPlayer();
     }
@@ -1400,6 +1800,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public long getFirstPlayed() {
         return base.getFirstPlayed();
     }
@@ -1407,6 +1808,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public long getLastPlayed() {
         return base.getLastPlayed();
     }
@@ -1414,6 +1816,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean hasPlayedBefore() {
         return base.hasPlayedBefore();
     }
@@ -1421,6 +1824,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Map<String, Object> serialize() {
         return base.serialize();
     }
@@ -1428,6 +1832,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public void sendPluginMessage(Plugin source, String channel, byte[] message) {
         base.sendPluginMessage(source, channel, message);
     }
@@ -1435,6 +1840,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public Set<String> getListeningPluginChannels() {
         return base.getListeningPluginChannels();
     }
@@ -1442,6 +1848,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * @inheritDoc
      */
+    @Override
     public String getDisplayName() {
         return base.getDisplayName();
     }

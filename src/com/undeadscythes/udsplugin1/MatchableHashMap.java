@@ -17,7 +17,7 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param partialKey Partial key to search the map with.
      * @return A list of objects corresponding to matches of the partial key.
      */
-    public ArrayList<Object> matchesKey(String partialKey) {
+    public ArrayList<Object> getKeyMatches(String partialKey) {
         String lowPartialKey = partialKey.toLowerCase();
         ArrayList<Object> returnValue = new ArrayList<Object>();
         for(Map.Entry<String, Object> entry : super.entrySet()) {
@@ -26,6 +26,22 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
             }
         }
         return returnValue;
+    }
+
+    /**
+     * Finds the first match for a partial key.
+     * @param partialKey Partial key to search the map with.
+     * @return The first match or <code>null</code> if there are no matches.
+     */
+    public Object matchKey(String partialKey) {
+        String lowPartialKey = partialKey.toLowerCase();
+        for(Map.Entry<String, Object> entry : super.entrySet()) {
+            if(entry.getKey().toLowerCase().contains(lowPartialKey)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+
     }
 
     /**

@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin1;
 
 import java.util.ArrayList;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 /**
  * A warp point used for player teleportation.
@@ -48,6 +49,7 @@ public class Warp implements Saveable {
     /**
      * @inheritDoc
      */
+    @Override
     public String getRecord() {
         ArrayList<String> record = new ArrayList<String>();
         record.add(name);
@@ -71,5 +73,19 @@ public class Warp implements Saveable {
      */
     public int getPrice() {
         return price;
+    }
+
+    /**
+     * Get the location of the warp.
+     * @return Warp location.
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    public static Location findSafePlace(World world, double x, double z) {
+        Location safePlace = world.getHighestBlockAt((int)x, (int)z).getLocation();
+        safePlace.add(.5, 0, .5);
+        return safePlace;
     }
 }

@@ -6,18 +6,19 @@ import com.undeadscythes.udsplugin1.PlayerCommandExecutor;
 import org.bukkit.Bukkit;
 
 /**
- * Switches the current world to sunset.
+ * Set the world the players is in to night.
  * @author UndeadScythes
  */
-public class DayCmd extends PlayerCommandExecutor {
+public class NightCmd extends PlayerCommandExecutor {
     /**
-     * @inheritDoc
+     * @inheritDocs
      */
     @Override
     public void playerExecute(ExtendedPlayer player, String[] args) {
-        if(hasPerm("day")) {
-            player.getWorld().setTime(0);
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " summoned the sun.");
+        if(hasPerm("night")) {
+            player.getWorld().setTime(14000);
+            Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " summoned the moon.");
         }
     }
+
 }

@@ -1,0 +1,36 @@
+package com.undeadscythes.udsplugin1.commands;
+
+import com.undeadscythes.udsplugin1.Color;
+import com.undeadscythes.udsplugin1.ExtendedPlayer;
+import com.undeadscythes.udsplugin1.PlayerCommandExecutor;
+import com.undeadscythes.udsplugin1.Rank;
+import com.undeadscythes.udsplugin1.UDSPlugin;
+import java.util.Map;
+import java.util.TreeMap;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+
+/**
+ * Displays a list of online players.
+ * @author UndeadScythes
+ */
+public class WhoCmd extends PlayerCommandExecutor {
+    /**
+     * @inheritDocs
+     */
+    @Override
+    public void playerExecute(ExtendedPlayer player, String[] args) {
+        if(hasPerm("who")) {
+            TreeMap<Rank, String> lists = new TreeMap<Rank, String>();
+            for(ExtendedPlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
+                String current = lists.get(onlinePlayer.getRank());
+                lists.put(onlinePlayer.getRank(), current + " " + (player.getGameMode() == GameMode.CREATIVE ? "[C]" : (player.hasGodMode() ? "[G]" : "")) + onlinePlayer.getDisplayName());
+            }
+            player.sendMessage(Color.MESSAGE + "--- Online Players (" + UDSPlugin.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers() + " ---");
+            for(Map.Entry<Rank, String> entry : lists.entrySet()) {
+                player.sendMessage(entry.getKey().color() + entry.getValue());
+            }
+        }
+    }
+
+}
