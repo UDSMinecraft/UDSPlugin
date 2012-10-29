@@ -1,0 +1,99 @@
+name: UDSPlugin1
+main: com.undeadscythes.udsplugin.UDSPlugin
+version: 0.1
+description: UndeadScythes' custom plugin for CB 1.4.2-R0.1 #2406.
+author: UndeadScythes - daveyognaut2@gmail.com
+website: http://undeadscythes.webs.com/
+depend: []
+softdepend: []
+commands:
+  a:
+  acceptrules:
+  back:
+  ban:
+  blind:
+  bounty:
+    aliases: bounties
+  broadcast:
+    aliases: b
+  butcher:
+  c:
+  call:
+  challenge:
+  check:
+  ci:
+  city:
+  clan:
+  day:
+  delwarp:
+  enchant:
+  face:
+  firework:
+  gift:
+  god:
+  heal:
+  help:
+  home:
+  i:
+    aliases: item
+  ignore:
+  invsee:
+  jail:
+  kick:
+  kit:
+  lockdown:
+  map:
+  mapdupe:
+  me:
+  money:
+  n:
+  nick:
+  night:
+  ownerme:
+  p:
+  paybail:
+  pet:
+  powertool:
+  private:
+  r:
+    aliases: reply
+  rain:
+  region:
+  resetquarry:
+  rules:
+  scuba:
+  server:
+  serverinfo:
+  setspawn:
+  setwarp:
+  shop:
+  signs:
+  sit:
+  spawn:
+  spawner:
+  stack:
+  stats:
+  storm:
+  sun:
+  swearjar:
+  tell:
+    aliases: [whisper, msg]
+  tgm:
+    aliases: [gm, gamemode]
+  ticket:
+  timereset:
+  tp:
+  udsreload:
+  unban:
+  unjail:
+  unnick:
+  warp:
+    aliases: warps
+  we:
+  where:
+  who:
+    aliases: list
+  whois:
+  xp:
+    aliases: exp
+  y:
