@@ -1,0 +1,21 @@
+cost:
+  build: 3000
+currency:
+  plural: credits
+request-timeout: 30
+auto-save: 15
+vip:
+  spawns: 1000
+  time: 7
+welcome:
+  message: "Welcome to the server. Type /help in chat for a list of commands."
+  gift: emerald
+  admin: "As a member of staff be helpful, be polite and lead by example."
+range:
+  world: 10000
+  butcher: 50
+pvp-time: 5
+exp:
+  spawner: 3
+server-owner: Player
+

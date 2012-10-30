@@ -1,0 +1,68 @@
+package com.undeadscythes.udsplugin.commands;
+
+import com.undeadscythes.udsplugin.*;
+import java.util.*;
+import org.bukkit.*;
+
+/**
+ * Description.
+ * @author UndeadScythes
+ */
+public class BountyCmd extends PlayerCommandExecutor {
+    /**
+     * @inheritDocs
+     */
+    @Override
+    public void playerExecute(ExtendedPlayer player, String[] args) {
+        if(argsLessEq(2)) {
+            int bounty;
+            ExtendedPlayer target;
+            if(args.length == 0) {
+                sendPage(1, player);
+            } else if(args.length == 1) {
+                int page;
+                if((page = parseInt(args[0])) != -1) {
+                    sendPage(page, player);
+                }
+            } else if(args.length == 2 && (target = matchesPlayer(args[0])) != null && (bounty = parseInt(args[1])) != -1 && canAfford(bounty)) {
+                player.debit(bounty);
+                target.addBounty(bounty);
+                Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " placed a bounty on " + target.getDisplayName());
+            }
+        }
+    }
+
+    /**
+     * Sends a full page of bounties to the player.
+     * @param page Page to send.
+     * @param player Player to send page to.
+     */
+    private void sendPage(int page, ExtendedPlayer player) {
+        TreeMap<Integer, String> bounties = getBounties();
+        int pages = (getBounties().size() + 8) / 9;
+        if(pages == 0) {
+            player.sendMessage(Message.NO_BOUNTIES);
+        } else if(page > pages) {
+            player.sendMessage(Message.NO_PAGE);
+        } else {
+            player.sendMessage(Color.MESSAGE + "--- Current Bounties " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            for(Map.Entry<Integer, String> entry : bounties.entrySet()) {
+                player.sendMessage(Color.ITEM + "- " + entry.getValue() + "'s reward: " + Color.TEXT + entry.getKey() + Config.CURRENCIES);
+            }
+        }
+    }
+
+    /**
+     * Gets a map of bounties and players.
+     * @return Bounty-player map.
+     */
+    private TreeMap<Integer, String> getBounties() {
+        TreeMap<Integer, String> bounties = new TreeMap<Integer, String>();
+        for(ExtendedPlayer player : UDSPlugin.getPlayers().values()) {
+            if(player.getBounty() > 0) {
+                bounties.put(player.getBounty(), player.getDisplayName());
+            }
+        }
+        return bounties;
+    }
+}

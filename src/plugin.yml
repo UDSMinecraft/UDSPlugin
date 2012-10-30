@@ -1,7 +1,7 @@
 name: UDSPlugin1
 main: com.undeadscythes.udsplugin.UDSPlugin
 version: 0.1
-description: UndeadScythes' custom plugin for CB 1.4.2-R0.1 #2406.
+description: UDSlugin1 for CB 1.4.2-R0.1 #2406.
 author: UndeadScythes - daveyognaut2@gmail.com
 website: http://undeadscythes.webs.com/
 depend: []
