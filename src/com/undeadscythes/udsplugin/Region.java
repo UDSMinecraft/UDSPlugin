@@ -46,7 +46,7 @@ public class Region implements Saveable {
     /**
      * File name of region file.
      */
-    public static String PATH = "region.csv";
+    public static String PATH = "region.data";
 
     private String name;
     private Vector v1;

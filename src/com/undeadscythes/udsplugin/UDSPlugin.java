@@ -20,19 +20,18 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static Vector HALF_BLOCK = new Vector(.5, .5, .5);
     /**
-     * Where the UDSPlugin config file is stored.
-     */
-    public static String CONFIG_PATH = "plugins/UDSPlugin/config.yml";
-
-    /**
      * Where the issue/suggestion tickets are stored.
      */
     public static String TICKET_PATH = "tickets.txt";
+    public static String TIMES_PATH = "times.data";
 
     /**
      * Whether the server is in lockdown mode.
      */
     public static boolean serverInLockdown;
+
+    public static long LAST_ENDER_DEATH;
+    public static long LAST_DAILY_EVENT;
 
     private static SaveableHashMap clans;
     private static SaveableHashMap players;
@@ -49,7 +48,7 @@ public class UDSPlugin extends JavaPlugin {
     private static MatchableHashMap<Region> arenas;
     private static MatchableHashMap<ExtendedPlayer> vips;
     private static MatchableHashMap<ExtendedPlayer> onlinePlayers;
-    private static String DATA_PATH;
+    private static File DATA_PATH = new File("plugins/UDSPlugin1/data");
     private Timer timer;
 
     /**
@@ -63,12 +62,10 @@ public class UDSPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        UDSPlugin.setDataPath(this.getDataFolder());
-        new File(DATA_PATH).mkdir();
+        DATA_PATH.mkdirs();
         saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         saveConfig();
-
         Config.loadConfig(getConfig());
         getLogger().info(Message.CONFIG_LOADED.toString());
         clans = new SaveableHashMap();
@@ -88,13 +85,11 @@ public class UDSPlugin extends JavaPlugin {
         onlinePlayers = new MatchableHashMap<ExtendedPlayer>();
         try {
             loadFiles();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            timer = new Timer(this);
+            timer = new Timer();
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -124,19 +119,20 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info(message);
     }
 
-    public static void setDataPath(File path) {
-        DATA_PATH = path.getName();
-    }
-
     /**
      * Saves all the listed objects to file.
      * @throws IOException When a file can't be opened.
      */
     public static void saveFiles() throws IOException {
-        clans.save(DATA_PATH + Clan.PATH);
-        players.save(DATA_PATH + ExtendedPlayer.PATH);
-        regions.save(DATA_PATH + Region.PATH);
-        warps.save(DATA_PATH + Warp.PATH);
+        clans.save(DATA_PATH + File.separator + Clan.PATH);
+        players.save(DATA_PATH + File.separator + ExtendedPlayer.PATH);
+        regions.save(DATA_PATH + File.separator + Region.PATH);
+        warps.save(DATA_PATH + File.separator + Warp.PATH);
+        BufferedWriter file = new BufferedWriter(new FileWriter(DATA_PATH + File.separator + UDSPlugin.TIMES_PATH));
+        file.write(Long.toString(LAST_DAILY_EVENT));
+        file.newLine();
+        file.write(Long.toString(LAST_ENDER_DEATH));
+        file.close();
     }
 
     /**
@@ -150,7 +146,7 @@ public class UDSPlugin extends JavaPlugin {
         String message;
         int count = 0;
         try {
-            file = new BufferedReader(new FileReader(DATA_PATH + Clan.PATH));
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
             while((nextLine = file.readLine()) != null) {
                 clans.put(nextLine.split("\t", 1)[0], new Clan(nextLine));
                 count++;
@@ -163,10 +159,10 @@ public class UDSPlugin extends JavaPlugin {
         }
         try {
             count = 0;
-            file = new BufferedReader(new FileReader(DATA_PATH + ExtendedPlayer.PATH));
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + ExtendedPlayer.PATH));
             while((nextLine = file.readLine()) != null) {
                 ExtendedPlayer player = new ExtendedPlayer(nextLine);
-                players.put(player.getName(), player);
+                players.put(nextLine.split("\t")[0], player);
                 if(player.getVIPTime() > 0) {
                     vips.put(player.getName(), player);
                 }
@@ -179,7 +175,7 @@ public class UDSPlugin extends JavaPlugin {
         }
         try {
             count = 0;
-            file = new BufferedReader(new FileReader(DATA_PATH + Region.PATH));
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Region.PATH));
             while((nextLine = file.readLine()) != null) {
                 Region region = new Region(nextLine);
                 regions.put(region.getName(), region);
@@ -205,7 +201,7 @@ public class UDSPlugin extends JavaPlugin {
         }
         try {
             count = 0;
-            file = new BufferedReader(new FileReader(DATA_PATH + Warp.PATH));
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Warp.PATH));
             while((nextLine = file.readLine()) != null) {
                 warps.put(nextLine.split("\t", 1)[0], new Warp(nextLine));
             }
@@ -214,6 +210,14 @@ public class UDSPlugin extends JavaPlugin {
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
             getLogger().info(Message.NO_WARP_FILE.toString());
+        }
+        try {
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + TIMES_PATH));
+            LAST_DAILY_EVENT = Long.parseLong(file.readLine());
+            LAST_ENDER_DEATH = Long.parseLong(file.readLine());
+            file.close();
+        } catch (FileNotFoundException ex) {
+            LAST_DAILY_EVENT = System.currentTimeMillis();
         }
     }
 
@@ -401,27 +405,6 @@ public class UDSPlugin extends JavaPlugin {
         this.getServer().addRecipe(villagerEgg);
         ShapedRecipe webBlock = new ShapedRecipe(new ItemStack(Material.WEB)).shape("AAA", "A A", "AAA").setIngredient('A', Material.STRING);
         this.getServer().addRecipe(webBlock);
-    }
-
-    static public long getDay() throws IOException {
-        long day;
-        BufferedReader file;
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + "day"));
-            day = Long.parseLong(file.readLine());
-            file.close();
-        } catch (FileNotFoundException ex) {
-            setDay(System.currentTimeMillis());
-            return System.currentTimeMillis();
-        }
-        return day;
-    }
-
-    static public void setDay(long day) throws IOException {
-        BufferedWriter file = new BufferedWriter(new FileWriter(DATA_PATH + "day"));
-        file.write(Long.toString(day));
-        file.newLine();
-        file.close();
     }
 
     /**

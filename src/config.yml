@@ -18,4 +18,5 @@ pvp-time: 5
 exp:
   spawner: 3
 server-owner: Player
+respawn-dragon: 60
 

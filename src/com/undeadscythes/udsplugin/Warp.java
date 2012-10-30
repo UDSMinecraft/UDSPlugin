@@ -12,7 +12,7 @@ public class Warp implements Saveable {
     /**
      * File name of warp file.
      */
-    public static String PATH = "warp.csv";
+    public static String PATH = "warp.data";
 
     private String name;
     private Location location;

@@ -3,6 +3,7 @@ package com.undeadscythes.udsplugin;
 import java.io.*;
 import java.util.logging.*;
 import org.bukkit.*;
+import org.bukkit.entity.*;
 
 /**
  * Threaded class to run scheduled functions for maintenance.
@@ -27,27 +28,15 @@ public class Timer implements Runnable {
     public static long SECOND = 1000;
 
     private long now = System.currentTimeMillis();
-    private long day;
     private long lastSlow = System.currentTimeMillis();
-    private long slowTime;
-    private long vipTime;
-    private int vipSpawns;
-    private int worldBorderSq;
-    private long requestTime;
+    private long worldBorderSq = (int)Math.pow(Config.WORLD_BORDER, 2);
 
     /**
      * Initiates the timer.
      * @param plugin The UDSPlugin.
      * @param interval The interval between passes.
      */
-    public Timer(UDSPlugin plugin) throws IOException {
-        day = UDSPlugin.getDay();
-        slowTime = Config.SLOW_TIME;
-        vipTime = Config.VIP_TIME;
-        vipSpawns = Config.VIP_SPAWNS;
-        worldBorderSq = (int)Math.pow(Config.WORLD_BORDER, 2);
-        requestTime = Config.REQUEST_TIME;
-    }
+    public Timer() throws IOException {}
 
     /**
      * The function that will be used on each schedule.
@@ -55,15 +44,11 @@ public class Timer implements Runnable {
     @Override
     public void run() {
         now = System.currentTimeMillis();
-        if(day + DAY < now) {
-            try {
-                dailyTask();
-            } catch (IOException ex) {
-                Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            day = now;
+        if(UDSPlugin.LAST_DAILY_EVENT + DAY < now) {
+            dailyTask();
+            UDSPlugin.LAST_DAILY_EVENT = now;
         }
-        if(lastSlow + slowTime < now) {
+        if(lastSlow + Config.SLOW_TIME < now) {
             try {
                 slowTask();
             } catch (IOException ex) {
@@ -78,8 +63,7 @@ public class Timer implements Runnable {
         }
     }
 
-    private void dailyTask() throws IOException {
-        UDSPlugin.setDay(day);
+    private void dailyTask() {
         for(Region quarry : UDSPlugin.getQuarries().values()) {
             Material material = Material.getMaterial(quarry.getData());
             int dX = quarry.getV2().getBlockX() - quarry.getV1().getBlockX();
@@ -95,7 +79,7 @@ public class Timer implements Runnable {
         }
         Bukkit.broadcastMessage(Message.QUARRIES_FILLED.toString());
         for(ExtendedPlayer vip : UDSPlugin.getVIPS().values()) {
-            vip.setVIPSpawns(vipSpawns);
+            vip.setVIPSpawns(Config.VIP_SPAWNS);
             if(vip.isOnline()) {
                 vip.sendMessage(Message.SPAWNS_REFILLED);
             }
@@ -104,11 +88,19 @@ public class Timer implements Runnable {
 
     private void slowTask() throws IOException {
         UDSPlugin.saveFiles();
+        if(UDSPlugin.LAST_ENDER_DEATH + Config.DRAGON_RESPAWN < now) {
+            for(World world : Bukkit.getWorlds()) {
+                if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
+                    world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);
+                    Bukkit.broadcastMessage(Message.DRAGON_RESPAWN.toString());
+                }
+            }
+        }
     }
 
     private void fastTask() throws IOException {
         for(ExtendedPlayer player : UDSPlugin.getOnlinePlayers().values()) {
-            if(player.getRank().equals(Rank.VIP) && player.getVIPTime() + vipTime < now) {
+            if(player.getRank().equals(Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
                 player.setVIPTime(0);
                 player.setRank(Rank.MEMBER);
                 player.sendMessage(Message.VIP_END);
@@ -136,7 +128,7 @@ public class Timer implements Runnable {
 
         }
         for(Request request : UDSPlugin.getRequests().values()) {
-            if(request.getTime() + requestTime < now) {
+            if(request.getTime() + Config.REQUEST_TIME < now) {
                 request.getSender().sendMessage(Message.REQUEST_TIMEOUT);
                 UDSPlugin.getRequests().remove(request.getRecipient().getName());
             }

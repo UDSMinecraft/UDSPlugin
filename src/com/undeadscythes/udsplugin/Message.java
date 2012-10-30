@@ -7,6 +7,7 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public enum Message {
+    DRAGON_RESPAWN(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End."),
     /**
      * You have not entered a valid rank.
      */

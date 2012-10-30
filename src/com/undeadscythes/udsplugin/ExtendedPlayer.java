@@ -26,7 +26,7 @@ public class ExtendedPlayer implements Saveable, Player {
     /**
      * File name of player file.
      */
-    public static String PATH = "players.csv";
+    public static String PATH = "players.data";
     /**
      * Current record version.
      */
@@ -64,7 +64,7 @@ public class ExtendedPlayer implements Saveable, Player {
      */
     public ExtendedPlayer(String record) {
         String[] recordSplit = record.split("\t");
-        bounty = Integer.getInteger(recordSplit[1]);
+        bounty = Integer.parseInt(recordSplit[1]);
         money = Integer.parseInt(recordSplit[2]);
         rank = Rank.valueOf(recordSplit[3]);
         vipTime = Long.parseLong(recordSplit[4]);
@@ -979,7 +979,7 @@ public class ExtendedPlayer implements Saveable, Player {
      */
     @Override
     public String getName() {
-        return base. getName();
+        return base.getName();
     }
 
     /**

@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.*;
  * @author UndeadScythes
  */
 public class Config {
+    public static long DRAGON_RESPAWN;
     /**
      * The name of the server owner.
      */
@@ -84,5 +85,6 @@ public class Config {
         PVP_TIME = config.getLong("pvp-time") * Timer.SECOND;
         SPAWNER_EXP = config.getInt("exp.spawner");
         SERVER_OWNER = config.getString("server-owner");
+        DRAGON_RESPAWN = config.getLong("respawn-dragon") * Timer.MINUTE;
     }
 }
