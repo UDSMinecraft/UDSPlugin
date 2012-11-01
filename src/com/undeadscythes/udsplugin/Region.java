@@ -53,7 +53,7 @@ public class Region implements Saveable {
     private Vector v2;
     private Location warp;
     private String owner;
-    private ArrayList<String> members = new ArrayList<String>();
+    private HashSet<String> members = new HashSet<String>();
     private String data;
     private HashSet<Flag> flags;
     private Type type;
@@ -94,7 +94,7 @@ public class Region implements Saveable {
         v2 = getBlockPos(recordSplit[2]);
         warp = (Location)(new ExtendedLocation(recordSplit[3]));
         owner = recordSplit[4];
-        members = new ArrayList<String>(Arrays.asList(recordSplit[5].split(",")));
+        members = new HashSet<String>(Arrays.asList(recordSplit[5].split(",")));
         data = recordSplit[5];
         flags = new HashSet<Flag>();
         for(String flag : recordSplit[6].split(",")) {
@@ -132,6 +132,61 @@ public class Region implements Saveable {
         record.add(StringUtils.join(flags.toArray(), ","));
         record.add(type.toString());
         return StringUtils.join(record.toArray(), "\t");
+    }
+
+    /**
+     * Place single corner markers around the region.
+     */
+    public void placeCornerMarkers() {
+        ExtendedWorld world = new ExtendedWorld(getWorld());
+
+    }
+
+    /**
+     * Place 3 wide side markers around the region.
+     */
+    public void placeMoreMarkers() {
+        ExtendedWorld world = new ExtendedWorld(getWorld());
+        world.buildLine(v1.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine(v2.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v1.getBlockZ(), 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v2.getBlockZ(), 0, 6, Material.FENCE, Material.TORCH);
+    }
+
+    /**
+     * Place 10 block high towers in each corner of the region.
+     */
+    public void placeTowers() {
+        ExtendedWorld world = new ExtendedWorld(getWorld());
+        world.buildTower(v1.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(v1.getBlockX(), v2.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(v2.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(v2.getBlockX(), v2.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+    }
+
+    /**
+     * Get the number of members this region has.
+     * @return The number of members of this region.
+     */
+    public int getMemberNo() {
+        return members.size();
+    }
+
+    /**
+     * Checks if this region overlaps another region.
+     * @param region Region to check.
+     * @return <code>true</code> if this region overlaps with the other, <code>false</code> otherwise.
+     */
+    public boolean hasOverlap(Region region) {
+        return !(v1.getX() > region.getV2().getX() || v2.getX() < region.getV1().getX() || v1.getZ() > region.getV2().getZ() || v2.getZ() < region.getV1().getZ() || v1.getY() > region.getV2().getY() || v2.getY() < region.getV1().getY());
+    }
+
+    /**
+     * Set the warp point of a region.
+     * @param location Location to set as warp.
+     */
+    public void setWarp(Location location) {
+        warp = location;
     }
 
     /**
@@ -211,17 +266,19 @@ public class Region implements Saveable {
     /**
      * Add a player as a member of the region.
      * @param name Player name.
+     * @return <code>true</code> if the player was not already a member of the region, <code>false</code> otherwise.
      */
-    public void addMember(String name) {
-        members.add(name);
+    public boolean addMember(String name) {
+        return members.add(name);
     }
 
     /**
      * Remove a player as a member of a region.
      * @param name Player name.
+     * @return <code>true</code> if the player was a member of the region, <code>false</code> otherwise.
      */
-    public void delMember(String name) {
-        members.remove(name);
+    public boolean delMember(String name) {
+        return members.remove(name);
     }
 
     /**

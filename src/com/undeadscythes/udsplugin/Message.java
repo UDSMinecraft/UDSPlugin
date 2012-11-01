@@ -7,6 +7,81 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public enum Message {
+    /**
+     * You don't have the rank required to do that.
+     */
+    DONT_HAVE_RANK(Color.ERROR + "You don't have the rank required to do that."),
+    /**
+     * You can't promote this player any further.
+     */
+    CANT_PROMOTE(Color.ERROR + "You can't promote this player any further."),
+    /**
+     * You can't demote this player any further.
+     */
+    CANT_DEMOTE(Color.ERROR + "You can't demote this player any further."),
+    /**
+     * There are no cities yet.
+     */
+    NO_CITIES(Color.MESSAGE + "There are no cities yet."),
+    /**
+     * You have no money to put in the swear jar, spend a minute in jail instead.
+     */
+    CANT_PAY_SWEARJAR(Color.ERROR + "You have no money to put in the swear jar."),
+    /**
+     * Please do not use bad language.
+     */
+    BAD_LANGUAGE(Color.ERROR + "Please do not use bad language."),
+    /**
+     * Gift sent.
+     */
+    GIFT_SENT(Color.MESSAGE + "Gift sent."),
+    /**
+     * [Gifting Service] You have recieved a free gift!
+     */
+    GIFT(Color.MESSAGE + "[Gifting Service] You have recieved a free gift!"),
+    /**
+     * You have no gift selected.
+     */
+    CANT_SEND_AIR(Color.ERROR + "You have no gift selected."),
+    /**
+     * You are not in a city.
+     */
+    NOT_IN_CITY(Color.ERROR + "You are not in a city."),
+    /**
+     * You are not in a protected area.
+     */
+    NOT_IN_REGION(Color.ERROR + "You are not in a protected area."),
+    /**
+     * No city exists by that name.
+     */
+    NOT_A_CITY(Color.ERROR + "No city exists by that name."),
+    /**
+     * You are not the mayor of that city.
+     */
+    NOT_MAYOR(Color.ERROR + "You are not the mayor of that city."),
+    /**
+     * City founded.
+     */
+    NEW_CITY(Color.MESSAGE + "City founded."),
+    /**
+     * A protected area already exists with that name.
+     */
+    REGION_EXISTS(Color.ERROR + "A protected area already exists with that name."),
+    /**
+     * You cannot do that here, you are too close to another protected area.
+     */
+    REGION_HAS_OVERLAP(Color.ERROR + "You cannot do that here, you are too close to another protected area."),
+    /**
+     * Inventory cleared.
+     */
+    CI(Color.MESSAGE + "Inventory cleared."),
+    /**
+     * That player is already dueling someone else.
+     */
+    PLAYER_DUELING(Color.MESSAGE + "That player is already dueling someone else."),
+    /**
+     * The Ender Dragon has regained his strength and awaits brave warriors in The End.
+     */
     DRAGON_RESPAWN(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End."),
     /**
      * You have not entered a valid rank.

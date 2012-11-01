@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import java.io.*;
 import java.net.*;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -24,6 +25,70 @@ import org.bukkit.util.Vector;
  */
 public class ExtendedPlayer implements Saveable, Player {
     /**
+    * A player rank granting permission.
+    * @author UndeadScythes
+    */
+    public enum Rank {
+        /**
+        * Basic player rank.
+        */
+        DEFAULT(ChatColor.WHITE, 0),
+        /**
+        * Player with build rights.
+        */
+        MEMBER(ChatColor.GREEN, 1),
+        /**
+        * Donating or long term player.
+        */
+        VIP(ChatColor.DARK_PURPLE, 1),
+        /**
+        * Trustee.
+        */
+        WARDEN(ChatColor.AQUA, 2),
+        /**
+        * Player moderator.
+        */
+        MOD(ChatColor.DARK_AQUA, 3),
+        /**
+        * Server administrator.
+        */
+        ADMIN(ChatColor.YELLOW, 4),
+        /**
+        * Server owner.
+        */
+        OWNER(ChatColor.GOLD, 5);
+
+        private ChatColor color;
+        private int ranking;
+
+        Rank(ChatColor color, int rank) {
+            this.color = color;
+            this.ranking = rank;
+        }
+
+        public ChatColor color() {
+            return color;
+        }
+
+        public static Rank getByRanking(int ranking) {
+            for(Rank rank : values()) {
+                if(rank.ranking == ranking) {
+                    return rank;
+                }
+            }
+            return null;
+        }
+
+        public static Rank getAbove(Rank rank) {
+            return getByRanking(rank.ranking + 1);
+        }
+
+        public static Rank getBelow(Rank rank) {
+            return getByRanking(rank.ranking - 1);
+        }
+    }
+
+    /**
      * File name of player file.
      */
     public static String PATH = "players.data";
@@ -40,12 +105,16 @@ public class ExtendedPlayer implements Saveable, Player {
     private int vipSpawns = 0;
     private long jailTime = 0;
     private long jailSentence = 0;
+    private int bail = 0;
     private String clan = "";
     private String nick;
     private Location back = null;
     private boolean godMode = false;
     private boolean lockdownPass = false;
     private long lastDamageCaused = 0;
+    private ExtendedPlayer duel = null;
+    private Location checkPoint = null;
+    private ChatRoom chatRoom = null;
     private HashSet<String> ignoredPlayers = new HashSet<String>();
     private Channel channel = Channel.PUBLIC;
 
@@ -71,8 +140,9 @@ public class ExtendedPlayer implements Saveable, Player {
         vipSpawns = Integer.parseInt(recordSplit[5]);
         jailTime = Long.parseLong(recordSplit[6]);
         jailSentence = Long.parseLong(recordSplit[7]);
-        clan = recordSplit[8];
-        nick = recordSplit[9];
+        bail = Integer.parseInt(recordSplit[8]);
+        clan = recordSplit[9];
+        nick = recordSplit[10];
     }
 
     /**
@@ -89,6 +159,7 @@ public class ExtendedPlayer implements Saveable, Player {
         record.add(vipSpawns + "");
         record.add(jailTime + "");
         record.add(jailSentence + "");
+        record.add(bail + "");
         record.add(clan);
         record.add(nick);
         return StringUtils.join(record.toArray(), "\t");
@@ -101,6 +172,143 @@ public class ExtendedPlayer implements Saveable, Player {
     public void wrapPlayer(Player player) {
         this.base = player;
         player.setDisplayName(nick);
+    }
+
+    /**
+     * Set the players back warp point to their current location.
+     */
+    public void setBackPoint() {
+        back = getLocation();
+    }
+
+    /**
+     * Toggle this players game mode.
+     * @return <code>true</code> if the players game mode is now set to creative, <code>false</code> otherwise.
+     */
+    public boolean toggleGameMode() {
+        if(getGameMode().equals(GameMode.SURVIVAL)) {
+            setGameMode(GameMode.CREATIVE);
+            return true;
+        } else {
+            setGameMode(GameMode.SURVIVAL);
+            return false;
+        }
+    }
+
+    /**
+     * Get a players monetary value.
+     * @return A players monetary value.
+     */
+    public int getMoney() {
+        return money;
+    }
+
+    /**
+     * Get the chat room this player is currently in.
+     * @return The players chat room.
+     */
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    /**
+     * Take a player out of jail and perform all the necessary operations.
+     * @throws IOException
+     */
+    public void release() throws IOException {
+        jailTime = 0;
+        jailSentence = 0;
+        sendMessage(Message.JAIL_OUT);
+        if(!quietTeleport(UDSPlugin.getWarps().get("jailout"))) {
+            BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
+            out.write(Message.NO_JAIL_OUT.toString());
+            out.close();
+        }
+    }
+
+    /**
+     * Put a player in jail and perform all the necessary operations.
+     * @param sentence Time in minutes to jail the player.
+     * @param bail Bail to set.
+     */
+    public void jail(long sentence, int bail) throws IOException {
+        getWorld().strikeLightningEffect(getLocation());
+        if(!quietTeleport(UDSPlugin.getWarps().get("jailin"))) {
+            BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
+            out.write(Message.NO_JAIL_OUT.toString());
+            out.close();
+        }
+        jailTime = System.currentTimeMillis();
+        jailSentence = sentence * Timer.MINUTE;
+        this.bail = bail;
+        sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
+        if(bail != 0) {
+            sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + Config.CURRENCIES + ".");
+        }
+    }
+
+    /**
+     * Get the first region that the player is currently inside.
+     * @param type Optional type of region to check, <code>null</code> to search all regions.
+     * @return The first region the player is in, <code>null</code> otherwise.
+     */
+    public Region getCurrentRegion(Region.Type type) {
+        if(type == Region.Type.CITY) {
+            for(Region region : UDSPlugin.getCities().values()) {
+                if(getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
+                    return region;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Demote a player.
+     * @return Players new rank, <code>null</code> if no change.
+     */
+    public Rank demote() {
+        Rank newRank = Rank.getBelow(rank);
+        if(newRank != null) {
+            rank = newRank;
+        }
+        return newRank;
+    }
+
+    /**
+     * Promote a player.
+     * @return Players new rank, <code>null</code> if no change.
+     */
+    public Rank promote() {
+        Rank newRank = Rank.getAbove(rank);
+        if(newRank != null) {
+            rank = newRank;
+        }
+        return newRank;
+    }
+
+    /**
+     * Get the players current chat channel.
+     * @return The players chat channel.
+     */
+    public Channel getChannel() {
+        return channel;
+    }
+
+    /**
+     * Get this players saved checkpoint.
+     * @return This players checkpoint.
+     */
+    public Location getCheckPoint() {
+        return checkPoint;
+    }
+
+    /**
+     * Check if a player is engaged in a duel with another player.
+     * @return <code>true</code> if the player is engaged in a duel, <code>false</code> otherwise.
+     */
+    public boolean isDuelling() {
+        return duel != null;
     }
 
     /**
@@ -119,6 +327,17 @@ public class ExtendedPlayer implements Saveable, Player {
             }
         }
         return !contained;
+    }
+
+    /**
+     * Give a player an item stack, any items that don't fit in the inventory are dropped at the players feet.
+     * @param item Item to give the player.
+     */
+    public void giveAndDrop(ItemStack item) {
+        HashMap<Integer, ItemStack> drops = getInventory().addItem(item);
+        for(ItemStack drop : drops.values()) {
+            getWorld().dropItemNaturally(getLocation(), drop);
+        }
     }
 
     /**
@@ -220,15 +439,19 @@ public class ExtendedPlayer implements Saveable, Player {
     }
 
     /**
+     * Teleport to the point indicated by a warp.
+     * @param warp Warp to teleport to.
+     */
+    public void teleport(Warp warp) {
+        teleport(warp.getLocation());
+    }
+
+    /**
      * Get the name of the clan the player is a member of.
      * @return Clan name.
      */
     public String getClan() {
         return clan;
-    }
-
-    public void sendPage(int pageNo, int pageTotal, int itemNo, String[] items, String message) {
-
     }
 
     /**
@@ -378,15 +601,31 @@ public class ExtendedPlayer implements Saveable, Player {
      * @return <code>true</code> if player has enough money, <code>false</code> otherwise.
      */
     public boolean canAfford(int price) {
-        return (price >= money);
+        return (money >= price);
     }
 
     /**
-     * Debit a players account the amount passed.
-     * @param price Amount to debit.
+     * Debit the players account the amount passed.
+     * @param amount Amount to debit.
      */
-    public void debit(int price) {
-        money -= price;
+    public void debit(int amount) {
+        money -= amount;
+    }
+
+    /**
+     * Credit the players account the amount passed.
+     * @param amount Amount to credit.
+     */
+    public void credit(int amount) {
+        money += amount;
+    }
+
+    /**
+     * Set a players account.
+     * @param amount Amount to set.
+     */
+    public void setMoney(int amount) {
+        money = amount;
     }
 
     /**

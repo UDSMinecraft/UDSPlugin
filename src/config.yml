@@ -1,7 +1,15 @@
 cost:
   build: 3000
+  city: 300000
+  map: 100
+  home: 1000
+  shop: 25000
+  vip: 30000
+  clan: 10000
+  base: 100000
 currency:
   plural: credits
+  singular: credit
 request-timeout: 30
 auto-save: 15
 vip:

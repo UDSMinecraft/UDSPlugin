@@ -56,6 +56,20 @@ public class Request {
     }
 
     /**
+     * Initialises a brand new request.
+     * @param sender The sender of the request.
+     * @param sender The receiver of the request.
+     * @param type The request type.
+     * @param data The request data, if any.
+     */
+    public Request(ExtendedPlayer sender, Type type, int data, ExtendedPlayer recipient) {
+        this.type = type;
+        this.sender = sender;
+        this.data = Integer.toString(data);
+        this.recipient = recipient;
+    }
+
+    /**
      * Get the type of this request.
      * @return Request type.
      */

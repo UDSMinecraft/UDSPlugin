@@ -1,7 +1,7 @@
 name: UDSPlugin1
 main: com.undeadscythes.udsplugin.UDSPlugin
 version: 0.1
-description: UDSlugin1 for CB 1.4.2-R0.1 #2406.
+description: UDSlugin1 for CB 1.4.2-R0.2 #2449.
 author: UndeadScythes - daveyognaut2@gmail.com
 website: http://undeadscythes.webs.com/
 depend: []
@@ -26,6 +26,7 @@ commands:
   clan:
   day:
   delwarp:
+  demote:
   enchant:
   face:
   firework:
@@ -55,6 +56,7 @@ commands:
   pet:
   powertool:
   private:
+  promote:
   r:
     aliases: reply
   rain:

@@ -39,15 +39,22 @@ public class BountyCmd extends PlayerCommandExecutor {
      */
     private void sendPage(int page, ExtendedPlayer player) {
         TreeMap<Integer, String> bounties = getBounties();
-        int pages = (getBounties().size() + 8) / 9;
+        int pages = (bounties.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Message.NO_BOUNTIES);
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {
             player.sendMessage(Color.MESSAGE + "--- Current Bounties " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            int posted = 0;
+            int skipped = 1;
             for(Map.Entry<Integer, String> entry : bounties.entrySet()) {
-                player.sendMessage(Color.ITEM + "- " + entry.getValue() + "'s reward: " + Color.TEXT + entry.getKey() + Config.CURRENCIES);
+                if(skipped > (page - 1) * 9 && posted < 9) {
+                    player.sendMessage(Color.ITEM + "- " + entry.getValue() + "'s reward: " + Color.TEXT + entry.getKey() + Config.CURRENCIES);
+                    posted++;
+                } else {
+                    skipped++;
+                }
             }
         }
     }

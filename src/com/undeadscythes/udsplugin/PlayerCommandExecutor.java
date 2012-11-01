@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import org.apache.commons.lang.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 
@@ -19,6 +18,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         player = UDSPlugin.getPlayers().get(sender.getName());
         if(sender instanceof Player && hasPerm(Perm.valueOf(command.getName().toUpperCase()))) {
+            if(args.length == 1 && args[0].equals("help")) {
+                player.performCommand("help " + command.getName());
+                return true;
+            }
             argsLength = args.length;
             playerExecute(player, args);
             return true;
@@ -27,8 +30,13 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Rank matchesRank(String string) {
-        Rank rank = Rank.valueOf(string);
+    /**
+     * Checks if a string corresponds to a valid rank.
+     * @param string String to check.
+     * @return <code>true</code> if the rank is valid, <code>false</code> otherwise.
+     */
+    public ExtendedPlayer.Rank matchesRank(String string) {
+        ExtendedPlayer.Rank rank = ExtendedPlayer.Rank.valueOf(string);
         if(rank != null) {
             return rank;
         } else {
@@ -43,10 +51,100 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @return <code>true</code> if the word was clean, <code>false</code> otherwise.
      */
     public boolean censor(String string) {
-        String[] badWords = new String[]{"fuvg", "shpx", "phag", "avttre"};
-        for(String word : badWords) {
-            if(string.toLowerCase().contains(rot13(word))) {
-                player.sendMessage(Message.CANT_USE_BAD_WORDS);
+        if(Censor.censor(string)) {
+            return false;
+        } else {
+            player.sendMessage(Message.CANT_USE_BAD_WORDS);
+            return true;
+        }
+    }
+
+    /**
+     * Check if the player has the required rank.
+     * @param rank Rank required.
+     * @return <code>true</code> if the player has the required rank, <code>false</code> otherwise.
+     */
+    public boolean hasRank(ExtendedPlayer.Rank rank) {
+        if(player.getRank().compareTo(rank) >= 0) {
+            return true;
+        } else {
+            player.sendMessage(Message.DONT_HAVE_RANK);
+            return false;
+        }
+    }
+
+    /**
+     * Get the first region the player is currently in.
+     * @return The first region the player is in or <code>null</code> if none found.
+     */
+    public Region inRegion() {
+        Region region;
+        if((region = player.getCurrentRegion(Region.Type.CITY)) != null) {
+            return region;
+        } else {
+            player.sendMessage(Message.NOT_IN_CITY);
+            return null;
+        }
+    }
+
+    /**
+     * Checks that no region already exists with a given name.
+     * @param name Name to check.
+     * @return <code>true</code> if no region already exists with the given name, <code>false</code> otherwise.
+     */
+    public boolean noRegion(String name) {
+        if(!UDSPlugin.getRegions().containsKey(name)) {
+            return true;
+        } else {
+            player.sendMessage(Message.REGION_EXISTS);
+            return false;
+        }
+    }
+
+    /**
+     * Checks if a city exists by this name.
+     * @param cityName City to check.
+     * @return The city if it exists, <code>null</code> otherwise.
+     */
+    public Region matchesCity(String cityName) {
+        Region city;
+        if((city = UDSPlugin.getCities().matchKey(cityName)) != null) {
+            return city;
+        } else {
+            player.sendMessage(Message.NOT_A_CITY);
+            return null;
+        }
+
+    }
+
+    /**
+     * Checks first if the city exists then that the player is the mayor of the city.
+     * @param cityName City to check.
+     * @return The city if both the city exists and the player is the mayor, <code>null</code> otherwise.
+     */
+    public Region mayor(String cityName) {
+        Region city;
+        if((city = matchesCity(cityName)) != null) {
+            if(city.getOwner().equals(player.getName())) {
+                return city;
+            } else {
+                player.sendMessage(Message.NOT_MAYOR);
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Checks that a region has no overlaps with any other regions.
+     * @param region Region to check for overlaps.
+     * @return <code>true</code> if there are no overlaps with other regions, <code>false</code> otherwise.
+     */
+    public boolean noOverlaps(Region region) {
+        for(Region test : UDSPlugin.getRegions().values()) {
+            if(test.hasOverlap(region)) {
+                player.sendMessage(Message.REGION_HAS_OVERLAP);
                 return false;
             }
         }
@@ -54,17 +152,17 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     /**
-     * This let's me hide the nasty words in the previous function. Interesting fact: "FU" maps to "SH". It took me a few minutes trying to figure out why the first two letters weren't being mapped... but they were!
-     * @param string String to rot.
-     * @return Rotted string.
+     * Checks that a player is not already engaged in a duel with another player.
+     * @param target Player to check.
+     * @return <code>true</code> if the player is not duelling, <code>false</code> otherwise.
      */
-    private String rot13(String string) {
-        char[] alphabet = "abcdefghijklmnopqrstuvwxyzabcdefghijklm".toCharArray();
-        String rotted = "";
-        for(int i = 0 ; i < string.length(); i++) {
-            rotted = rotted.concat(CharUtils.toString(alphabet[ArrayUtils.indexOf(alphabet, string.charAt(i)) + 13]));
+    public boolean notDueling(ExtendedPlayer target) {
+        if(!target.isDuelling()) {
+            return true;
+        } else {
+            player.sendMessage(Message.PLAYER_DUELING);
+            return false;
         }
-        return rotted;
     }
 
     /**

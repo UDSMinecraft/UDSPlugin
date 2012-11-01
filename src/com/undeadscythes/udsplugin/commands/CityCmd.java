@@ -1,0 +1,115 @@
+package com.undeadscythes.udsplugin.commands;
+
+import com.undeadscythes.udsplugin.*;
+import java.util.*;
+import org.bukkit.*;
+import org.bukkit.util.Vector;
+
+/**
+ * Description.
+ * @author UndeadScythes
+ */
+public class CityCmd extends PlayerCommandExecutor {
+    /**
+     * @inheritDocs
+     */
+    @Override
+    public void playerExecute(ExtendedPlayer player, String[] args) {
+        if(argsMoreLessInc(1, 3)) {
+            Region city;
+            if(args.length == 1) {
+                if(args[0].equals("set") && (city = inRegion()).getType() == Region.Type.CITY && mayor(city.getName()) != null) {
+                    city.setWarp(player.getLocation());
+                    player.sendMessage(Message.WARP_SET);
+                } else if(args[0].equals("list")) {
+                    sendPage(1, player);
+                }
+            } else if(args.length == 2) {
+                int page;
+                if(args[0].equals("new") && canAfford(Config.CITY_COST) && censor(args[1]) && noRegion(args[1])) {
+                    Vector min = player.getLocation().add(-100, 0, -100).toVector();
+                    Vector max = player.getLocation().add(100, player.getWorld().getMaxHeight(), 100).toVector();
+                    city = new Region(args[1], min, max, player.getLocation(), player.getName(), "", Region.Type.CITY);
+                    if(noOverlaps(city)) {
+                        player.debit(Config.CITY_COST);
+                        UDSPlugin.getRegions().put(args[1], city);
+                        UDSPlugin.getCities().put(args[1], city);
+                        city.placeMoreMarkers();
+                        city.placeTowers();
+                        player.sendMessage(Message.NEW_CITY);
+                        Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " has just founded " + args[1] + ".");
+                    }
+                } else if(args[0].equals("leave") && (city = matchesCity(args[1])) != null) {
+                    if(city.delMember(player.getName())) {
+                        player.sendMessage(Color.MESSAGE + "You have left " + city.getName() + ".");
+                    } else {
+                        player.sendMessage(Color.ERROR + "You are not a citizen of " + city.getName() + ".");
+                    }
+                } else if(args[0].equals("warp") && (city = matchesCity(args[1])) != null && notJailed()) {
+                    player.quietTeleport(city.getWarp());
+                } else if(args[0].equals("list") && (page = parseInt(args[1])) != -1) {
+                    sendPage(page, player);
+                }
+            } else if(args.length == 3) {
+                ExtendedPlayer target;
+                if(args[0].equals("invite") && (city = mayor(args[1])) != null && (target = matchesPlayer(args[2])) != null) {
+                    if(city.addMember(target.getName())) {
+                        player.sendMessage(Color.MESSAGE + target.getDisplayName() + " was added as a citizen of " + city.getName() + ".");
+                        target.sendMessage(Color.MESSAGE + "You have been added as a citizen of " + city.getName());
+                    } else {
+                        player.sendMessage(Color.ERROR + target.getDisplayName() + " is already a citizen of " + city.getName() + ".");
+                    }
+                } else if(args[0].equals("banish") && (city = mayor(args[1])) != null && (target = matchesPlayer(args[2])) != null) {
+                    if(city.delMember(target.getName())) {
+                        player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been banished from " + city.getName() + ".");
+                        target.sendMessage(Color.MESSAGE + "You have been banished from " + city.getName() + ".");
+                        target.quietTeleport(city.getWarp());
+                    } else {
+                        player.sendMessage(Color.ERROR + target.getDisplayName() + " is not a citizen of " + city.getName() + ".");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Sends a full page of cities to the player.
+     * @param page Page to send.
+     * @param player Player to send page to.
+     */
+    private void sendPage(int page, ExtendedPlayer player) {
+        ArrayList<Region> cities = UDSPlugin.getCities().getSortedValues(new SortByPop());
+        int pages = (cities.size() + 8) / 9;
+        if(pages == 0) {
+            player.sendMessage(Message.NO_CITIES);
+        } else if(page > pages) {
+            player.sendMessage(Message.NO_PAGE);
+        } else {
+            player.sendMessage(Color.MESSAGE + "--- Current Cities " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            int posted = 0;
+            int skipped = 1;
+            for(Region city : cities) {
+                if(skipped > (page - 1) * 9 && posted < 9) {
+                    player.sendMessage(Color.ITEM + "- " + city.getName() + ", Mayor " + city.getOwner() + " Pop. " + Color.TEXT + (city.getMemberNo() + 1));
+                    posted++;
+                } else {
+                    skipped++;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Compare regions by member size.
+ * @author UndeadScythe
+ */
+class SortByPop implements Comparator<Region> {
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public int compare(Region region1, Region region2) {
+        return region2.getMemberNo() - region1.getMemberNo();
+    }
+}

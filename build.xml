@@ -11,7 +11,7 @@
     <description>Builds, tests, and runs the project UDSPlugin1.</description>
     <import file="nbproject/build-impl.xml"/>
     <target name="-pre-compile">
-        <copy file="C:\Users\Dave\Documents\NetBeansProjects\CraftBukkit-Bleeding\target\craftbukkit-1.4.2-R0.1-SNAPSHOT.jar" tofile="C:\Users\Dave\Documents\MY Documents\Minecraft\Test Server\craftbukkit.jar" />
+        <copy file="C:\Users\Dave\Documents\NetBeansProjects\CraftBukkit-Bleeding\target\craftbukkit-1.4.2-R0.2-SNAPSHOT.jar" tofile="C:\Users\Dave\Documents\MY Documents\Minecraft\Test Server\craftbukkit.jar" />
     </target>
     <target name="-post-jar">
         <copy file="${dist.jar}" flatten="true" todir="C:\Users\Dave\Documents\MY Documents\Minecraft\Test Server\plugins\" />

@@ -13,10 +13,10 @@ public class SetWarpCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(ExtendedPlayer player, String[] args) {
         if(argsMoreLessInc(1, 2)) {
-            Rank rank;
+            ExtendedPlayer.Rank rank;
             int price;
             if(args.length == 1 && !UDSPlugin.getWarps().containsKey(args[0]) && censor(args[0])) {
-                UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), Rank.DEFAULT, 0));
+                UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), ExtendedPlayer.Rank.DEFAULT, 0));
                 player.sendMessage(Message.WARP_SET);
             } else if(args.length == 2 && !UDSPlugin.getWarps().containsKey(args[0]) && censor(args[0]) && (rank = matchesRank(args[1])) != null) {
                 UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), rank, 0));

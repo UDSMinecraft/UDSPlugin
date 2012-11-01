@@ -8,6 +8,41 @@ import org.bukkit.configuration.file.*;
  * @author UndeadScythes
  */
 public class Config {
+    /**
+     * Cost to get a map of spawn.
+     */
+    public static int MAP_COST;
+    /**
+     * Cost to protect a home area.
+     */
+    public static int HOME_COST;
+    /**
+     * Cost to but a city shop.
+     */
+    public static int SHOP_COST;
+    /**
+     * Cost to rent VIP rank.
+     */
+    public static int VIP_COST;
+    /**
+     * Cost to make a new clan.
+     */
+    public static int CLAN_COST;
+    /**
+     * Cost to setup a clan base.
+     */
+    public static int BASE_COST;
+    /**
+     * The singular form of the in game money.
+     */
+    public static String CURRENCY;
+    /**
+     * The cost to found anew city.
+     */
+    public static int CITY_COST;
+    /**
+     * The time between Ender Dragon respawns.
+     */
     public static long DRAGON_RESPAWN;
     /**
      * The name of the server owner.
@@ -86,5 +121,13 @@ public class Config {
         SPAWNER_EXP = config.getInt("exp.spawner");
         SERVER_OWNER = config.getString("server-owner");
         DRAGON_RESPAWN = config.getLong("respawn-dragon") * Timer.MINUTE;
+        CITY_COST = config.getInt("cost.city");
+        CURRENCY = config.getString("currency.singular");
+        MAP_COST = config.getInt("cost.map");
+        HOME_COST = config.getInt("cost.home");
+        SHOP_COST = config.getInt("cost.shop");
+        VIP_COST = config.getInt("cost.vip");
+        CLAN_COST = config.getInt("cost.clan");
+        BASE_COST = config.getInt("cost.base");
     }
 }

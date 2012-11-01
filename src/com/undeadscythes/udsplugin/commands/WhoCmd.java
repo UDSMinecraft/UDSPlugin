@@ -15,8 +15,8 @@ public class WhoCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(ExtendedPlayer player, String[] args) {
         if(argsEq(0)) {
-            TreeMap<Rank, String> lists = new TreeMap<Rank, String>();
-            for(Rank rank : Rank.values()) {
+            TreeMap<ExtendedPlayer.Rank, String> lists = new TreeMap<ExtendedPlayer.Rank, String>();
+            for(ExtendedPlayer.Rank rank : ExtendedPlayer.Rank.values()) {
                 lists.put(rank, "");
             }
             for(ExtendedPlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
@@ -24,7 +24,7 @@ public class WhoCmd extends PlayerCommandExecutor {
                 lists.put(onlinePlayer.getRank(), current + (player.getGameMode() == GameMode.CREATIVE ? "[C]" : (player.hasGodMode() ? "[G]" : "")) + onlinePlayer.getDisplayName() + " ");
             }
             player.sendMessage(Color.MESSAGE + "--- Online Players (" + UDSPlugin.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers() + ") ---");
-            for(Map.Entry<Rank, String> entry : lists.entrySet()) {
+            for(Map.Entry<ExtendedPlayer.Rank, String> entry : lists.entrySet()) {
                 if(!entry.getValue().equals("")) {
                     player.sendMessage(entry.getKey().color() + entry.getValue());
                 }

@@ -234,17 +234,17 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("butcher").setExecutor(new ButcherCmd());
         getCommand("c").setExecutor(new CCmd());
         getCommand("call").setExecutor(new CallCmd());
-//        getCommand("challenge").setExecutor(new Challenge(this));
-//        getCommand("check").setExecutor(new Check(this));
-//        getCommand("ci").setExecutor(new Ci(this));
-//        getCommand("city").setExecutor(new City(this));
+        getCommand("challenge").setExecutor(new ChallengeCmd());
+        getCommand("check").setExecutor(new CheckCmd());
+        getCommand("ci").setExecutor(new CiCmd());
+        getCommand("city").setExecutor(new CityCmd());
 //        getCommand("clan").setExecutor(new ClanCmd(this));
         getCommand("day").setExecutor(new DayCmd());
         getCommand("delwarp").setExecutor(new DelWarpCmd());
-//        getCommand("demote").setExecutor(new DemoteCmd());
+        getCommand("demote").setExecutor(new DemoteCmd());
 //        getCommand("enchant").setExecutor(new Enchant(this));
 //        getCommand("face").setExecutor(new Face());
-//        getCommand("gift").setExecutor(new Gift(this));
+        getCommand("gift").setExecutor(new GiftCmd());
         getCommand("god").setExecutor(new GodCmd());
         getCommand("heal").setExecutor(new HealCmd());
 //        getCommand("help").setExecutor(new Help(this));
@@ -258,7 +258,7 @@ public class UDSPlugin extends JavaPlugin {
 //        getCommand("lockdown").setExecutor(new Lockdown(this));
 //        getCommand("map").setExecutor(new Map(this));
 //        getCommand("me").setExecutor(new Me(this));
-//        getCommand("money").setExecutor(new Money());
+        getCommand("money").setExecutor(new MoneyCmd());
 //        getCommand("n").setExecutor(new N(this));
 //        getCommand("nick").setExecutor(new Nick(this));
         getCommand("night").setExecutor(new NightCmd());
@@ -267,7 +267,7 @@ public class UDSPlugin extends JavaPlugin {
 //        getCommand("pet").setExecutor(new Pet(this));
 //        getCommand("powertool").setExecutor(new Powertool());
 //        getCommand("private").setExecutor(new Private(this));
-//        getCommand("promote").setExecutor(new PromoteCmd());
+        getCommand("promote").setExecutor(new PromoteCmd());
 //        getCommand("r").setExecutor(new R(this));
 //        getCommand("rain").setExecutor(new Rain(this));
 //        getCommand("region").setExecutor(new RegionCmd(this));
@@ -286,15 +286,15 @@ public class UDSPlugin extends JavaPlugin {
 //        getCommand("storm").setExecutor(new Storm(this));
 //        getCommand("sun").setExecutor(new Sun(this));
 //        getCommand("swearjar").setExecutor(new Swearjar(this));
-//        getCommand("tp").setExecutor(new TP(this));
+        getCommand("tp").setExecutor(new TPCmd());
 //        getCommand("tell").setExecutor(new Tell(this));
-//        getCommand("tgm").setExecutor(new TGM(this));
+        getCommand("tgm").setExecutor(new TGMCmd());
 //        getCommand("unban").setExecutor(new UnBan(this));
 //        getCommand("unjail").setExecutor(new UnJail(this));
 //        getCommand("unnick").setExecutor(new UnNick(this));
 //        getCommand("vip").setExecutor(new VIP(this));
 //        getCommand("we").setExecutor(new WE(this));
-//        getCommand("warp").setExecutor(new WarpCmd());
+        getCommand("warp").setExecutor(new WarpCmd());
 //        getCommand("where").setExecutor(new Where(this));
         getCommand("who").setExecutor(new WhoCmd());
         getCommand("whois").setExecutor(new WhoIsCmd());
@@ -303,6 +303,7 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     private void registerEvents() {
+        getServer().getPluginManager().registerEvents(new AsyncPlayerChat(), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(), this);
 //        getServer().getPluginManager().registerEvents(new BlockBurn(), plugin);
 //        getServer().getPluginManager().registerEvents(new BlockFade(), plugin);
@@ -326,11 +327,10 @@ public class UDSPlugin extends JavaPlugin {
 //        getServer().getPluginManager().registerEvents(new InventoryClick(), plugin);
 //        getServer().getPluginManager().registerEvents(new InventoryOpen(), plugin);
 //        getServer().getPluginManager().registerEvents(new PlayerBucketEmpty(), plugin);
-//        getServer().getPluginManager().registerEvents(new AsyncPlayerChat(plugin), plugin);
 //        getServer().getPluginManager().registerEvents(new PlayerDeath(plugin), plugin);
 //        getServer().getPluginManager().registerEvents(new PlayerInteract(plugin), plugin);
 //        getServer().getPluginManager().registerEvents(new PlayerInteractEntity(), plugin);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerPortal(), plugin);
         getServer().getPluginManager().registerEvents(new PlayerQuit(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerRespawn(plugin), plugin);

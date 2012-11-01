@@ -8,6 +8,14 @@ import org.bukkit.*;
  */
 public enum Color {
     /**
+     * Chat room chat color.
+     */
+    PRIVATE(ChatColor.RED),
+    /**
+     * Chat color for clan chat.
+     */
+    CLAN(ChatColor.BLUE),
+    /**
      * Chat color of normal text.
      */
     TEXT(ChatColor.WHITE),

@@ -100,21 +100,13 @@ public class Timer implements Runnable {
 
     private void fastTask() throws IOException {
         for(ExtendedPlayer player : UDSPlugin.getOnlinePlayers().values()) {
-            if(player.getRank().equals(Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
+            if(player.getRank().equals(ExtendedPlayer.Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
                 player.setVIPTime(0);
-                player.setRank(Rank.MEMBER);
+                player.setRank(ExtendedPlayer.Rank.MEMBER);
                 player.sendMessage(Message.VIP_END);
             }
             if(player.isJailed() && player.getJailTime() + player.getJailSentence() < now) {
-                player.setJailTime(0);
-                player.setJailSentence(0);
-                player.sendMessage(Message.JAIL_OUT);
-                if(!player.quietTeleport(UDSPlugin.getWarps().get("jailout").getLocation())) {
-                    BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
-                    out.write(Message.NO_JAIL_OUT.toString());
-                    out.close();
-                }
-                player.setGodMode(false);
+                player.release();
             }
             if(player.hasGodMode()) {
                 player.setFoodLevel(20);
