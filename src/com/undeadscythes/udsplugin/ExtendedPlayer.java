@@ -86,6 +86,15 @@ public class ExtendedPlayer implements Saveable, Player {
         public static Rank getBelow(Rank rank) {
             return getByRanking(rank.ranking - 1);
         }
+
+        public static Rank get(String string) {
+            for(Rank rank : values()) {
+                if(rank.name().equals(string.toUpperCase())) {
+                    return rank;
+                }
+            }
+            return null;
+        }
     }
 
     /**
@@ -172,6 +181,40 @@ public class ExtendedPlayer implements Saveable, Player {
     public void wrapPlayer(Player player) {
         this.base = player;
         player.setDisplayName(nick);
+    }
+
+    public String getVIPTimeString() {
+        String time = "";
+        long timeLeft = Config.VIP_TIME - System.currentTimeMillis() - getVIPTime();
+        while(timeLeft >= Timer.SECOND) {
+            if(timeLeft >= Timer.DAY) {
+                int days = (int)(timeLeft / Timer.DAY);
+                time = time.concat(days + (days == 1 ? " day" : " days"));
+                timeLeft -= days * Timer.DAY;
+            } else if(timeLeft >= Timer.HOUR) {
+                int hours = (int)(timeLeft / Timer.HOUR);
+                time = time.concat(hours + (hours == 1 ? " hour" : " hours"));
+                timeLeft -= hours * Timer.HOUR;
+            } else if(timeLeft >= Timer.MINUTE) {
+                int minutes = (int)(timeLeft / Timer.MINUTE);
+                time = time.concat(minutes + (minutes == 1 ? " minute" : " minutes"));
+                timeLeft -= minutes * Timer.MINUTE;
+            } else if(timeLeft >= Timer.SECOND) {
+                int seconds = (int)(timeLeft / Timer.SECOND);
+                time = time.concat(seconds + (seconds == 1 ? " second" : " seconds"));
+                timeLeft -= seconds * Timer.SECOND;
+            }
+        }return time;
+    }
+
+    /**
+     * Use up some the players VIP daily item spawns.
+     * @param amount The amount of spawns to use up.
+     * @return The number of spawns remaining.
+     */
+    public int useVIPSpawns(int amount) {
+        vipSpawns -= amount;
+        return vipSpawns;
     }
 
     /**

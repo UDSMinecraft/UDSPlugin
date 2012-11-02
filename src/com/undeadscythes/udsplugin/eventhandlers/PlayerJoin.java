@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
@@ -24,7 +25,7 @@ public class PlayerJoin implements Listener {
             UDSPlugin.getPlayers().put(playerName, player);
             UDSPlugin.getOnlinePlayers().put(playerName, player);
             if(player.getName().equals(Config.SERVER_OWNER)) {
-                player.setRank(ExtendedPlayer.Rank.OWNER);
+                player.setRank(Rank.OWNER);
                 player.sendMessage(Message.OWNER_FIRST_LOG);
             } else {
                 Bukkit.broadcastMessage(Message.NEW_PLAYER.toString());
@@ -38,9 +39,9 @@ public class PlayerJoin implements Listener {
             player.kickPlayer(Message.SERVER_LOCKDOWN.toString());
         } else {
             player.sendMessage(Color.MESSAGE + Config.WELCOME);
-            if(player.getRank().equals(ExtendedPlayer.Rank.DEFAULT)) {
+            if(player.getRank().equals(Rank.DEFAULT)) {
                 player.sendMessage(Color.MESSAGE + "Kill monsters or trade with players to earn " + Config.BUILD_COST + " credits then type /acceptrules in chat.");
-            } else if(player.getRank().compareTo(ExtendedPlayer.Rank.MOD) >= 0) {
+            } else if(player.getRank().compareTo(Rank.MOD) >= 0) {
                 player.sendMessage(Config.WELCOME_ADMIN);
             }
             event.setJoinMessage(Color.BROADCAST + player.getDisplayName() + (player.isInClan() ? " of " + player.getClan() : "") + " has joined.");

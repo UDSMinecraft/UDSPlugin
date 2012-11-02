@@ -20,12 +20,15 @@ public class WarpCmd extends PlayerCommandExecutor {
                 TreeSet<String> warps = new TreeSet<String>();
                 for(Warp test : UDSPlugin.getWarps().values()) {
                     if(player.getRank().compareTo(test.getRank()) >= 0) {
-                        warps.add(test.getName() + (test.getPrice() > 0 ? "(" + test.getPrice() + ")" : ""));
+                        warps.add(test.getName() + (test.getPrice() > 0 ? " (" + test.getPrice() + ")" : ""));
                     }
                 }
-                player.sendMessage(Color.MESSAGE + "Available warps:");
-                String list = StringUtils.join(warps.toArray(), ", ");
-                player.sendMessage(Color.TEXT + list.substring(0, list.length() - 3));
+                if(!warps.isEmpty()) {
+                    player.sendMessage(Color.MESSAGE + "Available warps (with prices):");
+                    player.sendMessage(Color.TEXT + StringUtils.join(warps.toArray(), ", "));
+                } else {
+                    player.sendMessage(Message.NO_WARPS);
+                }
             } else if((warp = matchesWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
                 player.debit(warp.getPrice());
                 player.teleport(warp);

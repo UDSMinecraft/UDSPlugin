@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -14,7 +15,7 @@ public class DemoteCmd extends PlayerCommandExecutor {
     public void playerExecute(ExtendedPlayer player, String[] args) {
         ExtendedPlayer target;
         if(argsEq(1) && (target = matchesPlayer(args[0])) != null && notSelf(target)) {
-            ExtendedPlayer.Rank rank;
+            Rank rank;
             if((rank = target.demote()) != null) {
                 player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been demoted to " + rank.toString() + ".");
                 target.sendMessage(Color.MESSAGE + "You have been demoted to " + rank.toString() + ".");

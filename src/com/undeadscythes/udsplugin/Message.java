@@ -8,6 +8,58 @@ import org.bukkit.*;
  */
 public enum Message {
     /**
+     * That warp already exists.
+     */
+    WARP_EXISTS(Color.ERROR + "That warp already exists."),
+    /**
+     * You don't have access to any warps.
+     */
+    NO_WARPS(Color.MESSAGE + "You don't have access to any warps."),
+    /**
+     * You have been jailed for breaking the rules.
+     */
+    JAIL_IN(Color.MESSAGE + "You have been jailed for breaking the rules."),
+    /**
+     * There are no currently whitelisted items.
+     */
+    NO_WHITELIST_ITEMS(Color.MESSAGE + "There are no currently whitelisted items."),
+    /**
+     * Welcome to the elite, enjoy your VIP status.
+     */
+    VIP_RANK(Color.MESSAGE + "Welcome to the elite, enjoy your VIP status."),
+    /**
+     * You cannot spawn that item.
+     */
+    ITEM_NOT_WHITELISTED(Color.ERROR + "You cannot spawn that item."),
+    /**
+     * You are out of spawns for today.
+     */
+    OUT_OF_SPAWNS(Color.ERROR + "You are out of spawns for today."),
+    /**
+     * You have just used up you last spawns for today.
+     */
+    USED_LAST_SPAWNS(Color.MESSAGE + "You have just used up you last spawns for today."),
+    /**
+     * That is not a valid data value.
+     */
+    BAD_DATA_VALUE(Color.ERROR + "That is not a valid data value."),
+    /**
+     * That is not a valid item.
+     */
+    NOT_AN_ITEM(Color.ERROR + "That is not a valid item."),
+    /**
+     * That is not a valid direction.
+     */
+    NOT_A_DIRECTION(Color.ERROR + "That is not a valid direction."),
+    /**
+     * That is not a valid enchantment.
+     */
+    NOT_AN_ENCHANTMENT(Color.ERROR + "That is not a valid enchantment."),
+    /**
+     * There are no enchantments do display.
+     */
+    NO_ENCHANTMENTS(Color.ERROR + "There are no enchantments do display."),
+    /**
      * You don't have the rank required to do that.
      */
     DONT_HAVE_RANK(Color.ERROR + "You don't have the rank required to do that."),

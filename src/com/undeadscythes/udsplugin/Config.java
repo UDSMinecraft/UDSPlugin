@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import java.util.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 
@@ -8,6 +9,10 @@ import org.bukkit.configuration.file.*;
  * @author UndeadScythes
  */
 public class Config {
+    /**
+     * Items that VIP ranks can spawn.
+     */
+    public static ArrayList<Integer> WHITELIST;
     /**
      * Cost to get a map of spawn.
      */
@@ -129,5 +134,6 @@ public class Config {
         VIP_COST = config.getInt("cost.vip");
         CLAN_COST = config.getInt("cost.clan");
         BASE_COST = config.getInt("cost.base");
+        WHITELIST = new ArrayList<Integer>(config.getIntegerList("item-whitelist"));
     }
 }

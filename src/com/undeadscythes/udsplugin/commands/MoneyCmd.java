@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
 
@@ -33,17 +34,17 @@ public class MoneyCmd extends PlayerCommandExecutor {
                     int printed = 0;
                     int rank = 0;
                     for(ExtendedPlayer ranker : players) {
-                        if(ranker.getRank().compareTo(ExtendedPlayer.Rank.MOD) < 0 && printed < 5) {
+                        if(ranker.getRank().compareTo(Rank.MOD) < 0 && printed < 5) {
                             player.sendMessage(Color.TEXT.toString() + (printed + 1) + ": " + ranker.getRank().color() + ranker.getDisplayName() + ", " + Color.TEXT + ranker.getMoney() + " " + Config.CURRENCIES);
                             printed++;
                             if(!ranker.equals(player) && rank == 0) {
                                 rank++;
                             }
-                        } else if(rank > 0 || player.getRank().compareTo(ExtendedPlayer.Rank.MOD) >= 0) {
+                        } else if(rank > 0 || player.getRank().compareTo(Rank.MOD) >= 0) {
                             break;
                         }
                     }
-                    if(rank > 5 && player.getRank().compareTo(ExtendedPlayer.Rank.MOD) < 0) {
+                    if(rank > 5 && player.getRank().compareTo(Rank.MOD) < 0) {
                         player.sendMessage(Color.MESSAGE + "Your rank is " + rank + ".");
                     }
                 } else if((target = matchesPlayer(args[0])) != null && notSelf(target) && hasPerm(Perm.MONEY_OTHER)) {

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -14,7 +15,7 @@ public class PromoteCmd extends PlayerCommandExecutor {
     public void playerExecute(ExtendedPlayer player, String[] args) {
         ExtendedPlayer target;
         if(argsEq(1) && (target = matchesPlayer(args[0])) != null && notSelf(target)) {
-            ExtendedPlayer.Rank rank;
+            Rank rank;
             if(player.getRank().compareTo(target.getRank()) > 0 && (rank = target.promote()) != null) {
                 player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been promoted to " + rank.toString() + ".");
                 target.sendMessage(Color.MESSAGE + "You have been promoted to " + rank.toString() + ".");

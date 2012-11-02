@@ -1,7 +1,11 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import org.bukkit.*;
 import org.bukkit.command.*;
+import org.bukkit.enchantments.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
 
 /**
  * A command that is designed to be run by a player.
@@ -35,8 +39,8 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param string String to check.
      * @return <code>true</code> if the rank is valid, <code>false</code> otherwise.
      */
-    public ExtendedPlayer.Rank matchesRank(String string) {
-        ExtendedPlayer.Rank rank = ExtendedPlayer.Rank.valueOf(string);
+    public Rank matchesRank(String string) {
+        Rank rank = Rank.get(string);
         if(rank != null) {
             return rank;
         } else {
@@ -52,10 +56,70 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      */
     public boolean censor(String string) {
         if(Censor.censor(string)) {
-            return false;
+            return true;
         } else {
             player.sendMessage(Message.CANT_USE_BAD_WORDS);
+            return false;
+        }
+    }
+
+    /**
+     * Check that no warp by this name exists.
+     * @param warpName Warp name to check.
+     * @return <code>true</code> if no warp exists by this name, <code>false</code> otherwise.
+     */
+    public boolean noWarp(String warpName) {
+        if(UDSPlugin.getWarps().get(warpName) == null) {
             return true;
+        } else {
+            player.sendMessage(Message.WARP_EXISTS);
+            return false;
+        }
+    }
+
+    /**
+     * Check that a material exists.
+     * @param string Material to check.
+     * @return The material if it exists, <code>null</code> otherwise.
+     */
+    public ItemStack matchesItem(String string) {
+        Material material;
+        String matString = string.toUpperCase();
+        byte data = 0;
+        if(string.contains(":")) {
+            if(string.split(":")[1].matches("[0-9][0-9]*")) {
+                data = Byte.parseByte(string.split(":")[1]);
+            } else {
+                player.sendMessage(Message.BAD_DATA_VALUE);
+                return null;
+            }
+            matString = string.split(":")[0].toUpperCase();
+        }
+        if(matString.matches("[0-9][0-9]*")) {
+            material = Material.getMaterial(Integer.parseInt(matString));
+        } else {
+            material = Material.getMaterial(matString);
+        }
+        if(material != null) {
+            return new ItemStack(material, 1, (short)0, data);
+        } else {
+            player.sendMessage(Message.NOT_AN_ITEM);
+            return null;
+        }
+    }
+
+    /**
+     * Check if an enchantment exists.
+     * @param enchant Enchantment name.
+     * @return The enchantment if it exists, <code>null</code> otherwise.
+     */
+    public Enchantment matchesEnchantment(String enchant) {
+        Enchantment enchantment = Enchantment.getByName(enchant);
+        if(enchantment != null) {
+            return enchantment;
+        } else {
+            player.sendMessage(Message.NOT_AN_ENCHANTMENT);
+            return null;
         }
     }
 
@@ -64,7 +128,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param rank Rank required.
      * @return <code>true</code> if the player has the required rank, <code>false</code> otherwise.
      */
-    public boolean hasRank(ExtendedPlayer.Rank rank) {
+    public boolean hasRank(Rank rank) {
         if(player.getRank().compareTo(rank) >= 0) {
             return true;
         } else {

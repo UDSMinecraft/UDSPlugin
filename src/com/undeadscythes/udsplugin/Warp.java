@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -16,7 +17,7 @@ public class Warp implements Saveable {
 
     private String name;
     private Location location;
-    private ExtendedPlayer.Rank rank;
+    private Rank rank;
     private int price;
 
     /**
@@ -26,7 +27,7 @@ public class Warp implements Saveable {
      * @param rank Rank required to use the warp.
      * @param price Money required to use the warp.
      */
-    public Warp(String name, Location location, ExtendedPlayer.Rank rank, int price) {
+    public Warp(String name, Location location, Rank rank, int price) {
         this.name = name;
         this.location = location;
         this.rank = rank;
@@ -41,7 +42,7 @@ public class Warp implements Saveable {
         String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         location = new ExtendedLocation(recordSplit[1]);
-        rank = ExtendedPlayer.Rank.valueOf(recordSplit[2]);
+        rank = Rank.valueOf(recordSplit[2]);
         price = Integer.parseInt(recordSplit[3]);
     }
 
@@ -86,7 +87,7 @@ public class Warp implements Saveable {
      * Get the rank required to use this warp.
      * @return Rank needed to use this warp.
      */
-    public ExtendedPlayer.Rank getRank() {
+    public Rank getRank() {
         return rank;
     }
 

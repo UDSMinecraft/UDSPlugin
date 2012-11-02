@@ -27,4 +27,5 @@ exp:
   spawner: 3
 server-owner: Player
 respawn-dragon: 60
+item-whitelist: [1,2,3,4,12,13,17,18,31,35,50,58,61,65,82,87,88,106,111,283,284,285,286,294,314,315,316,317,357]
 

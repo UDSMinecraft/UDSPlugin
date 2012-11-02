@@ -89,6 +89,7 @@ commands:
   unban:
   unjail:
   unnick:
+  vip:
   warp:
     aliases: warps
   we:

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
 import java.io.*;
 import java.util.logging.*;
 import org.bukkit.*;
@@ -100,9 +101,9 @@ public class Timer implements Runnable {
 
     private void fastTask() throws IOException {
         for(ExtendedPlayer player : UDSPlugin.getOnlinePlayers().values()) {
-            if(player.getRank().equals(ExtendedPlayer.Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
+            if(player.getRank().equals(Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
                 player.setVIPTime(0);
-                player.setRank(ExtendedPlayer.Rank.MEMBER);
+                player.setRank(Rank.MEMBER);
                 player.sendMessage(Message.VIP_END);
             }
             if(player.isJailed() && player.getJailTime() + player.getJailSentence() < now) {

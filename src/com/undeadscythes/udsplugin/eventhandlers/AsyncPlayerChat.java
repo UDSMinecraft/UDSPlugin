@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import java.io.*;
 import org.bukkit.*;
@@ -35,9 +36,9 @@ public class AsyncPlayerChat implements Listener {
                 }
             }
         } else if(player.getChannel() == Channel.ADMIN) {
-            String message = ExtendedPlayer.Rank.ADMIN.color() + "[ADMIN] " + player.getDisplayName() + ": " + event.getMessage();
+            String message = Rank.ADMIN.color() + "[ADMIN] " + player.getDisplayName() + ": " + event.getMessage();
             for(ExtendedPlayer target : UDSPlugin.getOnlinePlayers().values()) {
-                if(target.getRank().compareTo(ExtendedPlayer.Rank.MOD) >= 0) {
+                if(target.getRank().compareTo(Rank.MOD) >= 0) {
                     target.sendMessage(message);
                 }
             }
