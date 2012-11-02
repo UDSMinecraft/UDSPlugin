@@ -14,7 +14,7 @@ public class CityCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsMoreLessInc(1, 3)) {
             Region city;
             if(args.length == 1) {
@@ -51,7 +51,7 @@ public class CityCmd extends PlayerCommandExecutor {
                     sendPage(page, player);
                 }
             } else if(args.length == 3) {
-                ExtendedPlayer target;
+                SaveablePlayer target;
                 if(args[0].equals("invite") && (city = mayor(args[1])) != null && (target = matchesPlayer(args[2])) != null) {
                     if(city.addMember(target.getName())) {
                         player.sendMessage(Color.MESSAGE + target.getDisplayName() + " was added as a citizen of " + city.getName() + ".");
@@ -77,11 +77,11 @@ public class CityCmd extends PlayerCommandExecutor {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, ExtendedPlayer player) {
+    private void sendPage(int page, SaveablePlayer player) {
         ArrayList<Region> cities = UDSPlugin.getCities().getSortedValues(new SortByPop());
         int pages = (cities.size() + 8) / 9;
         if(pages == 0) {
-            player.sendMessage(Message.NO_CITIES);
+            player.sendMessage(Color.MESSAGE + "There are no cities yet.");
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {

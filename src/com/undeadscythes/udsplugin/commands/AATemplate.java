@@ -11,6 +11,6 @@ public class AATemplate extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
     }
 }

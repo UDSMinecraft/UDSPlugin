@@ -13,7 +13,7 @@ public class WarpCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(1)) {
             Warp warp;
             if(args.length == 0) {
@@ -27,7 +27,7 @@ public class WarpCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.MESSAGE + "Available warps (with prices):");
                     player.sendMessage(Color.TEXT + StringUtils.join(warps.toArray(), ", "));
                 } else {
-                    player.sendMessage(Message.NO_WARPS);
+                    player.sendMessage(Color.MESSAGE + "You don't have access to any warps.");
                 }
             } else if((warp = matchesWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
                 player.debit(warp.getPrice());

@@ -12,7 +12,7 @@ public class DayCmd extends PlayerCommandExecutor {
      * @inheritDoc
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsEq(0)) {
             player.getWorld().setTime(0);
             Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " summoned the sun.");

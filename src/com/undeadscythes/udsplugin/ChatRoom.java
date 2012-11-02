@@ -8,14 +8,14 @@ import java.util.*;
  */
 public class ChatRoom {
     private String name;
-    private ArrayList<ExtendedPlayer> members = new ArrayList<ExtendedPlayer>();
+    private ArrayList<SaveablePlayer> members = new ArrayList<SaveablePlayer>();
 
     /**
      * Create a brand new private chat room.
      * @param player Player who opened the chat room.
      * @param name Name of the chat room.
      */
-    public ChatRoom (ExtendedPlayer player, String name) {
+    public ChatRoom (SaveablePlayer player, String name) {
         this.name = name;
         members.add(player);
     }
@@ -32,9 +32,9 @@ public class ChatRoom {
      * Get members of the chat room that are currently online.
      * @return Online members.
      */
-    public ArrayList<ExtendedPlayer> getOnlineMembers() {
-        ArrayList<ExtendedPlayer> onlineMembers = new ArrayList<ExtendedPlayer>();
-        for(ExtendedPlayer member : members) {
+    public ArrayList<SaveablePlayer> getOnlineMembers() {
+        ArrayList<SaveablePlayer> onlineMembers = new ArrayList<SaveablePlayer>();
+        for(SaveablePlayer member : members) {
             if(member != null) {
                 onlineMembers.add(member);
             }

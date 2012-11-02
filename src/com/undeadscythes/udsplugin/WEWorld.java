@@ -15,14 +15,14 @@ import org.bukkit.util.Vector;
  * An extension of the base world class adding various WE-like methods.
  * @author UndeadScythes
  */
-public class ExtendedWorld implements World {
+public class WEWorld implements World {
     private World base;
 
     /**
      * Wrap an existing world with these lovely extra methods.
      * @param world World to wrap.
      */
-    public ExtendedWorld(World world) {
+    public WEWorld(World world) {
         base = world;
     }
 
@@ -75,6 +75,10 @@ public class ExtendedWorld implements World {
                 }
             }
         }
+    }
+
+    public boolean setSpawnLocation(Location location) {
+        return base.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     /**

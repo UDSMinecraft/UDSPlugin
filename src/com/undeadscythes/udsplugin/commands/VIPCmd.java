@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
@@ -13,7 +13,7 @@ public class VIPCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(2)) {
             if(args.length == 0) {
                 if(player.getRank().equals(Rank.VIP)) {
@@ -22,7 +22,7 @@ public class VIPCmd extends PlayerCommandExecutor {
                     player.setRank(Rank.VIP);
                     player.setVIPTime(System.currentTimeMillis());
                     player.setVIPSpawns(Config.VIP_SPAWNS);
-                    player.sendMessage(Message.VIP_RANK);
+                    player.sendMessage(Color.MESSAGE + "Welcome to the elite, enjoy your VIP status.");
                 }
             } else {
                 if(args[0].equals("spawns")) {
@@ -42,10 +42,10 @@ public class VIPCmd extends PlayerCommandExecutor {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, ExtendedPlayer player) {
+    private void sendPage(int page, SaveablePlayer player) {
         int pages = (Config.WHITELIST.size() + 8) / 9;
         if(pages == 0) {
-            player.sendMessage(Message.NO_WHITELIST_ITEMS);
+            player.sendMessage(Color.MESSAGE + "There are no currently whitelisted items.");
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {

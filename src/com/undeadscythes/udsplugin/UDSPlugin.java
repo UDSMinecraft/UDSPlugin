@@ -18,20 +18,19 @@ public class UDSPlugin extends JavaPlugin {
     /**
      * A vector that defines the center of a block.
      */
-    public static Vector HALF_BLOCK = new Vector(.5, .5, .5);
+    public final static Vector HALF_BLOCK = new Vector(.5, .5, .5);
     /**
      * Where the issue/suggestion tickets are stored.
      */
-    public static String TICKET_PATH = "tickets.txt";
-    public static String TIMES_PATH = "times.data";
+    public final static String TICKET_PATH = "tickets.txt";
+    public final static String TIMES_PATH = "times.data";
 
     /**
      * Whether the server is in lockdown mode.
      */
     public static boolean serverInLockdown;
-
-    public static long LAST_ENDER_DEATH;
-    public static long LAST_DAILY_EVENT;
+    public static long lastEnderDeath;
+    public static long lastDailyEvent;
 
     private static SaveableHashMap clans;
     private static SaveableHashMap players;
@@ -46,13 +45,13 @@ public class UDSPlugin extends JavaPlugin {
     private static MatchableHashMap<Region> bases;
     private static MatchableHashMap<Region> cities;
     private static MatchableHashMap<Region> arenas;
-    private static MatchableHashMap<ExtendedPlayer> vips;
-    private static MatchableHashMap<ExtendedPlayer> onlinePlayers;
+    private static MatchableHashMap<SaveablePlayer> vips;
+    private static MatchableHashMap<SaveablePlayer> onlinePlayers;
     private static File DATA_PATH = new File("plugins/UDSPlugin1/data");
     private Timer timer;
 
     /**
-     * Used for testing in NetBeans.
+     * Used for testing in NetBeans. Woo! NetBeans!
      * @param args
      */
     public static void main(final String[] args) {}
@@ -67,7 +66,7 @@ public class UDSPlugin extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
         Config.loadConfig(getConfig());
-        getLogger().info(Message.CONFIG_LOADED.toString());
+        getLogger().info("Config loaded.");
         clans = new SaveableHashMap();
         players = new SaveableHashMap();
         regions = new SaveableHashMap();
@@ -81,8 +80,8 @@ public class UDSPlugin extends JavaPlugin {
         bases = new MatchableHashMap<Region>();
         cities = new MatchableHashMap<Region>();
         arenas = new MatchableHashMap<Region>();
-        vips = new MatchableHashMap<ExtendedPlayer>();
-        onlinePlayers = new MatchableHashMap<ExtendedPlayer>();
+        vips = new MatchableHashMap<SaveablePlayer>();
+        onlinePlayers = new MatchableHashMap<SaveablePlayer>();
         try {
             loadFiles();
         } catch (IOException ex) {
@@ -94,13 +93,13 @@ public class UDSPlugin extends JavaPlugin {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, timer, 100, 100);
-        getLogger().info(Message.TIMER_STARTED.toString());
+        getLogger().info("Timer started.");
         setCommandExecutors();
-        getLogger().info(Message.COMMANDS_REGISTERED.toString());
+        getLogger().info("Commands registered.");
         registerEvents();
-        getLogger().info(Message.EVENTS_REGISTERED.toString());
+        getLogger().info("Events registered.");
         addRecipes();
-        getLogger().info(Message.RECIPES_ADDED.toString());
+        getLogger().info("Recipes added.");
         String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
         getLogger().info(message);
     }
@@ -125,13 +124,13 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static void saveFiles() throws IOException {
         clans.save(DATA_PATH + File.separator + Clan.PATH);
-        players.save(DATA_PATH + File.separator + ExtendedPlayer.PATH);
+        players.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
         regions.save(DATA_PATH + File.separator + Region.PATH);
         warps.save(DATA_PATH + File.separator + Warp.PATH);
         BufferedWriter file = new BufferedWriter(new FileWriter(DATA_PATH + File.separator + UDSPlugin.TIMES_PATH));
-        file.write(Long.toString(LAST_DAILY_EVENT));
+        file.write(Long.toString(lastDailyEvent));
         file.newLine();
-        file.write(Long.toString(LAST_ENDER_DEATH));
+        file.write(Long.toString(lastEnderDeath));
         file.close();
     }
 
@@ -155,13 +154,13 @@ public class UDSPlugin extends JavaPlugin {
             message = count + " clans loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
-            getLogger().info(Message.NO_CLAN_FILE.toString());
+            getLogger().info("No clan file exists yet.");
         }
         try {
             count = 0;
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + ExtendedPlayer.PATH));
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + SaveablePlayer.PATH));
             while((nextLine = file.readLine()) != null) {
-                ExtendedPlayer player = new ExtendedPlayer(nextLine);
+                SaveablePlayer player = new SaveablePlayer(nextLine);
                 players.put(nextLine.split("\t")[0], player);
                 if(player.getVIPTime() > 0) {
                     vips.put(player.getName(), player);
@@ -171,7 +170,7 @@ public class UDSPlugin extends JavaPlugin {
             message = count + " players loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
-            getLogger().info(Message.NO_PLAYER_FILE.toString());
+            getLogger().info("No player file exists yet.");
         }
         try {
             count = 0;
@@ -197,7 +196,7 @@ public class UDSPlugin extends JavaPlugin {
             message = count + " regions loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
-            getLogger().info(Message.NO_REGION_FILE.toString());
+            getLogger().info("No region file exists yet.");
         }
         try {
             count = 0;
@@ -209,15 +208,15 @@ public class UDSPlugin extends JavaPlugin {
             message = count + " warps loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
-            getLogger().info(Message.NO_WARP_FILE.toString());
+            getLogger().info("No warp file exists yet.");
         }
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + TIMES_PATH));
-            LAST_DAILY_EVENT = Long.parseLong(file.readLine());
-            LAST_ENDER_DEATH = Long.parseLong(file.readLine());
+            lastDailyEvent = Long.parseLong(file.readLine());
+            lastEnderDeath = Long.parseLong(file.readLine());
             file.close();
         } catch (FileNotFoundException ex) {
-            LAST_DAILY_EVENT = System.currentTimeMillis();
+            lastDailyEvent = System.currentTimeMillis();
         }
     }
 
@@ -253,45 +252,44 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("ignore").setExecutor(new IgnoreCmd());
 //        getCommand("invsee").setExecutor(new InvSee(this));
         getCommand("jail").setExecutor(new JailCmd());
-//        getCommand("kick").setExecutor(new Kick(this));
+        getCommand("kick").setExecutor(new KickCmd());
 //        getCommand("kit").setExecutor(new Kit(this));
 //        getCommand("lockdown").setExecutor(new Lockdown(this));
 //        getCommand("map").setExecutor(new Map(this));
-//        getCommand("me").setExecutor(new Me(this));
+        getCommand("me").setExecutor(new MeCmd());
         getCommand("money").setExecutor(new MoneyCmd());
 //        getCommand("n").setExecutor(new N(this));
-//        getCommand("nick").setExecutor(new Nick(this));
+        getCommand("nick").setExecutor(new NickCmd());
         getCommand("night").setExecutor(new NightCmd());
 //        getCommand("p").setExecutor(new P(this));
-//        getCommand("paybail").setExecutor(new PayBail());
+        getCommand("paybail").setExecutor(new PayBailCmd());
 //        getCommand("pet").setExecutor(new Pet(this));
 //        getCommand("powertool").setExecutor(new Powertool());
 //        getCommand("private").setExecutor(new Private(this));
         getCommand("promote").setExecutor(new PromoteCmd());
 //        getCommand("r").setExecutor(new R(this));
-//        getCommand("rain").setExecutor(new Rain(this));
+        getCommand("rain").setExecutor(new RainCmd());
 //        getCommand("region").setExecutor(new RegionCmd(this));
-//        getCommand("rules").setExecutor(new Rules(this));
+//        getCommand("rules").setExecutor(new RulesCmd());
 //        getCommand("scuba").setExecutor(new Scuba(this));
 //        getCommand("server").setExecutor(new Server(this));
-//        getCommand("setspawn").setExecutor(new SetSpawn(this));
+        getCommand("setspawn").setExecutor(new SetSpawnCmd());
         getCommand("setwarp").setExecutor(new SetWarpCmd());
 //        getCommand("shop").setExecutor(new Shop(this));
 //        getCommand("signs").setExecutor(new Signs(this));
 //        getCommand("sit").setExecutor(new Sit(this));
-//        getCommand("spawn").setExecutor(new Spawn(this));
+        getCommand("spawn").setExecutor(new SpawnCmd());
 //        getCommand("spawner").setExecutor(new Spawner(this));
 //        getCommand("stack").setExecutor(new Stack(this));
 //        getCommand("stats").setExecutor(new Stats(this));
-//        getCommand("storm").setExecutor(new Storm(this));
-//        getCommand("sun").setExecutor(new Sun(this));
+        getCommand("storm").setExecutor(new StormCmd());
+        getCommand("sun").setExecutor(new SunCmd());
 //        getCommand("swearjar").setExecutor(new Swearjar(this));
         getCommand("tp").setExecutor(new TPCmd());
 //        getCommand("tell").setExecutor(new Tell(this));
         getCommand("tgm").setExecutor(new TGMCmd());
 //        getCommand("unban").setExecutor(new UnBan(this));
-//        getCommand("unjail").setExecutor(new UnJail(this));
-//        getCommand("unnick").setExecutor(new UnNick(this));
+        getCommand("unjail").setExecutor(new UnJailCmd());
         getCommand("vip").setExecutor(new VIPCmd());
 //        getCommand("we").setExecutor(new WE(this));
         getCommand("warp").setExecutor(new WarpCmd());
@@ -427,7 +425,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the players map.
      * @return Players map.
      */
-    static public MatchableHashMap<ExtendedPlayer> getPlayers() {
+    static public MatchableHashMap<SaveablePlayer> getPlayers() {
         return (MatchableHashMap)players;
     }
 
@@ -512,10 +510,10 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     /**
-     * Grab the vips map.
-     * @return Vips map.
+     * Grab the VIPs map.
+     * @return VIPs map.
      */
-    static public MatchableHashMap<ExtendedPlayer> getVIPS() {
+    static public MatchableHashMap<SaveablePlayer> getVIPS() {
         return vips;
     }
 
@@ -523,7 +521,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the online players map.
      * @return Online players map.
      */
-    static public MatchableHashMap<ExtendedPlayer> getOnlinePlayers() {
+    static public MatchableHashMap<SaveablePlayer> getOnlinePlayers() {
         return onlinePlayers;
     }
 }

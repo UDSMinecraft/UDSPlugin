@@ -11,9 +11,9 @@ public class HealCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(1)) {
-            ExtendedPlayer target;
+            SaveablePlayer target;
             if(args.length == 0) {
                 player.setHealth(player.getMaxHealth());
                 player.setFoodLevel(20);

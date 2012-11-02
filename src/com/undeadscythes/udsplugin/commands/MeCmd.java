@@ -5,18 +5,18 @@ import org.apache.commons.lang.*;
 import org.bukkit.*;
 
 /**
- * Broadcast a server wide message.
+ * Send an action.
  * @author UndeadScythes
  */
-public class BroadcastCmd extends PlayerCommandExecutor {
+public class MeCmd extends PlayerCommandExecutor {
     /**
      * @inheritDocs
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreEq(1)) {
-            Bukkit.broadcastMessage(Color.BROADCAST + StringUtils.join(args, " "));
+        String action = StringUtils.join(args, " ");
+        if(argsMoreEq(1) && censor(action)) {
+            Bukkit.broadcastMessage(Color.TEXT + "*" + player.getDisplayName() + " " + action);
         }
     }
-
 }

@@ -6,7 +6,7 @@ package com.undeadscythes.udsplugin;
  */
 public enum Channel {
     /**
-     * Public chat, deafult.
+     * Public chat, default.
      */
     PUBLIC,
     /**

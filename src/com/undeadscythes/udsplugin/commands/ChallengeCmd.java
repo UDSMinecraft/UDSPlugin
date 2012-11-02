@@ -11,8 +11,8 @@ public class ChallengeCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
-        ExtendedPlayer target;
+    public void playerExecute(SaveablePlayer player, String[] args) {
+        SaveablePlayer target;
         int wager;
         if(notJailed() && argsEq(2) && (target = matchesPlayer(args[0])) != null && isOnline(target) && notJailed(target) && (wager = parseInt(args[1])) != -1 && canAfford(wager) && notBusy(target) && notDueling(target) && notSelf(target)) {
             UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.Type.PVP, wager, target));

@@ -3,6 +3,7 @@ package com.undeadscythes.udsplugin;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.logging.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -23,7 +24,7 @@ import org.bukkit.util.Vector;
  * An extension of Minecraft players adding various fields and methods.
  * @author UndeadScythes
  */
-public class ExtendedPlayer implements Saveable, Player {
+public class SaveablePlayer implements Saveable, Player {
     /**
     * A player rank granting permission.
     * @author UndeadScythes
@@ -121,17 +122,18 @@ public class ExtendedPlayer implements Saveable, Player {
     private boolean godMode = false;
     private boolean lockdownPass = false;
     private long lastDamageCaused = 0;
-    private ExtendedPlayer duel = null;
+    private SaveablePlayer duel = null;
     private Location checkPoint = null;
     private ChatRoom chatRoom = null;
     private HashSet<String> ignoredPlayers = new HashSet<String>();
     private Channel channel = Channel.PUBLIC;
+    private LinkedList<Long> lastChats = new LinkedList<Long>();
 
     /**
      * Initialise a brand new player extension.
      * @param player Player to connect to this extension.
      */
-    public ExtendedPlayer(Player player) {
+    public SaveablePlayer(Player player) {
         this.base = player;
         nick = player.getName();
     }
@@ -140,7 +142,7 @@ public class ExtendedPlayer implements Saveable, Player {
      * Initialise an extended player from a string record.
      * @param record A line from a save file.
      */
-    public ExtendedPlayer(String record) {
+    public SaveablePlayer(String record) {
         String[] recordSplit = record.split("\t");
         bounty = Integer.parseInt(recordSplit[1]);
         money = Integer.parseInt(recordSplit[2]);
@@ -183,6 +185,33 @@ public class ExtendedPlayer implements Saveable, Player {
         player.setDisplayName(nick);
     }
 
+    /**
+     * Get this players bail.
+     * @return This players bail.
+     */
+    public int getBail() {
+        return bail;
+    }
+
+    /**
+     * Update the chat times with a new value.
+     * @return <code>true</code> if chat events are not occurring too frequently, <code>false</code> otherwise.
+     */
+    public boolean newChat() {
+        if(lastChats.size() > 5) {
+            lastChats.removeFirst();
+        }
+        lastChats.offerLast(System.currentTimeMillis());
+        if(lastChats.getLast() - lastChats.getFirst() / lastChats.size() < 1500) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Construct an english reading string of the remaining VIP time.
+     * @return English reading string.
+     */
     public String getVIPTimeString() {
         String time = "";
         long timeLeft = Config.VIP_TIME - System.currentTimeMillis() - getVIPTime();
@@ -258,14 +287,18 @@ public class ExtendedPlayer implements Saveable, Player {
      * Take a player out of jail and perform all the necessary operations.
      * @throws IOException
      */
-    public void release() throws IOException {
+    public void release() {
         jailTime = 0;
         jailSentence = 0;
-        sendMessage(Message.JAIL_OUT);
         if(!quietTeleport(UDSPlugin.getWarps().get("jailout"))) {
-            BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
-            out.write(Message.NO_JAIL_OUT.toString());
-            out.close();
+            BufferedWriter out;
+            try {
+                out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
+                out.write(Message.NO_JAIL_OUT);
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(SaveablePlayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -278,7 +311,7 @@ public class ExtendedPlayer implements Saveable, Player {
         getWorld().strikeLightningEffect(getLocation());
         if(!quietTeleport(UDSPlugin.getWarps().get("jailin"))) {
             BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
-            out.write(Message.NO_JAIL_OUT.toString());
+            out.write(Message.NO_JAIL_OUT);
             out.close();
         }
         jailTime = System.currentTimeMillis();
@@ -724,14 +757,6 @@ public class ExtendedPlayer implements Saveable, Player {
     }
 
     /**
-     * Extra method to send custom messages.
-     * @param message Message to send.
-     */
-    public void sendMessage(Message message) {
-        base.sendMessage(message.toString());
-    }
-
-    /**
      * Check if this player has a permission.
      * @param perm The permission to check.
      * @return <code>true</code> if the player has the permission, <code>false</code> otherwise.
@@ -745,11 +770,12 @@ public class ExtendedPlayer implements Saveable, Player {
     }
 
     /**
-     * @inheritDoc
+     * Storage of nick name kept in extension for offline access.
+     * @param name Nick name to set.
      */
     @Override
     public void setDisplayName(String name) {
-        base.setDisplayName(name);
+        nick = name;
     }
 
     /**

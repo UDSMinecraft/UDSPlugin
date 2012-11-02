@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import java.io.*;
 import java.util.logging.*;
 import org.bukkit.*;
@@ -12,21 +12,25 @@ import org.bukkit.entity.*;
  */
 public class Timer implements Runnable {
     /**
+     * Number to divide to convert milliseconds to ticks.
+     */
+    public static final long TICKS = 50;
+    /**
      * The number of milliseconds in a day.
      */
-    public static long DAY = 86400000;
+    public static final long DAY = 86400000;
     /**
      * The number of milliseconds in an hour.
      */
-    public static long HOUR = 3600000;
+    public static final long HOUR = 3600000;
     /**
      * The number of milliseconds in a minute.
      */
-    public static long MINUTE = 60000;
+    public static final long MINUTE = 60000;
     /**
      * The number of milliseconds in a second.
      */
-    public static long SECOND = 1000;
+    public static final long SECOND = 1000;
 
     private long now = System.currentTimeMillis();
     private long lastSlow = System.currentTimeMillis();
@@ -45,9 +49,9 @@ public class Timer implements Runnable {
     @Override
     public void run() {
         now = System.currentTimeMillis();
-        if(UDSPlugin.LAST_DAILY_EVENT + DAY < now) {
+        if(UDSPlugin.lastDailyEvent + DAY < now) {
             dailyTask();
-            UDSPlugin.LAST_DAILY_EVENT = now;
+            UDSPlugin.lastDailyEvent = now;
         }
         if(lastSlow + Config.SLOW_TIME < now) {
             try {
@@ -57,11 +61,7 @@ public class Timer implements Runnable {
             }
             lastSlow = now;
         }
-        try {
-            fastTask();
-        } catch (IOException ex) {
-            Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        fastTask();
     }
 
     private void dailyTask() {
@@ -78,8 +78,8 @@ public class Timer implements Runnable {
                 }
             }
         }
-        Bukkit.broadcastMessage(Message.QUARRIES_FILLED.toString());
-        for(ExtendedPlayer vip : UDSPlugin.getVIPS().values()) {
+        Bukkit.broadcastMessage(Message.QUARRIES_FILLED);
+        for(SaveablePlayer vip : UDSPlugin.getVIPS().values()) {
             vip.setVIPSpawns(Config.VIP_SPAWNS);
             if(vip.isOnline()) {
                 vip.sendMessage(Message.SPAWNS_REFILLED);
@@ -89,18 +89,18 @@ public class Timer implements Runnable {
 
     private void slowTask() throws IOException {
         UDSPlugin.saveFiles();
-        if(UDSPlugin.LAST_ENDER_DEATH + Config.DRAGON_RESPAWN < now) {
+        if(UDSPlugin.lastEnderDeath + Config.DRAGON_RESPAWN < now) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
                     world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);
-                    Bukkit.broadcastMessage(Message.DRAGON_RESPAWN.toString());
+                    Bukkit.broadcastMessage(Message.DRAGON_RESPAWN);
                 }
             }
         }
     }
 
-    private void fastTask() throws IOException {
-        for(ExtendedPlayer player : UDSPlugin.getOnlinePlayers().values()) {
+    private void fastTask() {
+        for(SaveablePlayer player : UDSPlugin.getOnlinePlayers().values()) {
             if(player.getRank().equals(Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
                 player.setVIPTime(0);
                 player.setRank(Rank.MEMBER);
@@ -108,6 +108,7 @@ public class Timer implements Runnable {
             }
             if(player.isJailed() && player.getJailTime() + player.getJailSentence() < now) {
                 player.release();
+                player.sendMessage(Color.MESSAGE + "You have served your time.");
             }
             if(player.hasGodMode()) {
                 player.setFoodLevel(20);

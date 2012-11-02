@@ -13,7 +13,7 @@ import org.bukkit.inventory.*;
 public class BlockBreak implements Listener {
     @EventHandler
     public void onEvent(BlockBreakEvent event) {
-        ExtendedPlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
+        SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
         if(player.isJailed()) {
             event.setCancelled(true);
             player.sendMessage(Message.NOT_WHILE_IN_JAIL);

@@ -36,8 +36,8 @@ public class Request {
     }
 
     private Type type;
-    private ExtendedPlayer sender;
-    private ExtendedPlayer recipient;
+    private SaveablePlayer sender;
+    private SaveablePlayer recipient;
     private String data;
     private long time = System.currentTimeMillis();
 
@@ -48,7 +48,7 @@ public class Request {
      * @param type The request type.
      * @param data The request data, if any.
      */
-    public Request(ExtendedPlayer sender, Type type, String data, ExtendedPlayer recipient) {
+    public Request(SaveablePlayer sender, Type type, String data, SaveablePlayer recipient) {
         this.type = type;
         this.sender = sender;
         this.data = data;
@@ -62,7 +62,7 @@ public class Request {
      * @param type The request type.
      * @param data The request data, if any.
      */
-    public Request(ExtendedPlayer sender, Type type, int data, ExtendedPlayer recipient) {
+    public Request(SaveablePlayer sender, Type type, int data, SaveablePlayer recipient) {
         this.type = type;
         this.sender = sender;
         this.data = Integer.toString(data);
@@ -81,7 +81,7 @@ public class Request {
      * Get the player this request was sent to.
      * @return Request receiver.
      */
-    public ExtendedPlayer getSender() {
+    public SaveablePlayer getSender() {
         return sender;
     }
 
@@ -101,7 +101,7 @@ public class Request {
         return time;
     }
 
-    public ExtendedPlayer getRecipient() {
+    public SaveablePlayer getRecipient() {
         return recipient;
     }
 }

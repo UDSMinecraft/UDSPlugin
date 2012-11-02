@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import java.io.*;
 import org.bukkit.*;
@@ -15,29 +15,33 @@ public class AsyncPlayerChat implements Listener {
     @EventHandler
     public void onEvent(AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
-        ExtendedPlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
-        if(player.getChannel() == Channel.PUBLIC) {
+        SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        if(!player.newChat()) {
+            player.sendMessage(Color.ERROR + "You have been jailed for spamming chat.");
+            Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " gets jail time for spamming chat.");
+            player.jail(5, 1000);
+        } else if(player.getChannel() == Channel.PUBLIC) {
             if(Censor.censor(event.getMessage())) {
                 String message = player.getRank().color() + player.getDisplayName() + ": " + Color.TEXT + event.getMessage();
-                for(ExtendedPlayer target : UDSPlugin.getOnlinePlayers().values()) {
+                for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
                     if(!target.isIgnoringPlayer(player)) {
                         target.sendMessage(message);
                     }
                 }
             } else {
-                player.sendMessage(Message.BAD_LANGUAGE);
+                player.sendMessage(Color.ERROR + "Please do not use bad language.");
                 if(player.canAfford(1)) {
                     player.debit(1);
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " put 1 " + Config.CURRENCY + " in the swear jar.");
                 } else {
-                    player.sendMessage(Message.CANT_PAY_SWEARJAR);
+                    player.sendMessage(Color.ERROR + "You have no money to put in the swear jar.");
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " gets jail time for using bad language.");
                     player.jail(1, 1);
                 }
             }
         } else if(player.getChannel() == Channel.ADMIN) {
             String message = Rank.ADMIN.color() + "[ADMIN] " + player.getDisplayName() + ": " + event.getMessage();
-            for(ExtendedPlayer target : UDSPlugin.getOnlinePlayers().values()) {
+            for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
                 if(target.getRank().compareTo(Rank.MOD) >= 0) {
                     target.sendMessage(message);
                 }
@@ -46,7 +50,7 @@ public class AsyncPlayerChat implements Listener {
             Clan clan = UDSPlugin.getClans().get(player.getClan());
             if(clan != null) {
                 String message = Color.CLAN + "[" + clan.getName() + "] " + player.getDisplayName() + ": " + event.getMessage();
-                for(ExtendedPlayer target : clan.getOnlineMembers()) {
+                for(SaveablePlayer target : clan.getOnlineMembers()) {
                     target.sendMessage(message);
                 }
             } else {
@@ -55,7 +59,7 @@ public class AsyncPlayerChat implements Listener {
         } else if(player.getChannel() == Channel.PRIVATE) {
             ChatRoom chatRoom = player.getChatRoom();
             String message = Color.PRIVATE + "[" + chatRoom.getName() + "] " + player.getDisplayName() + ": " + event.getMessage();
-            for(ExtendedPlayer target : chatRoom.getOnlineMembers()) {
+            for(SaveablePlayer target : chatRoom.getOnlineMembers()) {
                 target.sendMessage(message);
             }
         }

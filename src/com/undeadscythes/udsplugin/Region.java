@@ -92,7 +92,7 @@ public class Region implements Saveable {
         name = recordSplit[0];
         v1 = getBlockPos(recordSplit[1]);
         v2 = getBlockPos(recordSplit[2]);
-        warp = (Location)(new ExtendedLocation(recordSplit[3]));
+        warp = (Location)(new LoadableLocation(recordSplit[3]));
         owner = recordSplit[4];
         members = new HashSet<String>(Arrays.asList(recordSplit[5].split(",")));
         data = recordSplit[5];
@@ -138,7 +138,7 @@ public class Region implements Saveable {
      * Place single corner markers around the region.
      */
     public void placeCornerMarkers() {
-        ExtendedWorld world = new ExtendedWorld(getWorld());
+        WEWorld world = new WEWorld(getWorld());
 
     }
 
@@ -146,7 +146,7 @@ public class Region implements Saveable {
      * Place 3 wide side markers around the region.
      */
     public void placeMoreMarkers() {
-        ExtendedWorld world = new ExtendedWorld(getWorld());
+        WEWorld world = new WEWorld(getWorld());
         world.buildLine(v1.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
         world.buildLine(v2.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
         world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v1.getBlockZ(), 0, 6, Material.FENCE, Material.TORCH);
@@ -157,7 +157,7 @@ public class Region implements Saveable {
      * Place 10 block high towers in each corner of the region.
      */
     public void placeTowers() {
-        ExtendedWorld world = new ExtendedWorld(getWorld());
+        WEWorld world = new WEWorld(getWorld());
         world.buildTower(v1.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
         world.buildTower(v1.getBlockX(), v2.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
         world.buildTower(v2.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);

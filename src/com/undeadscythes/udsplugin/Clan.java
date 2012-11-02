@@ -61,10 +61,10 @@ public class Clan implements Saveable {
      * Get members of the clan that are currently online.
      * @return Online members.
      */
-    public ArrayList<ExtendedPlayer> getOnlineMembers() {
-        ArrayList<ExtendedPlayer> onlineMembers = new ArrayList<ExtendedPlayer>();
+    public ArrayList<SaveablePlayer> getOnlineMembers() {
+        ArrayList<SaveablePlayer> onlineMembers = new ArrayList<SaveablePlayer>();
         for(String memberName : members) {
-            ExtendedPlayer member = UDSPlugin.getOnlinePlayers().get(memberName);
+            SaveablePlayer member = UDSPlugin.getOnlinePlayers().get(memberName);
             if(member != null) {
                 onlineMembers.add(member);
             }

@@ -12,7 +12,7 @@ public class CCmd extends PlayerCommandExecutor {
      * @inheritDoc
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(args.length == 0 && isInClan()) {
             if(player.toggleChannel(Channel.CLAN)) {
                 player.sendMessage(Message.CLAN_CHAT);

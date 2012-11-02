@@ -12,7 +12,7 @@ public class EnchantCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsMoreLessInc(0, 2)) {
             int level;
             Enchantment enchantment;
@@ -37,7 +37,7 @@ public class EnchantCmd extends PlayerCommandExecutor {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, ExtendedPlayer player) {
+    private void sendPage(int page, SaveablePlayer player) {
         Enchantment[] enchantments = Enchantment.values();
         int pages = (enchantments.length + 8) / 9;
         if(pages == 0) {

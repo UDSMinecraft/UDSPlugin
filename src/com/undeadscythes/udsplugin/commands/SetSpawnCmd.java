@@ -1,22 +1,20 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
 
 /**
- * Set the world the players is in to night.
+ * Set the spawn point of the current world.
  * @author UndeadScythes
  */
-public class NightCmd extends PlayerCommandExecutor {
+public class SetSpawnCmd extends PlayerCommandExecutor {
     /**
      * @inheritDocs
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsEq(0)) {
-            player.getWorld().setTime(14000);
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " summoned the moon.");
+            new WEWorld(player.getWorld()).setSpawnLocation(player.getLocation());
+            player.sendMessage(Color.MESSAGE + "Spawn location moved.");
         }
     }
-
 }

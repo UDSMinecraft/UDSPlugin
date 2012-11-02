@@ -11,9 +11,9 @@ public class TGMCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(1)) {
-            ExtendedPlayer target;
+            SaveablePlayer target;
             if(args.length == 0) {
                 player.sendMessage(Color.MESSAGE + "You now have creative mode " + (player.toggleGameMode() ? "en" : "dis") + "abled.");
             } else if(args.length == 1 && (target = matchesPlayer(args[0])) != null) {

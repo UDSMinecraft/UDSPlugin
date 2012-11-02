@@ -12,7 +12,7 @@ public class PlayerQuit implements Listener {
     @EventHandler
     public void onEvent(PlayerQuitEvent event) {
         String playerName = event.getPlayer().getName();
-        ExtendedPlayer player = UDSPlugin.getOnlinePlayers().get(playerName);
+        SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(playerName);
         event.setQuitMessage(Color.BROADCAST + player.getDisplayName() + (player.isInClan() ? " of " + player.getClan() : "") + " has left.");
         UDSPlugin.getOnlinePlayers().remove(playerName);
     }

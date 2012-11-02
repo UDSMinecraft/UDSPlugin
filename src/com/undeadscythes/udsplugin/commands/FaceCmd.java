@@ -12,12 +12,12 @@ public class FaceCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(1)) {
-            ExtendedLocation.Direction direction;
+            LoadableLocation.Direction direction;
             if(args.length == 0) {
-                player.sendMessage(Color.MESSAGE + "You are facing " + ExtendedLocation.Direction.valueOf(player.getLocation()).toString() + ".");
-            } else if((direction = ExtendedLocation.Direction.get(args[0])) != null) {
+                player.sendMessage(Color.MESSAGE + "You are facing " + LoadableLocation.Direction.valueOf(player.getLocation()).toString() + ".");
+            } else if((direction = LoadableLocation.Direction.get(args[0])) != null) {
                 Location location = player.getLocation();
                 location.setYaw(direction.getYaw());
                 player.teleport(location);

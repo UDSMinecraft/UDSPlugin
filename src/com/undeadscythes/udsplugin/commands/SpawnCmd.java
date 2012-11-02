@@ -3,15 +3,17 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Description.
+ * Teleport a player to spawn.
  * @author UndeadScythes
  */
-public class CheckCmd extends PlayerCommandExecutor {
+public class SpawnCmd extends PlayerCommandExecutor {
     /**
      * @inheritDocs
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        player.quietTeleport(player.getCheckPoint());
+        if(argsEq(0) && notPinned()) {
+            player.teleport(player.getWorld().getSpawnLocation());
+        }
     }
 }

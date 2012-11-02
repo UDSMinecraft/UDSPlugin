@@ -11,9 +11,9 @@ public class TPCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
-        ExtendedPlayer targetFrom;
-        ExtendedPlayer targetTo;
+    public void playerExecute(SaveablePlayer player, String[] args) {
+        SaveablePlayer targetFrom;
+        SaveablePlayer targetTo;
         if(argsMoreLessInc(1, 2)) {
             if(args.length == 1 && (targetTo = matchesPlayer(args[0])) != null && isOnline(targetTo) && notSelf(targetTo)) {
                 player.setBackPoint();

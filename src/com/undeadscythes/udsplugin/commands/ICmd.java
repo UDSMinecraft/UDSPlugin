@@ -12,7 +12,7 @@ public class ICmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsMoreLessInc(1, 2)) {
             ItemStack item;
             if((item = matchesItem(args[0])) != null) {
@@ -31,14 +31,14 @@ public class ICmd extends PlayerCommandExecutor {
                         item.setAmount(player.getVIPSpawns());
                     }
                     if(player.useVIPSpawns(item.getAmount()) == 0) {
-                        player.sendMessage(Message.USED_LAST_SPAWNS);
+                        player.sendMessage(Color.MESSAGE + "You have just used up your last spawns for today.");
                     }
                     player.getInventory().addItem(item);
                 } else {
-                    player.sendMessage(Message.ITEM_NOT_WHITELISTED);
+                    player.sendMessage(Color.ERROR + "Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");
                 }
             } else {
-                player.sendMessage(Message.OUT_OF_SPAWNS);
+                player.sendMessage(Color.ERROR + "You are out of spawns for today.");
             }
         }
     }

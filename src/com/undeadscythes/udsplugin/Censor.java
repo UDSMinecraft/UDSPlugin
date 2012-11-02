@@ -13,7 +13,7 @@ public class Censor {
      * @return <code>true</code> if the word was clean, <code>false</code> otherwise.
      */
     public static boolean censor(String string) {
-        String[] badWords = new String[]{"fuvg", "shpx", "phag", "avttre"};
+        String[] badWords = new String[]{"fuvg", "shpx", "phag", "avttre", "cnxv", "shpxre", "onfgneq", "obyybpxf", "nefrubyr", "juber", "gjng", "fbqqvat", "fcnfgvp", "jnaxre", "fynt", "cvffvat", "qvpx", "chffl", "funt"};
         for(String word : badWords) {
             if(string.toLowerCase().contains(rot13(word))) {
                 return false;

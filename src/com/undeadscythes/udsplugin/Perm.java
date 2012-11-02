@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 
 /**
  * Permissions to use within UDSPlugin.
@@ -32,13 +32,25 @@ public enum Perm {
     I_ADMIN(Rank.MOD, true),
     IGNORE(Rank.DEFAULT, true),
     JAIL(Rank.WARDEN, true),
+    KICK(Rank.MOD, true),
+    ME(Rank.DEFAULT, true),
     MONEY(Rank.DEFAULT, true),
     MONEY_OTHER(Rank.WARDEN, true),
     MONEY_ADMIN(Rank.MOD, true),
+    NICK(Rank.MEMBER, true),
+    NICK_OTHER(Rank.MOD, true),
     NIGHT(Rank.WARDEN, true),
+    PAYBAIL(Rank.DEFAULT, true),
     PROMOTE(Rank.MOD, true),
+    RAIN(Rank.WARDEN, true),
+    RULES(Rank.DEFAULT, true),
+    SETSPAWN(Rank.ADMIN, true),
     SETWARP(Rank.WARDEN, true),
+    SPAWN(Rank.DEFAULT, true),
+    STORM(Rank.WARDEN, true),
+    SUM(Rank.WARDEN, true),
     TGM(Rank.MOD, true),
+    UNJAIL(Rank.WARDEN, true),
     VIP(Rank.MEMBER, true),
     VIP_BUY(Rank.MEMBER, false),
     TP(Rank.MOD, true),

@@ -12,7 +12,7 @@ public class ButcherCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(1)) {
             boolean all = false;
             if(args.length == 1 && args[0].equals("a")) {

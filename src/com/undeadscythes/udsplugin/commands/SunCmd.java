@@ -1,22 +1,21 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
 
 /**
- * Set the world the players is in to night.
+ * Make it sunn yin the world.
  * @author UndeadScythes
  */
-public class NightCmd extends PlayerCommandExecutor {
+public class SunCmd extends PlayerCommandExecutor {
     /**
      * @inheritDocs
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsEq(0)) {
-            player.getWorld().setTime(14000);
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " summoned the moon.");
+            player.getWorld().setStorm(false);
+            player.getWorld().setThundering(false);
+            player.sendMessage(Color.MESSAGE + "Clear skies on the way.");
         }
     }
-
 }

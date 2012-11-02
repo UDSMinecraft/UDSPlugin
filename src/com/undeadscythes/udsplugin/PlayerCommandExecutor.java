@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.enchantments.*;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public abstract class PlayerCommandExecutor implements CommandExecutor {
-    private ExtendedPlayer player;
+    private SaveablePlayer player;
     private int argsLength;
 
     /**
@@ -72,7 +72,34 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(UDSPlugin.getWarps().get(warpName) == null) {
             return true;
         } else {
-            player.sendMessage(Message.WARP_EXISTS);
+            player.sendMessage(Color.ERROR + "A warp already exists called " + warpName + ".");
+            return false;
+        }
+    }
+
+    /**
+     * Check that the player is in jail.
+     * @return <code>true</code> if the player is in jail, <code>false</code> otherwise.
+     */
+    public boolean isJailed() {
+        if(player.isJailed()) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You are not in jail.");
+            return false;
+        }
+    }
+
+    /**
+     * Check that the player is in jail.
+     * @param target Player to check.
+     * @return <code>true</code> if the player is in jail, <code>false</code> otherwise.
+     */
+    public boolean isJailed(SaveablePlayer target) {
+        if(target.isJailed()) {
+            return true;
+        } else {
+            target.sendMessage(Color.ERROR + target.getDisplayName() + " is not in jail.");
             return false;
         }
     }
@@ -220,7 +247,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param target Player to check.
      * @return <code>true</code> if the player is not duelling, <code>false</code> otherwise.
      */
-    public boolean notDueling(ExtendedPlayer target) {
+    public boolean notDueling(SaveablePlayer target) {
         if(!target.isDuelling()) {
             return true;
         } else {
@@ -234,7 +261,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param target Target to check.
      * @return <code>true</code> if target and this player are distinct, <code>false</code> otherwise.
      */
-    public boolean notSelf(ExtendedPlayer target) {
+    public boolean notSelf(SaveablePlayer target) {
         if(!target.equals(player)) {
             return true;
         } else {
@@ -286,7 +313,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * Check that the target player is not in jail.
      * @return <code>true</code> if the target player is not in jail, <code>false</code> otherwise.
      */
-    public boolean notJailed(ExtendedPlayer target) {
+    public boolean notJailed(SaveablePlayer target) {
         if(!target.isJailed()) {
             return true;
         } else {
@@ -300,7 +327,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param target The player to check.
      * @return <code>true</code> if the target player has no requests pending, <code>false</code> otherwise.
      */
-    public boolean notBusy(ExtendedPlayer target) {
+    public boolean notBusy(SaveablePlayer target) {
         if(!UDSPlugin.getRequests().containsKey(target.getName())) {
             return true;
         } else {
@@ -314,7 +341,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param target Player to check.
      * @return <code>true</code> if the target player is not ignoring the command sender, <code>false</code> otherwise.
      */
-    public boolean notIgnored(ExtendedPlayer target) {
+    public boolean notIgnored(SaveablePlayer target) {
         if(!target.isIgnoringPlayer(player)) {
             return true;
         } else {
@@ -399,7 +426,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param target Player to check.
      * @return <code>true</code> if the player is online, <code>false</code> otherwise.
      */
-    public boolean isOnline(ExtendedPlayer target) {
+    public boolean isOnline(SaveablePlayer target) {
         if(target.isOnline()) {
             return true;
         } else {
@@ -413,12 +440,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param partial Partial player name.
      * @return The first player matched or <code>null</code> if no players matched.
      */
-    public ExtendedPlayer matchesPlayer(String partial) {
-        ExtendedPlayer target = UDSPlugin.getOnlinePlayers().get(partial);
+    public SaveablePlayer matchesPlayer(String partial) {
+        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(partial);
         if(target!= null) {
             return target;
         } else {
-            for(ExtendedPlayer test : UDSPlugin.getOnlinePlayers().values()) {
+            for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
                 if(test.getDisplayName().equals(partial)) {
                     return test;
                 }
@@ -430,7 +457,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                 if(target != null) {
                     return target;
                 } else {
-                    for(ExtendedPlayer test : UDSPlugin.getOnlinePlayers().values()) {
+                    for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
                         if(test.getDisplayName().matches(partial)) {
                             return test;
                         }
@@ -439,7 +466,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                     if(target != null) {
                         return target;
                     } else {
-                        for(ExtendedPlayer test : UDSPlugin.getPlayers().values()) {
+                        for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
                             if(test.getDisplayName().equals(partial)) {
                                 return test;
                             }
@@ -448,7 +475,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                         if(target != null) {
                             return target;
                         } else {
-                            for(ExtendedPlayer test : UDSPlugin.getPlayers().values()) {
+                            for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
                                 if(test.getDisplayName().matches(partial)) {
                                     return test;
                                 }
@@ -515,5 +542,5 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param player Player who ran the command.
      * @param args Arguements of the command.
      */
-    public abstract void playerExecute(ExtendedPlayer player, String[] args);
+    public abstract void playerExecute(SaveablePlayer player, String[] args);
 }

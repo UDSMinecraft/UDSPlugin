@@ -13,10 +13,10 @@ public class BountyCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(2)) {
             int bounty;
-            ExtendedPlayer target;
+            SaveablePlayer target;
             if(args.length == 0) {
                 sendPage(1, player);
             } else if(args.length == 1) {
@@ -37,7 +37,7 @@ public class BountyCmd extends PlayerCommandExecutor {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, ExtendedPlayer player) {
+    private void sendPage(int page, SaveablePlayer player) {
         TreeMap<Integer, String> bounties = getBounties();
         int pages = (bounties.size() + 8) / 9;
         if(pages == 0) {
@@ -65,7 +65,7 @@ public class BountyCmd extends PlayerCommandExecutor {
      */
     private TreeMap<Integer, String> getBounties() {
         TreeMap<Integer, String> bounties = new TreeMap<Integer, String>();
-        for(ExtendedPlayer player : UDSPlugin.getPlayers().values()) {
+        for(SaveablePlayer player : UDSPlugin.getPlayers().values()) {
             if(player.getBounty() > 0) {
                 bounties.put(player.getBounty(), player.getDisplayName());
             }

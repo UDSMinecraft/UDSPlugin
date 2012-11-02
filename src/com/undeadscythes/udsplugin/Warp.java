@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -41,7 +41,7 @@ public class Warp implements Saveable {
     public Warp(String record) {
         String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        location = new ExtendedLocation(recordSplit[1]);
+        location = new LoadableLocation(recordSplit[1]);
         rank = Rank.valueOf(recordSplit[2]);
         price = Integer.parseInt(recordSplit[3]);
     }

@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
@@ -15,28 +15,28 @@ public class PlayerJoin implements Listener {
     @EventHandler
     public void onEvent(PlayerJoinEvent event) {
         String playerName = event.getPlayer().getName();
-        ExtendedPlayer player;
+        SaveablePlayer player;
         if(UDSPlugin.getPlayers().containsKey(playerName)) {
             player = UDSPlugin.getPlayers().get(playerName);
             player.wrapPlayer(event.getPlayer());
             UDSPlugin.getOnlinePlayers().put(playerName, player);
         } else {
-            player = new ExtendedPlayer(event.getPlayer());
+            player = new SaveablePlayer(event.getPlayer());
             UDSPlugin.getPlayers().put(playerName, player);
             UDSPlugin.getOnlinePlayers().put(playerName, player);
             if(player.getName().equals(Config.SERVER_OWNER)) {
                 player.setRank(Rank.OWNER);
                 player.sendMessage(Message.OWNER_FIRST_LOG);
             } else {
-                Bukkit.broadcastMessage(Message.NEW_PLAYER.toString());
-                for(ExtendedPlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
+                Bukkit.broadcastMessage(Message.NEW_PLAYER);
+                for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
                     onlinePlayer.giveAndDrop(new ItemStack(Config.WELCOME_GIFT));
                 }
             }
             player.quietTeleport(UDSPlugin.getWarps().get("spawn"));
         }
         if(UDSPlugin.serverInLockdown && !player.hasLockdownPass()) {
-            player.kickPlayer(Message.SERVER_LOCKDOWN.toString());
+            player.kickPlayer(Message.SERVER_LOCKDOWN);
         } else {
             player.sendMessage(Color.MESSAGE + Config.WELCOME);
             if(player.getRank().equals(Rank.DEFAULT)) {

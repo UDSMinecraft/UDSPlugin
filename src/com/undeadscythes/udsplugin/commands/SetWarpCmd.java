@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -12,7 +12,7 @@ public class SetWarpCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsMoreLessInc(1, 3)) {
             Rank rank;
             int price;

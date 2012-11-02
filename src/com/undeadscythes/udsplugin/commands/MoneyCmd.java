@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
 
@@ -13,8 +13,8 @@ public class MoneyCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
-        ExtendedPlayer target;
+    public void playerExecute(SaveablePlayer player, String[] args) {
+        SaveablePlayer target;
         if(argsMoreLessInc(0, 3)) {
             if(args.length == 0) {
                 player.sendMessage(Color.MESSAGE + "You have " + player.getMoney() + " credits.");
@@ -30,10 +30,10 @@ public class MoneyCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.ITEM + "Clan base cost: " + Color.TEXT + Config.BASE_COST + " " + Config.CURRENCIES);
                     player.sendMessage(Color.ITEM + "City cost: " + Color.TEXT + Config.CITY_COST + " " + Config.CURRENCIES);
                 } else if(args[0].equals("rank")) {
-                    ArrayList<ExtendedPlayer> players = UDSPlugin.getPlayers().getSortedValues(new SortByMoney());
+                    ArrayList<SaveablePlayer> players = UDSPlugin.getPlayers().getSortedValues(new SortByMoney());
                     int printed = 0;
                     int rank = 0;
-                    for(ExtendedPlayer ranker : players) {
+                    for(SaveablePlayer ranker : players) {
                         if(ranker.getRank().compareTo(Rank.MOD) < 0 && printed < 5) {
                             player.sendMessage(Color.TEXT.toString() + (printed + 1) + ": " + ranker.getRank().color() + ranker.getDisplayName() + ", " + Color.TEXT + ranker.getMoney() + " " + Config.CURRENCIES);
                             printed++;
@@ -73,12 +73,12 @@ public class MoneyCmd extends PlayerCommandExecutor {
  * Compare players by money.
  * @author UndeadScythe
  */
-class SortByMoney implements Comparator<ExtendedPlayer> {
+class SortByMoney implements Comparator<SaveablePlayer> {
     /**
      * @inheritDoc
      */
     @Override
-    public int compare(ExtendedPlayer player1, ExtendedPlayer player2) {
+    public int compare(SaveablePlayer player1, SaveablePlayer player2) {
         return player2.getMoney() - player1.getMoney();
     }
 }

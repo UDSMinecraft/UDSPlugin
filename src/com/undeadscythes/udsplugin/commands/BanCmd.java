@@ -13,10 +13,10 @@ public class BanCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
-        ExtendedPlayer target;
+    public void playerExecute(SaveablePlayer player, String[] args) {
+        SaveablePlayer target;
         if(argsMoreEq(1) && (target = matchesPlayer(args[0])) != null && notSelf(target)) {
-            String message = Message.BAN.toString();
+            String message = Message.BAN;
             if(args.length > 1) {
                 message = StringUtils.join(args, " ", 1, args.length - 1);
             }

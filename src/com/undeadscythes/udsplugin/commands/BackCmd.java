@@ -11,7 +11,7 @@ public class BackCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsEq(0)) {
             if(!player.quietTeleport(player.getBack())) {
                 player.sendMessage(Message.BACK_FAIL);

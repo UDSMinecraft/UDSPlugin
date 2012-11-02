@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.ExtendedPlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
@@ -13,7 +13,7 @@ public class AcceptRulesCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(ExtendedPlayer player, String[] args) {
+    public void playerExecute(SaveablePlayer player, String[] args) {
         if(canAfford(Config.BUILD_COST) && argsEq(0)) {
             player.setRank(Rank.MEMBER);
             player.debit(Config.BUILD_COST);
