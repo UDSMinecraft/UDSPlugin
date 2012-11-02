@@ -105,6 +105,7 @@ public class Config {
      * Message to send to mods+ on log on.
      */
     public static String WELCOME_ADMIN;
+    public static ArrayList<String> KITS;
 
     /**
      * Load the online 'easy-access' config class with values from the file on disk.
@@ -135,5 +136,6 @@ public class Config {
         CLAN_COST = config.getInt("cost.clan");
         BASE_COST = config.getInt("cost.base");
         WHITELIST = new ArrayList<Integer>(config.getIntegerList("item-whitelist"));
+        KITS = new ArrayList<String>(config.getStringList("kits"));
     }
 }

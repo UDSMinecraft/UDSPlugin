@@ -20,7 +20,7 @@ public class CityCmd extends PlayerCommandExecutor {
             if(args.length == 1) {
                 if(args[0].equals("set") && (city = inRegion()).getType() == Region.Type.CITY && mayor(city.getName()) != null) {
                     city.setWarp(player.getLocation());
-                    player.sendMessage(Message.WARP_SET);
+                    player.sendMessage(Color.MESSAGE + "City spawn point set.");
                 } else if(args[0].equals("list")) {
                     sendPage(1, player);
                 }
@@ -36,7 +36,7 @@ public class CityCmd extends PlayerCommandExecutor {
                         UDSPlugin.getCities().put(args[1], city);
                         city.placeMoreMarkers();
                         city.placeTowers();
-                        player.sendMessage(Message.NEW_CITY);
+                        player.sendMessage(Color.MESSAGE + "City founded.");
                         Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " has just founded " + args[1] + ".");
                     }
                 } else if(args[0].equals("leave") && (city = matchesCity(args[1])) != null) {

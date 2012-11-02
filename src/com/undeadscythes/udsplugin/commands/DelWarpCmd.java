@@ -15,7 +15,7 @@ public class DelWarpCmd extends PlayerCommandExecutor {
         Warp warp;
         if(argsEq(1) && (warp = matchesWarp(args[0])) != null) {
             UDSPlugin.getWarps().remove(warp.getName());
-            player.sendMessage(Message.WARP_REMOVED);
+            player.sendMessage(Color.MESSAGE + "Warp removed.");
         }
     }
 

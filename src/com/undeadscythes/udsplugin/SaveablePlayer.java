@@ -294,7 +294,7 @@ public class SaveablePlayer implements Saveable, Player {
             BufferedWriter out;
             try {
                 out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
-                out.write(Message.NO_JAIL_OUT);
+                out.write("No jail out warp point has been placed. Use '/setwarp jailout' to do this.");
                 out.close();
             } catch (IOException ex) {
                 Logger.getLogger(SaveablePlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -311,7 +311,7 @@ public class SaveablePlayer implements Saveable, Player {
         getWorld().strikeLightningEffect(getLocation());
         if(!quietTeleport(UDSPlugin.getWarps().get("jailin"))) {
             BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
-            out.write(Message.NO_JAIL_OUT);
+            out.write("No jail in warp point has been placed. Use '/setwarp jailin' to do this.");
             out.close();
         }
         jailTime = System.currentTimeMillis();

@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import org.bukkit.*;
 
 /**
@@ -18,7 +18,7 @@ public class AcceptRulesCmd extends PlayerCommandExecutor {
             player.setRank(Rank.MEMBER);
             player.debit(Config.BUILD_COST);
             Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " has accepted the rules.");
-            player.sendMessage(Message.ACCEPT_RULES);
+            player.sendMessage(Color.MESSAGE + "Thanks for accepting the rules, enjoy your stay on " + Bukkit.getServerName() + ".");
         }
     }
 

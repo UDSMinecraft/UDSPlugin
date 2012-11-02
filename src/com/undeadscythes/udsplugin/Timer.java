@@ -78,11 +78,11 @@ public class Timer implements Runnable {
                 }
             }
         }
-        Bukkit.broadcastMessage(Message.QUARRIES_FILLED);
+        Bukkit.broadcastMessage(Color.BROADCAST + "The quarries have been refilled.");
         for(SaveablePlayer vip : UDSPlugin.getVIPS().values()) {
             vip.setVIPSpawns(Config.VIP_SPAWNS);
             if(vip.isOnline()) {
-                vip.sendMessage(Message.SPAWNS_REFILLED);
+                vip.sendMessage(Color.MESSAGE + "Your daily item spawns have been refilled.");
             }
         }
     }
@@ -93,7 +93,7 @@ public class Timer implements Runnable {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
                     world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);
-                    Bukkit.broadcastMessage(Message.DRAGON_RESPAWN);
+                    Bukkit.broadcastMessage(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End.");
                 }
             }
         }
@@ -104,7 +104,7 @@ public class Timer implements Runnable {
             if(player.getRank().equals(Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
                 player.setVIPTime(0);
                 player.setRank(Rank.MEMBER);
-                player.sendMessage(Message.VIP_END);
+                player.sendMessage(Color.MESSAGE + "Your time as a VIP has come to an end.");
             }
             if(player.isJailed() && player.getJailTime() + player.getJailSentence() < now) {
                 player.release();
@@ -117,13 +117,13 @@ public class Timer implements Runnable {
             if(distanceSq - worldBorderSq > 100) {
                 double ratio = worldBorderSq / distanceSq;
                 player.move(Warp.findSafePlace(player.getWorld(), player.getLocation().getX() * ratio, player.getLocation().getZ() * ratio));
-                player.sendMessage(Message.WORLD_BORDER);
+                player.sendMessage(Color.MESSAGE + "You have reached the edge of the currently explorable world.");
             }
 
         }
         for(Request request : UDSPlugin.getRequests().values()) {
             if(request.getTime() + Config.REQUEST_TIME < now) {
-                request.getSender().sendMessage(Message.REQUEST_TIMEOUT);
+                request.getSender().sendMessage(Color.MESSAGE + "Your request has timed out.");
                 UDSPlugin.getRequests().remove(request.getRecipient().getName());
             }
         }

@@ -22,7 +22,7 @@ public class BlockBreak implements Listener {
             player.sendMessage(Message.CANT_BUILD_HERE);
         } else if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST) && !player.isSneaking()) {
             event.setCancelled(true);
-            player.sendMessage(Message.SNEAK_TO_BREAK);
+            player.sendMessage(Color.ERROR + "Sneak while punching if you want to break this block.");
         } else if(event.getBlock().getType().equals(Material.MOB_SPAWNER)) {
             player.getWorld().dropItemNaturally(event.getBlock().getLocation().add(UDSPlugin.HALF_BLOCK), new ItemStack(Material.MOB_SPAWNER));
             event.setExpToDrop(Config.SPAWNER_EXP);

@@ -26,9 +26,9 @@ public class PlayerJoin implements Listener {
             UDSPlugin.getOnlinePlayers().put(playerName, player);
             if(player.getName().equals(Config.SERVER_OWNER)) {
                 player.setRank(Rank.OWNER);
-                player.sendMessage(Message.OWNER_FIRST_LOG);
+                player.sendMessage(ChatColor.GOLD + "Welcome to your new server, I hope everything goes well.");
             } else {
-                Bukkit.broadcastMessage(Message.NEW_PLAYER);
+                Bukkit.broadcastMessage(Color.BROADCAST + "A new player, free gifts for everyone!");
                 for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
                     onlinePlayer.giveAndDrop(new ItemStack(Config.WELCOME_GIFT));
                 }
@@ -36,13 +36,13 @@ public class PlayerJoin implements Listener {
             player.quietTeleport(UDSPlugin.getWarps().get("spawn"));
         }
         if(UDSPlugin.serverInLockdown && !player.hasLockdownPass()) {
-            player.kickPlayer(Message.SERVER_LOCKDOWN);
+            player.kickPlayer("The server is currently in lockdown please check back later.");
         } else {
             player.sendMessage(Color.MESSAGE + Config.WELCOME);
             if(player.getRank().equals(Rank.DEFAULT)) {
                 player.sendMessage(Color.MESSAGE + "Kill monsters or trade with players to earn " + Config.BUILD_COST + " credits then type /acceptrules in chat.");
             } else if(player.getRank().compareTo(Rank.MOD) >= 0) {
-                player.sendMessage(Config.WELCOME_ADMIN);
+                player.sendMessage(Color.MESSAGE + "As a member of staff be polite helpful and lead by example.");
             }
             event.setJoinMessage(Color.BROADCAST + player.getDisplayName() + (player.isInClan() ? " of " + player.getClan() : "") + " has joined.");
         }

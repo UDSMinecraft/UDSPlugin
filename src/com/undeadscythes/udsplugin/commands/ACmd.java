@@ -15,7 +15,7 @@ public class ACmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(args.length == 0) {
             if(player.toggleChannel(Channel.ADMIN)) {
-                player.sendMessage(Message.ADMIN_CHAT);
+                player.sendMessage(Color.MESSAGE + "You are now talking in admin chat.");
             } else {
                 player.sendMessage(Message.PUBLIC_CHAT);
             }

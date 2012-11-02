@@ -251,7 +251,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(!target.isDuelling()) {
             return true;
         } else {
-            player.sendMessage(Message.PLAYER_DUELING);
+            player.sendMessage(Color.MESSAGE + "That player is already dueling someone else.");
             return false;
         }
     }

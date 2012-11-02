@@ -15,7 +15,7 @@ public class CCmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(args.length == 0 && isInClan()) {
             if(player.toggleChannel(Channel.CLAN)) {
-                player.sendMessage(Message.CLAN_CHAT);
+                player.sendMessage(Color.MESSAGE + "You are now talking in clan chat.");
             } else {
                 player.sendMessage(Message.PUBLIC_CHAT);
             }

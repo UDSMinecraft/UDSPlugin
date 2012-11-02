@@ -1,7 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import org.bukkit.*;
-
 /**
  * Messages commonly used in the plugin.
  * @author UndeadScythes
@@ -48,10 +46,6 @@ public class Message {
      */
     public static final String NOT_MAYOR = Color.ERROR + "You are not the mayor of that city.";
     /**
-     * City founded.
-     */
-    public static final String NEW_CITY = Color.MESSAGE + "City founded.";
-    /**
      * A protected area already exists with that name.
      */
     public static final String REGION_EXISTS = Color.ERROR + "A protected area already exists with that name.";
@@ -60,21 +54,9 @@ public class Message {
      */
     public static final String REGION_HAS_OVERLAP = Color.ERROR + "You cannot do that here, you are too close to another protected area.";
     /**
-     * That player is already dueling someone else.
-     */
-    public static final String PLAYER_DUELING = Color.MESSAGE + "That player is already dueling someone else.";
-    /**
-     * The Ender Dragon has regained his strength and awaits brave warriors in The End.
-     */
-    public static final String DRAGON_RESPAWN = Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End.";
-    /**
      * You have not entered a valid rank.
      */
     public static final String NOT_A_RANK = Color.ERROR + "You have not entered a valid rank.";
-    /**
-     * Warp point set.
-     */
-    public static final String WARP_SET = Color.MESSAGE + "Warp point set.";
     /**
      * You can't use bad words here.
      */
@@ -87,14 +69,6 @@ public class Message {
      * You must be in a clan to do that.
      */
     public static final String NOT_IN_CLAN = Color.ERROR + "You must be in a clan to do that.";
-    /**
-     * Welcome to your new server, I hope everything goes well.
-     */
-    public static final String OWNER_FIRST_LOG = ChatColor.GOLD + "Welcome to your new server, I hope everything goes well.";
-    /**
-     * Sneak while punching if you want to break this block.
-     */
-    public static final String SNEAK_TO_BREAK = Color.ERROR + "Sneak while punching if you want to break this block.";
     /**
      * You can't build here.
      */
@@ -136,57 +110,9 @@ public class Message {
      */
     public static final String NO_PAGE = Color.ERROR + "That page number is out of range.";
     /**
-     * There are no bounties to collect.
-     */
-    public static final String NO_BOUNTIES = Color.MESSAGE + "There are no bounties to collect.";
-    /**
      * That warp point does not exist.
      */
     public static final String NO_WARP = Color.ERROR + "That warp point does not exist.";
-    /**
-     * As a member of staff be polite helpful and lead by example.
-     */
-    public static final String ADMIN_WELCOME = Color.MESSAGE + "As a member of staff be polite helpful and lead by example.";
-    /**
-     * The server is currently in lockdown please check back later.
-     */
-    public static final String SERVER_LOCKDOWN = "The server is currently in lockdown please check back later.";
-    /**
-     * No jail out warp point has been placed. Use '/setwarp jailout' to do this.
-     */
-    public static final String NO_JAIL_OUT = "No jail out warp point has been placed. Use '/setwarp jailout' to do this.";
-    /**
-     * A new player, free gifts for everyone!
-     */
-    public static final String NEW_PLAYER = Color.BROADCAST + "A new player, free gifts for everyone!";
-    /**
-     * You are now talking in clan chat.
-     */
-    public static final String CLAN_CHAT = Color.MESSAGE + "You are now talking in clan chat.";
-    /**
-     * Your request has timed out.
-     */
-    public static final String REQUEST_TIMEOUT = Color.MESSAGE + "Your request has timed out.";
-    /**
-     * You have reached the edge of the currently explorable world.
-     */
-    public static final String WORLD_BORDER = Color.MESSAGE + "You have reached the edge of the currently explorable world.";
-    /**
-     * Your time as a VIP has come to an end.
-     */
-    public static final String VIP_END = Color.MESSAGE + "Your time as a VIP has come to an end.";
-    /**
-     * Your daily item spawns have been refilled.
-     */
-    public static final String SPAWNS_REFILLED = Color.MESSAGE + "Your daily item spawns have been refilled.";
-    /**
-     * The quarries have been refilled.
-     */
-    public static final String QUARRIES_FILLED = Color.BROADCAST + "The quarries have been refilled.";
-    /**
-     * You have been banned for breaking the rules.
-     */
-    public static final String BAN = "You have been banned for breaking the rules.";
     /**
      * Cannot find that player.
      */
@@ -200,17 +126,9 @@ public class Message {
      */
     public static final String PLAYER_NOT_ONLINE = Color.ERROR + "That player is not online.";
     /**
-     * You can't teleport back at this time.
-     */
-    public static final String BACK_FAIL = Color.ERROR + "You can't teleport back at this time.";
-    /**
      * You do not have enough money to do that.
      */
     public static final String CANT_AFFORD = Color.ERROR + "You do not have enough money to do that.";
-    /**
-     * Thanks for accepting the rules, enjoy your stay in Minecraftopia.
-     */
-    public static final String ACCEPT_RULES = Color.MESSAGE + "Thanks for accepting the rules, enjoy your stay in Minecraftopia.";
     /**
      * You do not have permission to do that.
      */
@@ -219,16 +137,4 @@ public class Message {
      * You are now talking in public chat.
      */
     public static final String PUBLIC_CHAT = Color.MESSAGE + "You are now talking in public chat.";
-    /**
-     * You are now talking in admin chat.
-     */
-    public static final String ADMIN_CHAT = Color.MESSAGE + "You are now talking in admin chat.";
-    /**
-     * Warp removed.
-     */
-    public static final String WARP_REMOVED = Color.MESSAGE + "Warp removed.";
-    /**
-     * You have been healed.
-     */
-    public static final String HEALED = Color.MESSAGE + "You have been healed.";
 }

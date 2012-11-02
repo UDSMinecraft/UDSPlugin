@@ -33,6 +33,7 @@ public enum Perm {
     IGNORE(Rank.DEFAULT, true),
     JAIL(Rank.WARDEN, true),
     KICK(Rank.MOD, true),
+    KIT(Rank.DEFAULT, true),
     ME(Rank.DEFAULT, true),
     MONEY(Rank.DEFAULT, true),
     MONEY_OTHER(Rank.WARDEN, true),

@@ -41,7 +41,7 @@ public class BountyCmd extends PlayerCommandExecutor {
         TreeMap<Integer, String> bounties = getBounties();
         int pages = (bounties.size() + 8) / 9;
         if(pages == 0) {
-            player.sendMessage(Message.NO_BOUNTIES);
+            player.sendMessage(Color.MESSAGE + "There are no bounties to collect.");
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {
