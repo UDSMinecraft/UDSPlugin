@@ -7,6 +7,12 @@ import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
  * @author UndeadScythes
  */
 public enum Perm {
+    WE_VIP(Rank.VIP, false),
+    CHAT_HELP(Rank.DEFAULT, true),
+    ADMIN_HELP(Rank.ADMIN, true),
+    MOD_HELP(Rank.MOD, true),
+    WARDEN_HELP(Rank.WARDEN, true),
+    VIP_HELP(Rank.VIP, true),
     A(Rank.MOD, true),
     ACCEPTRULES(Rank.DEFAULT, false),
     BACK(Rank.MEMBER, true),
