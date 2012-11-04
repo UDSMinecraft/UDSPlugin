@@ -128,6 +128,8 @@ public class SaveablePlayer implements Saveable, Player {
     private HashSet<String> ignoredPlayers = new HashSet<String>();
     private Channel channel = Channel.PUBLIC;
     private LinkedList<Long> lastChats = new LinkedList<Long>();
+    private ItemStack[] inventoryCopy = null;
+    private ItemStack[] armorCopy = null;
 
     /**
      * Initialise a brand new player extension.
@@ -183,6 +185,44 @@ public class SaveablePlayer implements Saveable, Player {
     public void wrapPlayer(Player player) {
         this.base = player;
         player.setDisplayName(nick);
+    }
+
+    /**
+     * Get the players saved inventory.
+     * @return The players saved inventory, <code>null</code> if none exists.
+     */
+    public ItemStack[] getInventoryCopy() {
+        return inventoryCopy;
+    }
+
+    /**
+     * Save this players inventory for later retrieval.
+     */
+    public void saveInventory() {
+        inventoryCopy = getInventory().getContents();
+    }
+
+    /**
+     * Load this players armor.
+     */
+    public void loadArmor() {
+        getInventory().setArmorContents(armorCopy);
+        armorCopy = null;
+    }
+
+    /**
+     * Load this players inventory.
+     */
+    public void loadInventory() {
+        getInventory().setContents(inventoryCopy);
+        inventoryCopy = null;
+    }
+
+    /**
+     * Save this players armor for later retrieval.
+     */
+    public void saveArmor() {
+        armorCopy = getInventory().getArmorContents();
     }
 
     /**

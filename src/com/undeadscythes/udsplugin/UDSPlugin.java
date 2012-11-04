@@ -250,7 +250,7 @@ public class UDSPlugin extends JavaPlugin {
 //        getCommand("home").setExecutor(new HomeCmd());
         getCommand("i").setExecutor(new ICmd());
         getCommand("ignore").setExecutor(new IgnoreCmd());
-//        getCommand("invsee").setExecutor(new InvSeeCmd());
+        getCommand("invsee").setExecutor(new InvSeeCmd());
         getCommand("jail").setExecutor(new JailCmd());
         getCommand("kick").setExecutor(new KickCmd());
         getCommand("kit").setExecutor(new KitCmd());
