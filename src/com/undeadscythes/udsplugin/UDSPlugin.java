@@ -246,7 +246,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("gift").setExecutor(new GiftCmd());
         getCommand("god").setExecutor(new GodCmd());
         getCommand("heal").setExecutor(new HealCmd());
-//        getCommand("help").setExecutor(new HelpCmd());
+        getCommand("help").setExecutor(new HelpCmd());
 //        getCommand("home").setExecutor(new HomeCmd());
         getCommand("i").setExecutor(new ICmd());
         getCommand("ignore").setExecutor(new IgnoreCmd());
@@ -295,7 +295,7 @@ public class UDSPlugin extends JavaPlugin {
 //        getCommand("where").setExecutor(new WhereCmd());
         getCommand("who").setExecutor(new WhoCmd());
         getCommand("whois").setExecutor(new WhoIsCmd());
-//        getCommand("xp").setExecutor(new XPCmd());
+        getCommand("xp").setExecutor(new XPCmd());
 //        getCommand("y").setExecutor(new YCmd());
     }
 
