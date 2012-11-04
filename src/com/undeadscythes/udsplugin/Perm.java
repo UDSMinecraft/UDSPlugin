@@ -70,7 +70,7 @@ public enum Perm {
     STACK(Rank.DEFAULT, true),
     STATS(Rank.DEFAULT, true),
     STORM(Rank.WARDEN, true),
-    SUM(Rank.WARDEN, true),
+    SUN(Rank.WARDEN, true),
     TP(Rank.MOD, true),
     TELL(Rank.DEFAULT, true),
     TGM(Rank.MOD, true),
