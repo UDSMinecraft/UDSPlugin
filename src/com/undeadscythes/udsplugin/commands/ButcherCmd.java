@@ -15,7 +15,7 @@ public class ButcherCmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(1)) {
             boolean all = false;
-            if(args.length == 1 && args[0].equals("a")) {
+            if(args.length == 1 && (args[0].equals("a") || args[0].equals("all"))) {
                 all = true;
             }
             int count = 0;
