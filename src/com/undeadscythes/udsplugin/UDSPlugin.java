@@ -237,7 +237,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("check").setExecutor(new CheckCmd());
         getCommand("ci").setExecutor(new CiCmd());
         getCommand("city").setExecutor(new CityCmd());
-//        getCommand("clan").setExecutor(new ClanCmd());
+        getCommand("clan").setExecutor(new ClanCmd());
         getCommand("day").setExecutor(new DayCmd());
         getCommand("delwarp").setExecutor(new DelWarpCmd());
         getCommand("demote").setExecutor(new DemoteCmd());

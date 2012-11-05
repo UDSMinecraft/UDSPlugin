@@ -195,6 +195,10 @@ public class SaveablePlayer implements Saveable, Player {
         return inventoryCopy;
     }
 
+    public void setClan(String clan) {
+        this.clan = clan;
+    }
+
     /**
      * Save this players inventory for later retrieval.
      */

@@ -72,6 +72,25 @@ public class Clan implements Saveable {
         return onlineMembers;
     }
 
+    public ArrayList<String> getMembers() {
+        return members;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void rename(String name) {
+        this.name = name;
+        for(String member : members) {
+            UDSPlugin.getPlayers().get(member).setClan(name);
+        }
+    }
+
     /**
      * Gets the name of the clan.
      * @return Name of the clan.
@@ -157,7 +176,26 @@ public class Clan implements Saveable {
      * Remove a member from the clan.
      * @param name Player name.
      */
-    public void delMember(String name) {
+    public boolean delMember(String name) {
         members.remove(name);
+        if(leader.equals(name)) {
+            if(members.isEmpty()) {
+                return false;
+            } else {
+                leader = members.get(0);
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public void sendMessage(String message) {
+        for(String memberName : members) {
+            SaveablePlayer member;
+            if((member = UDSPlugin.getOnlinePlayers().get(memberName)) != null) {
+                member.sendMessage(Color.CLAN + "[" + name + "] " + message);
+            }
+        }
     }
 }

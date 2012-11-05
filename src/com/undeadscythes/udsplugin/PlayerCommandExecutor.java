@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin;
 
 import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
+import java.util.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.enchantments.*;
@@ -27,7 +28,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                 return true;
             }
             argsLength = args.length;
-            playerExecute(player, args);
+            ArrayList<String> lowArgs = new ArrayList<String>();
+            for(String arg : args) {
+                lowArgs.add(arg.toLowerCase());
+            }
+            playerExecute(player, lowArgs.toArray(new String[lowArgs.size()]));
             return true;
         } else {
             return false;
@@ -45,6 +50,90 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return rank;
         } else {
             player.sendMessage(Message.NOT_A_RANK);
+            return null;
+        }
+    }
+
+    public boolean noBase(Clan clan) {
+        if(!UDSPlugin.getBases().containsKey(clan.getName() + "base")) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "Your clan already has a base.");
+            return false;
+        }
+    }
+
+    public Clan matchesClan(String name) {
+        Clan clan;
+        if((clan = UDSPlugin.getClans().get(name)) != null) {
+            return clan;
+        } else {
+            player.sendMessage(Color.ERROR + "That clan does not exist.");
+            return null;
+        }
+    }
+
+    public boolean isClanless() {
+        if(player.getClan().equals("")) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You are already in a clan.");
+            return false;
+        }
+    }
+
+    public boolean isInClan(SaveablePlayer player, Clan clan) {
+        if(player.getClan().equals(clan.getName())) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "That player is not in your clan.");
+            return false;
+        }
+    }
+
+    public boolean noClan(String name) {
+        if(!UDSPlugin.getClans().containsKey(name)) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "A clan already exists with that name.");
+            return false;
+        }
+    }
+
+    public boolean isLeader(Clan clan) {
+        if(clan.getLeader().equals(player.getName())) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You must be clan leader to do this.");
+            return false;
+        }
+    }
+
+    /**
+     * Check that a player is in a clan.
+     * @return The player's clan or <code>null</code> if the player is clanless.
+     */
+    public Clan hasClan() {
+        Clan clan;
+        if((clan = UDSPlugin.getClans().get(player.getClan())) != null) {
+            return clan;
+        } else {
+            player.sendMessage(Color.ERROR + "You are not in a clan.");
+            return null;
+        }
+    }
+
+    /**
+     * Check if the players clan has a base.
+     * @param clan The players clan.
+     * @return The clan's base or <code>null</code> if the clan does not have a base.
+     */
+    public Region hasBase(Clan clan) {
+        Region region;
+        if((region = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
+            return region;
+        } else {
+            player.sendMessage(Color.ERROR + "Your clan does not have a base.");
             return null;
         }
     }

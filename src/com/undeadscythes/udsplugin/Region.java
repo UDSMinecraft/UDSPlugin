@@ -209,7 +209,7 @@ public class Region implements Saveable {
      * Change the name of the region.
      * @param name New name of the region.
      */
-    public void changeName(String name) {
+    public void rename(String name) {
         this.name = name;
     }
 
