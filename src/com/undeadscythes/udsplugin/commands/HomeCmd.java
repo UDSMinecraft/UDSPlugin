@@ -19,7 +19,7 @@ public class HomeCmd extends PlayerCommandExecutor {
             Region home;
             SaveablePlayer target;
             int price;
-            if(args.length == 0 && (home = hasHome()) != null) {
+            if(args.length == 0 && (home = hasHome()) != null && notJailed() && notPinned()) {
                 player.teleport(home.getWarp());
             } else if(args.length == 1) {
                 if(args[0].equals("make") && canAfford(Config.HOME_COST) && noHome()) {
@@ -70,7 +70,7 @@ public class HomeCmd extends PlayerCommandExecutor {
                     home.setFlag(Flag.LOCK_DOORS);
                     home.toggleFlag(Flag.LOCK_DOORS);
                     player.sendMessage(Color.MESSAGE + "Your home is now unlocked.");
-                } else if((target = matchesPlayer(args[0])) != null && (home = hasHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER))) {
+                } else if((target = matchesPlayer(args[0])) != null && (home = hasHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
                     player.teleport(home.getWarp());
                 }
             } else if(args.length == 2) {

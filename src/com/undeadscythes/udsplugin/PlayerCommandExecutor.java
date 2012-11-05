@@ -29,11 +29,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                     player.performCommand("help " + command.getName());
                 } else {
                     argsLength = args.length;
-                    ArrayList<String> lowArgs = new ArrayList<String>();
-                    for(String arg : args) {
-                        lowArgs.add(arg.toLowerCase());
-                    }
-                    playerExecute(player, lowArgs.toArray(new String[argsLength]));
+                    playerExecute(player, args);
                 }
             }
             return true;
@@ -53,6 +49,72 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return rank;
         } else {
             player.sendMessage(Color.ERROR + "You have not entered a valid rank.");
+            return null;
+        }
+    }
+
+    public boolean notAirHand() {
+        if(!player.getItemInHand().getType().equals(Material.AIR)) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You need an item in your hand.");
+            return false;
+        }
+    }
+
+    public UUID petSelected() {
+        UUID pet;
+        if((pet = player.getSelectedPet()) != null) {
+            return pet;
+        } else {
+            player.sendMessage(Color.ERROR + "You have no pet selected.");
+            return null;
+        }
+    }
+
+    public SaveablePlayer hasWhisper() {
+        SaveablePlayer target;
+        if((target = player.getWhisperer()) != null) {
+            return target;
+        } else {
+            player.sendMessage(Color.ERROR + "There is no one to send this message to.");
+            return null;
+        }
+    }
+
+    public boolean inChatRoom() {
+        if(player.getChatRoom() != null) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You are not in any private chat rooms.");
+            return false;
+        }
+    }
+
+    public boolean noShop() {
+        if(!UDSPlugin.getShops().containsKey(player.getName() + "shop")) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You already own a shop.");
+            return false;
+        }
+    }
+
+    public boolean isBanned(SaveablePlayer target) {
+        if(target.isBanned()) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "That player is not banned.");
+            return false;
+        }
+    }
+
+    public Request hasRequest() {
+        Request request;
+        if((request = UDSPlugin.getRequests().get(player.getName())) != null) {
+            return request;
+        } else {
+            player.sendMessage(Color.ERROR + "You have no pending requests.");
             return null;
         }
     }
@@ -618,7 +680,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return target;
         } else {
             for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                if(test.getDisplayName().equals(partial)) {
+                if(test.getDisplayName().equalsIgnoreCase(partial)) {
                     return test;
                 }
             }
@@ -630,7 +692,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                     return target;
                 } else {
                     for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                        if(test.getDisplayName().matches(partial)) {
+                        if(test.getDisplayName().matches("(?i)" + partial)) {
                             return test;
                         }
                     }
@@ -639,16 +701,16 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                         return target;
                     } else {
                         for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                            if(test.getDisplayName().equals(partial)) {
+                            if(test.getDisplayName().equalsIgnoreCase(partial)) {
                                 return test;
                             }
                         }
-                        target = UDSPlugin.getPlayers().matchKey(partial);
+                        target = UDSPlugin.getPlayers().matchKey("(?i)" + partial);
                         if(target != null) {
                             return target;
                         } else {
                             for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                                if(test.getDisplayName().matches(partial)) {
+                                if(test.getDisplayName().matches("(?i)" + partial)) {
                                     return test;
                                 }
                             }

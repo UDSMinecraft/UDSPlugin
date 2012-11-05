@@ -135,6 +135,14 @@ public class Region implements Saveable {
         return StringUtils.join(record.toArray(), "\t");
     }
 
+    public void clearMembers() {
+        members = new HashSet<String>();
+    }
+
+    public void changeOwner(String owner) {
+        this.owner = owner;
+    }
+
     public HashSet<String> getMembers() {
         return members;
     }

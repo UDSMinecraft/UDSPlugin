@@ -2,8 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import java.text.*;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import org.bukkit.*;
 import org.bukkit.util.Vector;
 
@@ -22,7 +21,7 @@ public class ClanCmd extends PlayerCommandExecutor {
             Region base;
             SaveablePlayer target;
             if(args.length == 1) {
-                if(args[0].equals("base") && (clan = hasClan()) != null && (base = hasBase(clan)) != null) {
+                if(args[0].equals("base") && (clan = hasClan()) != null && (base = hasBase(clan)) != null && notJailed() && notPinned()) {
                     player.teleport(base.getWarp());
                 } else if(args[0].equals("leave") && (clan = hasClan()) != null) {
                     if(clan.delMember(player.getName())) {
@@ -36,6 +35,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                         UDSPlugin.getRegions().remove(clan.getName() + "base");
                         Bukkit.broadcastMessage(Color.BROADCAST + clan.getName() + " no longer exists as all members have left.");
                     }
+                    player.setClan("");
                     player.sendMessage(Color.MESSAGE + "You have left " + clan.getName());
                 } else if(args[0].equals("members") && (clan = hasClan()) != null) {
                     String members = "";
@@ -75,6 +75,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                 int page;
                 if(args[0].equals("new") && isClanless() && canAfford(Config.CLAN_COST) && noCensor(args[1]) && noClan(args[1])) {
                     player.debit(Config.CLAN_COST);
+                    player.setClan(args[1]);
                     UDSPlugin.getClans().put(args[1], new Clan(args[1], player.getName()));
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " just created " + args[1] + ".");
                 } else if(args[0].equals("invite") && (target = matchesPlayer(args[1])) != null && isOnline(target) && (clan = hasClan()) != null && isLeader(clan) && notSelf(target)) {
@@ -84,6 +85,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                     target.sendMessage(Message.REQUEST_Y_N);
                 } else if(args[0].equals("kick") && (target = matchesPlayer(args[1])) != null && (clan = hasClan()) != null && isInClan(target, clan)) {
                     clan.delMember(target.getName());
+                    target.setClan("");
                     if((base = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
                         base.delMember(target.getName());
                     }

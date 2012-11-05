@@ -45,7 +45,7 @@ public class CityCmd extends PlayerCommandExecutor {
                     } else {
                         player.sendMessage(Color.ERROR + "You are not a citizen of " + city.getName() + ".");
                     }
-                } else if(args[0].equals("warp") && (city = matchesCity(args[1])) != null && notJailed()) {
+                } else if(args[0].equals("warp") && (city = matchesCity(args[1])) != null && notJailed() && notPinned()) {
                     player.quietTeleport(city.getWarp());
                 } else if(args[0].equals("list") && (page = parseInt(args[1])) != -1) {
                     sendPage(page, player);
@@ -90,7 +90,7 @@ public class CityCmd extends PlayerCommandExecutor {
             int skipped = 1;
             for(Region city : cities) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + "- " + city.getName() + ", Mayor " + city.getOwner() + " Pop. " + Color.TEXT + (city.getMemberNo() + 1));
+                    player.sendMessage(Color.ITEM + city.getName() + " - " + Color.TEXT + "Mayor " + city.getOwner() + ", Pop. " + (city.getMemberNo() + 1));
                     posted++;
                 } else {
                     skipped++;

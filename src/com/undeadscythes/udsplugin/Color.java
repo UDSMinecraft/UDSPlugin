@@ -7,6 +7,7 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public enum Color {
+    WHISPER(ChatColor.GRAY),
     /**
      * Chat room chat color.
      */

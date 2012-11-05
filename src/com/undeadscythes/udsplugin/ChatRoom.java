@@ -42,4 +42,22 @@ public class ChatRoom {
         return onlineMembers;
 
     }
+
+    public void addMember(SaveablePlayer player) {
+        members.add(player);
+    }
+
+    public boolean isMember(SaveablePlayer player) {
+        return members.contains(player);
+    }
+
+    public void delMember(SaveablePlayer player) {
+        members.remove(player);
+    }
+
+    public void sendMessage(String message) {
+        for(SaveablePlayer member : getOnlineMembers()) {
+            member.sendMessage(Color.PRIVATE + "[" + name + "] " + message);
+        }
+    }
 }

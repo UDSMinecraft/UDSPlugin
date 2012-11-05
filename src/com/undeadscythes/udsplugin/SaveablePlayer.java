@@ -96,6 +96,11 @@ public class SaveablePlayer implements Saveable, Player {
             }
             return null;
         }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase().replaceFirst("[a-z]", name().substring(0, 1).toUpperCase());
+        }
     }
 
     /**
@@ -118,11 +123,13 @@ public class SaveablePlayer implements Saveable, Player {
     private int bail = 0;
     private String clan = "";
     private String nick;
+    private long timeLogged = 0;
     private Location back = null;
     private boolean godMode = false;
     private boolean lockdownPass = false;
     private long lastDamageCaused = 0;
-    private SaveablePlayer duel = null;
+    private SaveablePlayer challenger = null;
+    private int wager = 0;
     private Location checkPoint = null;
     private ChatRoom chatRoom = null;
     private HashSet<String> ignoredPlayers = new HashSet<String>();
@@ -130,6 +137,10 @@ public class SaveablePlayer implements Saveable, Player {
     private LinkedList<Long> lastChats = new LinkedList<Long>();
     private ItemStack[] inventoryCopy = null;
     private ItemStack[] armorCopy = null;
+    private UUID selectedPet = null;
+    private SaveablePlayer whisperer = null;
+    private int powertoolID = 0;
+    private String powertoolCmd = "";
 
     /**
      * Initialise a brand new player extension.
@@ -156,6 +167,7 @@ public class SaveablePlayer implements Saveable, Player {
         bail = Integer.parseInt(recordSplit[8]);
         clan = recordSplit[9];
         nick = recordSplit[10];
+        timeLogged = Long.parseLong(recordSplit[11]);
     }
 
     /**
@@ -175,6 +187,7 @@ public class SaveablePlayer implements Saveable, Player {
         record.add(bail + "");
         record.add(clan);
         record.add(nick);
+        record.add(timeLogged + "");
         return StringUtils.join(record.toArray(), "\t");
     }
 
@@ -185,6 +198,34 @@ public class SaveablePlayer implements Saveable, Player {
     public void wrapPlayer(Player player) {
         this.base = player;
         player.setDisplayName(nick);
+    }
+
+    public void addTime(long time) {
+        timeLogged += time;
+    }
+
+    public void toggleLockdownPass() {
+        lockdownPass ^= true;
+    }
+
+    public UUID getSelectedPet() {
+        return selectedPet;
+    }
+
+    public void setWhisperer(SaveablePlayer player) {
+        whisperer = player;
+    }
+
+    public SaveablePlayer getWhisperer() {
+        return whisperer;
+    }
+
+    public void setPowertoolID(int ID) {
+        powertoolID = ID;
+    }
+
+    public void setPowertool(String cmd) {
+        powertoolCmd = cmd;
     }
 
     /**
@@ -246,10 +287,18 @@ public class SaveablePlayer implements Saveable, Player {
             lastChats.removeFirst();
         }
         lastChats.offerLast(System.currentTimeMillis());
-        if(lastChats.getLast() - lastChats.getFirst() / lastChats.size() < 1500) {
+        if(lastChats.size() > 1 && lastChats.getLast() - lastChats.getFirst() < 3000) {
             return false;
         }
         return true;
+    }
+
+    public String getTimeLogged() {
+        return timeToString(timeLogged);
+    }
+
+    public String getLastSeen() {
+        return timeToString(System.currentTimeMillis() - getLastPlayed());
     }
 
     /**
@@ -257,27 +306,31 @@ public class SaveablePlayer implements Saveable, Player {
      * @return English reading string.
      */
     public String getVIPTimeString() {
-        String time = "";
-        long timeLeft = Config.VIP_TIME - System.currentTimeMillis() - getVIPTime();
-        while(timeLeft >= Timer.SECOND) {
-            if(timeLeft >= Timer.DAY) {
-                int days = (int)(timeLeft / Timer.DAY);
-                time = time.concat(days + (days == 1 ? " day" : " days"));
-                timeLeft -= days * Timer.DAY;
-            } else if(timeLeft >= Timer.HOUR) {
-                int hours = (int)(timeLeft / Timer.HOUR);
-                time = time.concat(hours + (hours == 1 ? " hour" : " hours"));
-                timeLeft -= hours * Timer.HOUR;
-            } else if(timeLeft >= Timer.MINUTE) {
-                int minutes = (int)(timeLeft / Timer.MINUTE);
-                time = time.concat(minutes + (minutes == 1 ? " minute" : " minutes"));
-                timeLeft -= minutes * Timer.MINUTE;
-            } else if(timeLeft >= Timer.SECOND) {
-                int seconds = (int)(timeLeft / Timer.SECOND);
-                time = time.concat(seconds + (seconds == 1 ? " second" : " seconds"));
-                timeLeft -= seconds * Timer.SECOND;
+        return timeToString(Config.VIP_TIME - System.currentTimeMillis() - getVIPTime());
+    }
+
+    public String timeToString(long time) {
+        String timeString = "";
+        while(time >= Timer.SECOND) {
+            if(time >= Timer.DAY) {
+                int days = (int)(time / Timer.DAY);
+                timeString = timeString.concat(days + (days == 1 ? " day" : " days"));
+                time -= days * Timer.DAY;
+            } else if(time >= Timer.HOUR) {
+                int hours = (int)(time / Timer.HOUR);
+                timeString = timeString.concat(hours + (hours == 1 ? " hour" : " hours"));
+                time -= hours * Timer.HOUR;
+            } else if(time >= Timer.MINUTE) {
+                int minutes = (int)(time / Timer.MINUTE);
+                timeString = timeString.concat(minutes + (minutes == 1 ? " minute" : " minutes"));
+                time -= minutes * Timer.MINUTE;
+            } else if(time >= Timer.SECOND) {
+                int seconds = (int)(time / Timer.SECOND);
+                timeString = timeString.concat(seconds + (seconds == 1 ? " second" : " seconds"));
+                time -= seconds * Timer.SECOND;
             }
-        }return time;
+        }
+        return timeString;
     }
 
     /**
@@ -428,7 +481,11 @@ public class SaveablePlayer implements Saveable, Player {
      * @return <code>true</code> if the player is engaged in a duel, <code>false</code> otherwise.
      */
     public boolean isDuelling() {
-        return duel != null;
+        return challenger != null;
+    }
+
+    public void setChallenger(SaveablePlayer challenger) {
+        this.challenger = challenger;
     }
 
     /**
@@ -722,6 +779,10 @@ public class SaveablePlayer implements Saveable, Player {
      */
     public boolean canAfford(int price) {
         return (money >= price);
+    }
+
+    public void setWager(int wager) {
+        this.wager = wager;
     }
 
     /**

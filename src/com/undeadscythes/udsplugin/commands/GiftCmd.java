@@ -18,7 +18,7 @@ public class GiftCmd extends PlayerCommandExecutor {
         SaveablePlayer target;
         if(argsMoreEq(1) && (target = matchesPlayer(args[0])) != null) {
             ItemStack gift = player.getItemInHand().clone();
-            if(gift.getType() != Material.AIR) {
+            if(notAirHand()) {
                 String message = Color.MESSAGE + "[Gifting Service] You have recieved a free gift!";
                 if(args.length > 1) {
                     message = Color.MESSAGE + "[Gifting Service] ".concat(StringUtils.join(args, " ", 1, args.length - 1));
@@ -27,8 +27,6 @@ public class GiftCmd extends PlayerCommandExecutor {
                 target.giveAndDrop(gift);
                 player.setItemInHand(new ItemStack(Material.AIR));
                 player.sendMessage(Color.MESSAGE + "Gift sent.");
-            } else {
-                player.sendMessage(Color.ERROR + "You have no gift selected.");
             }
         }
     }

@@ -9,6 +9,8 @@ import org.bukkit.configuration.file.*;
  * @author UndeadScythes
  */
 public class Config {
+    public static ArrayList<String> SERVER_RULES;
+    public static byte MAP_DATA;
     public static int EXPAND_COST;
     /**
      * Items that VIP ranks can spawn.
@@ -139,5 +141,7 @@ public class Config {
         WHITELIST = new ArrayList<Integer>(config.getIntegerList("item-whitelist"));
         KITS = new ArrayList<String>(config.getStringList("kits"));
         EXPAND_COST = config.getInt("cost.expand");
+        MAP_DATA = (byte)config.getInt("map-data");
+        SERVER_RULES = new ArrayList<String>(config.getStringList("server-rules"));
     }
 }

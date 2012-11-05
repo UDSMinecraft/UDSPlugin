@@ -24,7 +24,7 @@ public class BountyCmd extends PlayerCommandExecutor {
                 if((page = parseInt(args[0])) != -1) {
                     sendPage(page, player);
                 }
-            } else if(args.length == 2 && (target = matchesPlayer(args[0])) != null && (bounty = parseInt(args[1])) != -1 && canAfford(bounty)) {
+            } else if(args.length == 2 && (target = matchesPlayer(args[0])) != null && (bounty = parseInt(args[1])) != -1 && canAfford(bounty) && notSelf(target)) {
                 player.debit(bounty);
                 target.addBounty(bounty);
                 Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " placed a bounty on " + target.getDisplayName());
@@ -50,7 +50,7 @@ public class BountyCmd extends PlayerCommandExecutor {
             int skipped = 1;
             for(Map.Entry<Integer, String> entry : bounties.entrySet()) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + "- " + entry.getValue() + "'s reward: " + Color.TEXT + entry.getKey() + Config.CURRENCIES);
+                    player.sendMessage(Color.ITEM + "- " + entry.getValue() + "'s reward: " + Color.TEXT + entry.getKey() + " " + Config.CURRENCIES);
                     posted++;
                 } else {
                     skipped++;

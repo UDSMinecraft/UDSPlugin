@@ -30,4 +30,11 @@ server-owner: Player
 respawn-dragon: 60
 item-whitelist: [1,2,3,4,12,13,17,18,31,35,50,58,61,65,82,87,88,106,111,283,284,285,286,294,314,315,316,317,357]
 kits: ["Stone,100,274,273,275","Iron,2000,257,256,258","Diamond,3600,278,277,279"]
-
+map-data: 4
+server-rules:
+- No swearing/flaming/racism
+- No griefing
+- No pet killing
+- No bug exploits
+- No advertising
+- No hacks
