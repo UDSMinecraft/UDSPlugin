@@ -73,7 +73,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                 }
             } else if(args.length == 2) {
                 int page;
-                if(args[0].equals("new") && isClanless() && canAfford(Config.CLAN_COST) && censor(args[1]) && noClan(args[1])) {
+                if(args[0].equals("new") && isClanless() && canAfford(Config.CLAN_COST) && noCensor(args[1]) && noClan(args[1])) {
                     player.debit(Config.CLAN_COST);
                     UDSPlugin.getClans().put(args[1], new Clan(args[1], player.getName()));
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " just created " + args[1] + ".");
@@ -107,7 +107,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.ITEM + "Kills: " + Color.TEXT + clan.getKills());
                     player.sendMessage(Color.ITEM + "Deaths: " + Color.TEXT + clan.getDeaths());
                     player.sendMessage(Color.ITEM + "KDR: " + Color.TEXT + decimalFormat.format(clan.getRatio()));
-                } else if(args[0].equals("rename") && (clan = hasClan()) != null && isLeader(clan) && censor(args[1]) && noClan(args[1]) && canAfford(Config.CLAN_COST)) {
+                } else if(args[0].equals("rename") && (clan = hasClan()) != null && isLeader(clan) && noCensor(args[1]) && noClan(args[1]) && canAfford(Config.CLAN_COST)) {
                     player.debit(Config.CLAN_COST);
                     UDSPlugin.getClans().remove(clan.getName());
                     if((base = UDSPlugin.getBases().remove(clan.getName() + "base")) != null) {

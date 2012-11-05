@@ -22,18 +22,20 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        player = UDSPlugin.getPlayers().get(sender.getName());
-        if(sender instanceof Player && hasPerm(Perm.valueOf(command.getName().toUpperCase()))) {
-            if(args.length == 1 && args[0].equals("help")) {
-                player.performCommand("help " + command.getName());
-                return true;
+        if(sender instanceof Player) {
+            player = UDSPlugin.getOnlinePlayers().get(sender.getName());
+            if(hasPerm(Perm.valueOf(command.getName().toUpperCase()))) {
+                if(args.length == 1 && args[0].equals("help")) {
+                    player.performCommand("help " + command.getName());
+                } else {
+                    argsLength = args.length;
+                    ArrayList<String> lowArgs = new ArrayList<String>();
+                    for(String arg : args) {
+                        lowArgs.add(arg.toLowerCase());
+                    }
+                    playerExecute(player, lowArgs.toArray(new String[argsLength]));
+                }
             }
-            argsLength = args.length;
-            ArrayList<String> lowArgs = new ArrayList<String>();
-            for(String arg : args) {
-                lowArgs.add(arg.toLowerCase());
-            }
-            playerExecute(player, lowArgs.toArray(new String[lowArgs.size()]));
             return true;
         } else {
             return false;
@@ -43,14 +45,14 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     /**
      * Checks if a string corresponds to a valid rank.
      * @param string String to check.
-     * @return <code>true</code> if the rank is valid, <code>false</code> otherwise.
+     * @return The rank if the rank is valid, <code>null</code> otherwise.
      */
     public Rank matchesRank(String string) {
         Rank rank = Rank.get(string);
         if(rank != null) {
             return rank;
         } else {
-            player.sendMessage(Message.NOT_A_RANK);
+            player.sendMessage(Color.ERROR + "You have not entered a valid rank.");
             return null;
         }
     }
@@ -70,7 +72,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if((direction = Direction.get(dir)) != null) {
             return direction;
         } else {
-            player.sendMessage(Message.NOT_A_DIRECTION);
+            player.sendMessage(Color.ERROR + "That is not a valid direction.");
             return null;
         }
     }
@@ -187,11 +189,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param string String to check.
      * @return <code>true</code> if the word was clean, <code>false</code> otherwise.
      */
-    public boolean censor(String string) {
-        if(Censor.censor(string)) {
+    public boolean noCensor(String string) {
+        if(Censor.noCensor(string)) {
             return true;
         } else {
-            player.sendMessage(Message.CANT_USE_BAD_WORDS);
+            player.sendMessage(Color.ERROR + "You can't use bad words here.");
             return false;
         }
     }
@@ -250,7 +252,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             if(string.split(":")[1].matches("[0-9][0-9]*")) {
                 data = Byte.parseByte(string.split(":")[1]);
             } else {
-                player.sendMessage(Message.BAD_DATA_VALUE);
+                player.sendMessage(Color.ERROR + "That is not a valid data value.");
                 return null;
             }
             matString = string.split(":")[0].toUpperCase();
@@ -263,7 +265,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(material != null) {
             return new ItemStack(material, 1, (short)0, data);
         } else {
-            player.sendMessage(Message.NOT_AN_ITEM);
+            player.sendMessage(Color.ERROR + "That is not a valid item.");
             return null;
         }
     }
@@ -278,7 +280,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(enchantment != null) {
             return enchantment;
         } else {
-            player.sendMessage(Message.NOT_AN_ENCHANTMENT);
+            player.sendMessage(Color.ERROR + "That is not a valid enchantment.");
             return null;
         }
     }

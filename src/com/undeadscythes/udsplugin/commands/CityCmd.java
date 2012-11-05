@@ -26,7 +26,7 @@ public class CityCmd extends PlayerCommandExecutor {
                 }
             } else if(args.length == 2) {
                 int page;
-                if(args[0].equals("new") && canAfford(Config.CITY_COST) && censor(args[1]) && noRegion(args[1])) {
+                if(args[0].equals("new") && canAfford(Config.CITY_COST) && noCensor(args[1]) && noRegion(args[1])) {
                     Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
                     Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
                     city = new Region(args[1], min, max, player.getLocation(), player.getName(), "", Region.Type.CITY);

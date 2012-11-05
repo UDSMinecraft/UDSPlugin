@@ -21,7 +21,7 @@ public class AsyncPlayerChat implements Listener {
             Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " gets jail time for spamming chat.");
             player.jail(5, 1000);
         } else if(player.getChannel() == Channel.PUBLIC) {
-            if(Censor.censor(event.getMessage())) {
+            if(Censor.noCensor(event.getMessage())) {
                 String message = player.getRank().color() + player.getDisplayName() + ": " + Color.TEXT + event.getMessage();
                 for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
                     if(!target.isIgnoringPlayer(player)) {

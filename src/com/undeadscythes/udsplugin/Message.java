@@ -6,22 +6,6 @@ package com.undeadscythes.udsplugin;
  */
 public class Message {
     /**
-     * That is not a valid data value.
-     */
-    public static final String BAD_DATA_VALUE = Color.ERROR + "That is not a valid data value.";
-    /**
-     * That is not a valid item.
-     */
-    public static final String NOT_AN_ITEM = Color.ERROR + "That is not a valid item.";
-    /**
-     * That is not a valid direction.
-     */
-    public static final String NOT_A_DIRECTION = Color.ERROR + "That is not a valid direction.";
-    /**
-     * That is not a valid enchantment.
-     */
-    public static final String NOT_AN_ENCHANTMENT = Color.ERROR + "That is not a valid enchantment.";
-    /**
      * There are no enchantments do display.
      */
     public static final String NO_ENCHANTMENTS = Color.ERROR + "There are no enchantments do display.";
@@ -53,14 +37,6 @@ public class Message {
      * You cannot do that here, you are too close to another protected area.
      */
     public static final String REGION_HAS_OVERLAP = Color.ERROR + "You cannot do that here, you are too close to another protected area.";
-    /**
-     * You have not entered a valid rank.
-     */
-    public static final String NOT_A_RANK = Color.ERROR + "You have not entered a valid rank.";
-    /**
-     * You can't use bad words here.
-     */
-    public static final String CANT_USE_BAD_WORDS = Color.ERROR + "You can't use bad words here.";
     /**
      * You cannot use that command on yourself.
      */
