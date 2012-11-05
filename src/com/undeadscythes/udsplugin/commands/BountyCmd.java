@@ -16,18 +16,16 @@ public class BountyCmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(2)) {
             int bounty;
+            int page;
             SaveablePlayer target;
             if(args.length == 0) {
                 sendPage(1, player);
-            } else if(args.length == 1) {
-                int page;
-                if((page = parseInt(args[0])) != -1) {
-                    sendPage(page, player);
-                }
-            } else if(args.length == 2 && (target = matchesPlayer(args[0])) != null && (bounty = parseInt(args[1])) != -1 && canAfford(bounty) && notSelf(target)) {
+            } else if(args.length == 1 && (page = parseInt(args[0])) != -1) {
+                sendPage(page, player);
+            } else if(args.length == 2 && (target = matchesOtherPlayer(args[0])) != null && (bounty = canAffordSafe(args[1])) != -1) {
                 player.debit(bounty);
                 target.addBounty(bounty);
-                Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " placed a bounty on " + target.getDisplayName());
+                Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " placed a bounty on " + target.getDisplayName() + ".");
             }
         }
     }

@@ -83,6 +83,22 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     }
 
+    public boolean canRequest(SaveablePlayer target) {
+        if(notBusy(target) && notIgnored(target)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean canTP() {
+        if(notPinned() && notJailed()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Region hasShop(SaveablePlayer target) {
         Region shop;
         if((shop = UDSPlugin.getShops().get(target.getName() + "shop")) != null) {
@@ -92,6 +108,15 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return null;
         }
 
+    }
+
+    public int canAffordSafe(String amount) {
+        int cash;
+        if((cash = parseInt(amount)) != -1 && canAfford(cash)) {
+            return cash;
+        } else {
+            return -1;
+        }
     }
 
     public SaveablePlayer hasWhisper() {
@@ -328,6 +353,15 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         } else {
             player.sendMessage(Color.ERROR + "You can't use bad words here.");
             return false;
+        }
+    }
+
+    public SaveablePlayer matchesOtherPlayer(String name) {
+        SaveablePlayer target;
+        if((target = matchesPlayer(name)) != null && notSelf(target)) {
+            return target;
+        } else {
+            return null;
         }
     }
 
@@ -678,6 +712,15 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    public SaveablePlayer matchesOtherOnlinePlayer(String name) {
+        SaveablePlayer target;
+        if((target = matchesOnlinePlayer(name)) != null && notSelf(target)) {
+            return target;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Check that the target player is not being ignored by the command sender.
      * @param target Player to check.
@@ -823,9 +866,38 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                                 }
                             }
                         }
-                        player.sendMessage(Color.ERROR + "Cannot find that player.");
+                        player.sendMessage(Color.ERROR + "Cannot find that player online.");
                         return null;
                     }
+                }
+            }
+        }
+    }
+
+        public SaveablePlayer matchesOnlinePlayer(String partial) {
+        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(partial);
+        if(target!= null) {
+            return target;
+        } else {
+            for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+                if(test.getDisplayName().equalsIgnoreCase(partial)) {
+                    return test;
+                }
+            }
+            if(target!= null) {
+                return target;
+            } else {
+                target = UDSPlugin.getOnlinePlayers().matchKey(partial);
+                if(target != null) {
+                    return target;
+                } else {
+                    for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+                        if(test.getDisplayName().matches("(?i)" + partial)) {
+                            return test;
+                        }
+                    }
+                    player.sendMessage(Color.ERROR + "Cannot find that player.");
+                    return null;
                 }
             }
         }

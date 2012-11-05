@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.eventhandlers.AsyncPlayerChat.Channel;
 import org.apache.commons.lang.*;
 
 /**

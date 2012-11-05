@@ -13,7 +13,7 @@ public class CallCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsEq(1) && (target = matchesPlayer(args[0])) != null && isOnline(target) && notIgnored(target) && notBusy(target) && notJailed() && notJailed(target) && notPinned() && notSelf(target)) {
+        if(argsEq(1) && (target = matchesOtherOnlinePlayer(args[0])) != null && canRequest(target) && notJailed(target) && canTP()) {
             UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.Type.TP, "", target));
             player.sendMessage(Message.REQUEST_SENT);
             target.sendMessage(Color.MESSAGE + player.getName() + " wishes to teleport to you.");

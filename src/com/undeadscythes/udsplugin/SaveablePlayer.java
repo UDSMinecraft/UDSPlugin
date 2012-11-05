@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.eventhandlers.AsyncPlayerChat.Channel;
 import java.io.*;
 import java.net.*;
 import java.util.*;

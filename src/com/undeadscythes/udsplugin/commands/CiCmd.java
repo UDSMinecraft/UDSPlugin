@@ -12,7 +12,9 @@ public class CiCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        player.getInventory().clear(-1, -1);
-        player.sendMessage(Color.MESSAGE + "Inventory cleared.");
+        if(argsEq(0)) {
+            player.getInventory().clear(-1, -1);
+            player.sendMessage(Color.MESSAGE + "Inventory cleared.");
+        }
     }
 }

@@ -12,6 +12,29 @@ import org.bukkit.event.player.*;
  * @author UndeadScythes
  */
 public class AsyncPlayerChat implements Listener {
+    /**
+    * Chat channel for in-game chat.
+    * @author UndeadScythes
+    */
+    public enum Channel {
+        /**
+        * Public chat, default.
+        */
+        PUBLIC,
+        /**
+        * Clan chat.
+        */
+        CLAN,
+        /**
+        * Private chat or chat rooms.
+        */
+        PRIVATE,
+        /**
+        * Administrative chat.
+        */
+        ADMIN;
+    }
+
     @EventHandler
     public void onEvent(AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);

@@ -15,7 +15,7 @@ public class BanCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsMoreEq(1) && (target = matchesPlayer(args[0])) != null && notSelf(target)) {
+        if(argsMoreEq(1) && (target = matchesOtherPlayer(args[0])) != null) {
             String message = "You have been banned for breaking the rules.";
             if(args.length > 1) {
                 message = StringUtils.join(args, " ", 1, args.length - 1);
@@ -23,10 +23,8 @@ public class BanCmd extends PlayerCommandExecutor {
             if(isOnline(target)) {
                 target.getWorld().strikeLightningEffect(target.getLocation());
                 target.kickPlayer(message);
-                target.setBanned(true);
-            } else {
-                target.setBanned(true);
             }
+            target.setBanned(true);
             Bukkit.broadcastMessage(Color.BROADCAST + target.getDisplayName() + " has been banned for breaking the rules.");
         }
     }
