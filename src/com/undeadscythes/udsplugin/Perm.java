@@ -37,6 +37,7 @@ public enum Perm {
     HEAL(Rank.WARDEN, true),
     HELP(Rank.DEFAULT, true),
     HOME(Rank.MEMBER, true),
+    HOME_OTHER(Rank.MOD, true),
     I(Rank.VIP, true),
     I_ADMIN(Rank.MOD, true),
     IGNORE(Rank.DEFAULT, true),

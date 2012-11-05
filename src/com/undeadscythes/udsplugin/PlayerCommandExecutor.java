@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.LoadableLocation.Direction;
 import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import java.util.*;
 import org.bukkit.*;
@@ -51,6 +52,49 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         } else {
             player.sendMessage(Message.NOT_A_RANK);
             return null;
+        }
+    }
+
+    public Region hasHome() {
+        Region home;
+        if((home = UDSPlugin.getHomes().get(player.getName() + "home")) != null) {
+            return home;
+        } else {
+            player.sendMessage(Color.ERROR + "You do not have a home.");
+            return null;
+        }
+    }
+
+    public Direction matchesDirection(String dir) {
+        Direction direction;
+        if((direction = Direction.get(dir)) != null) {
+            return direction;
+        } else {
+            player.sendMessage(Message.NOT_A_DIRECTION);
+            return null;
+        }
+    }
+
+    public Direction matchesCardinalDirection(String dir) {
+        Direction direction;
+        if((direction = matchesDirection(dir)) != null) {
+            if(direction.cardinal()) {
+                return direction;
+            } else {
+                player.sendMessage(Color.ERROR + "You must choose a cardinal direction.");
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public boolean noHome() {
+        if(!UDSPlugin.getHomes().containsKey(player.getName() + "home")) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You already have a home.");
+            return false;
         }
     }
 
@@ -264,6 +308,43 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         } else {
             player.sendMessage(Message.NOT_IN_CITY);
             return null;
+        }
+    }
+
+    public boolean isRoomie(Region home) {
+        if(home.hasMember(player.getName())) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You are not that players room mate.");
+            return false;
+        }
+    }
+
+    public boolean isRoomie(SaveablePlayer target, Region home) {
+        if(home.hasMember(target.getName())) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "That player is not your room mate.");
+            return false;
+        }
+    }
+
+    public Region hasHome(SaveablePlayer target) {
+        Region home;
+        if((home = UDSPlugin.getHomes().get(target.getName() + "home")) != null) {
+            return home;
+        } else {
+            player.sendMessage(Color.ERROR + "That player does not have a home.");
+            return null;
+        }
+    }
+
+    public boolean isInHome(SaveablePlayer target, Region home) {
+        if(target.getLocation().toVector().isInAABB(home.getV1(), home.getV2())) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "That player is not in your home.");
+            return false;
         }
     }
 

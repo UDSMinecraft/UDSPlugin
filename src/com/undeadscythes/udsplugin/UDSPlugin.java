@@ -247,7 +247,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("god").setExecutor(new GodCmd());
         getCommand("heal").setExecutor(new HealCmd());
         getCommand("help").setExecutor(new HelpCmd());
-//        getCommand("home").setExecutor(new HomeCmd());
+        getCommand("home").setExecutor(new HomeCmd());
         getCommand("i").setExecutor(new ICmd());
         getCommand("ignore").setExecutor(new IgnoreCmd());
         getCommand("invsee").setExecutor(new InvSeeCmd());

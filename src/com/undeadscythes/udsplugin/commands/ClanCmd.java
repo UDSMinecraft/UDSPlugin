@@ -129,8 +129,8 @@ public class ClanCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.MESSAGE + "You have resigned as leader of " + clan.getName());
                 } else if(args[0].equals("base") && (clan = hasClan()) != null && isLeader(clan)) {
                     if(args[1].equals("make") && noBase(clan) && canAfford(Config.BASE_COST)) {
-                        Vector min = player.getLocation().add(-25, 20, -25).toVector();
-                        Vector max = player.getLocation().add(25, player.getWorld().getMaxHeight() - 20, 25).toVector();
+                        Vector min = player.getLocation().add(-25, 0, -25).toVector().setY(20);
+                        Vector max = player.getLocation().add(25, 0, 25).toVector().setY(220);
                         base = new Region(clan.getName() + "base", min, max, player.getLocation(), "", "", Region.Type.BASE);
                         if(noOverlaps(base)) {
                             player.debit(Config.BASE_COST);

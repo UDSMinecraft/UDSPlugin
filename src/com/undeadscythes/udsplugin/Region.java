@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.LoadableLocation.Direction;
 import java.io.*;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -132,6 +133,26 @@ public class Region implements Saveable {
         record.add(StringUtils.join(flags.toArray(), ","));
         record.add(type.toString());
         return StringUtils.join(record.toArray(), "\t");
+    }
+
+    public HashSet<String> getMembers() {
+        return members;
+    }
+
+    public void expand(Direction direction, int distance) {
+        if(direction.equals(Direction.NORTH)) {
+            v1.add(new Vector(0, 0, -distance));
+        } else if(direction.equals(Direction.SOUTH)) {
+            v2.add(new Vector(0, 0, distance));
+        } else if(direction.equals(Direction.EAST)) {
+            v2.add(new Vector(distance, 0, 0));
+        } else if(direction.equals(Direction.WEST)) {
+            v1.add(new Vector(-distance, 0, 0));
+        } else if(direction.equals(Direction.UP)) {
+            v2.add(new Vector(0, distance, 0));
+        } else if(direction.equals(Direction.DOWN)) {
+            v1.add(new Vector(0, -distance, 0));
+        }
     }
 
     /**

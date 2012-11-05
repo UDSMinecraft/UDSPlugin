@@ -8,21 +8,25 @@ import org.bukkit.*;
  */
 public class LoadableLocation extends Location {
     public static enum Direction {
-        NORTH(-22.5, 22.5),
-        NORTH_EAST(22.5, 67.5),
-        EAST(67.5, 112.5),
-        SOUTH_EAST(112.5, 157.5),
-        SOUTH(157.5, 202.5),
-        SOUTH_WEST(202.5, 247.5),
-        WEST(247.5, 292.5),
-        NORTH_WEST(292.5, 337.5);
+        NORTH(-22.5, 22.5, true),
+        NORTH_EAST(22.5, 67.5, false),
+        EAST(67.5, 112.5, true),
+        SOUTH_EAST(112.5, 157.5, false),
+        SOUTH(157.5, 202.5, true),
+        SOUTH_WEST(202.5, 247.5, false),
+        WEST(247.5, 292.5, true),
+        NORTH_WEST(292.5, 337.5, false),
+        UP(0, 0, true),
+        DOWN(0, 0, true);
 
         private double min;
         private double max;
+        private boolean cardinal;
 
-        private Direction(double min, double max) {
+        private Direction(double min, double max, boolean cardinal) {
             this.min = min;
             this.max = max;
+            this.cardinal = cardinal;
         }
 
         public float getYaw() {
@@ -52,6 +56,10 @@ public class LoadableLocation extends Location {
         @Override
         public String toString() {
             return name().toLowerCase().replace("_", " ");
+        }
+
+        public boolean cardinal() {
+            return cardinal;
         }
     }
 

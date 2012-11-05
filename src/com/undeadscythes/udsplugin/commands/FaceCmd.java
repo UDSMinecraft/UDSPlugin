@@ -17,12 +17,10 @@ public class FaceCmd extends PlayerCommandExecutor {
             LoadableLocation.Direction direction;
             if(args.length == 0) {
                 player.sendMessage(Color.MESSAGE + "You are facing " + LoadableLocation.Direction.valueOf(player.getLocation()).toString() + ".");
-            } else if((direction = LoadableLocation.Direction.get(args[0])) != null) {
+            } else if((direction = matchesDirection(args[0])) != null) {
                 Location location = player.getLocation();
                 location.setYaw(direction.getYaw());
                 player.teleport(location);
-            } else {
-                player.sendMessage(Message.NOT_A_DIRECTION);
             }
         }
     }
