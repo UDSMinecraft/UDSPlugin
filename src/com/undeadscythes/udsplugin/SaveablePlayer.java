@@ -220,6 +220,15 @@ public class SaveablePlayer implements Saveable, Player {
         return whisperer;
     }
 
+    public Session forceSession() {
+        Session session;
+        if((session = UDSPlugin.getSessions().get(getName())) == null) {
+            session = new Session(this);
+            UDSPlugin.getSessions().put(getName(), session);
+        }
+        return session;
+    }
+
     public void setPowertoolID(int ID) {
         powertoolID = ID;
     }
@@ -428,6 +437,12 @@ public class SaveablePlayer implements Saveable, Player {
     public Region getCurrentRegion(Region.Type type) {
         if(type == Region.Type.CITY) {
             for(Region region : UDSPlugin.getCities().values()) {
+                if(getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
+                    return region;
+                }
+            }
+        } else if(type == Region.Type.SHOP) {
+            for(Region region : UDSPlugin.getShops().values()) {
                 if(getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                     return region;
                 }

@@ -72,6 +72,28 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    public Region hasShop() {
+        Region shop;
+        if((shop = UDSPlugin.getShops().get(player.getName() + "shop")) != null) {
+            return shop;
+        } else {
+            player.sendMessage(Color.ERROR + "You do not own a shop.");
+            return null;
+        }
+
+    }
+
+    public Region hasShop(SaveablePlayer target) {
+        Region shop;
+        if((shop = UDSPlugin.getShops().get(target.getName() + "shop")) != null) {
+            return shop;
+        } else {
+            player.sendMessage(Color.ERROR + "That player does not own a shop.");
+            return null;
+        }
+
+    }
+
     public SaveablePlayer hasWhisper() {
         SaveablePlayer target;
         if((target = player.getWhisperer()) != null) {
@@ -87,6 +109,55 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You are not in any private chat rooms.");
+            return false;
+        }
+    }
+
+    public Session hasSession() {
+        Session session;
+        if((session = UDSPlugin.getSessions().get(player.getName())) != null) {
+            return session;
+        } else {
+            player.sendMessage(Color.ERROR + "You do not have a current WE session.");
+            return null;
+        }
+    }
+
+    public Region matchesRegion(String regionName) {
+        Region region;
+        if((region = UDSPlugin.getRegions().get(regionName)) != null) {
+            return region;
+        } else {
+            player.sendMessage(Color.ERROR + "No region exists by that name.");
+            return null;
+        }
+    }
+
+    public Region.Flag matchesFlag(String name) {
+        Region.Flag flag;
+        if((flag = Region.Flag.get(name)) != null) {
+            return flag;
+        } else {
+            player.sendMessage(Color.ERROR + "That is not a valid region type.");
+            return null;
+        }
+    }
+
+    public Region.Type matchesRegionType(String name) {
+        Region.Type type;
+        if((type = Region.Type.get(name)) != null) {
+            return type;
+        } else {
+            player.sendMessage(Color.ERROR + "That is not a valid region type.");
+            return null;
+        }
+    }
+
+    public boolean hasTwoPoints(Session session) {
+        if(session.getV1() != null && session.getV2() != null) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You need to select two points.");
             return false;
         }
     }
@@ -381,6 +452,43 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         } else {
             player.sendMessage(Color.ERROR + "You are not that players room mate.");
             return false;
+        }
+    }
+
+    public boolean isWorker(Region shop) {
+        if(shop.hasMember(player.getName())) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You are not that players worker.");
+            return false;
+        }
+    }
+
+    public boolean isWorker(SaveablePlayer target, Region shop) {
+        if(shop.hasMember(target.getName())) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "That player is not your worker.");
+            return false;
+        }
+    }
+
+    public boolean isEmpty(Region shop) {
+        if(shop.getOwner().equals("")) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "Somebody already owns this shop.");
+            return false;
+        }
+    }
+
+    public Region isInShop() {
+        Region shop;
+        if((shop = player.getCurrentRegion(Region.Type.SHOP)) != null) {
+            return shop;
+        } else {
+            player.sendMessage(Color.ERROR + "You must be stood inside a shop to buy it.");
+            return null;
         }
     }
 

@@ -32,6 +32,20 @@ public class Region implements Saveable {
         public boolean getDefault() {
             return defaultValue;
         }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase().replace("_", " ");
+        }
+
+        public static Flag get(String string) {
+            for(Flag flag : values()) {
+                if(flag.name().equals(string.toUpperCase())) {
+                    return flag;
+                }
+            }
+            return null;
+        }
     }
 
     public enum Type {
@@ -42,6 +56,15 @@ public class Region implements Saveable {
         HOME,
         ARENA,
         CITY;
+
+        public static Type get(String string) {
+            for(Type type : values()) {
+                if(type.name().equals(string.toUpperCase())) {
+                    return type;
+                }
+            }
+            return null;
+        }
     }
 
     /**
@@ -147,6 +170,10 @@ public class Region implements Saveable {
         return members;
     }
 
+    public void changeName(String newName) {
+        name = newName;
+    }
+
     public void expand(Direction direction, int distance) {
         if(direction.equals(Direction.NORTH)) {
             v1.add(new Vector(0, 0, -distance));
@@ -161,6 +188,15 @@ public class Region implements Saveable {
         } else if(direction.equals(Direction.DOWN)) {
             v1.add(new Vector(0, -distance, 0));
         }
+    }
+
+    public HashSet<Flag> getFlags() {
+        return flags;
+    }
+
+    public void changeV(Vector v1, Vector v2) {
+        this.v1 = v1;
+        this.v2 = v2;
     }
 
     /**

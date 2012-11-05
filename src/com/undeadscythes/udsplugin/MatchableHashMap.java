@@ -76,4 +76,9 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
         Collections.sort(values, comp);
         return values;
     }
+
+    public void replace(String oldName, String newName, Object newObject) {
+        remove(oldName);
+        put(newName, newObject);
+    }
 }

@@ -15,7 +15,7 @@ public class HomeCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreLessInc(0, 2)) {
+        if(argsMoreLessInc(0, 3)) {
             Region home;
             SaveablePlayer target;
             int price;
@@ -100,7 +100,7 @@ public class HomeCmd extends PlayerCommandExecutor {
                         target.sendMessage(Color.MESSAGE + "You are no longer " + player.getDisplayName() + "'s room mate.");
                     }
                 }
-            } else if((hasHome()) != null && (target = matchesPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
+            } else if(args[0].equals("sell") && (hasHome()) != null && (target = matchesPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
                 player.sendMessage(Message.REQUEST_SENT);
                 target.sendMessage(Color.MESSAGE + player.getDisplayName() + " wants to sell you their house for " + price + " " + Config.CURRENCIES + ".");
                 target.sendMessage(Message.REQUEST_Y_N);
