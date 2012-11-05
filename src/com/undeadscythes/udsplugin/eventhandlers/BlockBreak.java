@@ -16,7 +16,6 @@ public class BlockBreak implements Listener {
         SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
         if(player.isJailed()) {
             event.setCancelled(true);
-            player.sendMessage(Message.NOT_WHILE_IN_JAIL);
         } else if(!player.canBuildHere(event.getBlock().getLocation().add(UDSPlugin.HALF_BLOCK))) {
             event.setCancelled(true);
             player.sendMessage(Message.CANT_BUILD_HERE);

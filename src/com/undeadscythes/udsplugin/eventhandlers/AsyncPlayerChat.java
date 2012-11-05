@@ -48,13 +48,9 @@ public class AsyncPlayerChat implements Listener {
             }
         } else if(player.getChannel() == Channel.CLAN) {
             Clan clan = UDSPlugin.getClans().get(player.getClan());
-            if(clan != null) {
-                String message = Color.CLAN + "[" + clan.getName() + "] " + player.getDisplayName() + ": " + event.getMessage();
-                for(SaveablePlayer target : clan.getOnlineMembers()) {
-                    target.sendMessage(message);
-                }
-            } else {
-                player.sendMessage(Message.NOT_IN_CLAN);
+            String message = Color.CLAN + "[" + clan.getName() + "] " + player.getDisplayName() + ": " + event.getMessage();
+            for(SaveablePlayer target : clan.getOnlineMembers()) {
+                target.sendMessage(message);
             }
         } else if(player.getChannel() == Channel.PRIVATE) {
             ChatRoom chatRoom = player.getChatRoom();
