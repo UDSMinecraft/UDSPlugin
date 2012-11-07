@@ -18,7 +18,7 @@ public class CityCmd extends PlayerCommandExecutor {
         if(argsMoreLessInc(1, 3)) {
             Region city;
             if(args.length == 1) {
-                if(args[0].equals("set") && (city = inRegion()).getType() == Region.RegionType.CITY && mayor(city.getName()) != null) {
+                if(args[0].equals("set") && (city = getCurrentRegion()).getType() == Region.RegionType.CITY && getMunicipality(city.getName()) != null) {
                     city.setWarp(player.getLocation());
                     player.sendMessage(Color.MESSAGE + "City spawn point set.");
                 } else if(args[0].equals("list")) {
@@ -26,10 +26,10 @@ public class CityCmd extends PlayerCommandExecutor {
                 }
             } else if(args.length == 2) {
                 int page;
-                if(args[0].equals("new") && canAfford(Config.CITY_COST) && noCensor(args[1]) && noRegion(args[1])) {
+                if(args[0].equals("new") && canAfford(Config.CITY_COST) && noCensor(args[1]) && notRegion(args[1])) {
                     Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
                     Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
-                    city = new Region(args[1], min, max, player.getLocation(), player.getName(), "", Region.RegionType.CITY);
+                    city = new Region(args[1], min, max, player.getLocation(), player, "", Region.RegionType.CITY);
                     if(noOverlaps(city)) {
                         player.debit(Config.CITY_COST);
                         UDSPlugin.getRegions().put(args[1], city);
@@ -39,28 +39,28 @@ public class CityCmd extends PlayerCommandExecutor {
                         player.sendMessage(Color.MESSAGE + "City founded.");
                         Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " has just founded " + args[1] + ".");
                     }
-                } else if(args[0].equals("leave") && (city = matchesCity(args[1])) != null) {
-                    if(city.delMember(player.getName())) {
+                } else if(args[0].equals("leave") && (city = getMatchingCity(args[1])) != null) {
+                    if(city.delMember(player)) {
                         player.sendMessage(Color.MESSAGE + "You have left " + city.getName() + ".");
                     } else {
                         player.sendMessage(Color.ERROR + "You are not a citizen of " + city.getName() + ".");
                     }
-                } else if(args[0].equals("warp") && (city = matchesCity(args[1])) != null && notJailed() && notPinned()) {
+                } else if(args[0].equals("warp") && (city = getMatchingCity(args[1])) != null && notJailed() && notPinned()) {
                     player.quietTeleport(city.getWarp());
                 } else if(args[0].equals("list") && (page = parseInt(args[1])) != -1) {
                     sendPage(page, player);
                 }
             } else if(args.length == 3) {
                 SaveablePlayer target;
-                if(args[0].equals("invite") && (city = mayor(args[1])) != null && (target = matchesPlayer(args[2])) != null) {
-                    if(city.addMember(target.getName())) {
+                if(args[0].equals("invite") && (city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
+                    if(city.addMember(target)) {
                         player.sendMessage(Color.MESSAGE + target.getDisplayName() + " was added as a citizen of " + city.getName() + ".");
                         target.sendMessage(Color.MESSAGE + "You have been added as a citizen of " + city.getName());
                     } else {
                         player.sendMessage(Color.ERROR + target.getDisplayName() + " is already a citizen of " + city.getName() + ".");
                     }
-                } else if(args[0].equals("banish") && (city = mayor(args[1])) != null && (target = matchesPlayer(args[2])) != null) {
-                    if(city.delMember(target.getName())) {
+                } else if(args[0].equals("banish") && (city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
+                    if(city.delMember(target)) {
                         player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been banished from " + city.getName() + ".");
                         target.sendMessage(Color.MESSAGE + "You have been banished from " + city.getName() + ".");
                         target.quietTeleport(city.getWarp());

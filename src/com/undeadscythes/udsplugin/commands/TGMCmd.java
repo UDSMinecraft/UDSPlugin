@@ -16,7 +16,7 @@ public class TGMCmd extends PlayerCommandExecutor {
             SaveablePlayer target;
             if(args.length == 0) {
                 player.sendMessage(Color.MESSAGE + "You now have creative mode " + (player.toggleGameMode() ? "en" : "dis") + "abled.");
-            } else if(args.length == 1 && (target = matchesPlayer(args[0])) != null) {
+            } else if(args.length == 1 && (target = getMatchingPlayer(args[0])) != null) {
                 boolean gameMode = target.toggleGameMode();
                 if(!player.equals(target)) {
                     player.sendMessage(Color.MESSAGE + target.getDisplayName() + " now has creative mode " + (gameMode ? "en" : "dis") + "abled.");

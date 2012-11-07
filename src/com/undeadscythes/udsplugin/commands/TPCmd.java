@@ -15,10 +15,10 @@ public class TPCmd extends PlayerCommandExecutor {
         SaveablePlayer targetFrom;
         SaveablePlayer targetTo;
         if(argsMoreLessInc(1, 2)) {
-            if(args.length == 1 && (targetTo = matchesPlayer(args[0])) != null && isOnline(targetTo) && notSelf(targetTo)) {
+            if(args.length == 1 && (targetTo = getMatchingPlayer(args[0])) != null && isOnline(targetTo) && notSelf(targetTo)) {
                 player.setBackPoint();
                 player.teleport(targetTo);
-            } else if((targetFrom = matchesPlayer(args[0])) != null && isOnline(targetFrom) && (targetTo = matchesPlayer(args[1])) != null && isOnline(targetTo)) {
+            } else if((targetFrom = getMatchingPlayer(args[0])) != null && isOnline(targetFrom) && (targetTo = getMatchingPlayer(args[1])) != null && isOnline(targetTo)) {
                 targetFrom.setBackPoint();
                 targetFrom.teleport(targetTo);
             }

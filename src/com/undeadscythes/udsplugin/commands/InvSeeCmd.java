@@ -22,7 +22,7 @@ public class InvSeeCmd extends PlayerCommandExecutor {
                 } else {
                     player.sendMessage(Color.ERROR + "You have no saved inventory.");
                 }
-            } else if((target = matchesPlayer(args[0])) != null && isOnline(target) && notSelf(target)) {
+            } else if((target = getMatchingPlayer(args[0])) != null && isOnline(target) && notSelf(target)) {
                 if(player.getInventoryCopy() == null) {
                     player.saveInventory();
                     player.saveArmor();

@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -14,8 +14,8 @@ public class IgnoreCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsEq(1) && (target = matchesPlayer(args[0])) != null && notSelf(target)) {
-            if(target.getRank().compareTo(Rank.WARDEN) < 0) {
+        if(argsEq(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
+            if(target.getRank().compareTo(PlayerRank.WARDEN) < 0) {
                 if(player.ignorePlayer(target)) {
                     player.sendMessage(Color.MESSAGE + "you are now ignoring " + target.getDisplayName() + ".");
                 } else {

@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.LoadableLocation.Direction;
+import com.undeadscythes.udsplugin.Bearing.Direction;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.io.*;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -131,24 +132,25 @@ public class Region implements Saveable {
                     return type;
                 }
             }
-            return NORMAL;
+            return null;
         }
     }
 
     /**
      * File name of region storage file.
      */
-    public static String PATH = "regions.csv";
+    public static final String PATH = "regions.csv";
 
     private String name;
     private Vector v1;
     private Vector v2;
     private Location warp;
-    private String owner;
-    private HashSet<String> members = new HashSet<String>();
+    private SaveablePlayer owner;
+    private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>();
     private String data;
     private HashSet<RegionFlag> flags;
     private RegionType type;
+    private PlayerRank rank = PlayerRank.NONE;
 
     /**
      * Initialise a brand new region.
@@ -160,7 +162,7 @@ public class Region implements Saveable {
      * @param data Data of region, if any.
      * @param type Region type.
      */
-    public Region(String name, Vector v1, Vector v2, Location warp, String owner, String data, RegionType type) {
+    public Region(String name, Vector v1, Vector v2, Location warp, SaveablePlayer owner, String data, RegionType type) {
         this.name = name;
         this.v1 = v1;
         this.v2 = v2;
@@ -186,15 +188,19 @@ public class Region implements Saveable {
         name = recordSplit[0];
         v1 = getBlockPos(recordSplit[1]);
         v2 = getBlockPos(recordSplit[2]);
-        warp = (Location)(new LoadableLocation(recordSplit[3]));
-        owner = recordSplit[4];
-        members = new HashSet<String>(Arrays.asList(recordSplit[5].split(",")));
+        warp = (Location)(new Bearing(recordSplit[3]));
+        owner = UDSPlugin.getPlayers().get(recordSplit[4]);
+        members = new HashSet<SaveablePlayer>();
+        for(String member : recordSplit[5].split(",")) {
+            members.add(UDSPlugin.getPlayers().get(member));
+        }
         data = recordSplit[6];
         flags = new HashSet<RegionFlag>();
         for(String flag : recordSplit[7].split(",")) {
             flags.add(RegionFlag.getByName(flag));
         }
         type = RegionType.getByName(recordSplit[8]);
+        rank = PlayerRank.getByName(recordSplit[9]);
     }
 
     /**
@@ -219,12 +225,17 @@ public class Region implements Saveable {
         record.add(name);
         record.add(v1.toString());
         record.add(v2.toString());
-        record.add(new LoadableLocation(warp).toString());
-        record.add(owner);
-        record.add(StringUtils.join(members.toArray(), ","));
+        record.add(new Bearing(warp).toString());
+        record.add(owner.getName());
+        ArrayList<String> memberList = new ArrayList<String>();
+        for(SaveablePlayer member : members) {
+            memberList.add(member.getName());
+        }
+        record.add(StringUtils.join(memberList, ","));
         record.add(data);
         record.add(StringUtils.join(flags.toArray(), ","));
         record.add(type.toString());
+        record.add(rank.toString());
         return StringUtils.join(record.toArray(), "\t");
     }
 
@@ -232,14 +243,14 @@ public class Region implements Saveable {
      * Clear the members of the region.
      */
     public void clearMembers() {
-        members = new HashSet<String>();
+        members = new HashSet<SaveablePlayer>();
     }
 
     /**
      * Change the owner of the region.
      * @param owner New owner name.
      */
-    public void changeOwner(String owner) {
+    public void changeOwner(SaveablePlayer owner) {
         this.owner = owner;
     }
 
@@ -247,7 +258,7 @@ public class Region implements Saveable {
      * Get the region members.
      * @return Region members.
      */
-    public HashSet<String> getMembers() {
+    public HashSet<SaveablePlayer> getMembers() {
         return members;
     }
 
@@ -257,6 +268,14 @@ public class Region implements Saveable {
      */
     public void changeName(String newName) {
         name = newName;
+    }
+
+    public String getOwnerName() {
+        return owner != null ? owner.getDisplayName() : "";
+    }
+
+    public boolean isOwner(SaveablePlayer player) {
+        return player != null && player.equals(owner);
     }
 
     /**
@@ -278,6 +297,14 @@ public class Region implements Saveable {
         } else if(direction.equals(Direction.DOWN)) {
             v1.add(new Vector(0, -distance, 0));
         }
+    }
+
+    public PlayerRank getRank() {
+        return rank;
+    }
+
+    public void setRank(PlayerRank rank) {
+        this.rank = rank;
     }
 
     /**
@@ -303,7 +330,10 @@ public class Region implements Saveable {
      */
     public void placeCornerMarkers() {
         WEWorld world = new WEWorld(getWorld());
-
+        world.buildTower(v1.getBlockX(), v1.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(v2.getBlockX(), v1.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(v1.getBlockX(), v2.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(v2.getBlockX(), v2.getBlockZ(), 1, Material.FENCE, Material.TORCH);
     }
 
     /**
@@ -357,7 +387,7 @@ public class Region implements Saveable {
      * Get the name of the owner of this region.
      * @return Regions owner's name.
      */
-    public String getOwner() {
+    public SaveablePlayer getOwner() {
         return owner;
     }
 
@@ -420,29 +450,29 @@ public class Region implements Saveable {
 
     /**
      * Check if a player is a member of a region.
-     * @param name Player name.
+     * @param player Player name.
      * @return <code>true</code> if player is a member, <code>false</code> otherwise.
      */
-    public boolean hasMember(String name) {
-        return members.contains(name);
+    public boolean hasMember(SaveablePlayer player) {
+        return members.contains(player);
     }
 
     /**
      * Add a player as a member of the region.
-     * @param name Player name.
+     * @param player Player name.
      * @return <code>true</code> if the player was not already a member of the region, <code>false</code> otherwise.
      */
-    public boolean addMember(String name) {
-        return members.add(name);
+    public boolean addMember(SaveablePlayer player) {
+        return members.add(player);
     }
 
     /**
      * Remove a player as a member of a region.
-     * @param name Player name.
+     * @param player Player name.
      * @return <code>true</code> if the player was a member of the region, <code>false</code> otherwise.
      */
-    public boolean delMember(String name) {
-        return members.remove(name);
+    public boolean delMember(SaveablePlayer player) {
+        return members.remove(player);
     }
 
     /**

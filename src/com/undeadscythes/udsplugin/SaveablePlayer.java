@@ -27,43 +27,47 @@ import org.bukkit.util.Vector;
  */
 public class SaveablePlayer implements Saveable, Player {
     /**
-    * A player rank granting permission.
-    * @author UndeadScythes
-    */
-    public enum Rank {
+     * A player rank granting permission.
+     * @author UndeadScythes
+     */
+    public enum PlayerRank {
         /**
-        * Basic player rank.
-        */
+         * Basic player rank.
+         */
         DEFAULT(ChatColor.WHITE, 0),
         /**
-        * Player with build rights.
-        */
+         * Player with build rights.
+         */
         MEMBER(ChatColor.GREEN, 1),
         /**
-        * Donating or long term player.
-        */
+         * Donating or long term player.
+         */
         VIP(ChatColor.DARK_PURPLE, 1),
         /**
-        * Trustee.
-        */
+         * Trustee.
+         */
         WARDEN(ChatColor.AQUA, 2),
         /**
-        * Player moderator.
-        */
+         * Player moderator.
+         */
         MOD(ChatColor.DARK_AQUA, 3),
         /**
-        * Server administrator.
-        */
+         * Server administrator.
+         */
         ADMIN(ChatColor.YELLOW, 4),
         /**
-        * Server owner.
-        */
-        OWNER(ChatColor.GOLD, 5);
+         * Server owner.
+         */
+        OWNER(ChatColor.GOLD, 5),
+        /**
+         * Special rank for normally owned regions.
+         */
+        NONE(null, 5);
 
         private ChatColor color;
         private int ranking;
 
-        Rank(ChatColor color, int rank) {
+        PlayerRank(ChatColor color, int rank) {
             this.color = color;
             this.ranking = rank;
         }
@@ -72,8 +76,8 @@ public class SaveablePlayer implements Saveable, Player {
             return color;
         }
 
-        public static Rank getByRanking(int ranking) {
-            for(Rank rank : values()) {
+        public static PlayerRank getByRanking(int ranking) {
+            for(PlayerRank rank : values()) {
                 if(rank.ranking == ranking) {
                     return rank;
                 }
@@ -81,16 +85,16 @@ public class SaveablePlayer implements Saveable, Player {
             return null;
         }
 
-        public static Rank getAbove(Rank rank) {
+        public static PlayerRank getAbove(PlayerRank rank) {
             return getByRanking(rank.ranking + 1);
         }
 
-        public static Rank getBelow(Rank rank) {
+        public static PlayerRank getBelow(PlayerRank rank) {
             return getByRanking(rank.ranking - 1);
         }
 
-        public static Rank get(String string) {
-            for(Rank rank : values()) {
+        public static PlayerRank getByName(String string) {
+            for(PlayerRank rank : values()) {
                 if(rank.name().equals(string.toUpperCase())) {
                     return rank;
                 }
@@ -117,13 +121,12 @@ public class SaveablePlayer implements Saveable, Player {
     private Player base;
     private int bounty = 0;
     private int money = 0;
-    private Rank rank = Rank.DEFAULT;
+    private PlayerRank rank = PlayerRank.DEFAULT;
     private long vipTime = 0;
     private int vipSpawns = 0;
     private long jailTime = 0;
     private long jailSentence = 0;
     private int bail = 0;
-    private String clan = "";
     private String nick;
     private long timeLogged = 0;
     private Location back = null;
@@ -143,6 +146,7 @@ public class SaveablePlayer implements Saveable, Player {
     private SaveablePlayer whisperer = null;
     private int powertoolID = 0;
     private String powertoolCmd = "";
+    private Clan clan = null;
 
     /**
      * Initialise a brand new player extension.
@@ -163,15 +167,14 @@ public class SaveablePlayer implements Saveable, Player {
         name = recordSplit[0];
         bounty = Integer.parseInt(recordSplit[1]);
         money = Integer.parseInt(recordSplit[2]);
-        rank = Rank.get(recordSplit[3]);
+        rank = PlayerRank.getByName(recordSplit[3]);
         vipTime = Long.parseLong(recordSplit[4]);
         vipSpawns = Integer.parseInt(recordSplit[5]);
         jailTime = Long.parseLong(recordSplit[6]);
         jailSentence = Long.parseLong(recordSplit[7]);
         bail = Integer.parseInt(recordSplit[8]);
-        clan = recordSplit[9];
-        nick = recordSplit[10];
-        timeLogged = Long.parseLong(recordSplit[11]);
+        nick = recordSplit[9];
+        timeLogged = Long.parseLong(recordSplit[10]);
     }
 
     /**
@@ -189,7 +192,6 @@ public class SaveablePlayer implements Saveable, Player {
         record.add(jailTime + "");
         record.add(jailSentence + "");
         record.add(bail + "");
-        record.add(clan);
         record.add(nick);
         record.add(timeLogged + "");
         return StringUtils.join(record.toArray(), "\t");
@@ -249,7 +251,7 @@ public class SaveablePlayer implements Saveable, Player {
         return inventoryCopy;
     }
 
-    public void setClan(String clan) {
+    public void setClan(Clan clan) {
         this.clan = clan;
     }
 
@@ -300,7 +302,7 @@ public class SaveablePlayer implements Saveable, Player {
             lastChats.removeFirst();
         }
         lastChats.offerLast(System.currentTimeMillis());
-        if(lastChats.size() > 1 && lastChats.getLast() - lastChats.getFirst() < 3000) {
+        if(lastChats.size() == 5 && lastChats.getLast() - lastChats.getFirst() < 3000) {
             return false;
         }
         return true;
@@ -459,8 +461,8 @@ public class SaveablePlayer implements Saveable, Player {
      * Demote a player.
      * @return Players new rank, <code>null</code> if no change.
      */
-    public Rank demote() {
-        Rank newRank = Rank.getBelow(rank);
+    public PlayerRank demote() {
+        PlayerRank newRank = PlayerRank.getBelow(rank);
         if(newRank != null) {
             rank = newRank;
         }
@@ -471,8 +473,8 @@ public class SaveablePlayer implements Saveable, Player {
      * Promote a player.
      * @return Players new rank, <code>null</code> if no change.
      */
-    public Rank promote() {
-        Rank newRank = Rank.getAbove(rank);
+    public PlayerRank promote() {
+        PlayerRank newRank = PlayerRank.getAbove(rank);
         if(newRank != null) {
             rank = newRank;
         }
@@ -516,7 +518,7 @@ public class SaveablePlayer implements Saveable, Player {
         boolean contained = false;
         for(Region region : UDSPlugin.getRegions().values()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
-                if((region.getOwner().startsWith("g:") && rank.compareTo(Rank.get(region.getOwner().replace("g:", ""))) >= 0) || region.getOwner().equals(getName()) || region.hasMember(getName())) {
+                if((region.getRank() != null && rank.compareTo(region.getRank()) >= 0) || region.isOwner(this) || region.hasMember(this)) {
                     return true;
                 }
                 contained = true;
@@ -614,7 +616,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Get a player current rank.
      * @return Player rank.
      */
-    public Rank getRank() {
+    public PlayerRank getRank() {
         return rank;
     }
 
@@ -622,7 +624,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set the player rank.
      * @param rank The rank to set.
      */
-    public void setRank(Rank rank) {
+    public void setRank(PlayerRank rank) {
         this.rank = rank;
     }
 
@@ -631,7 +633,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @return <code>true</code> if a player is in a clan, <code>false</code> otherwise.
      */
     public boolean isInClan() {
-        return !clan.equals("");
+        return clan != null;
     }
 
     /**
@@ -646,7 +648,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Get the name of the clan the player is a member of.
      * @return Clan name.
      */
-    public String getClan() {
+    public Clan getClan() {
         return clan;
     }
 
@@ -833,7 +835,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @param rank Rank to check.
      * @return <code>true</code> if player has rank, <code>false</code> otherwise.
      */
-    public boolean hasRank(Rank rank) {
+    public boolean hasRank(PlayerRank rank) {
         if(this.rank.compareTo(rank) >= 0) {
             return true;
         } else {
@@ -886,7 +888,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @return <code>true</code> if the player has the permission, <code>false</code> otherwise.
      */
     public boolean hasPermission(Perm perm) {
-        if(perm.inherits()) {
+        if(perm.hereditary()) {
             return perm.getRank().compareTo(rank) <= 0;
         } else {
             return perm.getRank().equals(rank);

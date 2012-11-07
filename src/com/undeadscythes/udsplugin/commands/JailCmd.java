@@ -15,7 +15,7 @@ public class JailCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsMoreLessInc(1, 3) && (target = matchesPlayer(args[0])) != null && isOnline(target) && notSelf(target) && notJailed(target)) {
+        if(argsMoreLessInc(1, 3) && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notSelf(target) && notJailed(target)) {
             long sentence = 5;
             int bail = 1000;
             if(args.length > 1 && (sentence = parseInt(args[1])) != -1) {

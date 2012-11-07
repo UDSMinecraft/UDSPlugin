@@ -13,7 +13,7 @@ public class StatsCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsEq(1) && (target = matchesPlayer(args[0])) != null) {
+        if(argsEq(1) && (target = getMatchingPlayer(args[0])) != null) {
             player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s stats:");
             player.sendMessage(Color.TEXT + "Minecraft name: " + target.getName());
             player.sendMessage(Color.TEXT + "Rank: " + target.getRank().color() + target.getRank().toString());

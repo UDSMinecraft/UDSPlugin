@@ -22,11 +22,11 @@ public class EnchantCmd extends PlayerCommandExecutor {
                 if(args[0].matches("[0-9][0-9]*")) {
                     sendPage(Integer.parseInt(args[0]), player);
                 } else {
-                    if((enchantment = matchesEnchantment(args[0])) != null) {
+                    if((enchantment = getEnchantment(args[0])) != null) {
                         player.getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
                     }
                 }
-            } else if((enchantment = matchesEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0) {
+            } else if((enchantment = getEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0) {
                 player.getItemInHand().addEnchantment(enchantment, level);
             }
         }

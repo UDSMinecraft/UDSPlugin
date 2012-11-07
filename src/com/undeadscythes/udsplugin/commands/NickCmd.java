@@ -21,7 +21,7 @@ public class NickCmd extends PlayerCommandExecutor {
                 } else {
                     player.sendMessage(Color.ERROR + "Your nickname must be a shortened version of your Minecraft name.");
                 }
-            } else if(hasPerm(Perm.NICK_OTHER) && (target = matchesPlayer(args[0])) != null && noCensor(args[1])) {
+            } else if(hasPerm(Perm.NICK_OTHER) && (target = getMatchingPlayer(args[0])) != null && noCensor(args[1])) {
                 target.setDisplayName(args[1]);
                 player.sendMessage(Color.MESSAGE + player.getName() + "'s nickname has been changed to " + args[1] + ".");
                 target.sendMessage(Color.MESSAGE + "Your nickname has been changed to " + args[1] + ".");

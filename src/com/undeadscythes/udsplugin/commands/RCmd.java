@@ -14,7 +14,7 @@ public class RCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsMoreEq(1) && (target = hasWhisper()) != null && isOnline(target)) {
+        if(argsMoreEq(1) && (target = getWhisperer()) != null && isOnline(target)) {
             String message = player.getDisplayName() + " > " + target.getDisplayName() + ": " + StringUtils.join(args, " ");
             player.sendMessage(Color.WHISPER + message);
             target.sendMessage(Color.WHISPER + message);

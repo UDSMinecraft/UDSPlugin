@@ -13,7 +13,7 @@ public class WhoIsCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsEq(1) && (target = matchesPlayer(args[0])) != null) {
+        if(argsEq(1) && (target = getMatchingPlayer(args[0])) != null) {
             player.sendMessage(Color.MESSAGE + target.getDisplayName() + " is " + target.getName() + ".");
         }
     }

@@ -1,8 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.apache.commons.lang.*;
-import org.bukkit.*;
 import org.bukkit.inventory.*;
 
 /**
@@ -18,23 +16,21 @@ public class KitCmd extends PlayerCommandExecutor {
         if(argsMoreLessInc(0, 1)) {
             if(args.length == 0) {
                 player.sendMessage(Color.MESSAGE + "--- Available Kits ---");
-                for(String kit : Config.KITS) {
-                    String[] kitSplit = kit.split(",");
+                for(Kit kit : Config.KITS) {
                     String contents = "";
-                    for(String item : StringUtils.split(kit.replace(kitSplit[0] + "," + kitSplit[1] + ",", ""), ",")) {
-                        contents = contents.concat(Material.getMaterial(Integer.parseInt(item)).name().toLowerCase().replace("_", " ") + ", ");
+                    for(ItemStack item : kit.getItems()) {
+                        contents = contents.concat(item.getType().toString().toLowerCase().replace("_", " ") + ", ");
                     }
-                    player.sendMessage(Color.ITEM + kitSplit[0] + " (" + Integer.parseInt(kitSplit[1]) + "): " + Color.TEXT + contents.substring(0, contents.length() - 2));
+                    player.sendMessage(Color.ITEM + kit.getName() + " (" + kit.getPrice() + "): " + Color.TEXT + contents.substring(0, contents.length() - 2));
                 }
             } else {
                 boolean given = false;
-                for(String kit : Config.KITS) {
-                    String[] kitSplit = kit.split(",");
-                    if(kitSplit[0].equalsIgnoreCase(args[0]) && canAfford(Integer.parseInt(kitSplit[1]))) {
-                        for(String item : StringUtils.split(kit.replace(kitSplit[0] + "," + kitSplit[1] + ",", ""), ",")) {
-                            player.giveAndDrop(new ItemStack(Material.getMaterial(Integer.parseInt(item))));
+                for(Kit kit : Config.KITS) {
+                    if(kit.getName().equalsIgnoreCase(args[0]) && canAfford(kit.getPrice())) {
+                        for(ItemStack item : kit.getItems()) {
+                            player.giveAndDrop(item);
                         }
-                        player.debit(Integer.parseInt(kitSplit[1]));
+                        player.debit(kit.getPrice());
                         given = true;
                     }
                 }

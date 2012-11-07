@@ -8,7 +8,7 @@ public class Request {
     /**
      * A request type.
      */
-    public enum Type {
+    public enum RequestType {
         /**
          * A clan invite.
          */
@@ -35,7 +35,7 @@ public class Request {
         TP;
     }
 
-    private Type type;
+    private RequestType type;
     private SaveablePlayer sender;
     private SaveablePlayer recipient;
     private String data;
@@ -48,7 +48,7 @@ public class Request {
      * @param type The request type.
      * @param data The request data, if any.
      */
-    public Request(SaveablePlayer sender, Type type, String data, SaveablePlayer recipient) {
+    public Request(SaveablePlayer sender, RequestType type, String data, SaveablePlayer recipient) {
         this.type = type;
         this.sender = sender;
         this.data = data;
@@ -62,7 +62,7 @@ public class Request {
      * @param type The request type.
      * @param data The request data, if any.
      */
-    public Request(SaveablePlayer sender, Type type, int data, SaveablePlayer recipient) {
+    public Request(SaveablePlayer sender, RequestType type, int data, SaveablePlayer recipient) {
         this.type = type;
         this.sender = sender;
         this.data = Integer.toString(data);
@@ -73,7 +73,7 @@ public class Request {
      * Get the type of this request.
      * @return Request type.
      */
-    public Type getType() {
+    public RequestType getType() {
         return type;
     }
 

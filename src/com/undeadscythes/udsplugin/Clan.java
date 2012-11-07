@@ -11,20 +11,20 @@ public class Clan implements Saveable {
     /**
      * File name of clan file.
      */
-    public static String PATH = "clans.csv";
+    public static final String PATH = "clans.csv";
 
     private String name;
-    private String leader;
+    private SaveablePlayer leader;
     private int kills = 0;
     private int deaths = 0;
-    private ArrayList<String> members = new ArrayList<String>();
+    private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>();
 
     /**
      * Initialise a brand new clan.
      * @param name Clan name.
      * @param leader Leader name.
      */
-    public Clan(String name, String leader) {
+    public Clan(String name, SaveablePlayer leader) {
         this.name = name;
         this.leader = leader;
         members.add(leader);
@@ -37,10 +37,14 @@ public class Clan implements Saveable {
     public Clan(String record) {
         String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        leader = recordSplit[1];
+        leader = UDSPlugin.getPlayers().get(recordSplit[1]);
         kills = Integer.parseInt(recordSplit[2]);
         deaths = Integer.parseInt(recordSplit[3]);
-        members = new ArrayList<String>(Arrays.asList(recordSplit[4].split(",")));
+        members = new HashSet<SaveablePlayer>();
+        for(String member : recordSplit[4].split(",")) {
+            members.add(UDSPlugin.getPlayers().get(member));
+
+        }
     }
 
     /**
@@ -50,21 +54,30 @@ public class Clan implements Saveable {
     public String getRecord() {
         ArrayList<String> record = new ArrayList<String>();
         record.add(name);
-        record.add(leader);
+        record.add(leader.getName());
         record.add(kills + "");
         record.add(deaths + "");
-        record.add(StringUtils.join(members.toArray(), ","));
+        ArrayList<String> memberList = new ArrayList<String>();
+        for(SaveablePlayer member : members) {
+            memberList.add(member.getName());
+        }
+        record.add(StringUtils.join(memberList, ","));
         return StringUtils.join(record.toArray(), "\t");
+    }
+
+    public void linkMembers() {
+        for(SaveablePlayer member : members) {
+            member.setClan(this);
+        }
     }
 
     /**
      * Get members of the clan that are currently online.
      * @return Online members.
      */
-    public ArrayList<SaveablePlayer> getOnlineMembers() {
-        ArrayList<SaveablePlayer> onlineMembers = new ArrayList<SaveablePlayer>();
-        for(String memberName : members) {
-            SaveablePlayer member = UDSPlugin.getOnlinePlayers().get(memberName);
+    public HashSet<SaveablePlayer> getOnlineMembers() {
+        HashSet<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>();
+        for(SaveablePlayer member : members) {
             if(member != null) {
                 onlineMembers.add(member);
             }
@@ -72,7 +85,7 @@ public class Clan implements Saveable {
         return onlineMembers;
     }
 
-    public ArrayList<String> getMembers() {
+    public HashSet<SaveablePlayer> getMembers() {
         return members;
     }
 
@@ -86,9 +99,6 @@ public class Clan implements Saveable {
 
     public void rename(String name) {
         this.name = name;
-        for(String member : members) {
-            UDSPlugin.getPlayers().get(member).setClan(name);
-        }
     }
 
     /**
@@ -111,18 +121,18 @@ public class Clan implements Saveable {
      * Get the name of the clan's leader.
      * @return Clan leader's name.
      */
-    public String getLeader() {
+    public SaveablePlayer getLeader() {
         return leader;
     }
 
     /**
      * Change the clan leader to another member of the clan.
-     * @param name Name of the new leader.
+     * @param player Name of the new leader.
      * @return <code>true</code> if successful, <code>false</code> otherwise.
      */
-    public boolean changeLeader(String name) {
-        if(members.contains(name)) {
-            leader = name;
+    public boolean changeLeader(SaveablePlayer player) {
+        if(members.contains(player)) {
+            leader = player;
             return true;
         } else {
             return false;
@@ -157,32 +167,32 @@ public class Clan implements Saveable {
 
     /**
      * Checks if a player is a member of the clan.
-     * @param name Name of the player.
+     * @param player Name of the player.
      * @return <code>true</code> if player is a clan member, <code>false</code> otherwise.
      */
-    public boolean hasMember(String name) {
-        return members.contains(name);
+    public boolean hasMember(SaveablePlayer player) {
+        return members.contains(player);
     }
 
     /**
      * Add a new clan member.
-     * @param name Player name.
+     * @param player Player name.
      */
-    public void addMember(String name) {
-        members.add(name);
+    public void addMember(SaveablePlayer player) {
+        members.add(player);
     }
 
     /**
      * Remove a member from the clan.
-     * @param name Player name.
+     * @param player Player name.
      */
-    public boolean delMember(String name) {
-        members.remove(name);
-        if(leader.equals(name)) {
+    public boolean delMember(SaveablePlayer player) {
+        members.remove(player);
+        if(leader.equals(player)) {
             if(members.isEmpty()) {
                 return false;
             } else {
-                leader = members.get(0);
+                leader = members.toArray(new SaveablePlayer[members.size()])[0];
                 return true;
             }
         } else {
@@ -191,11 +201,8 @@ public class Clan implements Saveable {
     }
 
     public void sendMessage(String message) {
-        for(String memberName : members) {
-            SaveablePlayer member;
-            if((member = UDSPlugin.getOnlinePlayers().get(memberName)) != null) {
-                member.sendMessage(Color.CLAN + "[" + name + "] " + message);
-            }
+        for(SaveablePlayer member : getOnlineMembers()) {
+            member.sendMessage(Color.CLAN + "[" + name + "] " + message);
         }
     }
 }

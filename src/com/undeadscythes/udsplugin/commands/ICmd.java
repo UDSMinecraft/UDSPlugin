@@ -15,7 +15,7 @@ public class ICmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsMoreLessInc(1, 2)) {
             ItemStack item;
-            if((item = matchesItem(args[0])) != null) {
+            if((item = getItem(args[0])) != null) {
                 int amount;
                 if(args.length == 1) {
                     item.setAmount(item.getMaxStackSize());

@@ -1,7 +1,7 @@
 name: UDSPlugin
 main: com.undeadscythes.udsplugin.UDSPlugin
 version: 0.1
-description: UDSlugin1 for CB 1.4.2-R0.2 #2449.
+description: UDSPlugin1 for CB 1.4.2-R0.2 #2457.
 author: UndeadScythes - daveyognaut2@gmail.com
 website: http://undeadscythes.webs.com/
 depend: []
@@ -11,7 +11,6 @@ commands:
   acceptrules:
   back:
   ban:
-  blind:
   bounty:
     aliases: bounties
   broadcast:
@@ -29,7 +28,6 @@ commands:
   demote:
   enchant:
   face:
-  firework:
   gift:
   god:
   heal:
@@ -44,13 +42,11 @@ commands:
   kit:
   lockdown:
   map:
-  mapdupe:
   me:
   money:
   n:
   nick:
   night:
-  ownerme:
   p:
   paybail:
   pet:
@@ -61,11 +57,9 @@ commands:
     aliases: reply
   rain:
   region:
-  resetquarry:
   rules:
   scuba:
   server:
-  serverinfo:
   setspawn:
   setwarp:
   shop:
@@ -77,18 +71,13 @@ commands:
   stats:
   storm:
   sun:
-  swearjar:
   tell:
     aliases: [whisper, msg]
   tgm:
     aliases: [gm, gamemode]
-  ticket:
-  timereset:
   tp:
-  udsreload:
   unban:
   unjail:
-  unnick:
   vip:
   warp:
     aliases: warps

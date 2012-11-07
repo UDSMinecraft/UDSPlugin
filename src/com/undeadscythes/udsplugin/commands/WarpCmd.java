@@ -29,7 +29,7 @@ public class WarpCmd extends PlayerCommandExecutor {
                 } else {
                     player.sendMessage(Color.MESSAGE + "You don't have access to any warps.");
                 }
-            } else if((warp = matchesWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
+            } else if((warp = getWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
                 player.debit(warp.getPrice());
                 player.teleport(warp);
             }

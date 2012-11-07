@@ -14,8 +14,8 @@ public class ChallengeCmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
         int wager;
-        if(notJailed() && argsEq(2) && (target = matchesPlayer(args[0])) != null && isOnline(target) && notJailed(target) && (wager = parseInt(args[1])) != -1 && canAfford(wager) && notBusy(target) && notDueling(target) && notSelf(target)) {
-            UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.Type.PVP, wager, target));
+        if(notJailed() && argsEq(2) && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notJailed(target) && (wager = parseInt(args[1])) != -1 && canAfford(wager) && noRequests(target) && notDueling(target) && notSelf(target)) {
+            UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.PVP, wager, target));
             target.sendMessage(Color.MESSAGE + player.getDisplayName() + " has challenged you to a duel for " + wager + " credits.");
             target.sendMessage(Message.REQUEST_Y_N);
             player.sendMessage(Message.REQUEST_SENT);

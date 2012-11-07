@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import org.bukkit.*;
 
 /**
@@ -16,10 +16,10 @@ public class VIPCmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsLessEq(2)) {
             if(args.length == 0) {
-                if(player.getRank().equals(Rank.VIP)) {
+                if(player.getRank().equals(PlayerRank.VIP)) {
                     player.sendMessage(Color.MESSAGE + "You have " + player.getVIPTimeString()+ " left in VIP.");
                 } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
-                    player.setRank(Rank.VIP);
+                    player.setRank(PlayerRank.VIP);
                     player.setVIPTime(System.currentTimeMillis());
                     player.setVIPSpawns(Config.VIP_SPAWNS);
                     player.sendMessage(Color.MESSAGE + "Welcome to the elite, enjoy your VIP status.");
@@ -52,9 +52,9 @@ public class VIPCmd extends PlayerCommandExecutor {
             player.sendMessage(Color.MESSAGE + "--- VIP Item Whitelist " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
-            for(int i : Config.WHITELIST) {
+            for(Material i : Config.WHITELIST) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    String item = Material.getMaterial(i).toString();
+                    String item = i.toString();
                     item = item.substring(0, 1).toUpperCase().concat(item.substring(1, item.length()).toLowerCase());
                     player.sendMessage(Color.ITEM + item + " (" + Color.TEXT + i + Color.ITEM  + ")");
                     posted++;

@@ -13,7 +13,7 @@ public class NCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         Request request;
-        if(argsEq(0) && (request = hasRequest()) != null) {
+        if(argsEq(0) && (request = getRequest()) != null) {
             UDSPlugin.getRequests().remove(player.getName());
             SaveablePlayer sender = UDSPlugin.getPlayers().get(request.getSender().getName());
             if(sender.isOnline()) {

@@ -19,7 +19,7 @@ public class HealCmd extends PlayerCommandExecutor {
                 player.setHealth(player.getMaxHealth());
                 player.setFoodLevel(20);
                 player.sendMessage(message);
-            } else if((target = matchesPlayer(args[0])) != null) {
+            } else if((target = getMatchingPlayer(args[0])) != null) {
                 target.setHealth(player.getMaxHealth());
                 target.sendMessage(message);
                 target.setFoodLevel(20);

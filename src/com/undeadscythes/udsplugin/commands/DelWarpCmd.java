@@ -13,7 +13,7 @@ public class DelWarpCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         Warp warp;
-        if(argsEq(1) && (warp = matchesWarp(args[0])) != null) {
+        if(argsEq(1) && (warp = getWarp(args[0])) != null) {
             UDSPlugin.getWarps().remove(warp.getName());
             player.sendMessage(Color.MESSAGE + "Warp removed.");
         }

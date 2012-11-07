@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class ChatRoom {
     private String name;
-    private ArrayList<SaveablePlayer> members = new ArrayList<SaveablePlayer>();
+    private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>();
 
     /**
      * Create a brand new private chat room.
@@ -32,8 +32,8 @@ public class ChatRoom {
      * Get members of the chat room that are currently online.
      * @return Online members.
      */
-    public ArrayList<SaveablePlayer> getOnlineMembers() {
-        ArrayList<SaveablePlayer> onlineMembers = new ArrayList<SaveablePlayer>();
+    public HashSet<SaveablePlayer> getOnlineMembers() {
+        HashSet<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>();
         for(SaveablePlayer member : members) {
             if(member != null) {
                 onlineMembers.add(member);

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
 import java.io.*;
@@ -100,6 +101,8 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info("Events registered.");
         addRecipes();
         getLogger().info("Recipes added.");
+        Censor.initCensor();
+        getLogger().info("Censor online.");
         String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
         getLogger().info(message);
     }
@@ -124,9 +127,9 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static void saveFiles() throws IOException {
         clans.save(DATA_PATH + File.separator + Clan.PATH);
-        players.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
         regions.save(DATA_PATH + File.separator + Region.PATH);
         warps.save(DATA_PATH + File.separator + Warp.PATH);
+        players.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
         BufferedWriter file = new BufferedWriter(new FileWriter(DATA_PATH + File.separator + UDSPlugin.TIMES_PATH));
         file.write(Long.toString(lastDailyEvent));
         file.newLine();
@@ -144,18 +147,6 @@ public class UDSPlugin extends JavaPlugin {
         String nextLine;
         String message;
         int count = 0;
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
-            while((nextLine = file.readLine()) != null) {
-                clans.put(nextLine.split("\t")[0], new Clan(nextLine));
-                count++;
-            }
-            file.close();
-            message = count + " clans loaded.";
-            getLogger().info(message);
-        } catch (FileNotFoundException ex) {
-            getLogger().info("No clan file exists yet.");
-        }
         try {
             count = 0;
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + SaveablePlayer.PATH));
@@ -179,17 +170,17 @@ public class UDSPlugin extends JavaPlugin {
             while((nextLine = file.readLine()) != null) {
                 Region region = new Region(nextLine);
                 regions.put(region.getName(), region);
-                if(region.getType().equals(Region.RegionType.BASE)) {
+                if(region.getType().equals(RegionType.BASE)) {
                     bases.put(region.getName(), region);
-                } else if(region.getType().equals(Region.RegionType.HOME)) {
+                } else if(region.getType().equals(RegionType.HOME)) {
                     homes.put(region.getName(), region);
-                } else if(region.getType().equals(Region.RegionType.QUARRY)) {
+                } else if(region.getType().equals(RegionType.QUARRY)) {
                     quarries.put(region.getName(), region);
-                } else if(region.getType().equals(Region.RegionType.SHOP)) {
+                } else if(region.getType().equals(RegionType.SHOP)) {
                     shops.put(region.getName(), region);
-                } else if(region.getType().equals(Region.RegionType.CITY)) {
+                } else if(region.getType().equals(RegionType.CITY)) {
                     cities.put(region.getName(), region);
-                } else if(region.getType().equals(Region.RegionType.ARENA)) {
+                } else if(region.getType().equals(RegionType.ARENA)) {
                     arenas.put(region.getName(), region);
                 }
                 count++;
@@ -220,6 +211,20 @@ public class UDSPlugin extends JavaPlugin {
             file.close();
         } catch (FileNotFoundException ex) {
             lastDailyEvent = System.currentTimeMillis();
+        }
+        try {
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
+            while((nextLine = file.readLine()) != null) {
+                Clan clan = new Clan(nextLine);
+                clans.put(nextLine.split("\t")[0], clan);
+                clan.linkMembers();
+                count++;
+            }
+            file.close();
+            message = count + " clans loaded.";
+            getLogger().info(message);
+        } catch (FileNotFoundException ex) {
+            getLogger().info("No clan file exists yet.");
         }
     }
 
@@ -307,7 +312,7 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockBreak(), this);
         getServer().getPluginManager().registerEvents(new BlockBurn(), this);
         getServer().getPluginManager().registerEvents(new BlockFade(), this);
-//        getServer().getPluginManager().registerEvents(new BlockForm(), this);
+        getServer().getPluginManager().registerEvents(new BlockForm(), this);
         getServer().getPluginManager().registerEvents(new BlockFromTo(), this);
         getServer().getPluginManager().registerEvents(new BlockGrow(), this);
         getServer().getPluginManager().registerEvents(new BlockIgnite(), this);
@@ -316,7 +321,7 @@ public class UDSPlugin extends JavaPlugin {
 //        getServer().getPluginManager().registerEvents(new BlockPistonRetract(), this);
         getServer().getPluginManager().registerEvents(new BlockPlace(), this);
 //        getServer().getPluginManager().registerEvents(new BlockRedstone(), this);
-//        getServer().getPluginManager().registerEvents(new BlockSpread(), this);
+        getServer().getPluginManager().registerEvents(new BlockSpread(), this);
         getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);
 //        getServer().getPluginManager().registerEvents(new EntityBlockForm(), this);
 //        getServer().getPluginManager().registerEvents(new EntityChangeBlock(), this);
@@ -328,8 +333,8 @@ public class UDSPlugin extends JavaPlugin {
 //        getServer().getPluginManager().registerEvents(new EntityPortalEnter(), this);
 //        getServer().getPluginManager().registerEvents(new InventoryClick(), this);
 //        getServer().getPluginManager().registerEvents(new InventoryOpen(), this);
-//        getServer().getPluginManager().registerEvents(new PaintingBreak(), this);
-//        getServer().getPluginManager().registerEvents(new PaintingPlace(), this);
+        getServer().getPluginManager().registerEvents(new HangingBreak(), this);
+        getServer().getPluginManager().registerEvents(new HangingPlace(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerBucketEmpty(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerBucketFill(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerDeath(), this);

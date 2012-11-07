@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.LoadableLocation.Direction;
-import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
+import com.undeadscythes.udsplugin.Bearing.Direction;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -43,8 +43,8 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param string String to check.
      * @return The rank if the rank is valid, <code>null</code> otherwise.
      */
-    public Rank matchesRank(String string) {
-        Rank rank = Rank.get(string);
+    public PlayerRank getRank(String string) {
+        PlayerRank rank = PlayerRank.getByName(string);
         if(rank != null) {
             return rank;
         } else {
@@ -62,7 +62,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public UUID petSelected() {
+    public UUID getSelectedPet() {
         UUID pet;
         if((pet = player.getSelectedPet()) != null) {
             return pet;
@@ -72,7 +72,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region hasShop() {
+    public Region getShop() {
         Region shop;
         if((shop = UDSPlugin.getShops().get(player.getName() + "shop")) != null) {
             return shop;
@@ -84,7 +84,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean canRequest(SaveablePlayer target) {
-        if(notBusy(target) && notIgnored(target)) {
+        if(noRequests(target) && notIgnored(target)) {
             return true;
         } else {
             return false;
@@ -99,7 +99,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region hasShop(SaveablePlayer target) {
+    public Region getShop(SaveablePlayer target) {
         Region shop;
         if((shop = UDSPlugin.getShops().get(target.getName() + "shop")) != null) {
             return shop;
@@ -110,7 +110,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     }
 
-    public int canAffordSafe(String amount) {
+    public int getAffordablePrice(String amount) {
         int cash;
         if((cash = parseInt(amount)) != -1 && canAfford(cash)) {
             return cash;
@@ -119,7 +119,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public SaveablePlayer hasWhisper() {
+    public SaveablePlayer getWhisperer() {
         SaveablePlayer target;
         if((target = player.getWhisperer()) != null) {
             return target;
@@ -138,7 +138,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Session hasSession() {
+    public Session getSession() {
         Session session;
         if((session = UDSPlugin.getSessions().get(player.getName())) != null) {
             return session;
@@ -148,7 +148,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region matchesRegion(String regionName) {
+    public Region getRegion(String regionName) {
         Region region;
         if((region = UDSPlugin.getRegions().get(regionName)) != null) {
             return region;
@@ -158,7 +158,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region.RegionFlag matchesFlag(String name) {
+    public Region.RegionFlag getFlag(String name) {
         Region.RegionFlag flag;
         if((flag = Region.RegionFlag.getByName(name)) != null) {
             return flag;
@@ -168,7 +168,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region.RegionType matchesRegionType(String name) {
+    public Region.RegionType getRegionType(String name) {
         Region.RegionType type;
         if((type = Region.RegionType.getByName(name)) != null) {
             return type;
@@ -205,7 +205,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Request hasRequest() {
+    public Request getRequest() {
         Request request;
         if((request = UDSPlugin.getRequests().get(player.getName())) != null) {
             return request;
@@ -215,7 +215,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region hasHome() {
+    public Region getHome() {
         Region home;
         if((home = UDSPlugin.getHomes().get(player.getName() + "home")) != null) {
             return home;
@@ -225,9 +225,9 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Direction matchesDirection(String dir) {
+    public Direction getDirection(String dir) {
         Direction direction;
-        if((direction = Direction.get(dir)) != null) {
+        if((direction = Direction.getByName(dir)) != null) {
             return direction;
         } else {
             player.sendMessage(Color.ERROR + "That is not a valid direction.");
@@ -235,9 +235,9 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Direction matchesCardinalDirection(String dir) {
+    public Direction getCardinalDirection(String dir) {
         Direction direction;
-        if((direction = matchesDirection(dir)) != null) {
+        if((direction = getDirection(dir)) != null) {
             if(direction.cardinal()) {
                 return direction;
             } else {
@@ -267,7 +267,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Clan matchesClan(String name) {
+    public Clan getClan(String name) {
         Clan clan;
         if((clan = UDSPlugin.getClans().get(name)) != null) {
             return clan;
@@ -278,7 +278,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean isClanless() {
-        if(player.getClan().equals("")) {
+        if(player.getClan() == null) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You are already in a clan.");
@@ -287,7 +287,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean isInClan(SaveablePlayer player, Clan clan) {
-        if(player.getClan().equals(clan.getName())) {
+        if(player.getClan().equals(clan)) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "That player is not in your clan.");
@@ -295,7 +295,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public boolean noClan(String name) {
+    public boolean notClan(String name) {
         if(!UDSPlugin.getClans().containsKey(name)) {
             return true;
         } else {
@@ -305,7 +305,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean isLeader(Clan clan) {
-        if(clan.getLeader().equals(player.getName())) {
+        if(clan.getLeader().equals(player)) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You must be clan leader to do this.");
@@ -317,9 +317,9 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * Check that a player is in a clan.
      * @return The player's clan or <code>null</code> if the player is clanless.
      */
-    public Clan hasClan() {
+    public Clan getClan() {
         Clan clan;
-        if((clan = UDSPlugin.getClans().get(player.getClan())) != null) {
+        if((clan = player.getClan()) != null) {
             return clan;
         } else {
             player.sendMessage(Color.ERROR + "You are not in a clan.");
@@ -332,7 +332,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param clan The players clan.
      * @return The clan's base or <code>null</code> if the clan does not have a base.
      */
-    public Region hasBase(Clan clan) {
+    public Region getBase(Clan clan) {
         Region region;
         if((region = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
             return region;
@@ -356,9 +356,9 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public SaveablePlayer matchesOtherPlayer(String name) {
+    public SaveablePlayer getMatchingOtherPlayer(String name) {
         SaveablePlayer target;
-        if((target = matchesPlayer(name)) != null && notSelf(target)) {
+        if((target = getMatchingPlayer(name)) != null && notSelf(target)) {
             return target;
         } else {
             return null;
@@ -370,7 +370,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param warpName Warp name to check.
      * @return <code>true</code> if no warp exists by this name, <code>false</code> otherwise.
      */
-    public boolean noWarp(String warpName) {
+    public boolean notWarp(String warpName) {
         if(UDSPlugin.getWarps().get(warpName) == null) {
             return true;
         } else {
@@ -411,7 +411,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param string Material to check.
      * @return The material if it exists, <code>null</code> otherwise.
      */
-    public ItemStack matchesItem(String string) {
+    public ItemStack getItem(String string) {
         Material material;
         String matString = string.toUpperCase();
         byte data = 0;
@@ -442,7 +442,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param enchant Enchantment name.
      * @return The enchantment if it exists, <code>null</code> otherwise.
      */
-    public Enchantment matchesEnchantment(String enchant) {
+    public Enchantment getEnchantment(String enchant) {
         Enchantment enchantment = Enchantment.getByName(enchant.toUpperCase());
         if(enchantment != null) {
             return enchantment;
@@ -457,7 +457,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param rank Rank required.
      * @return <code>true</code> if the player has the required rank, <code>false</code> otherwise.
      */
-    public boolean hasRank(Rank rank) {
+    public boolean hasRank(PlayerRank rank) {
         if(player.getRank().compareTo(rank) >= 0) {
             return true;
         } else {
@@ -470,7 +470,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * Get the first region the player is currently in.
      * @return The first region the player is in or <code>null</code> if none found.
      */
-    public Region inRegion() {
+    public Region getCurrentRegion() {
         Region region;
         if((region = player.getCurrentRegion(Region.RegionType.CITY)) != null) {
             return region;
@@ -481,7 +481,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean isRoomie(Region home) {
-        if(home.hasMember(player.getName())) {
+        if(home.hasMember(player)) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You are not that players room mate.");
@@ -490,7 +490,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean isWorker(Region shop) {
-        if(shop.hasMember(player.getName())) {
+        if(shop.hasMember(player)) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You are not that players worker.");
@@ -499,7 +499,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean isWorker(SaveablePlayer target, Region shop) {
-        if(shop.hasMember(target.getName())) {
+        if(shop.hasMember(target)) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "That player is not your worker.");
@@ -507,8 +507,8 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public boolean isEmpty(Region shop) {
-        if(shop.getOwner().equals("")) {
+    public boolean isEmptyShop(Region shop) {
+        if(shop.getOwner() == null) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "Somebody already owns this shop.");
@@ -516,7 +516,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region isInShop() {
+    public Region getContainingShop() {
         Region shop;
         if((shop = player.getCurrentRegion(Region.RegionType.SHOP)) != null) {
             return shop;
@@ -527,7 +527,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     }
 
     public boolean isRoomie(SaveablePlayer target, Region home) {
-        if(home.hasMember(target.getName())) {
+        if(home.hasMember(target)) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "That player is not your room mate.");
@@ -535,7 +535,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region hasHome(SaveablePlayer target) {
+    public Region getHome(SaveablePlayer target) {
         Region home;
         if((home = UDSPlugin.getHomes().get(target.getName() + "home")) != null) {
             return home;
@@ -559,7 +559,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param name Name to check.
      * @return <code>true</code> if no region already exists with the given name, <code>false</code> otherwise.
      */
-    public boolean noRegion(String name) {
+    public boolean notRegion(String name) {
         if(!UDSPlugin.getRegions().containsKey(name)) {
             return true;
         } else {
@@ -573,7 +573,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param cityName City to check.
      * @return The city if it exists, <code>null</code> otherwise.
      */
-    public Region matchesCity(String cityName) {
+    public Region getMatchingCity(String cityName) {
         Region city;
         if((city = UDSPlugin.getCities().matchKey(cityName)) != null) {
             return city;
@@ -589,10 +589,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param cityName City to check.
      * @return The city if both the city exists and the player is the mayor, <code>null</code> otherwise.
      */
-    public Region mayor(String cityName) {
+    public Region getMunicipality(String cityName) {
         Region city;
-        if((city = matchesCity(cityName)) != null) {
-            if(city.getOwner().equals(player.getName())) {
+        if((city = getMatchingCity(cityName)) != null) {
+            if(city.getOwner().equals(player)) {
                 return city;
             } else {
                 player.sendMessage(Color.ERROR + "You are not the mayor of that city.");
@@ -703,7 +703,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param target The player to check.
      * @return <code>true</code> if the target player has no requests pending, <code>false</code> otherwise.
      */
-    public boolean notBusy(SaveablePlayer target) {
+    public boolean noRequests(SaveablePlayer target) {
         if(!UDSPlugin.getRequests().containsKey(target.getName())) {
             return true;
         } else {
@@ -712,9 +712,9 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public SaveablePlayer matchesOtherOnlinePlayer(String name) {
+    public SaveablePlayer getMatchingOtherOnlinePlayer(String name) {
         SaveablePlayer target;
-        if((target = matchesOnlinePlayer(name)) != null && notSelf(target)) {
+        if((target = getMatchingOnlinePlayer(name)) != null && notSelf(target)) {
             return target;
         } else {
             return null;
@@ -825,7 +825,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param partial Partial player name.
      * @return The first player matched or <code>null</code> if no players matched.
      */
-    public SaveablePlayer matchesPlayer(String partial) {
+    public SaveablePlayer getMatchingPlayer(String partial) {
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(partial);
         if(target!= null) {
             return target;
@@ -874,7 +874,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-        public SaveablePlayer matchesOnlinePlayer(String partial) {
+        public SaveablePlayer getMatchingOnlinePlayer(String partial) {
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(partial);
         if(target!= null) {
             return target;
@@ -908,7 +908,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @param partial Partial warp name.
      * @return The warp matched or <code>null</code> if there were no matches.
      */
-    public Warp matchesWarp(String partial) {
+    public Warp getWarp(String partial) {
         Warp warp = UDSPlugin.getWarps().get(partial);
         if(warp != null) {
             return warp;

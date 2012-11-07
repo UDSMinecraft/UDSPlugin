@@ -17,7 +17,7 @@ public class LockdownCmd extends PlayerCommandExecutor {
             if(args.length == 0) {
                 UDSPlugin.serverInLockdown ^= true;
                 player.sendMessage(Color.MESSAGE + "The server is " + (UDSPlugin.serverInLockdown ? "now" : "no longer") + " in lockdown.");
-            } else if((target = matchesPlayer(args[0])) != null) {
+            } else if((target = getMatchingPlayer(args[0])) != null) {
                 target.toggleLockdownPass();
                 player.sendMessage(Color.MESSAGE + target.getDisplayName() + (target.hasLockdownPass() ? " now" : " no longer") + " has a lockdown pass.");
             }

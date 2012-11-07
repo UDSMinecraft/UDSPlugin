@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
 
@@ -34,27 +34,27 @@ public class MoneyCmd extends PlayerCommandExecutor {
                     int printed = 0;
                     player.sendMessage(Color.MESSAGE + "Top 5 Richest Players:");
                     for(SaveablePlayer ranker : players) {
-                        if(printed < 5 && ranker.getRank().compareTo(Rank.MOD) < 0) {
+                        if(printed < 5 && ranker.getRank().compareTo(PlayerRank.MOD) < 0) {
                             player.sendMessage(Color.TEXT.toString() + (printed + 1) + ": " + ranker.getRank().color() + ranker.getDisplayName() + ", " + Color.TEXT + ranker.getMoney() + " " + Config.CURRENCIES);
                             printed++;
                         }
                     }
                     int rank = players.indexOf(player);
-                    if(rank > 5 && player.getRank().compareTo(Rank.MOD) < 0) {
+                    if(rank > 5 && player.getRank().compareTo(PlayerRank.MOD) < 0) {
                         player.sendMessage(Color.MESSAGE + "Your rank is " + rank + ".");
                     }
-                } else if((target = matchesPlayer(args[0])) != null && notSelf(target) && hasPerm(Perm.MONEY_OTHER)) {
+                } else if((target = getMatchingPlayer(args[0])) != null && notSelf(target) && hasPerm(Perm.MONEY_OTHER)) {
                     player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has " + target.getMoney() + " " + Config.CURRENCIES + ".");
                 }
             } else if(args.length == 3) {
                 int amount;
-                if(args[0].equals("set") && hasPerm(Perm.MONEY_ADMIN) && (target = matchesPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
+                if(args[0].equals("set") && hasPerm(Perm.MONEY_ADMIN) && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
                     target.setMoney(amount);
                     player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s account has been set to " + amount + " " + Config.CURRENCIES + ".");
-                } else if(args[0].equals("grant") && hasPerm(Perm.MONEY_ADMIN) && (target = matchesPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
+                } else if(args[0].equals("grant") && hasPerm(Perm.MONEY_ADMIN) && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
                     target.credit(amount);
                     player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s account has been credited " + amount + " " + Config.CURRENCIES + ".");
-                } else if(args[0].equals("pay") && (target = matchesPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1 && canAfford(amount) && notSelf(target)) {
+                } else if(args[0].equals("pay") && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1 && canAfford(amount) && notSelf(target)) {
                     target.credit(amount);
                     player.debit(amount);
                     player.sendMessage(Color.MESSAGE.toString() + amount + " " + Config.CURRENCIES + " have been sent to " + target.getDisplayName() + ".");

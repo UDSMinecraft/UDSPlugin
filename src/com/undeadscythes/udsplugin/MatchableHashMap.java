@@ -10,29 +10,29 @@ import java.util.*;
 public class MatchableHashMap<Object> extends HashMap<String, Object> {
     /**
      * Find all matches for a given partial key.
-     * @param partialKey Partial key to search the map with.
+     * @param partial Partial key to search the map with.
      * @return A list of objects corresponding to matches of the partial key.
      */
-    public ArrayList<Object> getKeyMatches(String partialKey) {
-        String lowPartialKey = partialKey.toLowerCase();
-        ArrayList<Object> returnValue = new ArrayList<Object>();
+    public ArrayList<Object> getKeyMatches(String partial) {
+        String lowPartial = partial.toLowerCase();
+        ArrayList<Object> matches = new ArrayList<Object>();
         for(Map.Entry<String, Object> entry : super.entrySet()) {
-            if(entry.getKey().toLowerCase().contains(lowPartialKey)) {
-                returnValue.add(entry.getValue());
+            if(entry.getKey().toLowerCase().contains(lowPartial)) {
+                matches.add(entry.getValue());
             }
         }
-        return returnValue;
+        return matches;
     }
 
     /**
      * Finds the first match for a partial key.
-     * @param partialKey Partial key to search the map with.
+     * @param partial Partial key to search the map with.
      * @return The first match or <code>null</code> if there are no matches.
      */
-    public Object matchKey(String partialKey) {
-        String lowPartialKey = partialKey.toLowerCase();
+    public Object matchKey(String partial) {
+        String lowPartial = partial.toLowerCase();
         for(Map.Entry<String, Object> entry : super.entrySet()) {
-            if(entry.getKey().toLowerCase().contains(lowPartialKey)) {
+            if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 return entry.getValue();
             }
         }
@@ -81,8 +81,8 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
         return values;
     }
 
-    public void replace(String oldName, String newName, Object newObject) {
-        remove(oldName);
-        put(newName, newObject);
+    public void replace(String oldKey, String newKey, Object object) {
+        remove(oldKey);
+        put(newKey, object);
     }
 }

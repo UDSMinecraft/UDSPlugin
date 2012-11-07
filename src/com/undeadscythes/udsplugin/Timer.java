@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.Rank;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.io.*;
 import java.util.logging.*;
 import org.bukkit.*;
@@ -101,9 +101,9 @@ public class Timer implements Runnable {
 
     private void fastTask() {
         for(SaveablePlayer player : UDSPlugin.getOnlinePlayers().values()) {
-            if(player.getRank().equals(Rank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
+            if(player.getRank().equals(PlayerRank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
                 player.setVIPTime(0);
-                player.setRank(Rank.MEMBER);
+                player.setRank(PlayerRank.MEMBER);
                 player.sendMessage(Color.MESSAGE + "Your time as a VIP has come to an end.");
             }
             if(player.isJailed() && player.getJailTime() + player.getJailSentence() < now) {

@@ -1,9 +1,12 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.util.*;
+import org.apache.commons.lang.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
 
 /**
  * Storage of config values to help aid maintenance.
@@ -22,7 +25,7 @@ public class Config {
     /**
      * Items that VIP ranks can spawn.
      */
-    public static ArrayList<Integer> WHITELIST;
+    public static ArrayList<Material> WHITELIST;
     /**
      * Cost to get a map of spawn.
      */
@@ -115,7 +118,7 @@ public class Config {
      * Message to send to mods+ on log on.
      */
     public static String WELCOME_ADMIN;
-    public static ArrayList<String> KITS;
+    public static ArrayList<Kit> KITS;
 
     /**
      * Load the online 'easy-access' config class with values from the file on disk.
@@ -145,8 +148,19 @@ public class Config {
         VIP_COST = config.getInt("cost.vip");
         CLAN_COST = config.getInt("cost.clan");
         BASE_COST = config.getInt("cost.base");
-        WHITELIST = new ArrayList<Integer>(config.getIntegerList("item-whitelist"));
-        KITS = new ArrayList<String>(config.getStringList("kits"));
+        WHITELIST = new ArrayList<Material>();
+        for(int id : config.getIntegerList("item-whitelist")) {
+            WHITELIST.add(Material.getMaterial(id));
+        }
+        KITS = new ArrayList<Kit>();
+        for(String kit : config.getStringList("kits")) {
+            String[] kitSplit = kit.split(",");
+            ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+            for(Object item : ArrayUtils.subarray(kitSplit, 2, kitSplit.length -1)) {
+                items.add(new ItemStack(Material.getMaterial(Integer.parseInt((String)item))));
+            }
+            KITS.add(new Kit(kitSplit[0], Integer.parseInt(kitSplit[1]), items, PlayerRank.getByName(kitSplit[2])));
+        }
         EXPAND_COST = config.getInt("cost.expand");
         MAP_DATA = (byte)config.getInt("map-data");
         SERVER_RULES = new ArrayList<String>(config.getStringList("server-rules"));
