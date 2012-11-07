@@ -3,46 +3,72 @@ package com.undeadscythes.udsplugin;
 import com.undeadscythes.udsplugin.Region.RegionFlag;
 import java.util.*;
 import org.bukkit.*;
+import org.bukkit.entity.*;
 
 /**
  * Provides checks for listeners.
  * @author UndeadScythes
  */
 public class ListenerWrapper {
-    public boolean hasFire(Location location) {
+    public boolean hasProtection(Location location) {
         for(Region region : UDSPlugin.getRegions().values()) {
-            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && !region.hasFlag(RegionFlag.FIRE)) {
-                return false;
+            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && region.hasFlag(RegionFlag.PROTECTION)) {
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    public Entity getAbsoluteEntity(Entity entity) {
+        if(entity instanceof Arrow) {
+            return ((Arrow)entity).getShooter();
+        }
+        return entity;
+    }
+
+    public boolean hasFire(Location location) {
+        for(Region region : UDSPlugin.getRegions().values()) {
+            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && region.hasFlag(RegionFlag.FIRE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasFood(Location location) {
+        for(Region region : UDSPlugin.getRegions().values()) {
+            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && region.hasFlag(RegionFlag.FOOD)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean hasMobs(Location location) {
         for(Region region : UDSPlugin.getRegions().values()) {
-            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && !region.hasFlag(RegionFlag.MOBS)) {
-                return false;
+            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && region.hasFlag(RegionFlag.MOBS)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public boolean hasSnow(Location location) {
         for(Region region : UDSPlugin.getRegions().values()) {
-            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && !region.hasFlag(RegionFlag.SNOW)) {
-                return false;
+            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && region.hasFlag(RegionFlag.SNOW)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public boolean hasMushrooms(Location location) {
         for(Region region : UDSPlugin.getRegions().values()) {
-            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && !region.hasFlag(RegionFlag.FOOD)) {
-                return false;
+            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2()) && region.hasFlag(RegionFlag.FOOD)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public ArrayList<Region> regionsHere(Location location) {
