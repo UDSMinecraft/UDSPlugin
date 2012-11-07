@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Region.Flag;
-import com.undeadscythes.udsplugin.Region.Type;
+import com.undeadscythes.udsplugin.Region.RegionFlag;
+import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.*;
 import org.apache.commons.lang.*;
 
@@ -18,12 +18,34 @@ public class RegionCmd extends PlayerCommandExecutor {
         if(argsMoreLessInc(1, 4)) {
             Session session;
             Region region;
-            Region.Type type;
+            Region.RegionType type;
             SaveablePlayer target;
-            Flag flag;
-            if(args.length == 1 && args[0].equals("vert") && (session = hasSession()) != null && hasTwoPoints(session)) {
-                session.vert();
-                player.sendMessage(Color.MESSAGE + "Region extended from bedrock to build limit.");
+            RegionFlag flag;
+            if(args.length == 1) {
+                if(args[0].equals("vert") && (session = hasSession()) != null && hasTwoPoints(session)) {
+                    session.vert();
+                    player.sendMessage(Color.MESSAGE + "Region extended from bedrock to build limit.");
+                } else if(args[0].equals("list")) {
+                    String list = "";
+                    for(Region test : UDSPlugin.getRegions().values()) {
+                        if(test.getType().equals(RegionType.NORMAL)) {
+                            list = list.concat(test.getName() + ", ");
+                        }
+                    }
+                    if(!list.isEmpty()) {
+                        player.sendMessage(Color.MESSAGE + RegionType.NORMAL.name().toLowerCase() + " Regions:");
+                        player.sendMessage(Color.TEXT + list.substring(0, list.length() - 2));
+                    } else {
+                        player.sendMessage(Color.MESSAGE + "There are no " + RegionType.NORMAL.name().toLowerCase() + " regions.");
+                    }
+                } else if(args[0].equals("flag")) {
+                    player.sendMessage(Color.MESSAGE + "Available region flags:");
+                    String message = "";
+                    for(RegionFlag test : RegionFlag.values()) {
+                        message = message.concat(test.name() + ", ");
+                    }
+                    player.sendMessage(Color.TEXT + message.substring(0, message.length() - 2));
+                }
             } else if(args.length == 2) {
                 if(args[0].equals("del") && (region = matchesRegion(args[1])) != null) {
                     UDSPlugin.getRegions().remove(region.getName());
@@ -49,8 +71,10 @@ public class RegionCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.TEXT + "Members: " + StringUtils.join(region.getMembers(), ", "));
                     player.sendMessage(Color.TEXT + "Type: " + region.getType().toString());
                     String flags = "";
-                    for(Flag test : region.getFlags()) {
-                        flags = flags.concat(test.toString() + ", ");
+                    if(!region.getFlags().isEmpty()) {
+                        for(RegionFlag test : region.getFlags()) {
+                            flags = flags.concat(test.toString() + ", ");
+                        }
                     }
                     if(!flags.isEmpty()) {
                         player.sendMessage(Color.TEXT + "Flags: " + flags.substring(0, flags.length() - 2));
@@ -64,7 +88,7 @@ public class RegionCmd extends PlayerCommandExecutor {
                     session.setV2(region.getV2());
                     player.sendMessage(Color.MESSAGE + "Points set. " + session.getVolume() + " blocks selected.");
                 } else if(args[0].equals("set") && (session = hasSession()) != null && hasTwoPoints(session) && noRegion(args[1]) && noCensor(args[1])) {
-                    region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), "", "", Type.ARBITRARY);
+                    region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), "", "", RegionType.NORMAL);
                     UDSPlugin.getRegions().put(region.getName(), region);
                     player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set.");
                 }
@@ -85,34 +109,34 @@ public class RegionCmd extends PlayerCommandExecutor {
                     UDSPlugin.getRegions().remove(oldName);
                     region.changeName(args[2]);
                     UDSPlugin.getRegions().put(region.getName(), region);
-                    if(region.getType().equals(Type.ARENA)) {
+                    if(region.getType().equals(RegionType.ARENA)) {
                         UDSPlugin.getArenas().replace(oldName, region.getName(), region);
-                    } else if(region.getType().equals(Type.BASE)) {
+                    } else if(region.getType().equals(RegionType.BASE)) {
                         UDSPlugin.getBases().replace(oldName, region.getName(), region);
-                    } else if(region.getType().equals(Type.CITY)) {
+                    } else if(region.getType().equals(RegionType.CITY)) {
                         UDSPlugin.getCities().replace(oldName, region.getName(), region);
-                    } else if(region.getType().equals(Type.HOME)) {
+                    } else if(region.getType().equals(RegionType.HOME)) {
                         UDSPlugin.getHomes().replace(oldName, region.getName(), region);
-                    } else if(region.getType().equals(Type.QUARRY)) {
+                    } else if(region.getType().equals(RegionType.QUARRY)) {
                         UDSPlugin.getQuarries().replace(oldName, region.getName(), region);
-                    } else if(region.getType().equals(Type.SHOP)) {
+                    } else if(region.getType().equals(RegionType.SHOP)) {
                         UDSPlugin.getShops().replace(oldName, region.getName(), region);
                     }
                     player.sendMessage(Color.MESSAGE + "Region " + oldName + " renamed to " + region.getName());
                 } else if(args[0].equals("set") && (session = hasSession()) != null && hasTwoPoints(session) && noRegion(args[1]) && noCensor(args[1]) && (type = matchesRegionType(args[2])) != null) {
                     region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), "", "", type);
                     UDSPlugin.getRegions().put(region.getName(), region);
-                    if(region.getType().equals(Type.ARENA)) {
+                    if(region.getType().equals(RegionType.ARENA)) {
                         UDSPlugin.getArenas().put(region.getName(), region);
-                    } else if(region.getType().equals(Type.BASE)) {
+                    } else if(region.getType().equals(RegionType.BASE)) {
                         UDSPlugin.getBases().put(region.getName(), region);
-                    } else if(region.getType().equals(Type.CITY)) {
+                    } else if(region.getType().equals(RegionType.CITY)) {
                         UDSPlugin.getCities().put(region.getName(), region);
-                    } else if(region.getType().equals(Type.HOME)) {
+                    } else if(region.getType().equals(RegionType.HOME)) {
                         UDSPlugin.getHomes().put(region.getName(), region);
-                    } else if(region.getType().equals(Type.QUARRY)) {
+                    } else if(region.getType().equals(RegionType.QUARRY)) {
                         UDSPlugin.getQuarries().put(region.getName(), region);
-                    } else if(region.getType().equals(Type.SHOP)) {
+                    } else if(region.getType().equals(RegionType.SHOP)) {
                         UDSPlugin.getShops().put(region.getName(), region);
                     }
                     player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set.");

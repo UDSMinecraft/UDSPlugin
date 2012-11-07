@@ -32,18 +32,14 @@ public class MoneyCmd extends PlayerCommandExecutor {
                 } else if(args[0].equals("rank")) {
                     ArrayList<SaveablePlayer> players = UDSPlugin.getPlayers().getSortedValues(new SortByMoney());
                     int printed = 0;
-                    int rank = 0;
+                    player.sendMessage(Color.MESSAGE + "Top 5 Richest Players:");
                     for(SaveablePlayer ranker : players) {
-                        if(ranker.getRank().compareTo(Rank.MOD) < 0 && printed < 5) {
+                        if(printed < 5 && ranker.getRank().compareTo(Rank.MOD) < 0) {
                             player.sendMessage(Color.TEXT.toString() + (printed + 1) + ": " + ranker.getRank().color() + ranker.getDisplayName() + ", " + Color.TEXT + ranker.getMoney() + " " + Config.CURRENCIES);
                             printed++;
-                            if(!ranker.equals(player) && rank == 0) {
-                                rank++;
-                            }
-                        } else if(rank > 0 || player.getRank().compareTo(Rank.MOD) >= 0) {
-                            break;
                         }
                     }
+                    int rank = players.indexOf(player);
                     if(rank > 5 && player.getRank().compareTo(Rank.MOD) < 0) {
                         player.sendMessage(Color.MESSAGE + "Your rank is " + rank + ".");
                     }

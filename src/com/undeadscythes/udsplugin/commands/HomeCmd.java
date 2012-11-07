@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.LoadableLocation.Direction;
-import com.undeadscythes.udsplugin.Region.Flag;
+import com.undeadscythes.udsplugin.Region.RegionFlag;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.util.*;
 
@@ -25,7 +25,7 @@ public class HomeCmd extends PlayerCommandExecutor {
                 if(args[0].equals("make") && canAfford(Config.HOME_COST) && noHome()) {
                     Vector min = player.getLocation().add(-10, 28, -10).toVector();
                     Vector max = player.getLocation().add(10, 12, 10).toVector();
-                    home = new Region(player.getName() + "home", min, max, player.getLocation(), player.getName(), "", Region.Type.HOME);
+                    home = new Region(player.getName() + "home", min, max, player.getLocation(), player.getName(), "", Region.RegionType.HOME);
                     if(noOverlaps(home)) {
                         player.debit(Config.HOME_COST);
                         UDSPlugin.getRegions().put(home.getName(), home);
@@ -64,11 +64,11 @@ public class HomeCmd extends PlayerCommandExecutor {
                         }
                     }
                 } else if(args[0].equals("lock") && (home = hasHome()) != null) {
-                    home.setFlag(Flag.LOCK_DOORS);
+                    home.setFlag(RegionFlag.LOCK);
                     player.sendMessage(Color.MESSAGE + "Your home is now locked.");
                 } else if(args[0].equals("unlock") && (home = hasHome()) != null) {
-                    home.setFlag(Flag.LOCK_DOORS);
-                    home.toggleFlag(Flag.LOCK_DOORS);
+                    home.setFlag(RegionFlag.LOCK);
+                    home.toggleFlag(RegionFlag.LOCK);
                     player.sendMessage(Color.MESSAGE + "Your home is now unlocked.");
                 } else if((target = matchesPlayer(args[0])) != null && (home = hasHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
                     player.teleport(home.getWarp());

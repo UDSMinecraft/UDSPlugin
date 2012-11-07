@@ -66,6 +66,10 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
         return super.remove(key.toLowerCase());
     }
 
+    public boolean containsKey(String key) {
+        return super.containsKey(key.toLowerCase());
+    }
+
     /**
      * A shortcut to get a sorted list of the map values.
      * @param comp Comparator to define sort priorities.

@@ -3,12 +3,19 @@ package com.undeadscythes.udsplugin;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.*;
+import org.bukkit.entity.*;
 
 /**
  * Storage of config values to help aid maintenance.
  * @author UndeadScythes
  */
 public class Config {
+    public static boolean BLOCK_ENDERMAN;
+    public static boolean BLOCK_SILVERFISH;
+    public static boolean BLOCK_CREEPER;
+    public static boolean BLOCK_TNT;
+    public static boolean BLOCK_WITHER;
+    public static ArrayList<EntityType> HOSTILE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.ENDER_DRAGON, EntityType.GHAST, EntityType.MAGMA_CUBE, EntityType.PIG_ZOMBIE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.WITCH, EntityType.WITHER, EntityType.ZOMBIE));
     public static ArrayList<String> SERVER_RULES;
     public static byte MAP_DATA;
     public static int EXPAND_COST;
@@ -143,5 +150,10 @@ public class Config {
         EXPAND_COST = config.getInt("cost.expand");
         MAP_DATA = (byte)config.getInt("map-data");
         SERVER_RULES = new ArrayList<String>(config.getStringList("server-rules"));
+        BLOCK_CREEPER = config.getBoolean("block.creeper");
+        BLOCK_TNT = config.getBoolean("block.tnt");
+        BLOCK_WITHER = config.getBoolean("block.wither");
+        BLOCK_ENDERMAN = config.getBoolean("block.enderman");
+        BLOCK_SILVERFISH = config.getBoolean("block.silverfish");
     }
 }

@@ -18,7 +18,7 @@ public class CityCmd extends PlayerCommandExecutor {
         if(argsMoreLessInc(1, 3)) {
             Region city;
             if(args.length == 1) {
-                if(args[0].equals("set") && (city = inRegion()).getType() == Region.Type.CITY && mayor(city.getName()) != null) {
+                if(args[0].equals("set") && (city = inRegion()).getType() == Region.RegionType.CITY && mayor(city.getName()) != null) {
                     city.setWarp(player.getLocation());
                     player.sendMessage(Color.MESSAGE + "City spawn point set.");
                 } else if(args[0].equals("list")) {
@@ -29,7 +29,7 @@ public class CityCmd extends PlayerCommandExecutor {
                 if(args[0].equals("new") && canAfford(Config.CITY_COST) && noCensor(args[1]) && noRegion(args[1])) {
                     Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
                     Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
-                    city = new Region(args[1], min, max, player.getLocation(), player.getName(), "", Region.Type.CITY);
+                    city = new Region(args[1], min, max, player.getLocation(), player.getName(), "", Region.RegionType.CITY);
                     if(noOverlaps(city)) {
                         player.debit(Config.CITY_COST);
                         UDSPlugin.getRegions().put(args[1], city);

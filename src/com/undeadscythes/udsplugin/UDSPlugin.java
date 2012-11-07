@@ -47,7 +47,7 @@ public class UDSPlugin extends JavaPlugin {
     private static MatchableHashMap<Region> arenas;
     private static MatchableHashMap<SaveablePlayer> vips;
     private static MatchableHashMap<SaveablePlayer> onlinePlayers;
-    private static File DATA_PATH = new File("plugins/UDSPlugin1/data");
+    private static File DATA_PATH = new File("plugins/UDSPlugin/data");
     private Timer timer;
 
     /**
@@ -147,7 +147,7 @@ public class UDSPlugin extends JavaPlugin {
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
             while((nextLine = file.readLine()) != null) {
-                clans.put(nextLine.split("\t", 1)[0], new Clan(nextLine));
+                clans.put(nextLine.split("\t")[0], new Clan(nextLine));
                 count++;
             }
             file.close();
@@ -165,6 +165,7 @@ public class UDSPlugin extends JavaPlugin {
                 if(player.getVIPTime() > 0) {
                     vips.put(player.getName(), player);
                 }
+                count++;
             }
             file.close();
             message = count + " players loaded.";
@@ -178,19 +179,20 @@ public class UDSPlugin extends JavaPlugin {
             while((nextLine = file.readLine()) != null) {
                 Region region = new Region(nextLine);
                 regions.put(region.getName(), region);
-                if(region.getType().equals(Region.Type.BASE)) {
+                if(region.getType().equals(Region.RegionType.BASE)) {
                     bases.put(region.getName(), region);
-                } else if(region.getType().equals(Region.Type.HOME)) {
+                } else if(region.getType().equals(Region.RegionType.HOME)) {
                     homes.put(region.getName(), region);
-                } else if(region.getType().equals(Region.Type.QUARRY)) {
+                } else if(region.getType().equals(Region.RegionType.QUARRY)) {
                     quarries.put(region.getName(), region);
-                } else if(region.getType().equals(Region.Type.SHOP)) {
+                } else if(region.getType().equals(Region.RegionType.SHOP)) {
                     shops.put(region.getName(), region);
-                } else if(region.getType().equals(Region.Type.CITY)) {
+                } else if(region.getType().equals(Region.RegionType.CITY)) {
                     cities.put(region.getName(), region);
-                } else if(region.getType().equals(Region.Type.ARENA)) {
+                } else if(region.getType().equals(Region.RegionType.ARENA)) {
                     arenas.put(region.getName(), region);
                 }
+                count++;
             }
             file.close();
             message = count + " regions loaded.";
@@ -203,6 +205,7 @@ public class UDSPlugin extends JavaPlugin {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Warp.PATH));
             while((nextLine = file.readLine()) != null) {
                 warps.put(nextLine.split("\t", 1)[0], new Warp(nextLine));
+                count++;
             }
             file.close();
             message = count + " warps loaded.";
@@ -302,38 +305,44 @@ public class UDSPlugin extends JavaPlugin {
     private void registerEvents() {
         getServer().getPluginManager().registerEvents(new AsyncPlayerChat(), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(), this);
-//        getServer().getPluginManager().registerEvents(new BlockBurn(), this);
-//        getServer().getPluginManager().registerEvents(new BlockFade(), this);
+        getServer().getPluginManager().registerEvents(new BlockBurn(), this);
+        getServer().getPluginManager().registerEvents(new BlockFade(), this);
 //        getServer().getPluginManager().registerEvents(new BlockForm(), this);
-//        getServer().getPluginManager().registerEvents(new BlockFromTo(), this);
-//        getServer().getPluginManager().registerEvents(new BlockIgnite(), this);
-//        getServer().getPluginManager().registerEvents(new BlockPhysics(this), this);
+        getServer().getPluginManager().registerEvents(new BlockFromTo(), this);
+        getServer().getPluginManager().registerEvents(new BlockGrow(), this);
+        getServer().getPluginManager().registerEvents(new BlockIgnite(), this);
+        getServer().getPluginManager().registerEvents(new BlockPhysics(), this);
 //        getServer().getPluginManager().registerEvents(new BlockPistonExtend(), this);
 //        getServer().getPluginManager().registerEvents(new BlockPistonRetract(), this);
-//        getServer().getPluginManager().registerEvents(new BlockPlace(), this);
+        getServer().getPluginManager().registerEvents(new BlockPlace(), this);
 //        getServer().getPluginManager().registerEvents(new BlockRedstone(), this);
 //        getServer().getPluginManager().registerEvents(new BlockSpread(), this);
-//        getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);
+        getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);
 //        getServer().getPluginManager().registerEvents(new EntityBlockForm(), this);
 //        getServer().getPluginManager().registerEvents(new EntityChangeBlock(), this);
 //        getServer().getPluginManager().registerEvents(new EntityDamage(), this);
-//        getServer().getPluginManager().registerEvents(new EntityDamageByEntity(this), this);
-//        getServer().getPluginManager().registerEvents(new EntityDeath(this), this);
-//        getServer().getPluginManager().registerEvents(new EntityExplode(this), this);
+//        getServer().getPluginManager().registerEvents(new EntityDamageByEntity(), this);
+//        getServer().getPluginManager().registerEvents(new EntityDeath(), this);
+        getServer().getPluginManager().registerEvents(new EntityExplode(), this);
 //        getServer().getPluginManager().registerEvents(new EntityInteract(), this);
+//        getServer().getPluginManager().registerEvents(new EntityPortalEnter(), this);
 //        getServer().getPluginManager().registerEvents(new InventoryClick(), this);
 //        getServer().getPluginManager().registerEvents(new InventoryOpen(), this);
+//        getServer().getPluginManager().registerEvents(new PaintingBreak(), this);
+//        getServer().getPluginManager().registerEvents(new PaintingPlace(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerBucketEmpty(), this);
-//        getServer().getPluginManager().registerEvents(new PlayerDeath(this), this);
-//        getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
+//        getServer().getPluginManager().registerEvents(new PlayerBucketFill(), this);
+//        getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
+//        getServer().getPluginManager().registerEvents(new PlayerInteract(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerInteractEntity(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
 //        getServer().getPluginManager().registerEvents(new PlayerPortal(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuit(), this);
-//        getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
+//        getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
+//        getServer().getPluginManager().registerEvents(new PlayerShearEntity(), this);
 //        getServer().getPluginManager().registerEvents(new SignChange(), this);
+//        getServer().getPluginManager().registerEvents(new VehicleCollision(), this);
 //        getServer().getPluginManager().registerEvents(new VehicleDestroy(), this);
-//        getServer().getPluginManager().registerEvents(new VehicleEntityCollision(), this);
 //        getServer().getPluginManager().registerEvents(new VehicleExit(), this);
     }
 

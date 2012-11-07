@@ -38,3 +38,9 @@ server-rules:
 - No bug exploits
 - No advertising
 - No hacks
+block:
+  creeper: true
+  tnt: true
+  wither: true
+  enderman: true
+  silverfish: true

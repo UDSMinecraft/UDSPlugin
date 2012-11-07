@@ -72,4 +72,13 @@ public class LoadableLocation extends Location {
         setPitch(Float.parseFloat(string.split(",")[4]));
         setPitch(Float.parseFloat(string.split(",")[5]));
     }
+
+    public LoadableLocation(Location location) {
+        super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
+    }
+
+    @Override
+    public String toString() {
+        return super.getWorld().getName() + "," + super.getX() + "," + super.getY() + "," + super.getZ() + "," + super.getPitch() + "," + super.getYaw();
+    }
 }

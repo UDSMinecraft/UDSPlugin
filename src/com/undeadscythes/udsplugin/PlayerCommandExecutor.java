@@ -158,9 +158,9 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region.Flag matchesFlag(String name) {
-        Region.Flag flag;
-        if((flag = Region.Flag.get(name)) != null) {
+    public Region.RegionFlag matchesFlag(String name) {
+        Region.RegionFlag flag;
+        if((flag = Region.RegionFlag.getByName(name)) != null) {
             return flag;
         } else {
             player.sendMessage(Color.ERROR + "That is not a valid region type.");
@@ -168,9 +168,9 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Region.Type matchesRegionType(String name) {
-        Region.Type type;
-        if((type = Region.Type.get(name)) != null) {
+    public Region.RegionType matchesRegionType(String name) {
+        Region.RegionType type;
+        if((type = Region.RegionType.getByName(name)) != null) {
             return type;
         } else {
             player.sendMessage(Color.ERROR + "That is not a valid region type.");
@@ -443,7 +443,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @return The enchantment if it exists, <code>null</code> otherwise.
      */
     public Enchantment matchesEnchantment(String enchant) {
-        Enchantment enchantment = Enchantment.getByName(enchant);
+        Enchantment enchantment = Enchantment.getByName(enchant.toUpperCase());
         if(enchantment != null) {
             return enchantment;
         } else {
@@ -472,7 +472,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      */
     public Region inRegion() {
         Region region;
-        if((region = player.getCurrentRegion(Region.Type.CITY)) != null) {
+        if((region = player.getCurrentRegion(Region.RegionType.CITY)) != null) {
             return region;
         } else {
             player.sendMessage(Color.ERROR + "You are not in a city.");
@@ -518,7 +518,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     public Region isInShop() {
         Region shop;
-        if((shop = player.getCurrentRegion(Region.Type.SHOP)) != null) {
+        if((shop = player.getCurrentRegion(Region.RegionType.SHOP)) != null) {
             return shop;
         } else {
             player.sendMessage(Color.ERROR + "You must be stood inside a shop to buy it.");

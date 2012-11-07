@@ -107,12 +107,13 @@ public class SaveablePlayer implements Saveable, Player {
     /**
      * File name of player file.
      */
-    public static String PATH = "players.data";
+    public static String PATH = "players.csv";
     /**
      * Current record version.
      */
     public static int VERSION = 1;
 
+    private String name;
     private Player base;
     private int bounty = 0;
     private int money = 0;
@@ -150,6 +151,7 @@ public class SaveablePlayer implements Saveable, Player {
     public SaveablePlayer(Player player) {
         this.base = player;
         nick = player.getName();
+        name = player.getName();
     }
 
     /**
@@ -158,9 +160,10 @@ public class SaveablePlayer implements Saveable, Player {
      */
     public SaveablePlayer(String record) {
         String[] recordSplit = record.split("\t");
+        name = recordSplit[0];
         bounty = Integer.parseInt(recordSplit[1]);
         money = Integer.parseInt(recordSplit[2]);
-        rank = Rank.valueOf(recordSplit[3]);
+        rank = Rank.get(recordSplit[3]);
         vipTime = Long.parseLong(recordSplit[4]);
         vipSpawns = Integer.parseInt(recordSplit[5]);
         jailTime = Long.parseLong(recordSplit[6]);
@@ -177,7 +180,7 @@ public class SaveablePlayer implements Saveable, Player {
     @Override
     public String getRecord() {
         ArrayList<String> record = new ArrayList<String>();
-        record.add(getName());
+        record.add(name);
         record.add(bounty + "");
         record.add(money + "");
         record.add(rank.toString());
@@ -435,14 +438,14 @@ public class SaveablePlayer implements Saveable, Player {
      * @param type Optional type of region to check, <code>null</code> to search all regions.
      * @return The first region the player is in, <code>null</code> otherwise.
      */
-    public Region getCurrentRegion(Region.Type type) {
-        if(type == Region.Type.CITY) {
+    public Region getCurrentRegion(Region.RegionType type) {
+        if(type == Region.RegionType.CITY) {
             for(Region region : UDSPlugin.getCities().values()) {
                 if(getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                     return region;
                 }
             }
-        } else if(type == Region.Type.SHOP) {
+        } else if(type == Region.RegionType.SHOP) {
             for(Region region : UDSPlugin.getShops().values()) {
                 if(getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                     return region;
@@ -513,7 +516,7 @@ public class SaveablePlayer implements Saveable, Player {
         boolean contained = false;
         for(Region region : UDSPlugin.getRegions().values()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
-                if(region.getOwner().equals(getName()) || region.hasMember(getName())) {
+                if((region.getOwner().startsWith("g:") && rank.compareTo(Rank.get(region.getOwner().replace("g:", ""))) >= 0) || region.getOwner().equals(getName()) || region.hasMember(getName())) {
                     return true;
                 }
                 contained = true;

@@ -1,12 +1,13 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.event.*;
 
 /**
- * Description
+ * Description.
  * @author UndeadScythes
  */
-public class AATemplate implements Listener {
+public class AATemplate extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(Event event) {
 

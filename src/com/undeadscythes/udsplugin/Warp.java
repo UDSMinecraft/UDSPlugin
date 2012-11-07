@@ -13,7 +13,7 @@ public class Warp implements Saveable {
     /**
      * File name of warp file.
      */
-    public static String PATH = "warp.data";
+    public static String PATH = "warps.csv";
 
     private String name;
     private Location location;
@@ -42,7 +42,7 @@ public class Warp implements Saveable {
         String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         location = new LoadableLocation(recordSplit[1]);
-        rank = Rank.valueOf(recordSplit[2]);
+        rank = Rank.get(recordSplit[2]);
         price = Integer.parseInt(recordSplit[3]);
     }
 

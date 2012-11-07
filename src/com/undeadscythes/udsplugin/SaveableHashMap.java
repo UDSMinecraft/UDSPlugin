@@ -16,6 +16,7 @@ public class SaveableHashMap extends MatchableHashMap<Saveable> {
         BufferedWriter file = new BufferedWriter(new FileWriter(path));
         for(Saveable value : this.values()) {
             file.write(value.getRecord());
+            file.newLine();
         }
         file.close();
     }

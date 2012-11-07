@@ -12,34 +12,73 @@ import org.bukkit.util.Vector;
  * @author UndeadScythes
  */
 public class Region implements Saveable {
-    public enum Flag {
-        PROTECTED(true),
-        BLOCK_MOBS(true),
-        BLOCK_ANIMALS(false),
-        LOCK_DOORS(true),
-        BLOCK_VINES(false),
-        BLOCK_SHROOMS(false),
-        BLOCK_FIRE(true),
-        BLOCK_SNOW(true),
-        BLOCK_PVP(true);
+    /**
+     * Region flags.
+     */
+    public enum RegionFlag {
+        /**
+         * This region is protected from other players building.
+         */
+        PROTECTION(true),
+        /**
+         * Mobs can spawn here.
+         */
+        MOBS(false),
+        /**
+         * Players can damage passive mobs here.
+         */
+        PVE(true),
+        /**
+         * Players cannot interact with anything here.
+         */
+        LOCK(true),
+        /**
+         * Vines will grow here.
+         */
+        VINES(true),
+        /**
+         * Food items will grow here.
+         */
+        FOOD(true),
+        /**
+         * Fire will burn and spread here.
+         */
+        FIRE(false),
+        /**
+         * Snow will fall and ice will melt here.
+         */
+        SNOW(false),
+        /**
+         * Players can attack other players here.
+         */
+        PVP(false);
 
         private boolean defaultValue;
 
-        Flag(boolean value) {
+        RegionFlag(boolean value) {
             this.defaultValue = value;
         }
 
+        /**
+         * Get this flag's default value.
+         * @return
+         */
         public boolean getDefault() {
             return defaultValue;
         }
 
         @Override
         public String toString() {
-            return name().toLowerCase().replace("_", " ");
+            return name().toLowerCase();
         }
 
-        public static Flag get(String string) {
-            for(Flag flag : values()) {
+        /**
+         * Get a flag by name.
+         * @param string The name of the flag.
+         * @return The flag or <code>null</code> if there was no match.
+         */
+        public static RegionFlag getByName(String string) {
+            for(RegionFlag flag : values()) {
                 if(flag.name().equals(string.toUpperCase())) {
                     return flag;
                 }
@@ -48,29 +87,58 @@ public class Region implements Saveable {
         }
     }
 
-    public enum Type {
-        ARBITRARY,
+    /**
+     * Region type.
+     */
+    public enum RegionType {
+        /**
+         * A standard region.
+         */
+        NORMAL,
+        /**
+         * A player ownable shop.
+         */
         SHOP,
+        /**
+         * A clan base.
+         */
         BASE,
+        /**
+         * A respawning quarry.
+         */
         QUARRY,
+        /**
+         * A player owned home.
+         */
         HOME,
+        /**
+         * A PVP arena.
+         */
         ARENA,
+        /**
+         * A player owned city.
+         */
         CITY;
 
-        public static Type get(String string) {
-            for(Type type : values()) {
+        /**
+         * Get a region type by name.
+         * @param string Name of region type.
+         * @return The region type or <code>null</code> if there was no match.
+         */
+        public static RegionType getByName(String string) {
+            for(RegionType type : values()) {
                 if(type.name().equals(string.toUpperCase())) {
                     return type;
                 }
             }
-            return null;
+            return NORMAL;
         }
     }
 
     /**
-     * File name of region file.
+     * File name of region storage file.
      */
-    public static String PATH = "region.data";
+    public static String PATH = "regions.csv";
 
     private String name;
     private Vector v1;
@@ -79,8 +147,8 @@ public class Region implements Saveable {
     private String owner;
     private HashSet<String> members = new HashSet<String>();
     private String data;
-    private HashSet<Flag> flags;
-    private Type type;
+    private HashSet<RegionFlag> flags;
+    private RegionType type;
 
     /**
      * Initialise a brand new region.
@@ -89,16 +157,18 @@ public class Region implements Saveable {
      * @param v2 Maximum block position.
      * @param warp Warp location of the region.
      * @param owner Owner of the region.
+     * @param data Data of region, if any.
+     * @param type Region type.
      */
-    public Region(String name, Vector v1, Vector v2, Location warp, String owner, String data, Type type) {
+    public Region(String name, Vector v1, Vector v2, Location warp, String owner, String data, RegionType type) {
         this.name = name;
         this.v1 = v1;
         this.v2 = v2;
         this.warp = warp;
         this.owner = owner;
         this.data = data;
-        flags = new HashSet<Flag>();
-        for(Flag flag : Flag.values()) {
+        flags = new HashSet<RegionFlag>();
+        for(RegionFlag flag : RegionFlag.values()) {
             if(flag.getDefault()) {
                 flags.add(flag);
             }
@@ -119,12 +189,12 @@ public class Region implements Saveable {
         warp = (Location)(new LoadableLocation(recordSplit[3]));
         owner = recordSplit[4];
         members = new HashSet<String>(Arrays.asList(recordSplit[5].split(",")));
-        data = recordSplit[5];
-        flags = new HashSet<Flag>();
-        for(String flag : recordSplit[6].split(",")) {
-            flags.add(Flag.valueOf(flag));
+        data = recordSplit[6];
+        flags = new HashSet<RegionFlag>();
+        for(String flag : recordSplit[7].split(",")) {
+            flags.add(RegionFlag.getByName(flag));
         }
-        type = Type.valueOf(recordSplit[7]);
+        type = RegionType.getByName(recordSplit[8]);
     }
 
     /**
@@ -134,9 +204,9 @@ public class Region implements Saveable {
      */
     private Vector getBlockPos(String string) {
         String[] split = string.replace("(", "").replace(")", "").split(",");
-        int x = Integer.parseInt(split[0]);
-        int y = Integer.parseInt(split[1]);
-        int z = Integer.parseInt(split[2]);
+        double x = Double.parseDouble(split[0]);
+        double y = Double.parseDouble(split[1]);
+        double z = Double.parseDouble(split[2]);
         return new Vector(x, y, z);
     }
 
@@ -149,7 +219,7 @@ public class Region implements Saveable {
         record.add(name);
         record.add(v1.toString());
         record.add(v2.toString());
-        record.add(warp.toString());
+        record.add(new LoadableLocation(warp).toString());
         record.add(owner);
         record.add(StringUtils.join(members.toArray(), ","));
         record.add(data);
@@ -158,22 +228,42 @@ public class Region implements Saveable {
         return StringUtils.join(record.toArray(), "\t");
     }
 
+    /**
+     * Clear the members of the region.
+     */
     public void clearMembers() {
         members = new HashSet<String>();
     }
 
+    /**
+     * Change the owner of the region.
+     * @param owner New owner name.
+     */
     public void changeOwner(String owner) {
         this.owner = owner;
     }
 
+    /**
+     * Get the region members.
+     * @return Region members.
+     */
     public HashSet<String> getMembers() {
         return members;
     }
 
+    /**
+     * Change the name of the region.
+     * @param newName New region name.
+     */
     public void changeName(String newName) {
         name = newName;
     }
 
+    /**
+     * Expand this region in some direction.
+     * @param direction Direction to expand.
+     * @param distance Distance to expand.
+     */
     public void expand(Direction direction, int distance) {
         if(direction.equals(Direction.NORTH)) {
             v1.add(new Vector(0, 0, -distance));
@@ -190,10 +280,19 @@ public class Region implements Saveable {
         }
     }
 
-    public HashSet<Flag> getFlags() {
+    /**
+     * Get this regions flags.
+     * @return The region flags.
+     */
+    public HashSet<RegionFlag> getFlags() {
         return flags;
     }
 
+    /**
+     * Change this regions defining points.
+     * @param v1 New v1.
+     * @param v2 New v2.
+     */
     public void changeV(Vector v1, Vector v2) {
         this.v1 = v1;
         this.v2 = v2;
@@ -307,7 +406,7 @@ public class Region implements Saveable {
      * Get the type of this region.
      * @return Type of the region.
      */
-    public Type getType() {
+    public RegionType getType() {
         return type;
     }
 
@@ -383,7 +482,7 @@ public class Region implements Saveable {
      * @param flag Flag to check.
      * @return <code>true</code> if this flag is set, <code>false</code> otherwise.
      */
-    public boolean hasFlag(Flag flag) {
+    public boolean hasFlag(RegionFlag flag) {
         return flags.contains(flag);
     }
 
@@ -392,7 +491,7 @@ public class Region implements Saveable {
      * @param flag Flag to set.
      * @return <code>true</code> if this flag was not already set, <code>false</code> otherwise.
      */
-    public boolean setFlag(Flag flag) {
+    public boolean setFlag(RegionFlag flag) {
         return flags.add(flag);
     }
 
@@ -401,7 +500,7 @@ public class Region implements Saveable {
      * @param flag Flag to toggle.
      * @return <code>true</code> if this flag is now set, <code>false</code> otherwise.
      */
-    public boolean toggleFlag(Flag flag) {
+    public boolean toggleFlag(RegionFlag flag) {
         if(!flags.add(flag)) {
             return !flags.remove(flag);
         }

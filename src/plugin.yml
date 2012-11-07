@@ -1,4 +1,4 @@
-name: UDSPlugin1
+name: UDSPlugin
 main: com.undeadscythes.udsplugin.UDSPlugin
 version: 0.1
 description: UDSlugin1 for CB 1.4.2-R0.2 #2449.

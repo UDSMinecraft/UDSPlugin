@@ -11,7 +11,7 @@ public class Clan implements Saveable {
     /**
      * File name of clan file.
      */
-    public static String PATH = "clans.data";
+    public static String PATH = "clans.csv";
 
     private String name;
     private String leader;

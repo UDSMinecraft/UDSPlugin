@@ -133,7 +133,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                     if(args[1].equals("make") && noBase(clan) && canAfford(Config.BASE_COST)) {
                         Vector min = player.getLocation().add(-25, 0, -25).toVector().setY(20);
                         Vector max = player.getLocation().add(25, 0, 25).toVector().setY(220);
-                        base = new Region(clan.getName() + "base", min, max, player.getLocation(), "", "", Region.Type.BASE);
+                        base = new Region(clan.getName() + "base", min, max, player.getLocation(), "", "", Region.RegionType.BASE);
                         if(noOverlaps(base)) {
                             player.debit(Config.BASE_COST);
                             UDSPlugin.getRegions().put(base.getName(), base);
@@ -188,7 +188,7 @@ class SortByKDR implements Comparator<Clan> {
      */
     @Override
     public int compare(Clan clan1, Clan clan2) {
-        return (int)(clan2.getRatio() - clan1.getRatio() * 1000);
+        return (int)((clan2.getRatio() - clan1.getRatio()) * 100);
     }
 }
 
