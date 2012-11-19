@@ -41,7 +41,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                     String members = "";
                     for(SaveablePlayer member : clan.getMembers()) {
                         if(!member.equals(player)) {
-                            members = members.concat(member + ", ");
+                            members = members.concat(member.getDisplayName() + ", ");
                         }
                     }
                     if(!clan.getLeader().equals(player)) {

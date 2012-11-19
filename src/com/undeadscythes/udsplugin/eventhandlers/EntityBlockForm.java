@@ -2,17 +2,18 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Region.RegionFlag;
+import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * A block is destroyed by fire.
+ * When an entity forms a block.
  * @author UndeadScythes
  */
-public class BlockBurn extends ListenerWrapper implements Listener {
+public class EntityBlockForm extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockBurnEvent event) {
-        if(!hasFlag(event.getBlock().getLocation(), RegionFlag.FIRE)) {
+    public void onEvent(EntityBlockFormEvent event) {
+        if(event.getEntity() instanceof Snowman && !hasFlag(event.getNewState().getLocation(), RegionFlag.SNOW)) {
             event.setCancelled(true);
         }
     }

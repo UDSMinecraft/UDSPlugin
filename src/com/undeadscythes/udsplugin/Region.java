@@ -191,8 +191,10 @@ public class Region implements Saveable {
         warp = (Location)(new Bearing(recordSplit[3]));
         owner = UDSPlugin.getPlayers().get(recordSplit[4]);
         members = new HashSet<SaveablePlayer>();
-        for(String member : recordSplit[5].split(",")) {
-            members.add(UDSPlugin.getPlayers().get(member));
+        if(!recordSplit[5].equals("")) {
+            for(String member : recordSplit[5].split(",")) {
+                members.add(UDSPlugin.getPlayers().get(member));
+            }
         }
         data = recordSplit[6];
         flags = new HashSet<RegionFlag>();
@@ -226,7 +228,7 @@ public class Region implements Saveable {
         record.add(v1.toString());
         record.add(v2.toString());
         record.add(new Bearing(warp).toString());
-        record.add(owner.getName());
+        record.add(owner == null ? "" : owner.getName());
         ArrayList<String> memberList = new ArrayList<String>();
         for(SaveablePlayer member : members) {
             memberList.add(member.getName());
@@ -244,6 +246,11 @@ public class Region implements Saveable {
      */
     public void clearMembers() {
         members = new HashSet<SaveablePlayer>();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     /**

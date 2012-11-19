@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.Region.RegionFlag;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
@@ -18,7 +19,7 @@ public class BlockIgnite extends ListenerWrapper implements Listener {
                 player.sendMessage(Message.CANT_BUILD_HERE);
                 event.setCancelled(true);
             }
-        } else if(!hasFire(event.getBlock().getLocation())) {
+        } else if(!hasFlag(event.getBlock().getLocation(), RegionFlag.FIRE)) {
             event.setCancelled(true);
         }
     }

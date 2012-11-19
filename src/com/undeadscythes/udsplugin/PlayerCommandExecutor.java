@@ -62,6 +62,15 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    public boolean canEnchant(Enchantment enchantment, ItemStack item) {
+        if(enchantment.canEnchantItem(item)) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You cannot use that enchantment on that item.");
+            return false;
+        }
+    }
+
     public UUID getSelectedPet() {
         UUID pet;
         if((pet = player.getSelectedPet()) != null) {
@@ -108,6 +117,15 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return null;
         }
 
+    }
+
+    public boolean goodEnchantLevel(Enchantment enchantment, int level) {
+        if(level <= enchantment.getMaxLevel()) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "The level you have chosen is too high.");
+            return false;
+        }
     }
 
     public int getAffordablePrice(String amount) {

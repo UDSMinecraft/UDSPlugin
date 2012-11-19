@@ -75,6 +75,11 @@ public class Warp implements Saveable {
         return price;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     /**
      * Get the location of the warp.
      * @return Warp location.
@@ -102,5 +107,9 @@ public class Warp implements Saveable {
         Location safePlace = world.getHighestBlockAt((int)x, (int)z).getLocation();
         safePlace.add(.5, 0, .5);
         return safePlace;
+    }
+
+    public static Location findSafePlace(Location location) {
+        return findSafePlace(location.getWorld(), location.getX(), location.getZ());
     }
 }

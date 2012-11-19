@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.Region.RegionFlag;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -15,7 +16,7 @@ public class HangingBreak extends ListenerWrapper implements Listener {
     public void onEvent(HangingBreakByEntityEvent event) {
         Entity remover = event.getRemover();
         Location location = event.getEntity().getLocation();
-        if(getAbsoluteEntity(remover) instanceof Player ? !UDSPlugin.getOnlinePlayers().get(((Player)remover).getName()).canBuildHere(location) : hasProtection(location)) {
+        if(getAbsoluteEntity(remover) instanceof Player ? !UDSPlugin.getOnlinePlayers().get(((Player)remover).getName()).canBuildHere(location) : hasFlag(location, RegionFlag.PROTECTION)) {
             event.setCancelled(true);
         }
     }

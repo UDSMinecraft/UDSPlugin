@@ -13,7 +13,7 @@ public class SpawnCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(argsEq(0) && notPinned() && notJailed()) {
-            player.teleport(player.getWorld().getSpawnLocation());
+            player.teleport(Config.WORLD.getSpawnLocation());
         }
     }
 }

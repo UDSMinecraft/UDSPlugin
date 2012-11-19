@@ -31,7 +31,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         MOD_INVSEE_RESET(Perm.INVSEE, "/invsee", "Get your inventory back.", false, true),
         MOD_KICK(Perm.KICK, "/kick <player> [reason]", "Kick a player from the server.", false, true),
         MOD_NICK_OTHER(Perm.NICK_OTHER, "/nick <player> <nickname>", "Change a players nickname.", false, true),
-        MOD_POWERTOOL(Perm.POWERTOOL, "/powertool <command>", "Set a powertool.", false, false),
+        MOD_POWERTOOL(Perm.POWERTOOL, "/powertool <command>", "Set a powertool.", false, true),
         MOD_PROMOTE(Perm.PROMOTE, "/promote <player>", "Promote a player.", false, true),
         MOD_DEMOTE(Perm.DEMOTE, "/demote <player>", "Demote a player.", false, true),
         MOD_SIGNS(Perm.SIGNS, "/signs", "View a list of special signs you can make.", false, true),
@@ -131,8 +131,8 @@ public class HelpCmd extends PlayerCommandExecutor {
         PET_GIVE(Perm.PET, "/pet give <player>", "Give your pet to a player.", false, false),
         PET_SELL(Perm.PET, "/pet sell <player> <price>", "Sell your pet to a player.", false, false),
         REGION(Perm.REGION, "/help region", "Show more region commands.", true, false),
-        REGION_ADDMEMBER(Perm.REGION, "/region addmember <region> <player>", "Add a member to a reegion.", false, true),
-        REGION_DELMEMBER(Perm.REGION, "/region delmember <region> <player>", "Remove a member from a region.", false, true),
+        REGION_ADDMEMBER(Perm.REGION, "/region addmember <region> <player>", "Add a member.", false, true),
+        REGION_DELMEMBER(Perm.REGION, "/region delmember <region> <player>", "Remove a member.", false, true),
         REGION_FLAG(Perm.REGION, "/region flag <region> <flag>", "Toggle a region flag.", false, true),
         REGION_INFO(Perm.REGION, "/region info <region>", "Get detailed info on a region.", false, true),
         REGION_LIST(Perm.REGION, "/region list <type>", "List regions of a certain type.", false, true),
@@ -191,7 +191,7 @@ public class HelpCmd extends PlayerCommandExecutor {
 
         public static Usage get(String name) {
             for(Usage use : values()) {
-                if(use.name().equalsIgnoreCase(name)) {
+                if(use.name().equalsIgnoreCase(name) || use.name().contains("_" + name.toUpperCase())) {
                     return use;
                 }
             }

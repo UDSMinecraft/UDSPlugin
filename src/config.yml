@@ -1,3 +1,6 @@
+world-name: world
+minecart:
+  life: 10
 cost:
   build: 3000
   city: 300000
@@ -23,6 +26,7 @@ welcome:
 range:
   world: 10000
   butcher: 50
+  compass: 100
 pvp-time: 5
 exp:
   spawner: 3
@@ -47,3 +51,41 @@ block:
   wither: true
   enderman: true
   silverfish: true
+mob-rewards:
+- spiderjockey:10000
+- cavespider:110
+- spider:115
+- pigzombie:120
+- zombie:60
+- skeleton:80
+- silverfish:95
+- creeper:150
+- enderman:170
+- giant:10000
+- chicken:5
+- mushroomcow:50
+- cow:20
+- sheep:15
+- pig:0
+- ocelot:10
+- wolf:10
+- squid:10
+- villager:0
+- snowman:0
+- irongolem:0
+- magmacube:125
+- slime:180
+- ghast:200
+- enderdragon:10000
+- witch:500
+- wither:10000
+global-flags:
+  protection: false
+  mobs: true
+  pve: true
+  lock: false
+  vines: true
+  food: true
+  fire: true
+  snow: true
+  pvp: true

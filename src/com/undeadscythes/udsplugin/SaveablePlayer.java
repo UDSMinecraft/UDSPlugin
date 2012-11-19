@@ -135,6 +135,7 @@ public class SaveablePlayer implements Saveable, Player {
     private long lastDamageCaused = 0;
     private SaveablePlayer challenger = null;
     private int wager = 0;
+    private long prizeClaim = 0;
     private Location checkPoint = null;
     private ChatRoom chatRoom = null;
     private HashSet<String> ignoredPlayers = new HashSet<String>();
@@ -197,6 +198,11 @@ public class SaveablePlayer implements Saveable, Player {
         return StringUtils.join(record.toArray(), "\t");
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     /**
      * Warp an existing player with these extensions.
      * @param player Player to wrap.
@@ -218,12 +224,48 @@ public class SaveablePlayer implements Saveable, Player {
         return selectedPet;
     }
 
+    public void selectPet(UUID id) {
+        selectedPet = id;
+    }
+
     public void setWhisperer(SaveablePlayer player) {
         whisperer = player;
     }
 
+    public int getWager() {
+        return wager;
+    }
+
     public SaveablePlayer getWhisperer() {
         return whisperer;
+    }
+
+    public int countItems(ItemStack search) {
+        final ItemStack[] inventory = getInventory().getContents();
+        int count = 0;
+        for(int i = 0; i < inventory.length; i++) {
+            ItemStack item = inventory[i];
+            if(item != null && item.getType() == search.getType() && item.getData().getData() == search.getData().getData()) {
+                count += item.getAmount();
+            }
+        }
+        return count;
+    }
+
+    public int getPowertoolID() {
+        return powertoolID;
+    }
+
+    public String getPowertool() {
+        return powertoolCmd;
+    }
+
+    public void claimPrize() {
+        prizeClaim = System.currentTimeMillis();
+    }
+
+    public boolean hasClaimedPrize() {
+        return (prizeClaim + Timer.DAY > System.currentTimeMillis());
     }
 
     public Session forceSession() {
@@ -251,6 +293,15 @@ public class SaveablePlayer implements Saveable, Player {
         return inventoryCopy;
     }
 
+    public boolean isInShop(Location location) {
+        for(Region region : UDSPlugin.getShops().values()) {
+            if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setClan(Clan clan) {
         this.clan = clan;
     }
@@ -262,12 +313,22 @@ public class SaveablePlayer implements Saveable, Player {
         inventoryCopy = getInventory().getContents();
     }
 
+    public void saveItems() {
+        saveInventory();
+        saveArmor();
+    }
+
     /**
      * Load this players armor.
      */
     public void loadArmor() {
         getInventory().setArmorContents(armorCopy);
         armorCopy = null;
+    }
+
+    public void endChallenge() {
+        wager = 0;
+        challenger = null;
     }
 
     /**
@@ -291,6 +352,11 @@ public class SaveablePlayer implements Saveable, Player {
      */
     public int getBail() {
         return bail;
+    }
+
+    public void loadItems() {
+        loadInventory();
+        loadArmor();
     }
 
     /**
@@ -363,6 +429,10 @@ public class SaveablePlayer implements Saveable, Player {
      */
     public void setBackPoint() {
         back = getLocation();
+    }
+
+    public void setBackPoint(Location location) {
+        back = location;
     }
 
     /**
@@ -497,6 +567,10 @@ public class SaveablePlayer implements Saveable, Player {
         return checkPoint;
     }
 
+    public void setCheckPoint(Location location) {
+        checkPoint = location;
+    }
+
     /**
      * Check if a player is engaged in a duel with another player.
      * @return <code>true</code> if the player is engaged in a duel, <code>false</code> otherwise.
@@ -507,6 +581,10 @@ public class SaveablePlayer implements Saveable, Player {
 
     public void setChallenger(SaveablePlayer challenger) {
         this.challenger = challenger;
+    }
+
+    public SaveablePlayer getChallenger() {
+        return challenger;
     }
 
     /**
@@ -1413,7 +1491,7 @@ public class SaveablePlayer implements Saveable, Player {
      */
     @Override
     public String getName() {
-        return base.getName();
+        return base == null ? name : base.getName();
     }
 
     /**

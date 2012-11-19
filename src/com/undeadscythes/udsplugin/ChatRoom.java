@@ -43,6 +43,11 @@ public class ChatRoom {
 
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public void addMember(SaveablePlayer player) {
         members.add(player);
     }

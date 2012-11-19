@@ -66,7 +66,7 @@ public class Timer implements Runnable {
 
     private void dailyTask() {
         for(Region quarry : UDSPlugin.getQuarries().values()) {
-            Material material = Material.getMaterial(quarry.getData());
+            Material material = Material.getMaterial(quarry.getData().toUpperCase());
             int dX = quarry.getV2().getBlockX() - quarry.getV1().getBlockX();
             int dY = quarry.getV2().getBlockY() - quarry.getV1().getBlockY();
             int dZ = quarry.getV2().getBlockZ() - quarry.getV1().getBlockZ();
@@ -88,15 +88,16 @@ public class Timer implements Runnable {
     }
 
     private void slowTask() throws IOException {
-        UDSPlugin.saveFiles();
-        if(UDSPlugin.lastEnderDeath + Config.DRAGON_RESPAWN < now) {
+        if(UDSPlugin.lastEnderDeath > 0 && UDSPlugin.lastEnderDeath + Config.DRAGON_RESPAWN < now) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
+                    UDSPlugin.lastEnderDeath = 0;
                     world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);
                     Bukkit.broadcastMessage(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End.");
                 }
             }
         }
+        UDSPlugin.saveFiles();
     }
 
     private void fastTask() {
@@ -125,6 +126,14 @@ public class Timer implements Runnable {
             if(request.getTime() + Config.REQUEST_TIME < now) {
                 request.getSender().sendMessage(Color.MESSAGE + "Your request has timed out.");
                 UDSPlugin.getRequests().remove(request.getRecipient().getName());
+            }
+        }
+        for(World world : Bukkit.getWorlds()) {
+            for(Minecart minecart : world.getEntitiesByClass(Minecart.class)) {
+                if(minecart.isEmpty() && minecart.getTicksLived() > Config.MINECART_LIFE) {
+                    minecart.remove();
+                    Bukkit.getLogger().info("" + minecart.getTicksLived());
+                }
             }
         }
     }

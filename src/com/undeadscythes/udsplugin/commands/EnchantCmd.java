@@ -26,7 +26,7 @@ public class EnchantCmd extends PlayerCommandExecutor {
                         player.getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
                     }
                 }
-            } else if((enchantment = getEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0) {
+            } else if((enchantment = getEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0 && goodEnchantLevel(enchantment, level) && canEnchant(enchantment, player.getItemInHand())) {
                 player.getItemInHand().addEnchantment(enchantment, level);
             }
         }

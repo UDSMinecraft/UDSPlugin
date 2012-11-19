@@ -89,6 +89,11 @@ public class Clan implements Saveable {
         return members;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public int getKills() {
         return kills;
     }

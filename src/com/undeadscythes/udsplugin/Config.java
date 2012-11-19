@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.Region.RegionFlag;
 import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -13,6 +14,10 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class Config {
+    public static int MINECART_LIFE;
+    public static World WORLD;
+    public static HashMap<RegionFlag, Boolean> GLOBAL_FLAGS;
+    public static HashMap<String, Integer> MOB_REWARDS;
     public static boolean BLOCK_ENDERMAN;
     public static boolean BLOCK_SILVERFISH;
     public static boolean BLOCK_CREEPER;
@@ -22,6 +27,7 @@ public class Config {
     public static ArrayList<String> SERVER_RULES;
     public static byte MAP_DATA;
     public static int EXPAND_COST;
+    public static int COMPASS_RANGE;
     /**
      * Items that VIP ranks can spawn.
      */
@@ -156,7 +162,7 @@ public class Config {
         for(String kit : config.getStringList("kits")) {
             String[] kitSplit = kit.split(",");
             ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-            for(Object item : ArrayUtils.subarray(kitSplit, 2, kitSplit.length -1)) {
+            for(Object item : ArrayUtils.subarray(kitSplit, 3, kitSplit.length -1)) {
                 items.add(new ItemStack(Material.getMaterial(Integer.parseInt((String)item))));
             }
             KITS.add(new Kit(kitSplit[0], Integer.parseInt(kitSplit[1]), items, PlayerRank.getByName(kitSplit[2])));
@@ -169,5 +175,16 @@ public class Config {
         BLOCK_WITHER = config.getBoolean("block.wither");
         BLOCK_ENDERMAN = config.getBoolean("block.enderman");
         BLOCK_SILVERFISH = config.getBoolean("block.silverfish");
+        MOB_REWARDS = new HashMap<String, Integer>();
+        for(String reward : config.getStringList("mob-rewards")) {
+            MOB_REWARDS.put(reward.split(":")[0], Integer.parseInt(reward.split(":")[1]));
+        }
+        COMPASS_RANGE = config.getInt("range.compass");
+        GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
+        for(RegionFlag flag : RegionFlag.values()) {
+            GLOBAL_FLAGS.put(flag, config.getBoolean("global-flags." + flag.toString()));
+        }
+        WORLD = Bukkit.getWorld(config.getString("world-name"));
+        MINECART_LIFE = config.getInt("minecart.life");
     }
 }
