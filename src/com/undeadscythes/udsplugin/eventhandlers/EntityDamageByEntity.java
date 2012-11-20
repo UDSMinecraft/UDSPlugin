@@ -18,11 +18,19 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
         if(attacker instanceof Player && defender instanceof Player) {
             event.setCancelled(pvp(UDSPlugin.getOnlinePlayers().get(((Player)attacker).getName()), UDSPlugin.getOnlinePlayers().get(((Player)defender).getName())));
         } else {
-            event.setCancelled((defender instanceof Player && UDSPlugin.getOnlinePlayers().get(((Player)defender).getName()).hasGodMode()) || (attacker instanceof Player && !Config.HOSTILE_MOBS.contains(defender.getType()) && hasFlag(defender.getLocation(), RegionFlag.PVE)));
+            event.setCancelled(godMode(defender) || pve(defender));
         }
     }
 
-    boolean pvp(SaveablePlayer attacker, SaveablePlayer defender) {
+    private boolean pvp(SaveablePlayer attacker, SaveablePlayer defender) {
         return attacker.getClan().equals(defender.getClan()) || !defender.isInClan() || !attacker.isInClan() || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
+    }
+
+    private boolean godMode(Entity defender) {
+        return defender instanceof Player && UDSPlugin.getOnlinePlayers().get(((Player)defender).getName()).hasGodMode();
+    }
+
+    private boolean pve(Entity defender) {
+        return Config.PASSIVE_MOBS.contains(defender.getType()) && !hasFlag(defender.getLocation(), RegionFlag.PVE);
     }
 }
