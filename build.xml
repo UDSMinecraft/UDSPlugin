@@ -11,7 +11,8 @@
     <description>Builds, tests, and runs the project UDSPlugin1.</description>
     <import file="nbproject/build-impl.xml"/>
     <target name="-post-jar">
-        <copy file="${dist.jar}" flatten="true" todir="C:\Users\Dave\Documents\MY Documents\Minecraft\Test Server\plugins\" />
+        <copy file="${dist.jar}" flatten="true" todir="..\..\MY Documents\Minecraft\Test Server\plugins\" />
+        <copy file="${dist.jar}" flatten="true" todir="Testing\" />
     </target>
     <!--
 
