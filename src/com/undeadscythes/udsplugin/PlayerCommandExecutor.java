@@ -822,7 +822,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      */
     public SaveablePlayer getMatchingPlayer(String partial) {
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(partial);
-        if(target!= null) {
+        if(target != null) {
             return target;
         } else {
             for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
@@ -830,40 +830,36 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                     return test;
                 }
             }
-            if(target!= null) {
+            target = UDSPlugin.getOnlinePlayers().matchKey(partial);
+            if(target != null) {
                 return target;
             } else {
-                target = UDSPlugin.getOnlinePlayers().matchKey(partial);
+                for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+                    if(test.getDisplayName().matches("(?i)" + partial)) {
+                        return test;
+                    }
+                }
+                target = UDSPlugin.getPlayers().get(partial);
                 if(target != null) {
                     return target;
                 } else {
-                    for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                        if(test.getDisplayName().matches("(?i)" + partial)) {
+                    for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
+                        if(test.getDisplayName().equalsIgnoreCase(partial)) {
                             return test;
                         }
                     }
-                    target = UDSPlugin.getPlayers().get(partial);
+                    target = UDSPlugin.getPlayers().matchKey(partial);
                     if(target != null) {
                         return target;
                     } else {
                         for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                            if(test.getDisplayName().equalsIgnoreCase(partial)) {
+                            if(test.getDisplayName().matches("(?i)" + partial)) {
                                 return test;
                             }
                         }
-                        target = UDSPlugin.getPlayers().matchKey("(?i)" + partial);
-                        if(target != null) {
-                            return target;
-                        } else {
-                            for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                                if(test.getDisplayName().matches("(?i)" + partial)) {
-                                    return test;
-                                }
-                            }
-                        }
-                        player.sendMessage(Color.ERROR + "Cannot find a player by that name.");
-                        return null;
                     }
+                    player.sendMessage(Color.ERROR + "Cannot find a player by that name.");
+                    return null;
                 }
             }
         }
