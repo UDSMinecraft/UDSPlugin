@@ -101,7 +101,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         CLAN_STATS_OTHER(Perm.CLAN, "/clan stats <clan>", "View another clans stats.", false, true),
         FACE(Perm.FACE, "/face <direction>", "Turn you character to face a direction.", false, false),
         FACE_GET(Perm.FACE, "/face", "Find out which way you are facing.", false, false),
-        GIFT(Perm.GIFT, "/gift <player> [message]", "Send a player a gift with an optional message.", false, false),
+        GIFT(Perm.GIFT, "/gift <player> [message]", "Send a player a gift.", false, false),
         HOME(Perm.HOME, "/help home", "Show more home commands.", true, false),
         HOME_HELP(Perm.HOME, "/home help [page]", "Show these help pages.", false, true),
         HOME_TP(Perm.HOME, "/home", "Teleport to your home.", false, true),
