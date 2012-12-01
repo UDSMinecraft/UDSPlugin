@@ -15,7 +15,7 @@ public class MeCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         String action = StringUtils.join(args, " ");
-        if(minArgsHelp(2) && noCensor(action)) {
+        if(minArgsHelp(1) && noCensor(action)) {
             Bukkit.broadcastMessage(Color.TEXT + "*" + player.getDisplayName() + " " + action);
         }
     }
