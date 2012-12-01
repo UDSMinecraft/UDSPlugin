@@ -12,6 +12,7 @@ public class TicketCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        player.sendMessage(Color.MESSAGE + "Please post issues to https://github.com/UndeadScythes/UDSPlugin1");
+        player.sendMessage(Color.MESSAGE + "Please post issues to:");
+        player.sendMessage(Color.LINK + "https://github.com/UndeadScythes/UDSPlugin1/issues");
     }
 }
