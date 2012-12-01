@@ -830,39 +830,40 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @return The first player matched or <code>null</code> if no players matched.
      */
     public SaveablePlayer getMatchingPlayer(String partial) {
-        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(partial);
+        String lowPartial = partial.toLowerCase();
+        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
         if(target != null) {
             return target;
         } else {
             for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                if(test.getDisplayName().equalsIgnoreCase(partial)) {
+                if(test.getDisplayName().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
             }
-            target = UDSPlugin.getOnlinePlayers().matchKey(partial);
+            target = UDSPlugin.getOnlinePlayers().matchKey(lowPartial);
             if(target != null) {
                 return target;
             } else {
                 for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                    if(test.getDisplayName().matches("(?i)" + partial)) {
+                    if(test.getDisplayName().toLowerCase().contains(lowPartial)) {
                         return test;
                     }
                 }
-                target = UDSPlugin.getPlayers().get(partial);
+                target = UDSPlugin.getPlayers().get(lowPartial);
                 if(target != null) {
                     return target;
                 } else {
                     for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                        if(test.getDisplayName().equalsIgnoreCase(partial)) {
+                        if(test.getDisplayName().equalsIgnoreCase(lowPartial)) {
                             return test;
                         }
                     }
-                    target = UDSPlugin.getPlayers().matchKey(partial);
+                    target = UDSPlugin.getPlayers().matchKey(lowPartial);
                     if(target != null) {
                         return target;
                     } else {
                         for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                            if(test.getDisplayName().matches("(?i)" + partial)) {
+                            if(test.getDisplayName().toLowerCase().contains(lowPartial)) {
                                 return test;
                             }
                         }
@@ -874,31 +875,28 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-        public SaveablePlayer getMatchingOnlinePlayer(String partial) {
-        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(partial);
+    public SaveablePlayer getMatchingOnlinePlayer(String partial) {
+        String lowPartial = partial.toLowerCase();
+        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
         if(target!= null) {
             return target;
         } else {
             for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                if(test.getDisplayName().equalsIgnoreCase(partial)) {
+                if(test.getDisplayName().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
             }
-            if(target!= null) {
+            target = UDSPlugin.getOnlinePlayers().matchKey(lowPartial);
+            if(target != null) {
                 return target;
             } else {
-                target = UDSPlugin.getOnlinePlayers().matchKey(partial);
-                if(target != null) {
-                    return target;
-                } else {
-                    for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                        if(test.getDisplayName().matches("(?i)" + partial)) {
-                            return test;
-                        }
+                for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+                    if(test.getDisplayName().contains(lowPartial)) {
+                        return test;
                     }
-                    player.sendMessage(Color.ERROR + "Cannot find that player.");
-                    return null;
                 }
+                player.sendMessage(Color.ERROR + "Cannot find that player.");
+                return null;
             }
         }
     }
