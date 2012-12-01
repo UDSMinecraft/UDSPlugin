@@ -18,8 +18,10 @@ public class HomeCmd extends PlayerCommandExecutor {
         Region home;
         SaveablePlayer target;
         int price;
-        if(args.length == 0 && (home = getHome()) != null && notJailed() && notPinned()) {
-            player.teleport(home.getWarp());
+        if(args.length == 0) {
+            if((home = getHome()) != null && notJailed() && notPinned()) {
+                player.teleport(home.getWarp());
+            }
         } else if(args.length == 1) {
             if(args[0].equals("make") && canAfford(Config.HOME_COST) && noHome()) {
                 Vector min = player.getLocation().add(-10, 28, -10).toVector();
@@ -103,7 +105,7 @@ public class HomeCmd extends PlayerCommandExecutor {
             } else {
 //                subCmdHelp(args);
             }
-        } else if(args.length == 3 && args[0].equals("sell") && (getHome()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
+        } else if(numArgsHelp(3) && args[0].equals("sell") && (getHome()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
             player.sendMessage(Message.REQUEST_SENT);
             target.sendMessage(Color.MESSAGE + player.getDisplayName() + " wants to sell you their house for " + price + " " + Config.CURRENCIES + ".");
             target.sendMessage(Message.REQUEST_Y_N);

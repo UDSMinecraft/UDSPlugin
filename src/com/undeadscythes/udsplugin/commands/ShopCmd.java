@@ -16,8 +16,10 @@ public class ShopCmd extends PlayerCommandExecutor {
         Region shop;
         SaveablePlayer target;
         int price;
-        if(args.length == 0 && (shop = getShop()) != null && notJailed() && notPinned()) {
-            player.teleport(shop.getWarp());
+        if(args.length == 0) {
+            if( (shop = getShop()) != null && notJailed() && notPinned()) {
+                player.teleport(shop.getWarp());
+            }
         } else if(args.length == 1) {
             if(args[0].equals("make") && hasPerm(Perm.SHOP_ADMIN)) {
                 player.performCommand("region set " + nextShopName() + " shop");
@@ -92,7 +94,7 @@ public class ShopCmd extends PlayerCommandExecutor {
             } else {
 //                subCmdHelp(args);
             }
-        } else if(args.length == 3 && args[0].equals("shop") && (getShop()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
+        } else if(numArgsHelp(3) && args[0].equals("shop") && (getShop()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
             player.sendMessage(Message.REQUEST_SENT);
             target.sendMessage(Color.MESSAGE + player.getDisplayName() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
             target.sendMessage(Message.REQUEST_Y_N);
