@@ -175,9 +175,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         WE(Perm.WE, "/help we", "Show more WE commands.", true, false),
         WHERE(Perm.WHERE, "/where", "Get details on your surroundings.", false, false),
         WHO(Perm.WHO, "/who", "Get a list of online players.", false, false),
-        WHOIS(Perm.WHOIS, "/whois <player>", "Find out what a players MC name is.", false, false),
-        Y(Perm.Y, "/y", "Accept a request.", false, false),
-        N(Perm.N, "/n", "Reject a request.", false, false);
+        WHOIS(Perm.WHOIS, "/whois <player>", "Find out what a players MC name is.", false, false);
 
         private Perm perm;
         private String usage;
