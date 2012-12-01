@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class HelpCmd extends PlayerCommandExecutor {
     private enum Usage {
-        HELP(Perm.HELP, "/help [page|command]", "Show these help pages.", false, false),
+        HELP(Perm.HELP, "/help [page or command]", "Show these help pages.", false, false),
         TICKET(Perm.TICKET, "/ticket", "Get the link to post suggestions and bugs to.", false, false),
         ACCEPTRULES(Perm.ACCEPTRULES, "/acceptrules", "Accept the rules and get build rights.", false, false),
         ADMIN(Perm.ADMIN_HELP, "/help admin", "Show more admin commands.", true, false),
