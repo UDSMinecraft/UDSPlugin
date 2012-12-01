@@ -174,7 +174,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         Location location = player.getTargetBlock(null, Config.COMPASS_RANGE).getLocation();
         location.setYaw(player.getLocation().getYaw());
         location.setPitch(player.getLocation().getPitch());
-        player.teleport(Warp.findSafePlace(location));
+        player.move(Warp.findSafePlace(location));
     }
 
     public void compassThru(final SaveablePlayer player) {
@@ -185,7 +185,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         Location location = LOS.get(1).getRelative(LOS.get(0).getFace(LOS.get(1))).getLocation();
         location.setYaw(player.getLocation().getYaw());
         location.setPitch(player.getLocation().getPitch());
-        player.teleport(Warp.findSafePlace(location));
+        player.move(Warp.findSafePlace(location));
     }
 
     /**
