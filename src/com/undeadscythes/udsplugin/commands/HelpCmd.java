@@ -193,7 +193,7 @@ public class HelpCmd extends PlayerCommandExecutor {
 
         public static Usage get(String name) {
             for(Usage use : values()) {
-                if(use.name().equalsIgnoreCase(name) || use.name().contains("_" + name.toUpperCase())) {
+                if(use.name().equalsIgnoreCase(name) || use.name().matches("[A-Z]*_" + name.toUpperCase())) {
                     return use;
                 }
             }
