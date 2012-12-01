@@ -130,7 +130,6 @@ public class HelpCmd extends PlayerCommandExecutor {
         MONEY_GRANT(Perm.MONEY_ADMIN, "/money grant <player> <amount>", "Give a player some money.", false, true),
         MONEY_SET(Perm.MONEY_ADMIN, "/money set <player> <amount>", "Set a players account.", false, true),
         PAYBAIL(Perm.PAYBAIL, "/paybail", "Pay your bail to get out of jail.", false, false),
-        PET_SELECT(Perm.PET, "Select a pet by right clicking on it while sneaking.", "", false, false),
         PET_GIVE(Perm.PET, "/pet give <player>", "Give your pet to a player.", false, false),
         PET_SELL(Perm.PET, "/pet sell <player> <price>", "Sell your pet to a player.", false, false),
         REGION(Perm.REGION, "/help region", "Show more region commands.", true, false),

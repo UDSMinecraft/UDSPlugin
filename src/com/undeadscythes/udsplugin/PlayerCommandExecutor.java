@@ -74,7 +74,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if((pet = player.getSelectedPet()) != null) {
             return pet;
         } else {
-            player.sendMessage(Color.ERROR + "You have no pet selected.");
+            player.sendMessage(Color.ERROR + "Right click a pet while sneaking to select it first.");
             return null;
         }
     }
