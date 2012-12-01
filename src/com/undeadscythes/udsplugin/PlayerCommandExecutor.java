@@ -861,7 +861,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                                 }
                             }
                         }
-                        player.sendMessage(Color.ERROR + "Cannot find that player online.");
+                        player.sendMessage(Color.ERROR + "Cannot find a player by that name.");
                         return null;
                     }
                 }
