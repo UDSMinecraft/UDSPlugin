@@ -40,7 +40,7 @@ public class CityCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.MESSAGE + "City founded.");
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " has just founded " + args[1] + ".");
                 }
-            } else if(args[0].equals("leave") && (city = getMatchingCity(args[1])) != null) {
+            } else if(args[0].equals("leave") && (city = getMatchingCity(args[1])) != null && notMayor(city)) {
                 if(city.delMember(player)) {
                     player.sendMessage(Color.MESSAGE + "You have left " + city.getName() + ".");
                 } else {

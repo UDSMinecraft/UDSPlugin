@@ -636,6 +636,15 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     }
 
+    public boolean notMayor(Region city) {
+        if(!city.isOwner(player)) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You cannot do that while you are the mayor.");
+            return false;
+        }
+    }
+
     /**
      * Checks first if the city exists then that the player is the mayor of the city.
      * @param cityName City to check.
