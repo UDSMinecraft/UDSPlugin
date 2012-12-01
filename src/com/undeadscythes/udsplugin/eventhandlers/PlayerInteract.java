@@ -36,9 +36,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             } else if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
                 wand1(player, block);
                 event.setCancelled(true);
-            } else if(block.getType() == Material.WALL_SIGN) {
+            } else if((block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) && !player.isSneaking()) {
                 sign(player, (Sign)block.getState());
-                event.setCancelled(true);
             } else {
                 event.setCancelled(lockCheck(block, player));
             }
@@ -72,7 +71,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             } else if(inHand == Material.MONSTER_EGG && block.getType() == Material.MOB_SPAWNER) {
                 setMobSpawner(block, player);
                 event.setCancelled(true);
-            } else if(block.getType() == Material.WALL_SIGN) {
+            } else if(block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
                 sign(player, (Sign)block.getState());
                 event.setCancelled(true);
             } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {

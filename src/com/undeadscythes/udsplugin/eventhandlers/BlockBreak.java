@@ -1,7 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
+import java.util.*;
 import org.bukkit.*;
+import org.bukkit.block.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.*;
@@ -11,6 +13,8 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class BlockBreak implements Listener {
+    public static ArrayList<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
+
     @EventHandler
     public void onEvent(BlockBreakEvent event) {
         SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
@@ -19,7 +23,7 @@ public class BlockBreak implements Listener {
         } else if(!player.canBuildHere(event.getBlock().getLocation().add(UDSPlugin.HALF_BLOCK))) {
             event.setCancelled(true);
             player.sendMessage(Message.CANT_BUILD_HERE);
-        } else if(event.getBlock().getType().equals(Material.WALL_SIGN) || event.getBlock().getType().equals(Material.SIGN_POST) && !player.isSneaking()) {
+        } else if(isSpecialSign(event.getBlock()) && !player.isSneaking()) {
             event.setCancelled(true);
             player.sendMessage(Color.ERROR + "Sneak while punching if you want to break this block.");
         } else if(event.getBlock().getType().equals(Material.MOB_SPAWNER)) {
@@ -35,5 +39,15 @@ public class BlockBreak implements Listener {
                 }
             }
         }
+    }
+
+    private boolean isSpecialSign(Block block) {
+        if(block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN_POST)) {
+            Sign sign = (Sign)block.getState();
+            if(SPECIAL_SIGNS.contains(sign.getLine(0))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
