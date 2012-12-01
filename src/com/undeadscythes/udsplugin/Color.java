@@ -7,6 +7,7 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public enum Color {
+    LINK(ChatColor.BLUE),
     SIGN(ChatColor.GREEN),
     WHISPER(ChatColor.GRAY),
     /**
