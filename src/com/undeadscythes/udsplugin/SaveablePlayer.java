@@ -2373,7 +2373,7 @@ public class SaveablePlayer implements Saveable, Player {
      */
     @Override
     public boolean isOnline() {
-        return base.isOnline();
+        return base != null ? base.isOnline() : false;
     }
 
     /**
