@@ -70,7 +70,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                 player.sendMessage(Color.ITEM + "Deaths: " + Color.TEXT + clan.getDeaths());
                 player.sendMessage(Color.ITEM + "KDR: " + Color.TEXT + decimalFormat.format(clan.getRatio()));
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(numArgsHelp(2)) {
             int page;
@@ -155,10 +155,10 @@ public class ClanCmd extends PlayerCommandExecutor {
                     base.setWarp(player.getLocation());
                     player.sendMessage(Color.MESSAGE + "Clan base warp point set.");
                 } else {
-                    subCmdHelp(args);
+//                    subCmdHelp(args);
                 }
             } else {
-                subCmdHelp();
+//                subCmdHelp();
             }
         }
     }

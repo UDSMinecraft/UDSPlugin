@@ -45,7 +45,7 @@ public class RegionCmd extends PlayerCommandExecutor {
                 }
                 player.sendMessage(Color.TEXT + message.substring(0, message.length() - 2));
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(args.length == 2) {
             if(args[0].equals("del") && (region = getRegion(args[1])) != null) {
@@ -93,7 +93,7 @@ public class RegionCmd extends PlayerCommandExecutor {
                 UDSPlugin.getRegions().put(region.getName(), region);
                 player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set.");
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(numArgsHelp(3)) {
             if(args[0].equals("addmember") && (region = getRegion(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
@@ -144,7 +144,7 @@ public class RegionCmd extends PlayerCommandExecutor {
                 }
                 player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set.");
             } else {
-                subCmdHelp();
+//                subCmdHelp();
             }
         }
     }

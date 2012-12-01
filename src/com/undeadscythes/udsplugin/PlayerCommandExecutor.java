@@ -90,21 +90,6 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     }
 
-    public void subCmdHelp(String[] args) {
-        if(args.length == 1 && args[0].equalsIgnoreCase("help")) {
-            sendHelp(1);
-        } else if(args.length == 2 && args[0].equalsIgnoreCase("help") && args[1].matches("[0-9][0-9]*")) {
-            sendHelp(Integer.parseInt(args[1]));
-        } else {
-            subCmdHelp();
-        }
-    }
-
-    public void subCmdHelp() {
-        player.sendMessage(Color.ERROR + "That command is not recognized.");
-        sendHelp(1);
-    }
-
     public boolean numArgsHelp(int num) {
         if(argsLength == num) {
             return true;

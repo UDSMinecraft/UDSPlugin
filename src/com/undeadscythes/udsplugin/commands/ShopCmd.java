@@ -74,7 +74,7 @@ public class ShopCmd extends PlayerCommandExecutor {
             } else if((target = getMatchingPlayer(args[0])) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {
                 player.teleport(shop.getWarp());
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(args.length == 2) {
             if(args[0].equals("hire") && (target = getMatchingPlayer(args[1])) != null && (shop = getShop()) != null) {
@@ -90,7 +90,7 @@ public class ShopCmd extends PlayerCommandExecutor {
                     target.sendMessage(Color.MESSAGE + "You are no longer " + player.getDisplayName() + "'s worker.");
                 }
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(numArgsHelp(3) && args[0].equals("shop") && (getShop()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
             player.sendMessage(Message.REQUEST_SENT);

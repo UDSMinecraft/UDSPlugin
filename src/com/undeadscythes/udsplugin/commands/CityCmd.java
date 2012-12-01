@@ -23,7 +23,7 @@ public class CityCmd extends PlayerCommandExecutor {
             } else if(args[0].equals("list")) {
                 sendPage(1, player);
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(args.length == 2) {
             int page;
@@ -51,7 +51,7 @@ public class CityCmd extends PlayerCommandExecutor {
             } else if(args[0].equals("list") && (page = parseInt(args[1])) != -1) {
                 sendPage(page, player);
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(numArgsHelp(3)) {
             SaveablePlayer target;
@@ -71,7 +71,7 @@ public class CityCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.ERROR + target.getDisplayName() + " is not a citizen of " + city.getName() + ".");
                 }
             } else {
-                subCmdHelp();
+//                subCmdHelp();
             }
         }
     }

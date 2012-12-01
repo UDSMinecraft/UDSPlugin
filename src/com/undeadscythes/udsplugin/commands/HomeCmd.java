@@ -72,7 +72,7 @@ public class HomeCmd extends PlayerCommandExecutor {
             } else if((target = getMatchingPlayer(args[0])) != null && (home = getHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
                 player.teleport(home.getWarp());
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(args.length == 2) {
             Direction direction;
@@ -101,7 +101,7 @@ public class HomeCmd extends PlayerCommandExecutor {
                     target.sendMessage(Color.MESSAGE + "You are no longer " + player.getDisplayName() + "'s room mate.");
                 }
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(numArgsHelp(3) && args[0].equals("sell") && (getHome()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
             player.sendMessage(Message.REQUEST_SENT);

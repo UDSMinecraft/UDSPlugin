@@ -45,7 +45,7 @@ public class MoneyCmd extends PlayerCommandExecutor {
             } else if((target = getMatchingPlayer(args[0])) != null && notSelf(target) && hasPerm(Perm.MONEY_OTHER)) {
                 player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has " + target.getMoney() + " " + Config.CURRENCIES + ".");
             } else {
-                subCmdHelp(args);
+//                subCmdHelp(args);
             }
         } else if(numArgsHelp(3)) {
             int amount;
@@ -61,7 +61,7 @@ public class MoneyCmd extends PlayerCommandExecutor {
                 player.sendMessage(Color.MESSAGE.toString() + amount + " " + Config.CURRENCIES + " have been sent to " + target.getDisplayName() + ".");
                 target.sendMessage(Color.MESSAGE + player.getDisplayName() + " has just paid you " + amount + " " + Config.CURRENCIES + ".");
             } else {
-                subCmdHelp();
+//                subCmdHelp();
             }
         }
     }
