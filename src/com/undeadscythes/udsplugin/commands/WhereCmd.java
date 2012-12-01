@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import org.bukkit.*;
 
 /**
  * Give a description of the players surroundings.
@@ -12,8 +13,10 @@ public class WhereCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        int distance = (int)(Math.sqrt(Math.pow(player.getLocation().getBlockX(), 2) + Math.pow(player.getLocation().getBlockZ(), 2)));
-        String message = "You are " + distance + " blocks from spawn";
+        Location playerLocation = player.getLocation();
+        Location spawnLocation = player.getWorld().getSpawnLocation();
+        int distance = (int)playerLocation.distance(spawnLocation);
+        String message = "You are " + distance + " blocks from spawn,";
         if(player.getLocation().getBlockY() < 64) {
             message = message.concat(" " + (64 - player.getLocation().getBlockY()) + " blocks below sea level");
         } else if(player.getLocation().getBlockY() > 64) {
