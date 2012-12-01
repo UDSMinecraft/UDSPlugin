@@ -26,6 +26,14 @@ public class Censor {
         return true;
     }
 
+    public static String fix(String message) {
+        String fixedMessage = message;
+        for(String word : BAD_WORDS) {
+            fixedMessage = fixedMessage.replaceAll("(?i)" + word, "****");
+        }
+        return fixedMessage;
+    }
+
     /**
      * This let's me hide the nasty words in the code. Interesting fact: "FU" maps to "SH". It took me a few minutes trying to figure out why the first two letters weren't being mapped... but they were!
      * @return Bad words in plaintext.
