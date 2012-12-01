@@ -94,7 +94,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(argsLength == num) {
             return true;
         } else {
-            numArgsHelpX();
+            numArgsHelp();
             return false;
         }
     }
@@ -103,7 +103,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(argsLength >= num) {
             return true;
         } else {
-            numArgsHelpX();
+            numArgsHelp();
             return false;
         }
     }
@@ -112,14 +112,14 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(argsLength <= num) {
             return true;
         } else {
-            numArgsHelpX();
+            numArgsHelp();
             return false;
         }
     }
 
-    public void numArgsHelpX() {
+    public void numArgsHelp() {
         player.sendMessage(Color.ERROR + "You have made an error using this command.");
-        sendHelp(1);
+        player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the correct usage.");
     }
 
     public void sendHelp(int page) {
