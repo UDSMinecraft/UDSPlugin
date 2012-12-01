@@ -107,7 +107,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         HOME_TP_OTHER(Perm.HOME, "/home <player>", "Teleport to a room mates home.", false, true),
         HOME_ADD(Perm.HOME, "/home add <player>", "Add a player as a room mate.", false, true),
         HOME_KICK(Perm.HOME, "/home kick <player>", "Kick a player from your room mates.", false, true),
-        HOME_BOOT(Perm.HOME, "/home boot <player>", "Forcibly remove a player from your home.", false, true),
+        HOME_BOOT(Perm.HOME, "/home boot <player>", "Forcibly boot a player from your home.", false, true),
         HOME_EXPAND(Perm.HOME, "/home expand <direction>", "Expand your home protection.", false, true),
         HOME_LOCK(Perm.HOME, "/home lock", "Lock your house.", false, true),
         HOME_UNLOCK(Perm.HOME, "/home unlock", "Unlock your house.", false, true),
