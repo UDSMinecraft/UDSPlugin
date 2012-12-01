@@ -1024,4 +1024,12 @@ public class WEWorld implements World {
     public void removeMetadata(String metadataKey, Plugin owningPlugin) {
         base.removeMetadata(metadataKey, owningPlugin);
     }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public boolean createExplosion(double d, double d1, double d2, float f, boolean bln, boolean bln1) {
+        return base.createExplosion(d, d1, d2, f, bln, bln1);
+    }
 }
