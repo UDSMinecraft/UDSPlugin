@@ -12,9 +12,7 @@ public class DayCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0)) {
-            player.getWorld().setTime(0);
-            player.sendMessage(Color.MESSAGE + "Summoning the sun.");
-        }
+        player.getWorld().setTime(0);
+        player.sendMessage(Color.MESSAGE + "Summoning the sun.");
     }
 }

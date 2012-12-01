@@ -13,21 +13,19 @@ public class SetWarpCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreLessInc(1, 3)) {
-            PlayerRank rank;
-            int price;
-            String message = Color.MESSAGE + "Warp point set.";
-            if(args.length == 1 && notWarp(args[0]) && noCensor(args[0])) {
-                UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), PlayerRank.DEFAULT, 0));
-                player.sendMessage(message);
-            } else if(args.length == 2 && notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null) {
-                UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), rank, 0));
-                player.sendMessage(message);
+        PlayerRank rank;
+        int price;
+        String message = Color.MESSAGE + "Warp point set.";
+        if(args.length == 1 && notWarp(args[0]) && noCensor(args[0])) {
+            UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), PlayerRank.DEFAULT, 0));
+            player.sendMessage(message);
+        } else if(args.length == 2 && notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null) {
+            UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), rank, 0));
+            player.sendMessage(message);
 
-            } else if(args.length == 3 && notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null && (price = parseInt(args[2])) != -1) {
-                UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), rank, price));
-                player.sendMessage(message);
-            }
+        } else if(numArgsHelp(3) && notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null && (price = parseInt(args[2])) != -1) {
+            UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), rank, price));
+            player.sendMessage(message);
         }
     }
 }

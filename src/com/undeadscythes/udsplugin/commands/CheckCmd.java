@@ -12,6 +12,8 @@ public class CheckCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        player.quietTeleport(player.getCheckPoint());
+        if(!player.quietTeleport(player.getCheckPoint())) {
+            player.sendMessage(Color.ERROR + "You do not currently have a checkpoint set.");
+        }
     }
 }

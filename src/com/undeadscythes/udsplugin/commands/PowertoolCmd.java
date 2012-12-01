@@ -13,16 +13,14 @@ public class PowertoolCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreEq(1)) {
-            if(args.length > 0 && notAirHand()) {
-                player.setPowertoolID(player.getItemInHand().getTypeId());
-                player.setPowertool(StringUtils.join(args, " ").replaceFirst("/", ""));
-                player.sendMessage(Color.MESSAGE + "Powertool set.");
-            } else {
-                player.setPowertoolID(0);
-                player.setPowertool("");
-                player.sendMessage(Color.MESSAGE + "Powertool removed.");
-            }
+        if(args.length >= 1 && notAirHand()) {
+            player.setPowertoolID(player.getItemInHand().getTypeId());
+            player.setPowertool(StringUtils.join(args, " ").replaceFirst("/", ""));
+            player.sendMessage(Color.MESSAGE + "Powertool set.");
+        } else {
+            player.setPowertoolID(0);
+            player.setPowertool("");
+            player.sendMessage(Color.MESSAGE + "Powertool removed.");
         }
     }
 }

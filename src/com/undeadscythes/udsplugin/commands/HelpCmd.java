@@ -211,7 +211,7 @@ public class HelpCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsLessEq(2)) {
+        if(maxArgsHelp(2)) {
             if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
                 TreeSet<Usage> usages = new TreeSet<Usage>();
                 for(Usage usage : Usage.values()) {

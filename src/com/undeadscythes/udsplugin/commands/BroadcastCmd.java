@@ -14,7 +14,7 @@ public class BroadcastCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreEq(1)) {
+        if(minArgsHelp(1)) {
             Bukkit.broadcastMessage(Color.BROADCAST + StringUtils.join(args, " "));
         }
     }

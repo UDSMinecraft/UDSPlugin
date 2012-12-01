@@ -12,10 +12,8 @@ public class BackCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0)) {
-            if(!player.quietTeleport(player.getBack())) {
-                player.sendMessage(Color.ERROR + "You can't teleport back at this time.");
-            }
+        if(!player.quietTeleport(player.getBack())) {
+            player.sendMessage(Color.ERROR + "You can't teleport back at this time.");
         }
     }
 

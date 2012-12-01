@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 
 /**
  * Demote a player by a single rank.
@@ -14,7 +14,7 @@ public class DemoteCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsEq(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
+        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
             PlayerRank rank;
             if((rank = target.demote()) != null) {
                 player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been demoted to " + rank.toString() + ".");

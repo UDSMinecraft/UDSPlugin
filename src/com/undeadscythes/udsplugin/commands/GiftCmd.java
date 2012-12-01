@@ -16,7 +16,7 @@ public class GiftCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsMoreEq(1) && (target = getMatchingPlayer(args[0])) != null) {
+        if(minArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
             ItemStack gift = player.getItemInHand().clone();
             if(notAirHand()) {
                 String message = Color.MESSAGE + "[Gifting Service] You have recieved a free gift!";

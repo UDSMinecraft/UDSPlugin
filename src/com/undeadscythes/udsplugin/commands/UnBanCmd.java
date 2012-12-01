@@ -13,7 +13,7 @@ public class UnBanCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsEq(1) && (target = getMatchingPlayer(args[0])) != null && isBanned(target) && notSelf(target)) {
+        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isBanned(target) && notSelf(target)) {
             target.setBanned(false);
             player.sendMessage(Color.MESSAGE + target.getDisplayName() + " is no longer banned.");
         }

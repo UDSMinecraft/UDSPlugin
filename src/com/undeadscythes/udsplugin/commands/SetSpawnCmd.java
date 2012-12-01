@@ -12,9 +12,7 @@ public class SetSpawnCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0)) {
-            new WEWorld(player.getWorld()).setSpawnLocation(player.getLocation());
-            player.sendMessage(Color.MESSAGE + "Spawn location moved.");
-        }
+        new WEWorld(player.getWorld()).setSpawnLocation(player.getLocation());
+        player.sendMessage(Color.MESSAGE + "Spawn location moved.");
     }
 }

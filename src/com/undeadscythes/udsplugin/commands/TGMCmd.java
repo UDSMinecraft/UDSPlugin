@@ -12,17 +12,15 @@ public class TGMCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsLessEq(1)) {
-            SaveablePlayer target;
-            if(args.length == 0) {
-                player.sendMessage(Color.MESSAGE + "You now have creative mode " + (player.toggleGameMode() ? "en" : "dis") + "abled.");
-            } else if(args.length == 1 && (target = getMatchingPlayer(args[0])) != null) {
-                boolean gameMode = target.toggleGameMode();
-                if(!player.equals(target)) {
-                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + " now has creative mode " + (gameMode ? "en" : "dis") + "abled.");
-                }
-                target.sendMessage(Color.MESSAGE + "You now have creative mode " + (gameMode ? "en" : "dis") + "abled.");
+        SaveablePlayer target;
+        if(args.length == 0) {
+            player.sendMessage(Color.MESSAGE + "You now have creative mode " + (player.toggleGameMode() ? "en" : "dis") + "abled.");
+        } else if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
+            boolean gameMode = target.toggleGameMode();
+            if(!player.equals(target)) {
+                player.sendMessage(Color.MESSAGE + target.getDisplayName() + " now has creative mode " + (gameMode ? "en" : "dis") + "abled.");
             }
+            target.sendMessage(Color.MESSAGE + "You now have creative mode " + (gameMode ? "en" : "dis") + "abled.");
         }
     }
 }

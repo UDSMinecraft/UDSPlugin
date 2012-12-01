@@ -12,18 +12,16 @@ public class WhereCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0)) {
-            int distance = (int)(Math.sqrt(Math.pow(player.getLocation().getBlockX(), 2) + Math.pow(player.getLocation().getBlockZ(), 2)));
-            String message = "You are " + distance + " blocks from spawn";
-            if(player.getLocation().getBlockY() < 64) {
-                message = message.concat(" " + (64 - player.getLocation().getBlockY()) + " blocks below sea level");
-            } else if(player.getLocation().getBlockY() > 64) {
-                message = message.concat(" " + (player.getLocation().getBlockY() - 64) + " blocks above sea level");
-            } else {
-                message = message.concat(" at sea level");
-            }
-            message = message.concat(" in a " + player.getLocation().getBlock().getBiome().toString().toLowerCase().replace("_", " ") + " biome");
-            player.sendMessage(Color.MESSAGE + message);
+        int distance = (int)(Math.sqrt(Math.pow(player.getLocation().getBlockX(), 2) + Math.pow(player.getLocation().getBlockZ(), 2)));
+        String message = "You are " + distance + " blocks from spawn";
+        if(player.getLocation().getBlockY() < 64) {
+            message = message.concat(" " + (64 - player.getLocation().getBlockY()) + " blocks below sea level");
+        } else if(player.getLocation().getBlockY() > 64) {
+            message = message.concat(" " + (player.getLocation().getBlockY() - 64) + " blocks above sea level");
+        } else {
+            message = message.concat(" at sea level");
         }
+        message = message.concat(" in a " + player.getLocation().getBlock().getBiome().toString().toLowerCase().replace("_", " ") + " biome");
+        player.sendMessage(Color.MESSAGE + message);
     }
 }

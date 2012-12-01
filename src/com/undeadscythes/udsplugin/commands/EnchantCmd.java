@@ -13,22 +13,20 @@ public class EnchantCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreLessInc(0, 2)) {
-            int level;
-            Enchantment enchantment;
-            if(args.length == 0) {
-                sendPage(1, player);
-            } else if(args.length == 1) {
-                if(args[0].matches("[0-9][0-9]*")) {
-                    sendPage(Integer.parseInt(args[0]), player);
-                } else {
-                    if((enchantment = getEnchantment(args[0])) != null) {
-                        player.getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
-                    }
+        int level;
+        Enchantment enchantment;
+        if(args.length == 0) {
+            sendPage(1, player);
+        } else if(args.length == 1) {
+            if(args[0].matches("[0-9][0-9]*")) {
+                sendPage(Integer.parseInt(args[0]), player);
+            } else {
+                if((enchantment = getEnchantment(args[0])) != null) {
+                    player.getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
                 }
-            } else if((enchantment = getEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0 && goodEnchantLevel(enchantment, level) && canEnchant(enchantment, player.getItemInHand())) {
-                player.getItemInHand().addEnchantment(enchantment, level);
             }
+        } else if(numArgsHelp(2) && (enchantment = getEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0 && goodEnchantLevel(enchantment, level) && canEnchant(enchantment, player.getItemInHand())) {
+            player.getItemInHand().addEnchantment(enchantment, level);
         }
     }
 

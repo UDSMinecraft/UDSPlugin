@@ -13,7 +13,7 @@ public class ICmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreLessInc(1, 2)) {
+        if(minArgsHelp(1) && maxArgsHelp(2)) {
             ItemStack item;
             if((item = getItem(args[0])) != null) {
                 int amount;
@@ -26,7 +26,7 @@ public class ICmd extends PlayerCommandExecutor {
             if(player.hasPermission(Perm.I_ADMIN)) {
                 player.getInventory().addItem(item);
             } else if(player.getVIPSpawns() > 0) {
-                if(Config.WHITELIST.contains(item.getTypeId())) {
+                if(Config.WHITELIST.contains(item.getType())) {
                     if(item.getAmount() > player.getVIPSpawns()) {
                         item.setAmount(player.getVIPSpawns());
                     }

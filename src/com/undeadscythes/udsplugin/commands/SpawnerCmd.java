@@ -15,7 +15,7 @@ public class SpawnerCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(1)) {
+        if(numArgsHelp(1)) {
             final Block block = player.getTargetBlock(null, 5);
             if(block.getType() == Material.MOB_SPAWNER) {
                 final EntityType mob = EntityType.fromName(args[0]);
@@ -23,7 +23,7 @@ public class SpawnerCmd extends PlayerCommandExecutor {
                     ((CreatureSpawner)block.getState()).setSpawnedType(mob);
                     player.sendMessage(Color.MESSAGE + "Spawner set to " + mob.toString().toLowerCase().replace("_", " ") + ".");
                 } else {
-                    player.sendMessage(Color.ERROR + "Not a vliad mob type.");
+                    player.sendMessage(Color.ERROR + "Not a valid mob type.");
                 }
             } else {
                 player.sendMessage(Color.ERROR + "You need to be looking at a mob spawner.");

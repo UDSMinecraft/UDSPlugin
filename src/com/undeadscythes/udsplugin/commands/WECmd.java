@@ -3,7 +3,7 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Toggles the admin chat channel.
+ * WorldEdit-like tools.
  * @author UndeadScythes
  */
 public class WECmd extends PlayerCommandExecutor {

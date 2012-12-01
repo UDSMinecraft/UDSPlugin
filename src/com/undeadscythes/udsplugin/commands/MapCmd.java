@@ -14,7 +14,7 @@ public class MapCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0) && canAfford(Config.MAP_COST)) {
+        if(canAfford(Config.MAP_COST)) {
             player.giveAndDrop(new ItemStack(Material.MAP, 1, (short)0, Config.MAP_DATA));
         }
     }

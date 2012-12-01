@@ -14,27 +14,25 @@ public class ScubaCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0)) {
-            if(player.getInventory().getHelmet() == null) {
-                if(player.getItemInHand().getType() == Material.GLASS) {
-                    player.getInventory().setHelmet(new ItemStack(Material.GLASS));
-                    final ItemStack glass = player.getItemInHand().clone();
-                    glass.setAmount(glass.getAmount() - 1);
-                    player.setItemInHand(glass);
-                    player.sendMessage(Color.MESSAGE + "You put on your scuba gear.");
-                } else {
-                    player.sendMessage(Color.ERROR + "You need glass in your hand to do this.");
-                }
-            } else if(player.getInventory().getHelmet().getType() != Material.GLASS) {
-                player.sendMessage(Color.ERROR + "You cannot do this while you have a normal helmet on.");
-            } else if(player.getInventory().getHelmet().getType() == Material.GLASS) {
-                player.getInventory().setHelmet(new ItemStack(Material.AIR));
-                if(!player.getInventory().addItem(new ItemStack(Material.GLASS)).isEmpty()) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.GLASS));
-                    player.sendMessage(Color.MESSAGE + "You dropped your scuba gear on the floor.");
-                } else {
-                    player.sendMessage(Color.MESSAGE + "You take off your scuba gear.");
-                }
+        if(player.getInventory().getHelmet() == null) {
+            if(player.getItemInHand().getType() == Material.GLASS) {
+                player.getInventory().setHelmet(new ItemStack(Material.GLASS));
+                final ItemStack glass = player.getItemInHand().clone();
+                glass.setAmount(glass.getAmount() - 1);
+                player.setItemInHand(glass);
+                player.sendMessage(Color.MESSAGE + "You put on your scuba gear.");
+            } else {
+                player.sendMessage(Color.ERROR + "You need glass in your hand to do this.");
+            }
+        } else if(player.getInventory().getHelmet().getType() != Material.GLASS) {
+            player.sendMessage(Color.ERROR + "You cannot do this while you have a normal helmet on.");
+        } else if(player.getInventory().getHelmet().getType() == Material.GLASS) {
+            player.getInventory().setHelmet(new ItemStack(Material.AIR));
+            if(!player.getInventory().addItem(new ItemStack(Material.GLASS)).isEmpty()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.GLASS));
+                player.sendMessage(Color.MESSAGE + "You dropped your scuba gear on the floor.");
+            } else {
+                player.sendMessage(Color.MESSAGE + "You take off your scuba gear.");
             }
         }
     }

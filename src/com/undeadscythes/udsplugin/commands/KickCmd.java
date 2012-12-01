@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
 
@@ -16,10 +16,10 @@ public class KickCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsMoreEq(1) && (target = getMatchingPlayer(args[0])) != null && isOnline(target)) {
+        if(minArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isOnline(target)) {
             if(target.getRank().compareTo(PlayerRank.MOD) < 0) {
                 String message = "You have been kicked for breaking the rules.";
-                if(args.length > 1) {
+                if(args.length >= 2) {
                     message = StringUtils.join(args, " ", 1, args.length - 1);
                 }
                 target.getWorld().strikeLightningEffect(target.getLocation());

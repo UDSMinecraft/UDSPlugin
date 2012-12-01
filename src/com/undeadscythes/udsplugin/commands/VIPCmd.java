@@ -5,7 +5,7 @@ import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import org.bukkit.*;
 
 /**
- * Rent VIP rank and perform other tasks.
+ * Rent VIP rank and perform other tasks. Sends help on wrong arguments.
  * @author UndeadScythes
  */
 public class VIPCmd extends PlayerCommandExecutor {
@@ -14,25 +14,25 @@ public class VIPCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsLessEq(2)) {
-            if(args.length == 0) {
-                if(player.getRank().equals(PlayerRank.VIP)) {
-                    player.sendMessage(Color.MESSAGE + "You have " + player.getVIPTimeString()+ " left in VIP.");
-                } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
-                    player.setRank(PlayerRank.VIP);
-                    player.setVIPTime(System.currentTimeMillis());
-                    player.setVIPSpawns(Config.VIP_SPAWNS);
-                    player.sendMessage(Color.MESSAGE + "Welcome to the elite, enjoy your VIP status.");
+        if(args.length == 0) {
+            if(player.getRank().equals(PlayerRank.VIP)) {
+                player.sendMessage(Color.MESSAGE + "You have " + player.getVIPTimeString()+ " left in VIP.");
+            } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
+                player.setRank(PlayerRank.VIP);
+                player.setVIPTime(System.currentTimeMillis());
+                player.setVIPSpawns(Config.VIP_SPAWNS);
+                player.sendMessage(Color.MESSAGE + "Welcome to the elite, enjoy your VIP status.");
+            }
+        } else if(maxArgsHelp(2)) {
+            if(args[0].equals("spawns")) {
+                int page;
+                if(args.length == 2 && (page = parseInt(args[1])) != -1) {
+                    sendPage(page, player);
+                } else {
+                    sendPage(1, player);
                 }
             } else {
-                if(args[0].equals("spawns")) {
-                    int page;
-                    if(args.length == 2 && (page = parseInt(args[1])) != -1) {
-                        sendPage(page, player);
-                    } else {
-                        sendPage(1, player);
-                    }
-                }
+                subCmdHelp();
             }
         }
     }

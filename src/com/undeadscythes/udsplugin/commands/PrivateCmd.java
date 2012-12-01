@@ -12,7 +12,7 @@ public class PrivateCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(1)) {
+        if(numArgsHelp(1)) {
             ChatRoom chatRoom = UDSPlugin.getChatRooms().get(args[0]);
             if(chatRoom == null) {
                 UDSPlugin.getChatRooms().put(args[0], new ChatRoom(player, args[0]));

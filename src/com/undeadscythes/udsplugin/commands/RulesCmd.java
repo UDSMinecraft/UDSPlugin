@@ -12,11 +12,9 @@ public class RulesCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0)) {
-            player.sendMessage(Color.MESSAGE + "--- Server Rules ---");
-            for(String rules : Config.SERVER_RULES) {
-                player.sendMessage(Color.TEXT + "- " + rules);
-            }
+        player.sendMessage(Color.MESSAGE + "--- Server Rules ---");
+        for(String rules : Config.SERVER_RULES) {
+            player.sendMessage(Color.TEXT + "- " + rules);
         }
     }
 }

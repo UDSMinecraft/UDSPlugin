@@ -13,13 +13,11 @@ public class ServerCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(1)) {
-            if(args[0].equals("stop")) {
-                for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
-                    target.kickPlayer("Server is shutting down.");
-                }
-                Bukkit.shutdown();
+        if(numArgsHelp(1) && args[0].equals("stop")) {
+            for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
+                target.kickPlayer("Server is shutting down.");
             }
+            Bukkit.shutdown();
         }
     }
 }

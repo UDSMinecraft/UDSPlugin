@@ -13,15 +13,13 @@ public class FaceCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsLessEq(1)) {
-            Bearing.Direction direction;
-            if(args.length == 0) {
-                player.sendMessage(Color.MESSAGE + "You are facing " + Bearing.Direction.valueOf(player.getLocation()).toString() + ".");
-            } else if((direction = getDirection(args[0])) != null) {
-                Location location = player.getLocation();
-                location.setYaw(direction.getYaw());
-                player.teleport(location);
-            }
+        Bearing.Direction direction;
+        if(args.length == 0) {
+            player.sendMessage(Color.MESSAGE + "You are facing " + Bearing.Direction.valueOf(player.getLocation()).toString() + ".");
+        } else if(numArgsHelp(1) && (direction = getDirection(args[0])) != null) {
+            Location location = player.getLocation();
+            location.setYaw(direction.getYaw());
+            player.teleport(location);
         }
     }
 }

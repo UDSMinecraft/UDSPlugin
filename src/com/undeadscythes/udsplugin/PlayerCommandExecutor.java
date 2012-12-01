@@ -15,6 +15,7 @@ import org.bukkit.inventory.*;
  */
 public abstract class PlayerCommandExecutor implements CommandExecutor {
     private SaveablePlayer player;
+    private String commandName;
     private int argsLength;
 
     /**
@@ -23,14 +24,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player) {
+            commandName = command.getName();
             player = UDSPlugin.getOnlinePlayers().get(sender.getName());
-            if(hasPerm(Perm.valueOf(command.getName().toUpperCase()))) {
-                if(args.length == 1 && args[0].equals("help")) {
-                    player.performCommand("help " + command.getName());
-                } else {
-                    argsLength = args.length;
-                    playerExecute(player, args);
-                }
+            if(hasPerm(Perm.valueOf(commandName.toUpperCase()))) {
+                argsLength = args.length;
+                playerExecute(player, args);
             }
             return true;
         } else {
@@ -90,6 +88,57 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return null;
         }
 
+    }
+
+    public void subCmdHelp(String[] args) {
+        if(args.length == 1 && args[0].equalsIgnoreCase("help")) {
+            sendHelp(1);
+        } else if(args.length == 2 && args[0].equalsIgnoreCase("help") && args[1].matches("[0-9][0-9]*")) {
+            sendHelp(Integer.parseInt(args[1]));
+        } else {
+            subCmdHelp();
+        }
+    }
+
+    public void subCmdHelp() {
+        player.sendMessage(Color.ERROR + "That command is not recognized.");
+        sendHelp(1);
+    }
+
+    public boolean numArgsHelp(int num) {
+        if(argsLength == num) {
+            return true;
+        } else {
+            numArgsHelpX();
+            return false;
+        }
+    }
+
+    public boolean minArgsHelp(int num) {
+        if(argsLength >= num) {
+            return true;
+        } else {
+            numArgsHelpX();
+            return false;
+        }
+    }
+
+    public boolean maxArgsHelp(int num) {
+        if(argsLength <= num) {
+            return true;
+        } else {
+            numArgsHelpX();
+            return false;
+        }
+    }
+
+    public void numArgsHelpX() {
+        player.sendMessage(Color.ERROR + "You have made an error using this command.");
+        sendHelp(1);
+    }
+
+    public void sendHelp(int page) {
+        player.performCommand("help " + commandName + " " + page);
     }
 
     public boolean canRequest(SaveablePlayer target) {
@@ -749,63 +798,6 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "This player can't be reached at this time.");
-            return false;
-        }
-    }
-
-    /**
-     * Checks that the command has the correct number of arguments.
-     * @param length Number of arguments required.
-     * @return <code>true</code> if there are sufficient arguments, <code>false</code> if there are too few or too many.
-     */
-    public boolean argsEq(int length) {
-        if(argsLength == length) {
-            return true;
-        } else {
-            player.sendMessage(Message.WRONG_NUM_ARGS);
-            return false;
-        }
-    }
-
-    /**
-     * Checks that the command has the correct number of arguments.
-     * @param max Maximum number of arguments.
-     * @return <code>true</code> if there aren't too many arguments, <code>false</code> otherwise.
-     */
-    public boolean argsLessEq(int max) {
-        if(argsLength <= max) {
-            return true;
-        } else {
-            player.sendMessage(Message.WRONG_NUM_ARGS);
-            return false;
-        }
-    }
-
-    /**
-     * Checks that the command has the correct number of arguments.
-     * @param min Minimum number of arguments.
-     * @return <code>true</code> if there aren't enough arguments, <code>false</code> otherwise.
-     */
-    public boolean argsMoreEq(int min) {
-        if(argsLength >= min) {
-            return true;
-        } else {
-            player.sendMessage(Message.WRONG_NUM_ARGS);
-            return false;
-        }
-    }
-
-    /**
-     * Checks that the command has the correct number of arguments.
-     * @param min Minimum number of arguments.
-     * @param max Maximum number of arguments.
-     * @return <code>true</code> if there the right number of arguments, <code>false</code> otherwise.
-     */
-    public boolean argsMoreLessInc(int min, int max) {
-        if(argsLength >= min && argsLength <= max) {
-            return true;
-        } else {
-            player.sendMessage(Message.WRONG_NUM_ARGS);
             return false;
         }
     }

@@ -13,30 +13,28 @@ public class KitCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsMoreLessInc(0, 1)) {
-            if(args.length == 0) {
-                player.sendMessage(Color.MESSAGE + "--- Available Kits ---");
-                for(Kit kit : Config.KITS) {
-                    String contents = "";
+        if(args.length == 0) {
+            player.sendMessage(Color.MESSAGE + "--- Available Kits ---");
+            for(Kit kit : Config.KITS) {
+                String contents = "";
+                for(ItemStack item : kit.getItems()) {
+                    contents = contents.concat(item.getType().toString().toLowerCase().replace("_", " ") + ", ");
+                }
+                player.sendMessage(Color.ITEM + kit.getName() + " (" + kit.getPrice() + "): " + Color.TEXT + contents.substring(0, contents.length() - 2));
+            }
+        } else if(numArgsHelp(1)) {
+            boolean given = false;
+            for(Kit kit : Config.KITS) {
+                if(kit.getName().equalsIgnoreCase(args[0]) && canAfford(kit.getPrice())) {
                     for(ItemStack item : kit.getItems()) {
-                        contents = contents.concat(item.getType().toString().toLowerCase().replace("_", " ") + ", ");
+                        player.giveAndDrop(item);
                     }
-                    player.sendMessage(Color.ITEM + kit.getName() + " (" + kit.getPrice() + "): " + Color.TEXT + contents.substring(0, contents.length() - 2));
+                    player.debit(kit.getPrice());
+                    given = true;
                 }
-            } else {
-                boolean given = false;
-                for(Kit kit : Config.KITS) {
-                    if(kit.getName().equalsIgnoreCase(args[0]) && canAfford(kit.getPrice())) {
-                        for(ItemStack item : kit.getItems()) {
-                            player.giveAndDrop(item);
-                        }
-                        player.debit(kit.getPrice());
-                        given = true;
-                    }
-                }
-                if(!given) {
-                    player.sendMessage(Color.ERROR + "No kit found by that name.");
-                }
+            }
+            if(!given) {
+                player.sendMessage(Color.ERROR + "No kit found by that name.");
             }
         }
     }

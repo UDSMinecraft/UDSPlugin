@@ -12,10 +12,8 @@ public class NightCmd extends PlayerCommandExecutor {
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        if(argsEq(0)) {
-            player.getWorld().setTime(14000);
-            player.sendMessage(Color.MESSAGE + "Summoning the moon.");
-        }
+        player.getWorld().setTime(14000);
+        player.sendMessage(Color.MESSAGE + "Summoning the moon.");
     }
 
 }

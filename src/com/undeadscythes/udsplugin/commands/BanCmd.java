@@ -15,7 +15,7 @@ public class BanCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsMoreEq(1) && (target = getMatchingOtherPlayer(args[0])) != null) {
+        if(minArgsHelp(1) && (target = getMatchingOtherPlayer(args[0])) != null) {
             String message = "You have been banned for breaking the rules.";
             if(args.length > 1) {
                 message = StringUtils.join(args, " ", 1, args.length - 1);

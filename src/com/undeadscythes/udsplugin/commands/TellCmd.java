@@ -14,7 +14,7 @@ public class TellCmd extends PlayerCommandExecutor {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         SaveablePlayer target;
-        if(argsMoreEq(2) && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notIgnored(target)) {
+        if(minArgsHelp(2) && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notIgnored(target)) {
             String message = player.getDisplayName() + " > " + target.getDisplayName() + ": " + StringUtils.join(args, " ", 1, args.length);
             player.sendMessage(Color.WHISPER + message);
             target.sendMessage(Color.WHISPER + message);
