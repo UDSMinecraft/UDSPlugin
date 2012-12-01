@@ -217,7 +217,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             ArrayList<Region> testRegions = regionsHere(location);
             for(Region region : testRegions) {
                 player.sendMessage(Color.MESSAGE + "--- Region " + region.getName() + " ---");
-                player.sendMessage(Color.TEXT + "Owner: " + region.getOwner());
+                player.sendMessage(Color.TEXT + "Owner: " + region.getOwnerName());
                 player.sendMessage(Color.TEXT + "Members: " + StringUtils.join(region.getMembers().toArray(), " "));
             }
         } else {
