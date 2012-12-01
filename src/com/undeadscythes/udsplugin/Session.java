@@ -43,6 +43,6 @@ public class Session {
     }
 
     public int getVolume() {
-        return Math.abs(v2.getBlockX() - v1.getBlockX()) * Math.abs(v2.getBlockY() - v1.getBlockY()) * Math.abs(v2.getBlockZ() - v1.getBlockZ());
+        return (Math.abs(v2.getBlockX() - v1.getBlockX()) + 1) * (Math.abs(v2.getBlockY() - v1.getBlockY()) + 1) * (Math.abs(v2.getBlockZ() - v1.getBlockZ()) + 1);
     }
 }
