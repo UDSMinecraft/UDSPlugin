@@ -350,8 +350,8 @@ public class Region implements Saveable {
         WEWorld world = new WEWorld(getWorld());
         world.buildLine(v1.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
         world.buildLine(v2.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
-        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v1.getBlockZ(), 0, 6, Material.FENCE, Material.TORCH);
-        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v2.getBlockZ(), 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v1.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
+        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v2.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
     }
 
     /**
