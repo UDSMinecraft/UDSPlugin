@@ -21,7 +21,7 @@ public class BountyCmd extends PlayerCommandExecutor {
             sendPage(1, player);
         } else if(args.length == 1 && (page = parseInt(args[0])) != -1) {
             sendPage(page, player);
-        } else if(numArgsHelp(2) && (target = getMatchingOtherPlayer(args[0])) != null && (bounty = getAffordablePrice(args[1])) != -1) {
+        } else if(args.length == 2 && (target = getMatchingOtherPlayer(args[0])) != null && (bounty = getAffordablePrice(args[1])) != -1) {
             player.debit(bounty);
             target.addBounty(bounty);
             Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " placed a bounty on " + target.getDisplayName() + ".");

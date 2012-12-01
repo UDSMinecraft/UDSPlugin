@@ -27,7 +27,7 @@ public class PetCmd extends PlayerCommandExecutor {
                     break;
                 }
             }
-        } else if(numArgsHelp(3) && args[0].equals("sell") && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && getSelectedPet() != null && (price = parseInt(args[2])) != -1) {
+        } else if(args.length == 3 && args[0].equals("sell") && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && getSelectedPet() != null && (price = parseInt(args[2])) != -1) {
             UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.PET, price, target));
             player.sendMessage(Message.REQUEST_SENT);
             target.sendMessage(Color.MESSAGE + player.getDisplayName() + " wants to sell their pet to you for " + price + " " + Config.CURRENCIES + ".");

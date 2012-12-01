@@ -103,7 +103,7 @@ public class HomeCmd extends PlayerCommandExecutor {
             } else {
 //                subCmdHelp(args);
             }
-        } else if(numArgsHelp(3) && args[0].equals("sell") && (getHome()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
+        } else if(args.length == 3 && args[0].equals("sell") && (getHome()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
             player.sendMessage(Message.REQUEST_SENT);
             target.sendMessage(Color.MESSAGE + player.getDisplayName() + " wants to sell you their house for " + price + " " + Config.CURRENCIES + ".");
             target.sendMessage(Message.REQUEST_Y_N);

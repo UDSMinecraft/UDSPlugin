@@ -23,7 +23,7 @@ public class SetWarpCmd extends PlayerCommandExecutor {
             UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), rank, 0));
             player.sendMessage(message);
 
-        } else if(numArgsHelp(3) && notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null && (price = parseInt(args[2])) != -1) {
+        } else if(args.length == 3 && notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null && (price = parseInt(args[2])) != -1) {
             UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), rank, price));
             player.sendMessage(message);
         }
