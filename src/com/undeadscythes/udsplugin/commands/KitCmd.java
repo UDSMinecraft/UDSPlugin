@@ -23,19 +23,17 @@ public class KitCmd extends PlayerCommandExecutor {
                 player.sendMessage(Color.ITEM + kit.getName() + " (" + kit.getPrice() + "): " + Color.TEXT + contents.substring(0, contents.length() - 2));
             }
         } else if(numArgsHelp(1)) {
-            boolean kitExists = false;
+            boolean given = false;
             for(Kit kit : Config.KITS) {
-                if(kit.getName().equalsIgnoreCase(args[0])) {
-                    kitExists = true;
-                    if(canAfford(kit.getPrice())) {
-                        for(ItemStack item : kit.getItems()) {
-                            player.giveAndDrop(item);
-                        }
-                        player.debit(kit.getPrice());
+                if(kit.getName().equalsIgnoreCase(args[0]) && canAfford(kit.getPrice())) {
+                    for(ItemStack item : kit.getItems()) {
+                        player.giveAndDrop(item);
                     }
+                    player.debit(kit.getPrice());
+                    given = true;
                 }
             }
-            if(!kitExists) {
+            if(!given) {
                 player.sendMessage(Color.ERROR + "No kit found by that name.");
             }
         }
