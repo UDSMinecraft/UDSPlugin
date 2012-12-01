@@ -45,16 +45,16 @@ public class BlockPistonRetract extends ListenerWrapper implements Listener {
                         event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 1, true);
                     }
                     if(event.getDirection() == BlockFace.NORTH) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 4, true);
+                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 2, true);
                     }
                     if(event.getDirection() == BlockFace.SOUTH) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 5, true);
-                    }
-                    if(event.getDirection() == BlockFace.WEST) {
                         event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 3, true);
                     }
+                    if(event.getDirection() == BlockFace.WEST) {
+                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 4, true);
+                    }
                     if(event.getDirection() == BlockFace.EAST) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 2, true);
+                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 5, true);
                     }
                     event.getBlock().getRelative(event.getDirection()).setTypeId(0);
                 }
