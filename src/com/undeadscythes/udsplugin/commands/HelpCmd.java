@@ -18,9 +18,9 @@ public class HelpCmd extends PlayerCommandExecutor {
         MOD(Perm.MOD_HELP, "/help mod", "Show more mod commands.", true, false),
         MOD_A(Perm.A, "/a", "Switch to the admin chat channel.", false, true),
         MOD_A_MSG(Perm.A, "/a <message>", "Send a message in the admin chat channel.", false, true),
+        MOD_BROADCAST(Perm.BROADCAST, "/b <message>", "Send a server message.", false, true),
         MOD_BAN(Perm.BAN, "/ban <player>", "Ban a player from the server.", false, true),
         MOD_UNBAN(Perm.UNBAN, "/unban <player>", "Unban a player from the server.", false, true),
-        MOD_BROADCAST(Perm.BROADCAST, "/b <message>", "Send a server message.", false, true),
         MOD_BUTCHER(Perm.BUTCHER, "/butcher", "Kill hostile mobs around you.", false, true),
         MOD_BUTCHER_ALL(Perm.BUTCHER, "/butcher a", "Kill all mobs around you.", false, true),
         MOD_ENCHANT(Perm.ENCHANT, "/enchant <enchantment> [level]", "Enchant an item.", false, true),
@@ -79,6 +79,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         CITY_LEAVE(Perm.CITY, "/city leave <city>", "Leave a city.", false, true),
         CITY_BANISH(Perm.CITY, "/city banish <city> <player>", "Banish a player from a city.", false, true),
         CLAN(Perm.CLAN, "/help clan", "Show more clan commands.", true, false),
+        CLAN_HELP(Perm.CLAN, "/clan help [page]", "Show these help pages.", false, true),
         CLAN_C(Perm.C, "/c", "Switch to the clan chat channel.", false, true),
         CLAN_C_MSG(Perm.C, "/c <message>", "Send a message in the clan chat channel.", false, true),
         CLAN_BASE(Perm.CLAN, "/clan base", "Teleport to your clan base.", false, true),
@@ -101,6 +102,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         FACE_GET(Perm.FACE, "/face", "Find out which way you are facing.", false, false),
         GIFT(Perm.GIFT, "/gift <player> [message]", "Send a player a gift with an optional message.", false, false),
         HOME(Perm.HOME, "/help home", "Show more home commands.", true, false),
+        HOME_HELP(Perm.HOME, "/home help [page]", "Show these help pages.", false, true),
         HOME_TP(Perm.HOME, "/home", "Teleport to your home.", false, true),
         HOME_TP_OTHER(Perm.HOME, "/home <player>", "Teleport to a room mates home.", false, true),
         HOME_ADD(Perm.HOME, "/home add <player>", "Add a player as a room mate.", false, true),
@@ -131,6 +133,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         PET_GIVE(Perm.PET, "/pet give <player>", "Give your pet to a player.", false, false),
         PET_SELL(Perm.PET, "/pet sell <player> <price>", "Sell your pet to a player.", false, false),
         REGION(Perm.REGION, "/help region", "Show more region commands.", true, false),
+        REGION_HELP(Perm.REGION, "/region help [page]", "Show these help pages.", false, true),
         REGION_ADDMEMBER(Perm.REGION, "/region addmember <region> <player>", "Add a member.", false, true),
         REGION_DELMEMBER(Perm.REGION, "/region delmember <region> <player>", "Remove a member.", false, true),
         REGION_FLAG(Perm.REGION, "/region flag <region> <flag>", "Toggle a region flag.", false, true),
@@ -149,6 +152,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         SERVER(Perm.SERVER, "/help server", "Show more server commands.", true, false),
         SERVER_STOP(Perm.SERVER, "/server stop", "Stop the server.", false, true),
         SHOP(Perm.SHOP, "/help shop", "Show more shop commands.", true, false),
+        SHOP_HELP(Perm.SHOP, "/shop help [page]", "Show these help pages.", false, true),
         SHOP_TP(Perm.SHOP, "/shop", "Teleport to your shop.", false, true),
         SHOP_TP_OTHER(Perm.SHOP, "/shop <player>", "Teleport to another players shop.", false, true),
         SHOP_BUY(Perm.SHOP, "/shop buy", "Buy the shop plot you are standing in.", false, true),
@@ -238,7 +242,7 @@ public class HelpCmd extends PlayerCommandExecutor {
                                 extensions.add(extension);
                             }
                         }
-                        sendPage(page, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()));
+                        sendPage(page, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
                     } else {
                         player.sendMessage(Color.ITEM + usage.usage + Color.TEXT + " - " + usage.description);
                     }
