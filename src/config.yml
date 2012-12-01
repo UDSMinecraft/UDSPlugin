@@ -86,6 +86,6 @@ global-flags:
   lock: false
   vines: true
   food: true
-  fire: true
+  fire: false
   snow: true
   pvp: true
