@@ -28,22 +28,20 @@ public class SitCmd extends PlayerCommandExecutor {
             final boolean f = target.getTypeId() == 128;
             final boolean g = target.getRelative(BlockFace.DOWN).getTypeId() != 0;
             if((a || b || c || d || e || f) && g) {
-                //final Entity arrow = player.getWorld().spawn(target.getLocation().add(0.5, 0.5, 0.5), Arrow.class);
-                //arrow.setPassenger(player);
                 final Item seat = player.getWorld().dropItemNaturally(target.getLocation(), new ItemStack(Material.SNOW_BALL));
                 seat.setPickupDelay(2147483647);
-                seat.teleport(target.getLocation().add(0.5, -0.5, 0.5));
+                seat.teleport(target.getLocation().add(0.5, 0.2, 0.5));
                 seat.setVelocity(new Vector(0, 0, 0));
                 final Stairs chair = (Stairs)target.getState().getData();
                 Location view = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
                 if(chair.getDescendingDirection() == BlockFace.NORTH) {
-                    view.setYaw(90);
-                } else if(chair.getDescendingDirection() == BlockFace.EAST) {
                     view.setYaw(180);
-                } else if(chair.getDescendingDirection() == BlockFace.SOUTH) {
+                } else if(chair.getDescendingDirection() == BlockFace.EAST) {
                     view.setYaw(270);
-                } else {
+                } else if(chair.getDescendingDirection() == BlockFace.SOUTH) {
                     view.setYaw(0);
+                } else {
+                    view.setYaw(90);
                 }
                 player.teleport(view);
                 seat.setPassenger(player);
