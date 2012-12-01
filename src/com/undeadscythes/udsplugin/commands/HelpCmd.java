@@ -10,6 +10,7 @@ import java.util.*;
 public class HelpCmd extends PlayerCommandExecutor {
     private enum Usage {
         HELP(Perm.HELP, "/help [page|command]", "Show these help pages.", false, false),
+        TICKET(Perm.TICKET, "Tickets", "Please use https://github.com/UndeadScythes/UDSPlugin1", false, false),
         ACCEPTRULES(Perm.ACCEPTRULES, "/acceptrules", "Accept the rules and get build rights.", false, false),
         ADMIN(Perm.ADMIN_HELP, "/help admin", "Show more admin commands.", true, false),
         ADMIN_LOCKDOWN(Perm.LOCKDOWN, "/lockdown", "Toggle the server's lockdown mode.", false, true),

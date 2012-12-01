@@ -288,6 +288,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("sun").setExecutor(new SunCmd());
         getCommand("tp").setExecutor(new TPCmd());
         getCommand("tell").setExecutor(new TellCmd());
+        getCommand("ticket").setExecutor(new TicketCmd());
         getCommand("tgm").setExecutor(new TGMCmd());
         getCommand("unban").setExecutor(new UnBanCmd());
         getCommand("unjail").setExecutor(new UnJailCmd());

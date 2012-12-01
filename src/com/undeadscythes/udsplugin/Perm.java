@@ -98,6 +98,7 @@ public enum Perm {
     SUN(PlayerRank.WARDEN, true),
     TP(PlayerRank.MOD, true),
     TELL(PlayerRank.DEFAULT, true),
+    TICKET(PlayerRank.DEFAULT, true),
     TGM(PlayerRank.MOD, true),
     UNBAN(PlayerRank.MOD, true),
     UNJAIL(PlayerRank.WARDEN, true),

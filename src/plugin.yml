@@ -73,6 +73,7 @@ commands:
   sun:
   tell:
     aliases: [whisper, msg]
+  ticket:
   tgm:
     aliases: [gm, gamemode]
   tp:
