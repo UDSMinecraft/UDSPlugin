@@ -57,10 +57,6 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 event.setCancelled(true);
             }
         } else if(action == Action.RIGHT_CLICK_BLOCK) {
-//            if(block.getType() == Material.ANVIL) {
-//                player.sendMessage(Color.ERROR + "Due to a bug in Minecraft, anvils are currently blocked.");
-//                event.setCancelled(true);
-//            } else
             if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
                 wand2(player, block);
                 event.setCancelled(true);
