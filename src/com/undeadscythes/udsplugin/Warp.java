@@ -96,6 +96,10 @@ public class Warp implements Saveable {
         return rank;
     }
 
+    public Location findSafePlace() {
+        return findSafePlace(location);
+    }
+
     /**
      * Find a centered safe place at the given coordinates.
      * @param world World to search.

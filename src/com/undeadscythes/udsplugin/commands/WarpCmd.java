@@ -30,7 +30,7 @@ public class WarpCmd extends PlayerCommandExecutor {
             }
         } else if(numArgsHelp(1) && (warp = getWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
             player.debit(warp.getPrice());
-            player.teleport(warp);
+            player.teleport(warp.findSafePlace());
         }
     }
 }
