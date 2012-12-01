@@ -236,6 +236,10 @@ public class SaveablePlayer implements Saveable, Player {
         return wager;
     }
 
+    public boolean hasScuba() {
+        return getInventory().getHelmet().getType().equals(Material.GLASS);
+    }
+
     public SaveablePlayer getWhisperer() {
         return whisperer;
     }
