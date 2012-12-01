@@ -61,7 +61,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         BOUNTY(Perm.BOUNTY, "/bounty <player> <amount>", "Place a bounty on a player.", false, false),
         BOUNTY_LIST(Perm.BOUNTY, "/bounty", "Check the bounties list.", false, false),
         CALL(Perm.CALL, "/call <player>", "Request a teleport to another player.", false, false),
-        CHALLENGE(Perm.CHALLENGE, "/challenge <player> <wager>", "Challenge another player to a duel.", false, false),
+        CHALLENGE(Perm.CHALLENGE, "/challenge <player> <wager>", "Challenge a player to a duel.", false, false),
         CHECK(Perm.CHECK, "/check", "Teleport to your saved checkpoint.", false, false),
         CHAT(Perm.CHAT_HELP, "/help chat", "Show more chat commands.", true, false),
         CHAT_IGNORE(Perm.IGNORE, "/ignore <player>", "Ignore or unignore a player in chat.", false, true),
