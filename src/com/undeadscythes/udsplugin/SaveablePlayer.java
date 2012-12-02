@@ -600,7 +600,7 @@ public class SaveablePlayer implements Saveable, Player {
         boolean contained = false;
         for(Region region : UDSPlugin.getRegions().values()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
-                if((region.getRank() != null && rank.compareTo(region.getRank()) >= 0) || region.isOwner(this) || region.hasMember(this)) {
+                if(((region.getRank() != null && rank.compareTo(region.getRank()) >= 0)) || region.isOwner(this) || region.hasMember(this)) {
                     return true;
                 }
                 contained = true;
