@@ -644,13 +644,16 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      */
     public Region getMatchingCity(String cityName) {
         Region city;
-        if((city = UDSPlugin.getCities().matchKey(cityName)) != null) {
+        if((city = UDSPlugin.getCities().get(cityName)) != null) {
             return city;
         } else {
-            player.sendMessage(Color.ERROR + "No city exists by that name.");
-            return null;
+            if((city = UDSPlugin.getCities().matchKey(cityName)) != null) {
+                return city;
+            } else {
+                player.sendMessage(Color.ERROR + "No city exists by that name.");
+                return null;
+            }
         }
-
     }
 
     public boolean notMayor(Region city) {
