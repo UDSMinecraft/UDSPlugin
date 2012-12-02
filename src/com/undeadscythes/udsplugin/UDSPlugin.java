@@ -62,7 +62,9 @@ public class UDSPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        DATA_PATH.mkdirs();
+        if(DATA_PATH.mkdirs()) {
+            getLogger().info("Created directory tree.");
+        }
         saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         saveConfig();
