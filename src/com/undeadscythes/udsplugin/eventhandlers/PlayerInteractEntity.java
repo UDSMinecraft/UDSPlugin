@@ -11,7 +11,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerInteractEntity extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerInteractEntityEvent event) {
+    public void onEvent(final PlayerInteractEntityEvent event) {
         if(event.getRightClicked() instanceof Tameable) {
             final Tameable pet = (Tameable) event.getRightClicked();
             if(pet.isTamed()) {
@@ -31,7 +31,11 @@ public class PlayerInteractEntity extends ListenerWrapper implements Listener {
                 }
             }
         } else if(event.getRightClicked() instanceof ItemFrame) {
-            event.setCancelled(!(UDSPlugin.getPlayers().get(event.getPlayer().getName())).canBuildHere(event.getRightClicked().getLocation()));
+            final SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
+            if(!(player.canBuildHere(event.getRightClicked().getLocation()))) {
+                event.setCancelled(true);
+                player.sendMessage(Message.CANT_BUILD_HERE);
+            }
         }
     }
 }

@@ -16,6 +16,14 @@ public class HangingBreak extends ListenerWrapper implements Listener {
     public void onEvent(final HangingBreakByEntityEvent event) {
         final Entity remover = event.getRemover();
         final Location location = event.getEntity().getLocation();
-        event.setCancelled(getAbsoluteEntity(remover) instanceof Player ? !UDSPlugin.getOnlinePlayers().get(((Player)remover).getName()).canBuildHere(location) : hasFlag(location, RegionFlag.PROTECTION));
+        if(getAbsoluteEntity(remover) instanceof Player) {
+            final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(((Player)remover).getName());
+            if(!player.canBuildHere(location)) {
+                event.setCancelled(true);
+                player.sendMessage(Message.CANT_BUILD_HERE);
+            }
+        } else if(hasFlag(location, RegionFlag.PROTECTION)) {
+            event.setCancelled(true);
+        }
     }
 }
