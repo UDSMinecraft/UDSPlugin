@@ -42,26 +42,32 @@ public class MoneyCmd extends PlayerCommandExecutor {
                 if(rank > 5 && player.getRank().compareTo(PlayerRank.MOD) < 0) {
                     player.sendMessage(Color.MESSAGE + "Your rank is " + rank + ".");
                 }
+            } else if(args[0].equals("help")) {
+                sendHelp(1);
             } else if((target = getMatchingPlayer(args[0])) != null && notSelf(target) && hasPerm(Perm.MONEY_OTHER)) {
                 player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has " + target.getMoney() + " " + Config.CURRENCIES + ".");
-            } else {
-//                subCmdHelp(args);
             }
         } else if(numArgsHelp(3)) {
             int amount;
-            if(args[0].equals("set") && hasPerm(Perm.MONEY_ADMIN) && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
-                target.setMoney(amount);
-                player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s account has been set to " + amount + " " + Config.CURRENCIES + ".");
-            } else if(args[0].equals("grant") && hasPerm(Perm.MONEY_ADMIN) && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
-                target.credit(amount);
-                player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s account has been credited " + amount + " " + Config.CURRENCIES + ".");
-            } else if(args[0].equals("pay") && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1 && canAfford(amount) && notSelf(target)) {
-                target.credit(amount);
-                player.debit(amount);
-                player.sendMessage(Color.MESSAGE.toString() + amount + " " + Config.CURRENCIES + " have been sent to " + target.getDisplayName() + ".");
-                target.sendMessage(Color.MESSAGE + player.getDisplayName() + " has just paid you " + amount + " " + Config.CURRENCIES + ".");
+            if(args[0].equals("set")) {
+                if(hasPerm(Perm.MONEY_ADMIN) && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
+                    target.setMoney(amount);
+                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s account has been set to " + amount + " " + Config.CURRENCIES + ".");
+                }
+            } else if(args[0].equals("grant")) {
+                if(hasPerm(Perm.MONEY_ADMIN) && (target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1) {
+                    target.credit(amount);
+                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s account has been credited " + amount + " " + Config.CURRENCIES + ".");
+                }
+            } else if(args[0].equals("pay")) {
+                if((target = getMatchingPlayer(args[1])) != null && (amount = parseInt(args[2])) != -1 && canAfford(amount) && notSelf(target)) {
+                    target.credit(amount);
+                    player.debit(amount);
+                    player.sendMessage(Color.MESSAGE.toString() + amount + " " + Config.CURRENCIES + " have been sent to " + target.getDisplayName() + ".");
+                    target.sendMessage(Color.MESSAGE + player.getDisplayName() + " has just paid you " + amount + " " + Config.CURRENCIES + ".");
+                }
             } else {
-//                subCmdHelp();
+                subCmdHelp();
             }
         }
     }

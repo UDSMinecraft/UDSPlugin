@@ -26,7 +26,7 @@ public class XPCmd extends PlayerCommandExecutor {
                 target.setLevel(0);
                 player.sendMessage(Color.MESSAGE + target.getDisplayName() + "'s experience has been reset.");
             } else {
-//                subCmdHelp(args);
+                subCmdHelp(args);
             }
         }
     }

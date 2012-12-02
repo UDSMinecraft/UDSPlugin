@@ -122,6 +122,23 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the correct usage.");
     }
 
+    public void subCmdHelp(String[] args) {
+        if(args[0].equalsIgnoreCase("help")) {
+            if(args.length == 2 && args[1].matches("[0-9][0-9]*")) {
+                sendHelp(Integer.parseInt(args[1]));
+            } else {
+                sendHelp(1);
+            }
+        } else {
+            subCmdHelp();
+        }
+    }
+
+    public void subCmdHelp() {
+        player.sendMessage(Color.ERROR + "That is not a valid sub command.");
+        player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the available sub commands.");
+    }
+
     public void sendHelp(int page) {
         player.performCommand("help " + commandName + " " + page);
     }

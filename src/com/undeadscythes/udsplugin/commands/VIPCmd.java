@@ -32,7 +32,7 @@ public class VIPCmd extends PlayerCommandExecutor {
                     sendPage(1, player);
                 }
             } else {
-//                subCmdHelp();
+                subCmdHelp();
             }
         }
     }

@@ -97,7 +97,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         CLAN_MEMBERS(Perm.CLAN, "/clan members", "View a list of your fellow clan members.", false, true),
         CLAN_MEMBERS_OTHER(Perm.CLAN, "/clan members <clan>", "View a list of clan members.", false, true),
         CLAN_NEW(Perm.CLAN, "/clan new <name>", "Make a new clan.", false, true),
-        CLAN_OWNER(Perm.CLAN, "/clan owner <player>", "Make another member the owner of your clan.", false, true),
+        CLAN_OWNER(Perm.CLAN, "/clan owner <player>", "Change the owner of your clan.", false, true),
         CLAN_RENAME(Perm.CLAN, "/clan rename <name>", "Rename your clan.", false, true),
         CLAN_STATS(Perm.CLAN, "/clan stats", "View your clans stats.", false, true),
         CLAN_STATS_OTHER(Perm.CLAN, "/clan stats <clan>", "View another clans stats.", false, true),
