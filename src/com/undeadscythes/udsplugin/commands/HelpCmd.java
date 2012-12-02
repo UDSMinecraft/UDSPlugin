@@ -76,7 +76,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         CITY_CLEAR(Perm.CITY, "/city clear <city>", "Remove the city protection.", false, true),
         CITY_INVITE(Perm.CITY, "/city invite <city> <player>", "Invite a player to a city.", false, true),
         CITY_MAYOR(Perm.CITY, "/city mayor <city> <player>", "Change the mayor of the city.", false, true),
-        CITY_SET(Perm.CITY, "/city set <city>", "Set the warp point for your city.", false, true),
+        CITY_SET(Perm.CITY, "/city set", "Set the warp point for your city.", false, true),
         CITY_LIST(Perm.CITY, "/city list", "Get a list of cities on the server.", false, true),
         CITY_WARP(Perm.CITY, "/city warp <city>", "Teleport to a city.", false, true),
         CITY_LEAVE(Perm.CITY, "/city leave <city>", "Leave a city.", false, true),
