@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.eventhandlers.AsyncPlayerChat.Channel;
 import java.io.*;
 import java.net.*;
@@ -12,71 +13,55 @@ import org.bukkit.conversations.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.map.*;
 import org.bukkit.metadata.*;
 import org.bukkit.permissions.*;
 import org.bukkit.plugin.*;
 import org.bukkit.potion.*;
-import org.bukkit.util.Vector;
 
 /**
  * An extension of Minecraft players adding various fields and methods.
  * @author UndeadScythes
  */
-public class SaveablePlayer implements Saveable, Player {
+public class SaveablePlayer implements Saveable {
     /**
      * A player rank granting permission.
      * @author UndeadScythes
      */
     public enum PlayerRank {
-        /**
-         * Basic player rank.
-         */
         DEFAULT(ChatColor.WHITE, 0),
-        /**
-         * Player with build rights.
-         */
         MEMBER(ChatColor.GREEN, 1),
-        /**
-         * Donating or long term player.
-         */
         VIP(ChatColor.DARK_PURPLE, 1),
-        /**
-         * Trustee.
-         */
         WARDEN(ChatColor.AQUA, 2),
-        /**
-         * Player moderator.
-         */
         MOD(ChatColor.DARK_AQUA, 3),
-        /**
-         * Server administrator.
-         */
         ADMIN(ChatColor.YELLOW, 4),
-        /**
-         * Server owner.
-         */
         OWNER(ChatColor.GOLD, 5),
-        /**
-         * Special rank for normally owned regions.
-         */
         NONE(null, 5);
 
         private ChatColor color;
         private int ranking;
 
-        PlayerRank(ChatColor color, int rank) {
+        PlayerRank(final ChatColor color, final int rank) {
             this.color = color;
             this.ranking = rank;
         }
 
-        public ChatColor color() {
+        /**
+         * Get the chat color associated to this rank.
+         * @return The rank's chat color.
+         */
+        public ChatColor getColor() {
             return color;
         }
 
-        public static PlayerRank getByRanking(int ranking) {
+        /**
+         * Get player rank by integer ranking.
+         * @param ranking Integer ranking.
+         * @return Player rank or <code>null</code> if there is no match.
+         */
+        public static PlayerRank getByRanking(final int ranking) {
             for(PlayerRank rank : values()) {
                 if(rank.ranking == ranking) {
                     return rank;
@@ -85,15 +70,30 @@ public class SaveablePlayer implements Saveable, Player {
             return null;
         }
 
-        public static PlayerRank getAbove(PlayerRank rank) {
+        /**
+         * Get the rank above this one.
+         * @param rank Player rank.
+         * @return The rank above.
+         */
+        public static PlayerRank getAbove(final PlayerRank rank) {
             return getByRanking(rank.ranking + 1);
         }
 
-        public static PlayerRank getBelow(PlayerRank rank) {
+        /**
+         * Get the rank below this one.
+         * @param rank Player rank.
+         * @return The rank below.
+         */
+        public static PlayerRank getBelow(final PlayerRank rank) {
             return getByRanking(rank.ranking - 1);
         }
 
-        public static PlayerRank getByName(String string) {
+        /**
+         * Get player rank by name.
+         * @param string Rank name.
+         * @return Player rank, <code>null</code> if there is no match.
+         */
+        public static PlayerRank getByName(final String string) {
             for(PlayerRank rank : values()) {
                 if(rank.name().equals(string.toUpperCase())) {
                     return rank;
@@ -111,49 +111,50 @@ public class SaveablePlayer implements Saveable, Player {
     /**
      * File name of player file.
      */
-    public static String PATH = "players.csv";
+    public final static String PATH = "players.csv";
     /**
      * Current record version.
      */
-    public static int VERSION = 1;
+    public final static int VERSION = 1;
 
-    private String name;
-    private Player base;
-    private int bounty = 0;
-    private int money = 0;
-    private PlayerRank rank = PlayerRank.DEFAULT;
-    private long vipTime = 0;
-    private int vipSpawns = 0;
-    private long jailTime = 0;
-    private long jailSentence = 0;
-    private int bail = 0;
-    private String nick;
-    private long timeLogged = 0;
-    private Location back = null;
-    private boolean godMode = false;
-    private boolean lockdownPass = false;
+    private transient String name;
+    private transient Player base;
+    private transient String nick;
+
+    private transient long timeLogged = 0;
+    private transient Location back = null;
+    private transient boolean godMode = false;
+    private transient boolean lockdownPass = false;
     private long lastDamageCaused = 0;
     private SaveablePlayer challenger = null;
     private int wager = 0;
-    private long prizeClaim = 0;
+    private transient long prizeClaim = 0;
     private Location checkPoint = null;
-    private ChatRoom chatRoom = null;
-    private HashSet<String> ignoredPlayers = new HashSet<String>();
-    private Channel channel = Channel.PUBLIC;
-    private LinkedList<Long> lastChats = new LinkedList<Long>();
-    private ItemStack[] inventoryCopy = null;
-    private ItemStack[] armorCopy = null;
-    private UUID selectedPet = null;
+    private transient ChatRoom chatRoom = null; // Is this field never modified?
+    private final transient Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
+    private transient Channel channel = Channel.PUBLIC;
+    private final transient LinkedList<Long> lastChats = new LinkedList<Long>();
+    private transient ItemStack[] inventoryCopy = null;
+    private transient ItemStack[] armorCopy = null;
+    private transient UUID selectedPet = null;
     private SaveablePlayer whisperer = null;
     private int powertoolID = 0;
-    private String powertoolCmd = "";
+    private transient String powertoolCmd = "";
     private Clan clan = null;
+    private int bounty = 0;
+    private int money = 0;
+    private PlayerRank rank = PlayerRank.DEFAULT;
+    private transient long vipTime = 0;
+    private transient int vipSpawns = 0;
+    private long jailTime = 0;
+    private long jailSentence = 0;
+    private transient int bail = 0;
 
     /**
      * Initialise a brand new player extension.
      * @param player Player to connect to this extension.
      */
-    public SaveablePlayer(Player player) {
+    public SaveablePlayer(final Player player) {
         this.base = player;
         nick = player.getName();
         name = player.getName();
@@ -163,8 +164,8 @@ public class SaveablePlayer implements Saveable, Player {
      * Initialise an extended player from a string record.
      * @param record A line from a save file.
      */
-    public SaveablePlayer(String record) {
-        String[] recordSplit = record.split("\t");
+    public SaveablePlayer(final String record) {
+        final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         bounty = Integer.parseInt(recordSplit[1]);
         money = Integer.parseInt(recordSplit[2]);
@@ -178,23 +179,20 @@ public class SaveablePlayer implements Saveable, Player {
         timeLogged = Long.parseLong(recordSplit[10]);
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public String getRecord() {
-        ArrayList<String> record = new ArrayList<String>();
+        final List<String> record = new ArrayList<String>();
         record.add(name);
-        record.add(bounty + "");
-        record.add(money + "");
+        record.add(Integer.toString(bounty));
+        record.add(Integer.toString(money));
         record.add(rank.toString());
-        record.add(vipTime + "");
-        record.add(vipSpawns + "");
-        record.add(jailTime + "");
-        record.add(jailSentence + "");
-        record.add(bail + "");
+        record.add(Long.toString(vipTime));
+        record.add(Integer.toString(vipSpawns));
+        record.add(Long.toString(jailTime));
+        record.add(Long.toString(jailSentence));
+        record.add(Integer.toString(bail));
         record.add(nick);
-        record.add(timeLogged + "");
+        record.add(Long.toString(timeLogged));
         return StringUtils.join(record.toArray(), "\t");
     }
 
@@ -207,48 +205,84 @@ public class SaveablePlayer implements Saveable, Player {
      * Warp an existing player with these extensions.
      * @param player Player to wrap.
      */
-    public void wrapPlayer(Player player) {
+    public void wrapPlayer(final Player player) {
         this.base = player;
         player.setDisplayName(nick);
     }
 
-    public void addTime(long time) {
+    /**
+     * Increment logged time.
+     * @param time Time to add.
+     */
+    public void addTime(final long time) {
         timeLogged += time;
     }
 
+    /**
+     * Toggle this players lockdown pass.
+     */
     public void toggleLockdownPass() {
         lockdownPass ^= true;
     }
 
+    /**
+     * Get this players selected pet.
+     * @return Pet UUID.
+     */
     public UUID getSelectedPet() {
         return selectedPet;
     }
 
-    public void selectPet(UUID id) {
+    /**
+     * Set this players selected pet.
+     * @param id Pet UUID
+     */
+    public void selectPet(final UUID id) {
         selectedPet = id;
     }
 
-    public void setWhisperer(SaveablePlayer player) {
+    /**
+     * Set the player that this player is whispering with.
+     * @param player Player whispering.
+     */
+    public void setWhisperer(final SaveablePlayer player) {
         whisperer = player;
     }
 
+    /**
+     * Get this players duel wager.
+     * @return Duel wager.
+     */
     public int getWager() {
         return wager;
     }
 
+    /**
+     * Check if this player is wearing scuba gear.
+     * @return <code>true</code> if the player is wearing scuba gear, <code>false</code> otherwise.
+     */
     public boolean hasScuba() {
-        return getInventory().getHelmet().getType().equals(Material.GLASS);
+        return base.getInventory().getHelmet().getType().equals(Material.GLASS);
     }
 
+    /**
+     * Set the player that this player is whispering with.
+     * @return Player whispering.
+     */
     public SaveablePlayer getWhisperer() {
         return whisperer;
     }
 
-    public int countItems(ItemStack search) {
-        final ItemStack[] inventory = getInventory().getContents();
+    /**
+     *
+     * @param search
+     * @return
+     */
+    public int countItems(final ItemStack search) {
+        final ItemStack[] inventory = base.getInventory().getContents();
         int count = 0;
         for(int i = 0; i < inventory.length; i++) {
-            ItemStack item = inventory[i];
+            final ItemStack item = inventory[i];
             if(item != null && item.getType() == search.getType() && item.getData().getData() == search.getData().getData()) {
                 count += item.getAmount();
             }
@@ -256,37 +290,72 @@ public class SaveablePlayer implements Saveable, Player {
         return count;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPowertoolID() {
         return powertoolID;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPowertool() {
         return powertoolCmd;
     }
 
+    /**
+     *
+     */
     public void claimPrize() {
         prizeClaim = System.currentTimeMillis();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean hasClaimedPrize() {
         return (prizeClaim + Timer.DAY > System.currentTimeMillis());
     }
 
-    public Session forceSession() {
-        Session session;
-        if((session = UDSPlugin.getSessions().get(getName())) == null) {
-            session = new Session(this);
+    /**
+     *
+     * @return
+     */
+    public WESession forceSession() {
+        WESession session = UDSPlugin.getSessions().get(getName());
+        if(session == null) {
+            session = new WESession();
             UDSPlugin.getSessions().put(getName(), session);
         }
         return session;
     }
 
-    public void setPowertoolID(int ID) {
+    /**
+     *
+     * @param ID
+     */
+    public void setPowertoolID(final int ID) {
         powertoolID = ID;
     }
 
-    public void setPowertool(String cmd) {
+    /**
+     *
+     * @param cmd
+     */
+    public void setPowertool(final String cmd) {
         powertoolCmd = cmd;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Player getBase() {
+        return base;
     }
 
     /**
@@ -294,10 +363,15 @@ public class SaveablePlayer implements Saveable, Player {
      * @return The players saved inventory, <code>null</code> if none exists.
      */
     public ItemStack[] getInventoryCopy() {
-        return inventoryCopy;
+        return inventoryCopy.clone();
     }
 
-    public boolean isInShop(Location location) {
+    /**
+     *
+     * @param location
+     * @return
+     */
+    public boolean isInShop(final Location location) {
         for(Region region : UDSPlugin.getShops().values()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 return true;
@@ -306,7 +380,11 @@ public class SaveablePlayer implements Saveable, Player {
         return false;
     }
 
-    public void setClan(Clan clan) {
+    /**
+     *
+     * @param clan
+     */
+    public void setClan(final Clan clan) {
         this.clan = clan;
     }
 
@@ -314,9 +392,12 @@ public class SaveablePlayer implements Saveable, Player {
      * Save this players inventory for later retrieval.
      */
     public void saveInventory() {
-        inventoryCopy = getInventory().getContents();
+        inventoryCopy = base.getInventory().getContents();
     }
 
+    /**
+     *
+     */
     public void saveItems() {
         saveInventory();
         saveArmor();
@@ -326,10 +407,13 @@ public class SaveablePlayer implements Saveable, Player {
      * Load this players armor.
      */
     public void loadArmor() {
-        getInventory().setArmorContents(armorCopy);
-        armorCopy = null;
+        base.getInventory().setArmorContents(armorCopy);
+        armorCopy = new ItemStack[0];
     }
 
+    /**
+     *
+     */
     public void endChallenge() {
         wager = 0;
         challenger = null;
@@ -339,15 +423,15 @@ public class SaveablePlayer implements Saveable, Player {
      * Load this players inventory.
      */
     public void loadInventory() {
-        getInventory().setContents(inventoryCopy);
-        inventoryCopy = null;
+        base.getInventory().setContents(inventoryCopy);
+        inventoryCopy = new ItemStack[0];
     }
 
     /**
      * Save this players armor for later retrieval.
      */
     public void saveArmor() {
-        armorCopy = getInventory().getArmorContents();
+        armorCopy = base.getInventory().getArmorContents();
     }
 
     /**
@@ -358,6 +442,9 @@ public class SaveablePlayer implements Saveable, Player {
         return bail;
     }
 
+    /**
+     *
+     */
     public void loadItems() {
         loadInventory();
         loadArmor();
@@ -378,41 +465,55 @@ public class SaveablePlayer implements Saveable, Player {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTimeLogged() {
         return timeToString(timeLogged);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLastSeen() {
-        return timeToString(System.currentTimeMillis() - getLastPlayed());
+        return timeToString(System.currentTimeMillis() - base.getLastPlayed());
     }
 
     /**
-     * Construct an english reading string of the remaining VIP time.
+     * Construct an English reading string of the remaining VIP time.
      * @return English reading string.
      */
     public String getVIPTimeString() {
-        return timeToString(Config.VIP_TIME - System.currentTimeMillis() - getVIPTime());
+        return timeToString(Config.vipTime - System.currentTimeMillis() - getVIPTime());
     }
 
-    public String timeToString(long time) {
+    /**
+     *
+     * @param time
+     * @return
+     */
+    public String timeToString(final long time) {
+        long timeRemaining = time;
         String timeString = "";
         while(time >= Timer.SECOND) {
             if(time >= Timer.DAY) {
-                int days = (int)(time / Timer.DAY);
+                final int days = (int)(time / Timer.DAY);
                 timeString = timeString.concat(days + (days == 1 ? " day" : " days"));
-                time -= days * Timer.DAY;
+                timeRemaining -= days * Timer.DAY;
             } else if(time >= Timer.HOUR) {
-                int hours = (int)(time / Timer.HOUR);
+                final int hours = (int)(time / Timer.HOUR);
                 timeString = timeString.concat(hours + (hours == 1 ? " hour" : " hours"));
-                time -= hours * Timer.HOUR;
+                timeRemaining -= hours * Timer.HOUR;
             } else if(time >= Timer.MINUTE) {
-                int minutes = (int)(time / Timer.MINUTE);
+                final int minutes = (int)(time / Timer.MINUTE);
                 timeString = timeString.concat(minutes + (minutes == 1 ? " minute" : " minutes"));
-                time -= minutes * Timer.MINUTE;
+                timeRemaining -= minutes * Timer.MINUTE;
             } else if(time >= Timer.SECOND) {
-                int seconds = (int)(time / Timer.SECOND);
+                final int seconds = (int)(time / Timer.SECOND);
                 timeString = timeString.concat(seconds + (seconds == 1 ? " second" : " seconds"));
-                time -= seconds * Timer.SECOND;
+                timeRemaining -= seconds * Timer.SECOND;
             }
         }
         return timeString;
@@ -423,7 +524,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @param amount The amount of spawns to use up.
      * @return The number of spawns remaining.
      */
-    public int useVIPSpawns(int amount) {
+    public int useVIPSpawns(final int amount) {
         vipSpawns -= amount;
         return vipSpawns;
     }
@@ -432,10 +533,14 @@ public class SaveablePlayer implements Saveable, Player {
      * Set the players back warp point to their current location.
      */
     public void setBackPoint() {
-        back = getLocation();
+        back = base.getLocation();
     }
 
-    public void setBackPoint(Location location) {
+    /**
+     *
+     * @param location
+     */
+    public void setBackPoint(final Location location) {
         back = location;
     }
 
@@ -444,11 +549,11 @@ public class SaveablePlayer implements Saveable, Player {
      * @return <code>true</code> if the players game mode is now set to creative, <code>false</code> otherwise.
      */
     public boolean toggleGameMode() {
-        if(getGameMode().equals(GameMode.SURVIVAL)) {
-            setGameMode(GameMode.CREATIVE);
+        if(base.getGameMode().equals(GameMode.SURVIVAL)) {
+            base.setGameMode(GameMode.CREATIVE);
             return true;
         } else {
-            setGameMode(GameMode.SURVIVAL);
+            base.setGameMode(GameMode.SURVIVAL);
             return false;
         }
     }
@@ -471,7 +576,6 @@ public class SaveablePlayer implements Saveable, Player {
 
     /**
      * Take a player out of jail and perform all the necessary operations.
-     * @throws IOException
      */
     public void release() {
         jailTime = 0;
@@ -492,20 +596,17 @@ public class SaveablePlayer implements Saveable, Player {
      * Put a player in jail and perform all the necessary operations.
      * @param sentence Time in minutes to jail the player.
      * @param bail Bail to set.
+     * @throws IOException
      */
-    public void jail(long sentence, int bail) throws IOException {
-        getWorld().strikeLightningEffect(getLocation());
-        if(!quietTeleport(UDSPlugin.getWarps().get("jailin"))) {
-            BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
-            out.write("No jail in warp point has been placed. Use '/setwarp jailin' to do this.");
-            out.close();
-        }
+    public void jail(final long sentence, final int bail) {
+        base.getWorld().strikeLightningEffect(base.getLocation());
+        quietTeleport(UDSPlugin.getWarps().get("jailin"));
         jailTime = System.currentTimeMillis();
         jailSentence = sentence * Timer.MINUTE;
         this.bail = bail;
-        sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
+        base.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
         if(bail != 0) {
-            sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + Config.CURRENCIES + ".");
+            base.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + Config.currencies + ".");
         }
     }
 
@@ -514,16 +615,16 @@ public class SaveablePlayer implements Saveable, Player {
      * @param type Optional type of region to check, <code>null</code> to search all regions.
      * @return The first region the player is in, <code>null</code> otherwise.
      */
-    public Region getCurrentRegion(Region.RegionType type) {
+    public Region getCurrentRegion(final RegionType type) {
         if(type == Region.RegionType.CITY) {
             for(Region region : UDSPlugin.getCities().values()) {
-                if(getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
+                if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                     return region;
                 }
             }
         } else if(type == Region.RegionType.SHOP) {
             for(Region region : UDSPlugin.getShops().values()) {
-                if(getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
+                if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                     return region;
                 }
             }
@@ -536,7 +637,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @return Players new rank, <code>null</code> if no change.
      */
     public PlayerRank demote() {
-        PlayerRank newRank = PlayerRank.getBelow(rank);
+        final PlayerRank newRank = PlayerRank.getBelow(rank);
         if(newRank != null) {
             rank = newRank;
         }
@@ -548,7 +649,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @return Players new rank, <code>null</code> if no change.
      */
     public PlayerRank promote() {
-        PlayerRank newRank = PlayerRank.getAbove(rank);
+        final PlayerRank newRank = PlayerRank.getAbove(rank);
         if(newRank != null) {
             rank = newRank;
         }
@@ -571,7 +672,11 @@ public class SaveablePlayer implements Saveable, Player {
         return checkPoint;
     }
 
-    public void setCheckPoint(Location location) {
+    /**
+     *
+     * @param location
+     */
+    public void setCheckPoint(final Location location) {
         checkPoint = location;
     }
 
@@ -583,20 +688,28 @@ public class SaveablePlayer implements Saveable, Player {
         return challenger != null;
     }
 
-    public void setChallenger(SaveablePlayer challenger) {
+    /**
+     *
+     * @param challenger
+     */
+    public void setChallenger(final SaveablePlayer challenger) {
         this.challenger = challenger;
     }
 
+    /**
+     *
+     * @return
+     */
     public SaveablePlayer getChallenger() {
         return challenger;
     }
 
     /**
      * Check if a player can build in a given location.
-     * @param player
+     * @param location
      * @return
      */
-    public boolean canBuildHere(Location location) {
+    public boolean canBuildHere(final Location location) {
         boolean contained = false;
         for(Region region : UDSPlugin.getRegions().values()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
@@ -613,10 +726,10 @@ public class SaveablePlayer implements Saveable, Player {
      * Give a player an item stack, any items that don't fit in the inventory are dropped at the players feet.
      * @param item Item to give the player.
      */
-    public void giveAndDrop(ItemStack item) {
-        HashMap<Integer, ItemStack> drops = getInventory().addItem(item);
+    public void giveAndDrop(final ItemStack item) {
+        final Map<Integer, ItemStack> drops = base.getInventory().addItem(item);
         for(ItemStack drop : drops.values()) {
-            getWorld().dropItemNaturally(getLocation(), drop);
+            base.getWorld().dropItemNaturally(base.getLocation(), drop);
         }
     }
 
@@ -625,8 +738,8 @@ public class SaveablePlayer implements Saveable, Player {
      * @param player Player to ignore.
      * @return <code>true</code> if this player was not already being ignored, <code>false</code> otherwise.
      */
-    public boolean ignorePlayer(Player player) {
-        return ignoredPlayers.add(player.getName());
+    public boolean ignorePlayer(final SaveablePlayer player) {
+        return ignoredPlayers.add(player);
     }
 
     /**
@@ -634,8 +747,8 @@ public class SaveablePlayer implements Saveable, Player {
      * @param player Player to stop ignoring.
      * @return <code>true</code> if this player was being ignored, <code>false</code> otherwise.
      */
-    public boolean unignorePlayer(Player player) {
-        return ignoredPlayers.remove(player.getName());
+    public boolean unignorePlayer(final SaveablePlayer player) {
+        return ignoredPlayers.remove(player);
     }
 
     /**
@@ -643,8 +756,8 @@ public class SaveablePlayer implements Saveable, Player {
      * @param player Player to check.
      * @return <code>true</code> if this player is ignoring that player, <code>false</code> otherwise.
      */
-    public boolean isIgnoringPlayer(Player player) {
-        return ignoredPlayers.contains(player.getName());
+    public boolean isIgnoringPlayer(final SaveablePlayer player) {
+        return ignoredPlayers.contains(player);
     }
 
     /**
@@ -674,7 +787,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set the bounty on a player.
      * @param bounty Bounty to set.
      */
-    public void setBounty(int bounty) {
+    public void setBounty(final int bounty) {
         this.bounty = bounty;
     }
 
@@ -682,7 +795,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Add a bounty to this player.
      * @param bounty New bounty.
      */
-    public void addBounty(int bounty) {
+    public void addBounty(final int bounty) {
         this.bounty += bounty;
     }
 
@@ -706,7 +819,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set the player rank.
      * @param rank The rank to set.
      */
-    public void setRank(PlayerRank rank) {
+    public void setRank(final PlayerRank rank) {
         this.rank = rank;
     }
 
@@ -722,8 +835,8 @@ public class SaveablePlayer implements Saveable, Player {
      * Teleport to the point indicated by a warp.
      * @param warp Warp to teleport to.
      */
-    public void teleport(Warp warp) {
-        teleport(warp.getLocation());
+    public void teleport(final Warp warp) {
+        base.teleport(warp.getLocation());
     }
 
     /**
@@ -738,8 +851,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Storage of nick name kept in extension for offline access.
      * @return Player nick name.
      */
-    @Override
-    public String getDisplayName() {
+    public String getNick() {
         return nick;
     }
 
@@ -748,7 +860,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @param channel Channel to toggle.
      * @return <code>true</code> if channel was toggled on, <code>false</code> if channel switched back to public.
      */
-    public boolean toggleChannel(Channel channel) {
+    public boolean toggleChannel(final Channel channel) {
         if(this.channel.equals(channel)) {
             this.channel = Channel.PUBLIC;
             return false;
@@ -778,7 +890,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set when a player rented VIP status.
      * @param time Time to set.
      */
-    public void setVIPTime(long time) {
+    public void setVIPTime(final long time) {
         vipTime = time;
     }
 
@@ -794,7 +906,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set the number of free VIP item spawns a player has remaining.
      * @param spawns Number of spawns to set.
      */
-    public void setVIPSpawns(int spawns) {
+    public void setVIPSpawns(final int spawns) {
         vipSpawns = spawns;
     }
 
@@ -810,7 +922,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set when a player was put in jail.
      * @param time Jail time.
      */
-    public void setJailTime(long time) {
+    public void setJailTime(final long time) {
         jailTime = time;
     }
 
@@ -826,7 +938,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set the length of a players jail sentence.
      * @param sentence Length of sentence.
      */
-    public void setJailSentence(long sentence) {
+    public void setJailSentence(final long sentence) {
         jailSentence = sentence;
     }
 
@@ -859,7 +971,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set a players god mode.
      * @param mode God mode setting.
      */
-    public void setGodMode(boolean mode) {
+    public void setGodMode(final boolean mode) {
         godMode = mode;
     }
 
@@ -868,10 +980,10 @@ public class SaveablePlayer implements Saveable, Player {
      * @param channel Channel to send message in.
      * @param message Message to send.
      */
-    public void chat(Channel channel, String message) {
-        Channel temp = this.channel;
+    public void chat(final Channel channel, final String message) {
+        final Channel temp = this.channel;
         this.channel = channel;
-        chat(message);
+        base.chat(message);
         this.channel = temp;
     }
 
@@ -880,11 +992,15 @@ public class SaveablePlayer implements Saveable, Player {
      * @param price Price to pay.
      * @return <code>true</code> if player has enough money, <code>false</code> otherwise.
      */
-    public boolean canAfford(int price) {
+    public boolean canAfford(final int price) {
         return (money >= price);
     }
 
-    public void setWager(int wager) {
+    /**
+     *
+     * @param wager
+     */
+    public void setWager(final int wager) {
         this.wager = wager;
     }
 
@@ -892,7 +1008,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Debit the players account the amount passed.
      * @param amount Amount to debit.
      */
-    public void debit(int amount) {
+    public void debit(final int amount) {
         money -= amount;
     }
 
@@ -900,7 +1016,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Credit the players account the amount passed.
      * @param amount Amount to credit.
      */
-    public void credit(int amount) {
+    public void credit(final int amount) {
         money += amount;
     }
 
@@ -908,7 +1024,7 @@ public class SaveablePlayer implements Saveable, Player {
      * Set a players account.
      * @param amount Amount to set.
      */
-    public void setMoney(int amount) {
+    public void setMoney(final int amount) {
         money = amount;
     }
 
@@ -917,23 +1033,19 @@ public class SaveablePlayer implements Saveable, Player {
      * @param rank Rank to check.
      * @return <code>true</code> if player has rank, <code>false</code> otherwise.
      */
-    public boolean hasRank(PlayerRank rank) {
-        if(this.rank.compareTo(rank) >= 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean hasRank(final PlayerRank rank) {
+        return this.rank.compareTo(rank) >= 0;
     }
 
     /**
      * Teleport a player but reserve pitch and yaw of player.
      * @param location Location to teleport to.
      */
-    public void move(Location location) {
-        Location destination = location;
-        destination.setPitch(getLocation().getPitch());
-        destination.setYaw(getLocation().getYaw());
-        teleport(destination);
+    public void move(final Location location) {
+        final Location destination = location;
+        destination.setPitch(base.getLocation().getPitch());
+        destination.setYaw(base.getLocation().getYaw());
+        base.teleport(destination);
     }
 
     /**
@@ -941,7 +1053,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @param location Location to teleport player to.
      * @return <code>true</code> if location is not <code>null</code>, <code>false</code> otherwise.
      */
-    public boolean quietTeleport(Location location) {
+    public boolean quietTeleport(final Location location) {
         if(location == null) {
             return false;
         } else {
@@ -955,7 +1067,7 @@ public class SaveablePlayer implements Saveable, Player {
      * @param warp Warp to teleport player to.
      * @return <code>true</code> if warp is not <code>null</code>, <code>false</code> otherwise.
      */
-    public boolean quietTeleport(Warp warp) {
+    public boolean quietTeleport(final Warp warp) {
         if(warp == null) {
             return false;
         } else {
@@ -969,8 +1081,8 @@ public class SaveablePlayer implements Saveable, Player {
      * @param perm The permission to check.
      * @return <code>true</code> if the player has the permission, <code>false</code> otherwise.
      */
-    public boolean hasPermission(Perm perm) {
-        if(perm.hereditary()) {
+    public boolean hasPermission(final Perm perm) {
+        if(perm.isHereditary()) {
             return perm.getRank().compareTo(rank) <= 0;
         } else {
             return perm.getRank().equals(rank);
@@ -978,1506 +1090,263 @@ public class SaveablePlayer implements Saveable, Player {
     }
 
     /**
-     * Storage of nick name kept in extension for offline access.
-     * @param name Nick name to set.
+     *
+     * @param name
      */
-    @Override
-    public void setDisplayName(String name) {
+    public void setDisplayName(final String name) {
         nick = name;
     }
 
     /**
-     * @inheritDoc
+     *
+     * @return
      */
-    @Override
-    public String getPlayerListName() {
-        return base.getPlayerListName();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setPlayerListName(String name) {
-        base.setPlayerListName(name);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setCompassTarget(Location loc) {
-        base.setCompassTarget(loc);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Location getCompassTarget() {
-        return base.getCompassTarget();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public InetSocketAddress getAddress() {
-        return base.getAddress();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void sendRawMessage(String message) {
-        base.sendRawMessage(message);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void kickPlayer(String message) {
-        base.kickPlayer(message);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void chat(String msg) {
-        base.chat(msg);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean performCommand(String command) {
-        return base.performCommand(command);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isSneaking() {
-        return base.isSneaking();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setSneaking(boolean sneak) {
-        base.setSneaking(sneak);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isSprinting() {
-        return base.isSprinting();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setSprinting(boolean sprinting) {
-        base.setSprinting(sprinting);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void saveData() {
-        base.saveData();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void loadData() {
-        base.loadData();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setSleepingIgnored(boolean isSleeping) {
-        base.setSleepingIgnored(isSleeping);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isSleepingIgnored() {
-        return base.isSleepingIgnored();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void playNote(Location loc, byte instrument, byte note) {
-        base.playNote(loc, instrument, note);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void playNote(Location loc, Instrument instrument, Note note) {
-        base.playNote(loc, instrument, note);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void playSound(Location location, Sound sound, float volume, float pitch) {
-        base.playSound(location, sound, volume, pitch);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void playEffect(Location loc, Effect effect, int data) {
-        base.playEffect(loc, effect, data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public <T> void playEffect(Location loc, Effect effect, T data) {
-        base.playEffect(loc, effect, data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void sendBlockChange(Location loc, Material material, byte data) {
-        base.sendBlockChange(loc, material, data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data) {
-        return base.sendChunkChange(loc, sx, sy, sz, data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void sendBlockChange(Location loc, int material, byte data) {
-        base.sendBlockChange(loc, material, data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void sendMap(MapView map) {
-        base.sendMap(map);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void updateInventory() {
-        base.updateInventory();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void awardAchievement(Achievement achievement) {
-        base.awardAchievement(achievement);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void incrementStatistic(Statistic statistic) {
-        base.incrementStatistic(statistic);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void incrementStatistic(Statistic statistic, int amount) {
-        base.incrementStatistic(statistic, amount);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void incrementStatistic(Statistic statistic, Material material) {
-        base.incrementStatistic(statistic, material);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void incrementStatistic(Statistic statistic, Material material, int amount) {
-        base.incrementStatistic(statistic, material, amount);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setPlayerTime(long time, boolean relative) {
-        base.setPlayerTime(time, relative);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public long getPlayerTime() {
-        return base.getPlayerTime();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public long getPlayerTimeOffset() {
-        return base.getPlayerTimeOffset();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isPlayerTimeRelative() {
-        return base.isPlayerTimeRelative();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void resetPlayerTime() {
-        base.resetPlayerTime();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void giveExp(int amount) {
-        base.giveExp(amount);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public float getExp() {
-        return base.getExp();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setExp(float exp) {
-        base.setExp(exp);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getLevel() {
-        return base.getLevel();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setLevel(int level) {
-        base.setLevel(level);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getTotalExperience() {
-        return base.getTotalExperience();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setTotalExperience(int exp) {
-        base.setTotalExperience(exp);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public float getExhaustion() {
-        return base.getExhaustion();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setExhaustion(float value) {
-        base.setExhaustion(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public float getSaturation() {
-        return base.getSaturation();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setSaturation(float value) {
-        base.setSaturation(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getFoodLevel() {
-        return base.getFoodLevel();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setFoodLevel(int value) {
-        base.setFoodLevel(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Location getBedSpawnLocation() {
-        return base. getBedSpawnLocation();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setBedSpawnLocation(Location location) {
-        base.setBedSpawnLocation(location);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean getAllowFlight() {
-        return base.getAllowFlight();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setAllowFlight(boolean flight) {
-        base.setAllowFlight(flight);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void hidePlayer(Player player) {
-        base.hidePlayer(player);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void showPlayer(Player player) {
-        base.showPlayer(player);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean canSee(Player player) {
-        return base.canSee(player);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isFlying() {
-        return base.isFlying();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setFlying(boolean value) {
-        base.setFlying(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setFlySpeed(float value) throws IllegalArgumentException {
-        base.setFlySpeed(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setWalkSpeed(float value) throws IllegalArgumentException {
-        base.setWalkSpeed(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public float getFlySpeed() {
-        return base.getFlySpeed();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public float getWalkSpeed() {
-        return base.getWalkSpeed();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
     public String getName() {
         return base == null ? name : base.getName();
     }
 
     /**
-     * @inheritDoc
-     */
-    @Override
-    public PlayerInventory getInventory() {
-        return base.getInventory();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Inventory getEnderChest() {
-        return base. getEnderChest();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean setWindowProperty(Property prop, int value) {
-        return base.setWindowProperty(prop, value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public InventoryView getOpenInventory() {
-        return base.getOpenInventory();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public InventoryView openInventory(Inventory inventory) {
-        return base.openInventory(inventory);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public InventoryView openWorkbench(Location location, boolean force) {
-        return base.openWorkbench(location, force);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public InventoryView openEnchanting(Location location, boolean force) {
-        return base.openEnchanting(location, force);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void openInventory(InventoryView inventory) {
-        base.openInventory(inventory);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void closeInventory() {
-        base.closeInventory();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public ItemStack getItemInHand() {
-        return base.getItemInHand();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setItemInHand(ItemStack item) {
-        base.setItemInHand(item);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public ItemStack getItemOnCursor() {
-        return base.getItemOnCursor();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setItemOnCursor(ItemStack item) {
-        base.setItemOnCursor(item);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isSleeping() {
-        return base.isSleeping();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getSleepTicks() {
-        return base.getSleepTicks();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public GameMode getGameMode() {
-        return base.getGameMode();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setGameMode(GameMode mode) {
-        base.setGameMode(mode);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isBlocking() {
-        return base.isBlocking();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getExpToLevel() {
-        return base.getExpToLevel();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getHealth() {
-        return base.getHealth();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setHealth(int health) {
-        base.setHealth(health);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getMaxHealth() {
-        return base.getMaxHealth();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public double getEyeHeight() {
-        return base.getEyeHeight();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public double getEyeHeight(boolean ignoreSneaking) {
-        return base.getEyeHeight(ignoreSneaking);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Location getEyeLocation() {
-        return base. getEyeLocation();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
-        return base.getLineOfSight(transparent, maxDistance);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
-        return base. getTargetBlock(transparent, maxDistance);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
-        return base.getLastTwoTargetBlocks(transparent, maxDistance);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Egg throwEgg() {
-        return base. throwEgg();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Snowball throwSnowball() {
-        return base. throwSnowball();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Arrow shootArrow() {
-        return base. shootArrow();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public <T extends Projectile> T launchProjectile(Class<? extends T> projectile) {
-        return base.launchProjectile(projectile);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getRemainingAir() {
-        return base.getRemainingAir();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setRemainingAir(int ticks) {
-        base.setRemainingAir(ticks);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getMaximumAir() {
-        return base.getMaximumAir();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setMaximumAir(int ticks) {
-        base.setMaximumAir(ticks);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void damage(int amount) {
-        base.damage(amount);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void damage(int amount, Entity source) {
-        base.damage(amount, source);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getMaximumNoDamageTicks() {
-        return base.getMaximumNoDamageTicks();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setMaximumNoDamageTicks(int ticks) {
-        base.setMaximumNoDamageTicks(ticks);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getLastDamage() {
-        return base.getLastDamage();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setLastDamage(int damage) {
-        base.setLastDamage(damage);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getNoDamageTicks() {
-        return base.getNoDamageTicks();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setNoDamageTicks(int ticks) {
-        base.setNoDamageTicks(ticks);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Player getKiller() {
-        return base. getKiller();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean addPotionEffect(PotionEffect effect) {
-        return base.addPotionEffect(effect);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean addPotionEffect(PotionEffect effect, boolean force) {
-        return base.addPotionEffect(effect, force);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean addPotionEffects(Collection<PotionEffect> effects) {
-        return base.addPotionEffects(effects);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean hasPotionEffect(PotionEffectType type) {
-        return base.hasPotionEffect(type);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void removePotionEffect(PotionEffectType type) {
-        base.removePotionEffect(type);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Collection<PotionEffect> getActivePotionEffects() {
-        return base.getActivePotionEffects();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean hasLineOfSight(Entity other) {
-        return base.hasLineOfSight(other);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Location getLocation() {
-        return base. getLocation();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setVelocity(Vector velocity) {
-        base.setVelocity(velocity);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Vector getVelocity() {
-        return base. getVelocity();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public World getWorld() {
-        return base. getWorld();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean teleport(Location location) {
-        return base.teleport(location);
-    }
-
-    /**
-     * @inheritDoc
-     * @Override
-     */
-    @Override
-    public boolean teleport(Location location, TeleportCause cause) {
-        return base.teleport(location, cause);
-    }
-
-    /**
      *
-     * @inheritDoc
+     * @param message
      */
-    @Override
-    public boolean teleport(Entity destination) {
-        return base.teleport(destination);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean teleport(Entity destination, TeleportCause cause) {
-        return base.teleport(destination, cause);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public List<Entity> getNearbyEntities(double x, double y, double z) {
-        return base.getNearbyEntities(x, y, z);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getEntityId() {
-        return base.getEntityId();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getFireTicks() {
-        return base.getFireTicks();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getMaxFireTicks() {
-        return base.getMaxFireTicks();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setFireTicks(int ticks) {
-        base.setFireTicks(ticks);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void remove() {
-        base.remove();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isDead() {
-        return base.isDead();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isValid() {
-        return base.isValid();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Server getServer() {
-        return base. getServer();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Entity getPassenger() {
-        return base. getPassenger();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean setPassenger(Entity passenger) {
-        return base.setPassenger(passenger);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isEmpty() {
-        return base.isEmpty();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean eject() {
-        return base.eject();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public float getFallDistance() {
-        return base.getFallDistance();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setFallDistance(float distance) {
-        base.setFallDistance(distance);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setLastDamageCause(EntityDamageEvent event) {
-        base.setLastDamageCause(event);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public EntityDamageEvent getLastDamageCause() {
-        return base.getLastDamageCause();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public UUID getUniqueId() {
-        return base.getUniqueId();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getTicksLived() {
-        return base.getTicksLived();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setTicksLived(int value) {
-        base.setTicksLived(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void playEffect(EntityEffect type) {
-        base.playEffect(type);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public EntityType getType() {
-        return base.getType();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isInsideVehicle() {
-        return base.isInsideVehicle();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean leaveVehicle() {
-        return base.leaveVehicle();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Entity getVehicle() {
-        return base. getVehicle();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
-        base.setMetadata(metadataKey, newMetadataValue);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public List<MetadataValue> getMetadata(String metadataKey) {
-        return base.getMetadata(metadataKey);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean hasMetadata(String metadataKey) {
-        return base.hasMetadata(metadataKey);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void removeMetadata(String metadataKey, Plugin owningPlugin) {
-        base.removeMetadata(metadataKey, owningPlugin);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isPermissionSet(String name) {
-        return base.isPermissionSet(name);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isPermissionSet(Permission perm) {
-        return base.isPermissionSet(perm);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean hasPermission(String name) {
-        return base.hasPermission(name);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean hasPermission(Permission perm) {
-        return base.hasPermission(perm);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-        return base.addAttachment(plugin, name, value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin) {
-        return base.addAttachment(plugin);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-        return base.addAttachment(plugin, name, value, ticks);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-        return base.addAttachment(plugin, ticks);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void removeAttachment(PermissionAttachment attachment) {
-        base.removeAttachment(attachment);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void recalculatePermissions() {
-        base.recalculatePermissions();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        return base.getEffectivePermissions();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isOp() {
-        return base.isOp();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void setOp(boolean value) {
-        base.setOp(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean isConversing() {
-        return base.isConversing();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void acceptConversationInput(String input) {
-        base.acceptConversationInput(input);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean beginConversation(Conversation conversation) {
-        return base.beginConversation(conversation);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void abandonConversation(Conversation conversation) {
-        base.abandonConversation(conversation);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void abandonConversation(Conversation conversation, ConversationAbandonedEvent details) {
-        base.abandonConversation(conversation, details);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public void sendMessage(String message) {
+    public void sendMessage(final String message) {
         base.sendMessage(message);
     }
 
     /**
-     * @inheritDoc
+     *
+     * @return
      */
-    @Override
-    public void sendMessage(String[] messages) {
-        base.sendMessage(messages);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
     public boolean isOnline() {
-        return base != null ? base.isOnline() : false;
+        return base.isOnline();
     }
 
     /**
-     * @inheritDoc
+     *
+     * @param level
      */
-    @Override
-    public boolean isBanned() {
-        return base.isBanned();
+    public void setFoodLevel(final int level) {
+        base.setFoodLevel(level);
     }
 
     /**
-     * @inheritDoc
+     *
+     * @return
      */
-    @Override
-    public void setBanned(boolean banned) {
-        base.setBanned(banned);
+    public Location getLocation() {
+        return base.getLocation();
     }
 
     /**
-     * @inheritDoc
+     *
+     * @return
      */
-    @Override
-    public boolean isWhitelisted() {
-        return base.isWhitelisted();
+    public World getWorld() {
+        return base.getWorld();
     }
 
     /**
-     * @inheritDoc
+     *
+     * @return
      */
-    @Override
-    public void setWhitelisted(boolean value) {
-        base.setWhitelisted(value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Player getPlayer() {
-        return base.getPlayer();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public long getFirstPlayed() {
-        return base.getFirstPlayed();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
     public long getLastPlayed() {
         return base.getLastPlayed();
     }
 
     /**
-     * @inheritDoc
+     *
+     * @param message
      */
-    @Override
-    public boolean hasPlayedBefore() {
-        return base.hasPlayedBefore();
+    public void kickPlayer(final String message) {
+        base.kickPlayer(message);
     }
 
     /**
-     * @inheritDoc
+     *
+     * @param banned
      */
-    @Override
-    public Map<String, Object> serialize() {
-        return base.serialize();
+    public void setBanned(final boolean banned) {
+        base.setBanned(banned);
     }
 
     /**
-     * @inheritDoc
+     *
+     * @return
      */
-    @Override
-    public void sendPluginMessage(Plugin source, String channel, byte[] message) {
-        base.sendPluginMessage(source, channel, message);
+    public boolean isBanned() {
+        return base.isBanned();
     }
 
     /**
-     * @inheritDoc
+     *
+     * @return
      */
-    @Override
-    public Set<String> getListeningPluginChannels() {
-        return base.getListeningPluginChannels();
+    public PlayerInventory getInventory() {
+        return base.getInventory();
     }
 
     /**
-     * @inheritDoc
+     *
+     * @param location
+     * @return
      */
-    @Override
-    public void setBedSpawnLocation(Location lctn, boolean bln) {
-        base.setBedSpawnLocation(lctn, bln);
+    public boolean teleport(final Location location) {
+        return base.teleport(location);
     }
 
-    @Override
-    public void giveExpLevels(int amount) {
-        base.giveExpLevels(amount);
+    /**
+     *
+     * @return
+     */
+    public ItemStack getItemInHand() {
+        return base.getItemInHand();
+    }
+
+    /**
+     *
+     * @param command
+     * @return
+     */
+    public boolean performCommand(final String command) {
+        return base.performCommand(command);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isOp() {
+        return base.isOp();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isSneaking() {
+        return base.isSneaking();
+    }
+
+    /**
+     *
+     * @param item
+     */
+    public void setItemInHand(final ItemStack item) {
+        base.setItemInHand(item);
+    }
+
+    /**
+     *
+     * @param transparent
+     * @param range
+     * @return
+     */
+    public Block getTargetBlock(final HashSet<Byte> transparent, final int range) {
+        return base.getTargetBlock(transparent, range);
+    }
+
+    /**
+     *
+     * @param transparent
+     * @param range
+     * @return
+     */
+    public List<Block> getLastTwoTargetBlocks(final HashSet<Byte> transparent, final int range) {
+        return base.getLastTwoTargetBlocks(transparent, range);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Player getKiller() {
+        return base.getKiller();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public GameMode getGameMode() {
+        return base.getGameMode();
+    }
+
+    /**
+     *
+     */
+    public void updateInventory() {
+        base.updateInventory();
+    }
+
+    /**
+     *
+     * @param player
+     */
+    public void teleport(final SaveablePlayer player) {
+        base.teleport(player.getBase());
+    }
+
+    /**
+     *
+     * @param entity
+     */
+    public void teleportHere(final Entity entity) {
+        entity.teleport(base);
+    }
+
+    /**
+     *
+     * @param pet
+     */
+    public void setPet(final Tameable pet) {
+        pet.setOwner(base);
+    }
+
+    /**
+     *
+     * @param levels
+     */
+    public void giveExpLevels(final int levels) {
+        base.giveExpLevels(levels);
+    }
+
+    /**
+     *
+     * @param exp
+     */
+    public void setExp(final int exp) {
+        base.setExp(exp);
+    }
+
+    /**
+     *
+     * @param level
+     */
+    public void setLevel(final int level) {
+        base.setLevel(level);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getLevel() {
+        return base.getLevel();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getMaxHealth() {
+        return base.getMaxHealth();
+    }
+
+    /**
+     *
+     * @param health
+     */
+    public void setHealth(int health) {
+        base.setHealth(health);
     }
 }
