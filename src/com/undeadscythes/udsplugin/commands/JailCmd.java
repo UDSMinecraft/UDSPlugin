@@ -8,7 +8,7 @@ import org.bukkit.*;
  * Jail a player.
  * @author UndeadScythes
  */
-public class JailCmd extends PlayerCommandExecutor {
+public class JailCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -22,12 +22,8 @@ public class JailCmd extends PlayerCommandExecutor {
                 if(args.length > 1 && (sentence = parseInt(args[1])) != -1) {
                     if(args.length > 2 && (bail = parseInt(args[2])) != -1) {
                         target.sendMessage(Color.MESSAGE + "You have been jailed for breaking the rules.");
-                        try {
-                            target.jail(sentence, bail);
-                            Bukkit.broadcastMessage(Color.BROADCAST + target.getDisplayName() + " has been jailed for breaking the rules.");
-                        } catch (IOException ex) {
-                            player.sendMessage(Color.ERROR + "There is no 'jailin' warp point " + target.getDisplayName() + " is wandering free.");
-                        }
+                        target.jail(sentence, bail);
+                        Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been jailed for breaking the rules.");
                     }
                 }
             }

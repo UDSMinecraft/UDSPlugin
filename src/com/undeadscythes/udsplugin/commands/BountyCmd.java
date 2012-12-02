@@ -8,7 +8,7 @@ import org.bukkit.*;
  * Description.
  * @author UndeadScythes
  */
-public class BountyCmd extends PlayerCommandExecutor {
+public class BountyCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -26,7 +26,7 @@ public class BountyCmd extends PlayerCommandExecutor {
         } else if(numArgsHelp(2) && (target = getMatchingOtherPlayer(args[0])) != null && (bounty = getAffordablePrice(args[1])) != -1) {
             player.debit(bounty);
             target.addBounty(bounty);
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " placed a bounty on " + target.getDisplayName() + ".");
+            Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " placed a bounty on " + target.getNick() + ".");
         }
     }
 
@@ -53,7 +53,7 @@ public class BountyCmd extends PlayerCommandExecutor {
             int skipped = 1;
             for(SaveablePlayer bounty : bounties) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + "- " + bounty.getDisplayName() + "'s reward: " + Color.TEXT + bounty.getBounty() + " " + Config.CURRENCIES);
+                    player.sendMessage(Color.ITEM + "- " + bounty.getNick() + "'s reward: " + Color.TEXT + bounty.getBounty() + " " + Config.currencies);
                     posted++;
                 } else {
                     skipped++;

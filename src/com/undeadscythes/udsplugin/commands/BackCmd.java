@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Teleports a player to their last recorded position.
  * @author UndeadScythes
  */
-public class BackCmd extends PlayerCommandExecutor {
+public class BackCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

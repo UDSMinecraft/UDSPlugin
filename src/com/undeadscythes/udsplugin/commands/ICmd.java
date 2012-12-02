@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Spawn items into the players inventory.
  * @author UndeadScythes
  */
-public class ICmd extends PlayerCommandExecutor {
+public class ICmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -25,7 +25,7 @@ public class ICmd extends PlayerCommandExecutor {
                 if(player.hasPermission(Perm.I_ADMIN)) {
                     player.getInventory().addItem(item);
                 } else if(player.getVIPSpawns() > 0) {
-                    if(Config.WHITELIST.contains(item.getType())) {
+                    if(Config.whitelistVIP.contains(item.getType())) {
                         if(item.getAmount() > player.getVIPSpawns()) {
                             item.setAmount(player.getVIPSpawns());
                         }

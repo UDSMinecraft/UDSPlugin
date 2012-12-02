@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Start a storm in the world.
  * @author UndeadScythes
  */
-public class StormCmd extends PlayerCommandExecutor {
+public class StormCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
  * Promote a player by a single rank.
  * @author UndeadScythes
  */
-public class PromoteCmd extends PlayerCommandExecutor {
+public class PromoteCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -17,7 +17,7 @@ public class PromoteCmd extends PlayerCommandExecutor {
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
             PlayerRank rank;
             if(player.getRank().compareTo(target.getRank()) > 0 && (rank = target.promote()) != null) {
-                player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been promoted to " + rank.toString() + ".");
+                player.sendMessage(Color.MESSAGE + target.getNick() + " has been promoted to " + rank.toString() + ".");
                 target.sendMessage(Color.MESSAGE + "You have been promoted to " + rank.toString() + ".");
             } else {
                 player.sendMessage(Color.ERROR + "You can't promote this player any further.");

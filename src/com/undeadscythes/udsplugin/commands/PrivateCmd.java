@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Set up a private chat room.
  * @author UndeadScythes
  */
-public class PrivateCmd extends PlayerCommandExecutor {
+public class PrivateCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -20,10 +20,10 @@ public class PrivateCmd extends PlayerCommandExecutor {
             } else {
                 if(chatRoom.isMember(player)) {
                     chatRoom.delMember(player);
-                    chatRoom.sendMessage(player.getDisplayName() + " has left.");
+                    chatRoom.sendMessage(player.getNick() + " has left.");
                 } else {
                     chatRoom.addMember(player);
-                    chatRoom.sendMessage(player.getDisplayName() + " has joined.");
+                    chatRoom.sendMessage(player.getNick() + " has joined.");
                 }
             }
         }

@@ -7,7 +7,7 @@ import org.bukkit.*;
  * Server related commands.
  * @author UndeadScythes
  */
-public class ServerCmd extends PlayerCommandExecutor {
+public class ServerCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

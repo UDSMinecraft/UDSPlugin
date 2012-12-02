@@ -8,10 +8,7 @@ import org.apache.commons.lang.*;
  * Toggles the admin chat channel.
  * @author UndeadScythes
  */
-public class ACmd extends PlayerCommandExecutor {
-    /**
-     * @inheritDoc
-     */
+public class ACmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(args.length == 0) {

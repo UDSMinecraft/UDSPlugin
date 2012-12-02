@@ -7,7 +7,7 @@ import org.bukkit.*;
  * Give a description of the players surroundings.
  * @author UndeadScythes
  */
-public class WhereCmd extends PlayerCommandExecutor {
+public class WhereCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

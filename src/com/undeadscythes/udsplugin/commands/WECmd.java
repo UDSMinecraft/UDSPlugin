@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * WorldEdit-like tools.
  * @author UndeadScythes
  */
-public class WECmd extends PlayerCommandExecutor {
+public class WECmd extends AbstractPlayerCommand {
     /**
      * @inheritDoc
      */

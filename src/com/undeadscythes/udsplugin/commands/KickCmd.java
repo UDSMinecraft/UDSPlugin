@@ -9,7 +9,7 @@ import org.bukkit.*;
  * Kick a player from the server.
  * @author UndeadScythes
  */
-public class KickCmd extends PlayerCommandExecutor {
+public class KickCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -24,7 +24,7 @@ public class KickCmd extends PlayerCommandExecutor {
                 }
                 target.getWorld().strikeLightningEffect(target.getLocation());
                 target.kickPlayer(message);
-                Bukkit.broadcastMessage(Color.BROADCAST + target.getDisplayName() + " has been kicked for breaking the rules.");
+                Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been kicked for breaking the rules.");
             } else {
                 player.sendMessage(Color.ERROR + "You cannot kick this player.");
             }

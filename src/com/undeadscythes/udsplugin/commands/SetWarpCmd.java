@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.*;
  * Sets a warp that players can teleport to.
  * @author UndeadScythes
  */
-public class SetWarpCmd extends PlayerCommandExecutor {
+public class SetWarpCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

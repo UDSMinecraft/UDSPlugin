@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Description. Sends help on wrong arguments.
  * @author UndeadScythes
  */
-public class UnJailCmd extends PlayerCommandExecutor {
+public class UnJailCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -16,7 +16,7 @@ public class UnJailCmd extends PlayerCommandExecutor {
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isJailed(target)) {
             target.release();
             target.sendMessage(Color.MESSAGE + "You have been released early.");
-            player.sendMessage(Color.MESSAGE + "You have released " + target.getDisplayName() + ".");
+            player.sendMessage(Color.MESSAGE + "You have released " + target.getNick() + ".");
         }
     }
 }

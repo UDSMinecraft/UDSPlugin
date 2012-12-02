@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Switches the current world to sunset.
  * @author UndeadScythes
  */
-public class DayCmd extends PlayerCommandExecutor {
+public class DayCmd extends AbstractPlayerCommand {
     /**
      * @inheritDoc
      */

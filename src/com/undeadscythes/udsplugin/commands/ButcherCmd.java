@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
  * Description.
  * @author UndeadScythes
  */
-public class ButcherCmd extends PlayerCommandExecutor {
+public class ButcherCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -20,7 +20,7 @@ public class ButcherCmd extends PlayerCommandExecutor {
             }
             int count = 0;
             for(LivingEntity entity : player.getWorld().getLivingEntities()) {
-                if(!(entity instanceof Player) && entity.getLocation().distanceSquared(player.getLocation()) < Config.BUTCHER_RANGE) {
+                if(!(entity instanceof Player) && entity.getLocation().distanceSquared(player.getLocation()) < Config.butcherRange) {
                     if((entity instanceof Wolf) && !all) {
                         if(((Wolf)entity).isAngry()) {
                             entity.remove();

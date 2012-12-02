@@ -6,13 +6,13 @@ import com.undeadscythes.udsplugin.*;
  * Set the spawn point of the current world.
  * @author UndeadScythes
  */
-public class SetSpawnCmd extends PlayerCommandExecutor {
+public class SetSpawnCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        new WEWorld(player.getWorld()).setSpawnLocation(player.getLocation());
+        new EditableWorld(player.getWorld()).setSpawnLocation(player.getLocation());
         player.sendMessage(Color.MESSAGE + "Spawn location moved.");
     }
 }

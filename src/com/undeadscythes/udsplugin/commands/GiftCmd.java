@@ -9,7 +9,7 @@ import org.bukkit.inventory.*;
  * Send another player a gift.
  * @author UndeadScythes
  */
-public class GiftCmd extends PlayerCommandExecutor {
+public class GiftCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

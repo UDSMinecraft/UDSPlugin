@@ -7,10 +7,7 @@ import org.bukkit.entity.*;
  * Accept a request sent by another player.
  * @author UndeadScythes
  */
-public class YCmd extends PlayerCommandExecutor {
-    /**
-     * @inheritDocs
-     */
+public class YCmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         Request request;
@@ -23,7 +20,7 @@ public class YCmd extends PlayerCommandExecutor {
 
                 case CLAN:  Clan clan = UDSPlugin.getClans().get(request.getData());
                             clan.addMember(player);
-                            clan.sendMessage(player.getDisplayName() + " has joined the clan.");
+                            clan.sendMessage(player.getNick() + " has joined the clan.");
                             Region base;
                             if((base = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
                                 base.addMember(player);
@@ -44,17 +41,17 @@ public class YCmd extends PlayerCommandExecutor {
                                     if(entity.getUniqueId().equals(sender.getSelectedPet())) {
                                         player.debit(price);
                                         sender.credit(price);
-                                        ((Tameable)entity).setOwner(player);
-                                        entity.teleport(player);
-                                        player.sendMessage(Color.MESSAGE + "Your bought " + sender.getDisplayName() + "'s pet.");
-                                        sender.sendMessage(Color.MESSAGE + player.getDisplayName() + " bought your pet.");
+                                        player.setPet((Tameable)entity);
+                                        player.teleportHere(entity);
+                                        player.sendMessage(Color.MESSAGE + "Your bought " + sender.getNick() + "'s pet.");
+                                        sender.sendMessage(Color.MESSAGE + player.getNick() + " bought your pet.");
                                     }
                                 }
                             }
                             break;
 
                 case PVP:   if(canAfford(price = Integer.parseInt(request.getData()))) {
-                                sender.sendMessage(Color.MESSAGE + player.getDisplayName() + " accepted your duel, may the best player win.");
+                                sender.sendMessage(Color.MESSAGE + player.getNick() + " accepted your duel, may the best player win.");
                                 player.sendMessage(Color.MESSAGE + "Duel accepted, may the best player win.");
                                 player.setChallenger(sender);
                                 sender.setChallenger(sender);
@@ -72,7 +69,7 @@ public class YCmd extends PlayerCommandExecutor {
                             }
                             break;
 
-                default:    sender.sendMessage(Color.MESSAGE + player.getDisplayName() + " was unable to accept your request.");
+                default:    sender.sendMessage(Color.MESSAGE + player.getNick() + " was unable to accept your request.");
             }
         }
         UDSPlugin.getRequests().remove(player.getName());

@@ -8,7 +8,7 @@ import org.bukkit.*;
  * Broadcast a server wide message.
  * @author UndeadScythes
  */
-public class BroadcastCmd extends PlayerCommandExecutor {
+public class BroadcastCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

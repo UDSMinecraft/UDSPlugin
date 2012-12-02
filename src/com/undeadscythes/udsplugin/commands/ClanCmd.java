@@ -10,12 +10,9 @@ import org.bukkit.util.Vector;
  * Various clan related commands.
  * @author UndeadScythes
  */
-public class ClanCmd extends PlayerCommandExecutor {
-    /**
-     * @inheritDocs
-     */
+public class ClanCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         Clan clan;
         Region base;
         SaveablePlayer target;
@@ -30,7 +27,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                         if((base = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
                             base.delMember(player);
                         }
-                        clan.sendMessage(player.getDisplayName() + " has left the clan.");
+                        clan.sendMessage(player.getNick() + " has left the clan.");
                     } else {
                         UDSPlugin.getClans().remove(clan.getName());
                         UDSPlugin.getBases().remove(clan.getName() + "base");
@@ -45,7 +42,7 @@ public class ClanCmd extends PlayerCommandExecutor {
                     String members = "";
                     for(SaveablePlayer member : clan.getMembers()) {
                         if(!member.equals(player)) {
-                            members = members.concat(member.getDisplayName() + ", ");
+                            members = members.concat(member.getNick() + ", ");
                         }
                     }
                     if(!clan.getLeader().equals(player)) {
@@ -85,18 +82,18 @@ public class ClanCmd extends PlayerCommandExecutor {
         } else if(numArgsHelp(2)) {
             int page;
             if(args[0].equals("new")) {
-                if(isClanless() && canAfford(Config.CLAN_COST) && noCensor(args[1]) && notClan(args[1])) {
-                    player.debit(Config.CLAN_COST);
+                if(isClanless() && canAfford(Config.clanCost) && noCensor(args[1]) && notClan(args[1])) {
+                    player.debit(Config.clanCost);
                     clan = new Clan(args[1], player);
                     player.setClan(clan);
                     UDSPlugin.getClans().put(args[1], clan);
-                    Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " just created " + args[1] + ".");
+                    Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " just created " + args[1] + ".");
                 }
             } else if(args[0].equals("invite")) {
                 if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && (clan = getClan()) != null && isLeader(clan) && notSelf(target)) {
                     UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.CLAN, clan.getName(), target));
                     player.sendMessage(Message.REQUEST_SENT);
-                    target.sendMessage(Color.MESSAGE + player.getDisplayName() + " has invited you to join " + clan.getName() + ".");
+                    target.sendMessage(Color.MESSAGE + player.getNick() + " has invited you to join " + clan.getName() + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                 }
             } else if(args[0].equals("kick")) {
@@ -106,15 +103,15 @@ public class ClanCmd extends PlayerCommandExecutor {
                     if((base = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
                         base.delMember(target);
                     }
-                    target.sendMessage(Color.MESSAGE + player.getDisplayName() + " has kicked you out of " + clan.getName() + ".");
-                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been kicked out of your clan.");
-                    clan.sendMessage(target.getDisplayName() + " has left the clan.");
+                    target.sendMessage(Color.MESSAGE + player.getNick() + " has kicked you out of " + clan.getName() + ".");
+                    player.sendMessage(Color.MESSAGE + target.getNick() + " has been kicked out of your clan.");
+                    clan.sendMessage(target.getNick() + " has left the clan.");
                 }
             } else if(args[0].equals("members")) {
                 if((clan = getClan(args[1])) != null) {
                     String members = "";
                     for(SaveablePlayer member : clan.getMembers()) {
-                        members = members.concat(member.getDisplayName() + ", ");
+                        members = members.concat(member.getNick() + ", ");
                     }
                     player.sendMessage(Color.MESSAGE + clan.getName() + "'s leader is " + clan.getLeader() + ".");
                     player.sendMessage(Color.MESSAGE + clan.getName() + "'s members are:");
@@ -134,8 +131,8 @@ public class ClanCmd extends PlayerCommandExecutor {
                     player.sendMessage(Color.ITEM + "KDR: " + Color.TEXT + decimalFormat.format(clan.getRatio()));
                 }
             } else if(args[0].equals("rename")) {
-                if((clan = getClan()) != null && isLeader(clan) && noCensor(args[1]) && notClan(args[1]) && canAfford(Config.CLAN_COST)) {
-                    player.debit(Config.CLAN_COST);
+                if((clan = getClan()) != null && isLeader(clan) && noCensor(args[1]) && notClan(args[1]) && canAfford(Config.clanCost)) {
+                    player.debit(Config.clanCost);
                     UDSPlugin.getClans().remove(clan.getName());
                     if((base = UDSPlugin.getBases().remove(clan.getName() + "base")) != null) {
                         UDSPlugin.getRegions().remove(clan.getName() + "base");
@@ -146,12 +143,12 @@ public class ClanCmd extends PlayerCommandExecutor {
                     clan.rename(args[1]);
                     UDSPlugin.getClans().put(args[1], clan);
                     clan.sendMessage("Your clan has been renamed " + args[1] + ".");
-                    Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " has rebranded their clan as " + args[1] + ".");
+                    Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " has rebranded their clan as " + args[1] + ".");
                 }
             } else if(args[0].equals("owner")) {
                 if((clan = getClan()) != null && isLeader(clan) && (target = getMatchingPlayer(args[1])) != null && isInClan(target, clan)) {
                     clan.changeLeader(target);
-                    clan.sendMessage("Your new leader is " + target.getDisplayName());
+                    clan.sendMessage("Your new leader is " + target.getNick());
                     if(target.isOnline()) {
                         target.sendMessage(Color.MESSAGE + "You are the new leader of " + clan.getName());
                     }
@@ -160,12 +157,12 @@ public class ClanCmd extends PlayerCommandExecutor {
             } else if(args[0].equals("base")) {
                 if((clan = getClan()) != null && isLeader(clan)) {
                     if(args[1].equals("make")) {
-                        if(noBase(clan) && canAfford(Config.BASE_COST)) {
+                        if(noBase(clan) && canAfford(Config.baseCost)) {
                             Vector min = player.getLocation().add(-25, 0, -25).toVector().setY(20);
                             Vector max = player.getLocation().add(25, 0, 25).toVector().setY(220);
                             base = new Region(clan.getName() + "base", min, max, player.getLocation(), null, "", Region.RegionType.BASE);
                             if(noOverlaps(base)) {
-                                player.debit(Config.BASE_COST);
+                                player.debit(Config.baseCost);
                                 UDSPlugin.getRegions().put(base.getName(), base);
                                 UDSPlugin.getBases().put(base.getName(), base);
                                 base.placeMoreMarkers();
@@ -198,7 +195,7 @@ public class ClanCmd extends PlayerCommandExecutor {
     }
 
     private void sendPage(int page, SaveablePlayer player) {
-        ArrayList<Clan> clans = UDSPlugin.getClans().getSortedValues(new SortByKDR());
+        List<Clan> clans = UDSPlugin.getClans().getSortedValues(new SortByKDR());
         int pages = (clans.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There are no clans on the server.");
@@ -211,7 +208,7 @@ public class ClanCmd extends PlayerCommandExecutor {
             DecimalFormat decimalFormat = new DecimalFormat("#.##");
             for(Clan clan : clans) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + clan.getName() + " - " + Color.TEXT + clan.getLeader().getDisplayName() + " KDR: " + decimalFormat.format(clan.getRatio()));
+                    player.sendMessage(Color.ITEM + clan.getName() + " - " + Color.TEXT + clan.getLeader().getNick() + " KDR: " + decimalFormat.format(clan.getRatio()));
                     posted++;
                 } else {
                     skipped++;

@@ -8,7 +8,7 @@ import org.apache.commons.lang.*;
  * Toggles the private chat channel.
  * @author UndeadScythes
  */
-public class PCmd extends PlayerCommandExecutor {
+public class PCmd extends AbstractPlayerCommand {
     /**
      * @inheritDoc
      */

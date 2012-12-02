@@ -9,7 +9,7 @@ import org.bukkit.*;
  * Displays a list of online players.
  * @author UndeadScythes
  */
-public class WhoCmd extends PlayerCommandExecutor {
+public class WhoCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -21,12 +21,12 @@ public class WhoCmd extends PlayerCommandExecutor {
         }
         for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
             String current = lists.get(onlinePlayer.getRank());
-            lists.put(onlinePlayer.getRank(), current + (player.getGameMode() == GameMode.CREATIVE ? "[C]" : (player.hasGodMode() ? "[G]" : "")) + onlinePlayer.getDisplayName() + " ");
+            lists.put(onlinePlayer.getRank(), current + (player.getGameMode() == GameMode.CREATIVE ? "[C]" : (player.hasGodMode() ? "[G]" : "")) + onlinePlayer.getNick() + " ");
         }
         player.sendMessage(Color.MESSAGE + "--- Online Players (" + UDSPlugin.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers() + ") ---");
         for(Map.Entry<PlayerRank, String> entry : lists.entrySet()) {
             if(!entry.getValue().equals("")) {
-                player.sendMessage(entry.getKey().color() + entry.getValue());
+                player.sendMessage(entry.getKey().getColor() + entry.getValue());
             }
         }
     }

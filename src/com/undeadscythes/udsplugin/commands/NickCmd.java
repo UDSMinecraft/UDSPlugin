@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Change a players nickname.
  * @author UndeadScythes
  */
-public class NickCmd extends PlayerCommandExecutor {
+public class NickCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Heal a player's health.
  * @author UndeadScythes
  */
-public class HealCmd extends PlayerCommandExecutor {
+public class HealCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -23,7 +23,7 @@ public class HealCmd extends PlayerCommandExecutor {
             target.sendMessage(message);
             target.setFoodLevel(20);
             if(!player.equals(target)) {
-                player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been healed.");
+                player.sendMessage(Color.MESSAGE + target.getNick() + " has been healed.");
             }
         }
     }

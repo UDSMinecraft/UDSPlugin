@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Set up a powertool.
  * @author UndeadScythes
  */
-public class PowertoolCmd extends PlayerCommandExecutor {
+public class PowertoolCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

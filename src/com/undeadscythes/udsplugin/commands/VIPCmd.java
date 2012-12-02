@@ -8,7 +8,7 @@ import org.bukkit.*;
  * Rent VIP rank and perform other tasks. Sends help on wrong arguments.
  * @author UndeadScythes
  */
-public class VIPCmd extends PlayerCommandExecutor {
+public class VIPCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -17,10 +17,10 @@ public class VIPCmd extends PlayerCommandExecutor {
         if(args.length == 0) {
             if(player.getRank().equals(PlayerRank.VIP)) {
                 player.sendMessage(Color.MESSAGE + "You have " + player.getVIPTimeString()+ " left in VIP.");
-            } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
+            } else if(canAfford(Config.vipCost) && notJailed() && hasPerm(Perm.VIP_BUY)) {
                 player.setRank(PlayerRank.VIP);
                 player.setVIPTime(System.currentTimeMillis());
-                player.setVIPSpawns(Config.VIP_SPAWNS);
+                player.setVIPSpawns(Config.vipSpawns);
                 player.sendMessage(Color.MESSAGE + "Welcome to the elite, enjoy your VIP status.");
             }
         } else if(maxArgsHelp(2)) {
@@ -43,7 +43,7 @@ public class VIPCmd extends PlayerCommandExecutor {
      * @param player Player to send page to.
      */
     private void sendPage(int page, SaveablePlayer player) {
-        int pages = (Config.WHITELIST.size() + 8) / 9;
+        int pages = (Config.whitelistVIP.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There are no currently whitelisted items.");
         } else if(page > pages) {
@@ -52,7 +52,7 @@ public class VIPCmd extends PlayerCommandExecutor {
             player.sendMessage(Color.MESSAGE + "--- VIP Item Whitelist " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
-            for(Material i : Config.WHITELIST) {
+            for(Material i : Config.whitelistVIP) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
                     String item = i.toString();
                     item = item.substring(0, 1).toUpperCase().concat(item.substring(1, item.length()).toLowerCase());

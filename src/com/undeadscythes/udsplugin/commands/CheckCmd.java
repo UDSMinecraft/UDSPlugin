@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Description.
  * @author UndeadScythes
  */
-public class CheckCmd extends PlayerCommandExecutor {
+public class CheckCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

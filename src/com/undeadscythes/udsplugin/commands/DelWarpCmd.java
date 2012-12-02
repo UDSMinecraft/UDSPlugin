@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Delete a warp point.
  * @author UndeadScythes
  */
-public class DelWarpCmd extends PlayerCommandExecutor {
+public class DelWarpCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

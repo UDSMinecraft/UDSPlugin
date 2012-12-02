@@ -8,12 +8,9 @@ import org.bukkit.*;
  * Ban a player from the server.
  * @author UndeadScythes
  */
-public class BanCmd extends PlayerCommandExecutor {
-    /**
-     * @inheritDocs
-     */
+public class BanCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(minArgsHelp(1) && (target = getMatchingOtherPlayer(args[0])) != null) {
             String message = "You have been banned for breaking the rules.";
@@ -25,7 +22,7 @@ public class BanCmd extends PlayerCommandExecutor {
                 target.kickPlayer(message);
             }
             target.setBanned(true);
-            Bukkit.broadcastMessage(Color.BROADCAST + target.getDisplayName() + " has been banned for breaking the rules.");
+            Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been banned for breaking the rules.");
         }
     }
 }

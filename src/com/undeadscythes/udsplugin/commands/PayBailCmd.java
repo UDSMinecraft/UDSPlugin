@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Pay bail to get out of prison early.
  * @author UndeadScythes
  */
-public class PayBailCmd extends PlayerCommandExecutor {
+public class PayBailCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

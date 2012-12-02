@@ -6,14 +6,14 @@ import com.undeadscythes.udsplugin.*;
  * Teleport a player to spawn.
  * @author UndeadScythes
  */
-public class SpawnCmd extends PlayerCommandExecutor {
+public class SpawnCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(notPinned() && notJailed()) {
-            player.teleport(Config.WORLD.getSpawnLocation());
+            player.teleport(Config.mainWorld.getSpawnLocation());
         }
     }
 }

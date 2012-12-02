@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Spawns the player a kit.
  * @author UndeadScythes
  */
-public class KitCmd extends PlayerCommandExecutor {
+public class KitCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -15,7 +15,7 @@ public class KitCmd extends PlayerCommandExecutor {
     public void playerExecute(SaveablePlayer player, String[] args) {
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "--- Available Kits ---");
-            for(Kit kit : Config.KITS) {
+            for(Kit kit : Config.kits) {
                 String contents = "";
                 for(ItemStack item : kit.getItems()) {
                     contents = contents.concat(item.getType().toString().toLowerCase().replace("_", " ") + ", ");
@@ -24,7 +24,7 @@ public class KitCmd extends PlayerCommandExecutor {
             }
         } else if(numArgsHelp(1)) {
             boolean given = false;
-            for(Kit kit : Config.KITS) {
+            for(Kit kit : Config.kits) {
                 if(kit.getName().equalsIgnoreCase(args[0]) && canAfford(kit.getPrice())) {
                     for(ItemStack item : kit.getItems()) {
                         player.giveAndDrop(item);

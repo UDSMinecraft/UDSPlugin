@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Spy a players inventory.
  * @author UndeadScythes
  */
-public class InvSeeCmd extends PlayerCommandExecutor {
+public class InvSeeCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -31,7 +31,7 @@ public class InvSeeCmd extends PlayerCommandExecutor {
                 player.getInventory().setContents(target.getInventory().getContents());
                 player.getInventory().setArmorContents(target.getInventory().getArmorContents());
             }
-            player.sendMessage(Color.MESSAGE + "You now have a copy of " + target.getDisplayName() + "'s inventory.");
+            player.sendMessage(Color.MESSAGE + "You now have a copy of " + target.getNick() + "'s inventory.");
         }
     }
 }

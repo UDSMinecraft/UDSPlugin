@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Teleport players to each other.
  * @author UndeadScythes
  */
-public class TPCmd extends PlayerCommandExecutor {
+public class TPCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

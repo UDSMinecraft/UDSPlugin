@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Remove a ban on a player.
  * @author UndeadScythes
  */
-public class UnBanCmd extends PlayerCommandExecutor {
+public class UnBanCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -15,7 +15,7 @@ public class UnBanCmd extends PlayerCommandExecutor {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isBanned(target) && notSelf(target)) {
             target.setBanned(false);
-            player.sendMessage(Color.MESSAGE + target.getDisplayName() + " is no longer banned.");
+            player.sendMessage(Color.MESSAGE + target.getNick() + " is no longer banned.");
         }
     }
 }

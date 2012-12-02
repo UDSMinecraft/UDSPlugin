@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Make it rainy in the current world.
  * @author UndeadScythes
  */
-public class RainCmd extends PlayerCommandExecutor {
+public class RainCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

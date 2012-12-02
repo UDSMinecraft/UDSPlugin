@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Stack the items in the players inventory.
  * @author UndeadScythes
  */
-public class StackCmd extends PlayerCommandExecutor {
+public class StackCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

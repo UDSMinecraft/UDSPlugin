@@ -12,7 +12,7 @@ import org.bukkit.util.*;
  * Lets a player 'sit' on stair blocks.
  * @author UndeadScythes
  */
-public class SitCmd extends PlayerCommandExecutor {
+public class SitCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

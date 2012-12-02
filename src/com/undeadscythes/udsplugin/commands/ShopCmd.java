@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Shop related commands.
  * @author UndeadScythes
  */
-public class ShopCmd extends PlayerCommandExecutor {
+public class ShopCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -32,7 +32,7 @@ public class ShopCmd extends PlayerCommandExecutor {
                     shop.clearMembers();
                     shop.changeOwner(null);
                     player.sendMessage(Color.MESSAGE + "Shop put back up for sale.");
-                    player.credit(Config.SHOP_COST / 2);
+                    player.credit(Config.shopCost / 2);
                 }
             } else if(args[0].equals("set")) {
                 if((shop = getShop()) != null) {
@@ -43,7 +43,7 @@ public class ShopCmd extends PlayerCommandExecutor {
                 String message = "";
                 for(Region otherShop : UDSPlugin.getShops().values()) {
                     if(otherShop.hasMember(player)) {
-                        message = message.concat(otherShop.getOwner().getDisplayName() + ", ");
+                        message = message.concat(otherShop.getOwner().getNick() + ", ");
                     }
                     if(!message.isEmpty()) {
                         player.sendMessage(Color.MESSAGE + "You work for:");
@@ -52,7 +52,7 @@ public class ShopCmd extends PlayerCommandExecutor {
                     message = "";
                     if((shop = UDSPlugin.getShops().get(player.getName() + "shop")) != null) {
                         for(SaveablePlayer member : shop.getMembers()) {
-                            message = message.concat(member.getDisplayName() + ", ");
+                            message = message.concat(member.getNick() + ", ");
                         }
                     }
                     if(!message.equals("")) {
@@ -63,8 +63,8 @@ public class ShopCmd extends PlayerCommandExecutor {
                     }
                 }
             } else if(args[0].equals("buy")) {
-                if((shop = getContainingShop()) != null && canAfford(Config.SHOP_COST) && isEmptyShop(shop)) {
-                    player.debit(Config.SHOP_COST);
+                if((shop = getContainingShop()) != null && canAfford(Config.shopCost) && isEmptyShop(shop)) {
+                    player.debit(Config.shopCost);
                     UDSPlugin.getRegions().replace(shop.getName(), player.getName() + "shop", shop);
                     UDSPlugin.getShops().replace(shop.getName(), player.getName() + "shop", shop);
                     shop.changeName(player.getName() + "shop");
@@ -90,17 +90,17 @@ public class ShopCmd extends PlayerCommandExecutor {
             if(args[0].equals("hire")) {
                 if((target = getMatchingPlayer(args[1])) != null && (shop = getShop()) != null) {
                     shop.addMember(target);
-                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + " has been added as your worker.");
+                    player.sendMessage(Color.MESSAGE + target.getNick() + " has been added as your worker.");
                     if(target.isOnline()) {
-                        target.sendMessage(Color.MESSAGE + "You have been added as " + player.getDisplayName() + "'s worker.");
+                        target.sendMessage(Color.MESSAGE + "You have been added as " + player.getNick() + "'s worker.");
                     }
                 }
             } else if(args[0].equals("fire")) {
                 if((target = getMatchingPlayer(args[1])) != null && (shop = getShop()) != null && isWorker(target, shop)) {
                     shop.delMember(target);
-                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + " is no longer your worker.");
+                    player.sendMessage(Color.MESSAGE + target.getNick() + " is no longer your worker.");
                     if(target.isOnline()) {
-                        target.sendMessage(Color.MESSAGE + "You are no longer " + player.getDisplayName() + "'s worker.");
+                        target.sendMessage(Color.MESSAGE + "You are no longer " + player.getNick() + "'s worker.");
                     }
                 }
             } else {
@@ -110,7 +110,7 @@ public class ShopCmd extends PlayerCommandExecutor {
             if(args[0].equals("shop")) {
                 if((getShop()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
-                    target.sendMessage(Color.MESSAGE + player.getDisplayName() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
+                    target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their shop for " + price + " " + Config.currencies + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                     UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.SHOP, price, target));
                 }

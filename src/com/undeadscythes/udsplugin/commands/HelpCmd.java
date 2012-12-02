@@ -7,7 +7,7 @@ import java.util.*;
  * Get help on certain commands.
  * @author UndeadScythes
  */
-public class HelpCmd extends PlayerCommandExecutor {
+public class HelpCmd extends AbstractPlayerCommand {
     private enum Usage {
         HELP(Perm.HELP, "/help [page or command]", "Show these help pages.", false, false),
         TICKET(Perm.TICKET, "/ticket", "Get the link to post suggestions and bugs to.", false, false),

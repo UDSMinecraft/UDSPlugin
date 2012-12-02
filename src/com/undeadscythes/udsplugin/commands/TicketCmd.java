@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Toggles the admin chat channel.
  * @author UndeadScythes
  */
-public class TicketCmd extends PlayerCommandExecutor {
+public class TicketCmd extends AbstractPlayerCommand {
     /**
      * @inheritDoc
      */

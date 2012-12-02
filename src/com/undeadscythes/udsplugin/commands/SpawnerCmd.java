@@ -9,7 +9,7 @@ import org.bukkit.entity.*;
  * Change the mob type of a spawner.
  * @author UndeadScythes
  */
-public class SpawnerCmd extends PlayerCommandExecutor {
+public class SpawnerCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

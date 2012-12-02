@@ -8,7 +8,7 @@ import org.bukkit.inventory.*;
  * Don your scuba gear.
  * @author UndeadScythes
  */
-public class ScubaCmd extends PlayerCommandExecutor {
+public class ScubaCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

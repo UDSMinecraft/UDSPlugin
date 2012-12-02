@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Deny a request.
  * @author UndeadScythes
  */
-public class NCmd extends PlayerCommandExecutor {
+public class NCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
@@ -17,7 +17,7 @@ public class NCmd extends PlayerCommandExecutor {
             UDSPlugin.getRequests().remove(player.getName());
             SaveablePlayer sender = UDSPlugin.getPlayers().get(request.getSender().getName());
             if(sender.isOnline()) {
-                sender.sendMessage(Color.MESSAGE + player.getDisplayName() + " has denied your request.");
+                sender.sendMessage(Color.MESSAGE + player.getNick() + " has denied your request.");
             }
         }
     }

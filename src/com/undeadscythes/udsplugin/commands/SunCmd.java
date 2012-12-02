@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Make it sunny in the players world.
  * @author UndeadScythes
  */
-public class SunCmd extends PlayerCommandExecutor {
+public class SunCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */

@@ -9,13 +9,13 @@ import org.apache.commons.lang.*;
  * Description.
  * @author UndeadScythes
  */
-public class RegionCmd extends PlayerCommandExecutor {
+public class RegionCmd extends AbstractPlayerCommand {
     /**
      * @inheritDocs
      */
     @Override
     public void playerExecute(SaveablePlayer player, String[] args) {
-        Session session;
+        WESession session;
         Region region;
         Region.RegionType type;
         SaveablePlayer target;
@@ -98,8 +98,7 @@ public class RegionCmd extends PlayerCommandExecutor {
             } else if(args[0].equals("select")) {
                 if((region = getRegion(args[1])) != null) {
                     session = player.forceSession();
-                    session.setV1(region.getV1());
-                    session.setV2(region.getV2());
+                    session.setVPair(region.getV1(), region.getV2(), region.getWorld());
                     player.sendMessage(Color.MESSAGE + "Points set. " + session.getVolume() + " blocks selected.");
                 }
             } else if(args[0].equals("set")) {
@@ -115,17 +114,17 @@ public class RegionCmd extends PlayerCommandExecutor {
             if(args[0].equals("addmember")) {
                 if((region = getRegion(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
                     region.addMember(target);
-                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + " add to region " + region.getName() + ".");
+                    player.sendMessage(Color.MESSAGE + target.getNick() + " add to region " + region.getName() + ".");
                 }
             } else if(args[0].equals("delmember")) {
                 if((region = getRegion(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
                     region.delMember(target);
-                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + " removed from region " + region.getName() + ".");
+                    player.sendMessage(Color.MESSAGE + target.getNick() + " removed from region " + region.getName() + ".");
                 }
             } else if(args[0].equals("owner")) {
                 if((region = getRegion(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
                     region.changeOwner(target);
-                    player.sendMessage(Color.MESSAGE + target.getDisplayName() + " made owner of region " + region.getName() + ".");
+                    player.sendMessage(Color.MESSAGE + target.getNick() + " made owner of region " + region.getName() + ".");
                 }
             } else if(args[0].equals("flag")) {
                 if((region = getRegion(args[1])) != null && (flag = getFlag(args[2])) != null) {
