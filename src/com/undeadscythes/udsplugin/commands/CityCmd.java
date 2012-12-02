@@ -14,7 +14,7 @@ public class CityCmd extends PlayerCommandExecutor {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         Region city;
         if(args.length == 1) {
             if(args[0].equals("set") && (city = getCurrentRegion()).getType() == Region.RegionType.CITY && getMunicipality(city.getName()) != null) {
@@ -50,6 +50,10 @@ public class CityCmd extends PlayerCommandExecutor {
                 player.quietTeleport(city.getWarp());
             } else if(args[0].equals("list") && (page = parseInt(args[1])) != -1) {
                 sendPage(page, player);
+            } else if(args[0].equals("clear") && (city = getMunicipality(args[1])) != null) {
+                UDSPlugin.getRegions().remove(city.getName());
+                UDSPlugin.getCities().remove(city.getName());
+                Bukkit.broadcastMessage(Color.BROADCAST + city.getName() + " has been abandoned.");
             } else {
 //                subCmdHelp(args);
             }

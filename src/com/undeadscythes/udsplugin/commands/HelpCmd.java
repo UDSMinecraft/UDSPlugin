@@ -73,6 +73,7 @@ public class HelpCmd extends PlayerCommandExecutor {
         CI(Perm.CI, "/ci", "Clear all the items from your inventory. (Not reversible)", false, false),
         CITY(Perm.CITY, "/help city", "Show more city commands.", true, false),
         CITY_NEW(Perm.CITY, "/city new", "Found a new city where you are stood.", false, true),
+        CITY_CLEAR(Perm.CITY, "/city clear <city>", "Remove the city protection.", false, true),
         CITY_INVITE(Perm.CITY, "/city invite <city> <player>", "Invite a player to a city.", false, true),
         CITY_SET(Perm.CITY, "/city set <city>", "Set the warp point for your city.", false, true),
         CITY_LIST(Perm.CITY, "/city list", "Get a list of cities on the server.", false, true),
