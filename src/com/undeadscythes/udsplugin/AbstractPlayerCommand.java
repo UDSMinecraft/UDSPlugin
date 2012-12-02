@@ -12,16 +12,21 @@ import org.bukkit.inventory.*;
  * A command that is designed to be run by a player.
  * @author UndeadScythes
  */
-public abstract class PlayerCommandExecutor implements CommandExecutor {
-    private SaveablePlayer player;
-    private String commandName;
-    private int argsLength;
+public abstract class AbstractPlayerCommand implements CommandExecutor {
+    private transient SaveablePlayer player;
+    private transient String commandName;
+    private transient int argsLength;
 
     /**
-     * @inheritDoc
+     *
+     * @param sender
+     * @param command
+     * @param label
+     * @param args
+     * @return
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if(sender instanceof Player) {
             commandName = command.getName();
             player = UDSPlugin.getOnlinePlayers().get(sender.getName());
@@ -50,6 +55,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean notAirHand() {
         if(!player.getItemInHand().getType().equals(Material.AIR)) {
             return true;
@@ -59,6 +68,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param enchantment
+     * @param item
+     * @return
+     */
     public boolean canEnchant(Enchantment enchantment, ItemStack item) {
         if(enchantment.canEnchantItem(item)) {
             return true;
@@ -68,6 +83,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public UUID getSelectedPet() {
         UUID pet;
         if((pet = player.getSelectedPet()) != null) {
@@ -78,6 +97,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Region getShop() {
         Region shop;
         if((shop = UDSPlugin.getShops().get(player.getName() + "shop")) != null) {
@@ -89,6 +112,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     }
 
+    /**
+     *
+     * @param num
+     * @return
+     */
     public boolean numArgsHelp(int num) {
         if(argsLength == num) {
             return true;
@@ -98,6 +126,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param num
+     * @return
+     */
     public boolean minArgsHelp(int num) {
         if(argsLength >= num) {
             return true;
@@ -107,6 +140,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param num
+     * @return
+     */
     public boolean maxArgsHelp(int num) {
         if(argsLength <= num) {
             return true;
@@ -116,11 +154,18 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     */
     public void numArgsHelp() {
         player.sendMessage(Color.ERROR + "You have made an error using this command.");
         player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the correct usage.");
     }
 
+    /**
+     *
+     * @param args
+     */
     public void subCmdHelp(String[] args) {
         if(args[0].equalsIgnoreCase("help")) {
             if(args.length == 2 && args[1].matches("[0-9][0-9]*")) {
@@ -133,15 +178,27 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     */
     public void subCmdHelp() {
         player.sendMessage(Color.ERROR + "That is not a valid sub command.");
         player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the available sub commands.");
     }
 
+    /**
+     *
+     * @param page
+     */
     public void sendHelp(int page) {
         player.performCommand("help " + commandName + " " + page);
     }
 
+    /**
+     *
+     * @param target
+     * @return
+     */
     public boolean canRequest(SaveablePlayer target) {
         if(noRequests(target) && notIgnored(target)) {
             return true;
@@ -150,6 +207,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean canTP() {
         if(notPinned() && notJailed()) {
             return true;
@@ -158,6 +219,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param target
+     * @return
+     */
     public Region getShop(SaveablePlayer target) {
         Region shop;
         if((shop = UDSPlugin.getShops().get(target.getName() + "shop")) != null) {
@@ -169,6 +235,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     }
 
+    /**
+     *
+     * @param enchantment
+     * @param level
+     * @return
+     */
     public boolean goodEnchantLevel(Enchantment enchantment, int level) {
         if(level <= enchantment.getMaxLevel()) {
             return true;
@@ -178,6 +250,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param amount
+     * @return
+     */
     public int getAffordablePrice(String amount) {
         int cash;
         if((cash = parseInt(amount)) != -1 && canAfford(cash)) {
@@ -187,6 +264,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public SaveablePlayer getWhisperer() {
         SaveablePlayer target;
         if((target = player.getWhisperer()) != null) {
@@ -197,6 +278,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean inChatRoom() {
         if(player.getChatRoom() != null) {
             return true;
@@ -206,8 +291,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public Session getSession() {
-        Session session;
+    /**
+     *
+     * @return
+     */
+    public WESession getSession() {
+        WESession session;
         if((session = UDSPlugin.getSessions().get(player.getName())) != null) {
             return session;
         } else {
@@ -216,6 +305,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param regionName
+     * @return
+     */
     public Region getRegion(String regionName) {
         Region region;
         if((region = UDSPlugin.getRegions().get(regionName)) != null) {
@@ -226,6 +320,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public Region.RegionFlag getFlag(String name) {
         Region.RegionFlag flag;
         if((flag = Region.RegionFlag.getByName(name)) != null) {
@@ -236,6 +335,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public Region.RegionType getRegionType(String name) {
         Region.RegionType type;
         if((type = Region.RegionType.getByName(name)) != null) {
@@ -246,7 +350,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
-    public boolean hasTwoPoints(Session session) {
+    /**
+     *
+     * @param session
+     * @return
+     */
+    public boolean hasTwoPoints(WESession session) {
         if(session.getV1() != null && session.getV2() != null) {
             return true;
         } else {
@@ -255,6 +364,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean noShop() {
         if(!UDSPlugin.getShops().containsKey(player.getName() + "shop")) {
             return true;
@@ -264,6 +377,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param target
+     * @return
+     */
     public boolean isBanned(SaveablePlayer target) {
         if(target.isBanned()) {
             return true;
@@ -273,6 +391,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public Request getRequest() {
         Request request;
         if((request = UDSPlugin.getRequests().get(player.getName())) != null) {
@@ -283,6 +405,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Region getHome() {
         Region home;
         if((home = UDSPlugin.getHomes().get(player.getName() + "home")) != null) {
@@ -293,6 +419,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param dir
+     * @return
+     */
     public Direction getDirection(String dir) {
         Direction direction;
         if((direction = Direction.getByName(dir)) != null) {
@@ -303,6 +434,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param dir
+     * @return
+     */
     public Direction getCardinalDirection(String dir) {
         Direction direction;
         if((direction = getDirection(dir)) != null) {
@@ -317,6 +453,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean noHome() {
         if(!UDSPlugin.getHomes().containsKey(player.getName() + "home")) {
             return true;
@@ -326,6 +466,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param clan
+     * @return
+     */
     public boolean noBase(Clan clan) {
         if(!UDSPlugin.getBases().containsKey(clan.getName() + "base")) {
             return true;
@@ -335,6 +480,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public Clan getClan(String name) {
         Clan clan;
         if((clan = UDSPlugin.getClans().get(name)) != null) {
@@ -345,6 +495,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isClanless() {
         if(player.getClan() == null) {
             return true;
@@ -354,6 +508,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param clan
+     * @return
+     */
     public boolean isInClan(SaveablePlayer player, Clan clan) {
         if(player.getClan().equals(clan)) {
             return true;
@@ -363,6 +523,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public boolean notClan(String name) {
         if(!UDSPlugin.getClans().containsKey(name)) {
             return true;
@@ -372,6 +537,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param clan
+     * @return
+     */
     public boolean isLeader(Clan clan) {
         if(clan.getLeader().equals(player)) {
             return true;
@@ -424,6 +594,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public SaveablePlayer getMatchingOtherPlayer(String name) {
         SaveablePlayer target;
         if((target = getMatchingPlayer(name)) != null && notSelf(target)) {
@@ -469,7 +644,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         if(target.isJailed()) {
             return true;
         } else {
-            target.sendMessage(Color.ERROR + target.getDisplayName() + " is not in jail.");
+            target.sendMessage(Color.ERROR + target.getNick() + " is not in jail.");
             return false;
         }
     }
@@ -548,6 +723,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param home
+     * @return
+     */
     public boolean isRoomie(Region home) {
         if(home.hasMember(player)) {
             return true;
@@ -557,6 +737,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param shop
+     * @return
+     */
     public boolean isWorker(Region shop) {
         if(shop.hasMember(player)) {
             return true;
@@ -566,6 +751,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param target
+     * @param shop
+     * @return
+     */
     public boolean isWorker(SaveablePlayer target, Region shop) {
         if(shop.hasMember(target)) {
             return true;
@@ -575,6 +766,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param shop
+     * @return
+     */
     public boolean isEmptyShop(Region shop) {
         if(shop.getOwner() == null) {
             return true;
@@ -584,6 +780,10 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Region getContainingShop() {
         Region shop;
         if((shop = player.getCurrentRegion(Region.RegionType.SHOP)) != null) {
@@ -594,6 +794,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param target
+     * @param home
+     * @return
+     */
     public boolean isRoomie(SaveablePlayer target, Region home) {
         if(home.hasMember(target)) {
             return true;
@@ -603,6 +809,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param target
+     * @return
+     */
     public Region getHome(SaveablePlayer target) {
         Region home;
         if((home = UDSPlugin.getHomes().get(target.getName() + "home")) != null) {
@@ -613,6 +824,12 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param target
+     * @param home
+     * @return
+     */
     public boolean isInHome(SaveablePlayer target, Region home) {
         if(target.getLocation().toVector().isInAABB(home.getV1(), home.getV2())) {
             return true;
@@ -655,6 +872,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param city
+     * @return
+     */
     public boolean notMayor(Region city) {
         if(!city.isOwner(player)) {
             return true;
@@ -744,7 +966,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
      * @return <code>true</code> if the player is not pinned, <code>false</code> otherwise.
      */
     public boolean notPinned() {
-        if(player.getLastDamageCaused() + Config.PVP_TIME < System.currentTimeMillis()) {
+        if(player.getLastDamageCaused() + Config.pvpTime < System.currentTimeMillis()) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You can't do that at this time.");
@@ -767,6 +989,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
 
     /**
      * Check that the target player is not in jail.
+     * @param target
      * @return <code>true</code> if the target player is not in jail, <code>false</code> otherwise.
      */
     public boolean notJailed(SaveablePlayer target) {
@@ -792,6 +1015,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public SaveablePlayer getMatchingOtherOnlinePlayer(String name) {
         SaveablePlayer target;
         if((target = getMatchingOnlinePlayer(name)) != null && notSelf(target)) {
@@ -855,7 +1083,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return target;
         } else {
             for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                if(test.getDisplayName().equalsIgnoreCase(lowPartial)) {
+                if(test.getNick().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
             }
@@ -864,7 +1092,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                 return target;
             } else {
                 for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                    if(test.getDisplayName().toLowerCase().contains(lowPartial)) {
+                    if(test.getNick().toLowerCase().contains(lowPartial)) {
                         return test;
                     }
                 }
@@ -873,7 +1101,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                     return target;
                 } else {
                     for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                        if(test.getDisplayName().equalsIgnoreCase(lowPartial)) {
+                        if(test.getNick().equalsIgnoreCase(lowPartial)) {
                             return test;
                         }
                     }
@@ -882,7 +1110,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                         return target;
                     } else {
                         for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
-                            if(test.getDisplayName().toLowerCase().contains(lowPartial)) {
+                            if(test.getNick().toLowerCase().contains(lowPartial)) {
                                 return test;
                             }
                         }
@@ -894,6 +1122,11 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
         }
     }
 
+    /**
+     *
+     * @param partial
+     * @return
+     */
     public SaveablePlayer getMatchingOnlinePlayer(String partial) {
         String lowPartial = partial.toLowerCase();
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
@@ -901,7 +1134,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
             return target;
         } else {
             for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                if(test.getDisplayName().equalsIgnoreCase(lowPartial)) {
+                if(test.getNick().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
             }
@@ -910,7 +1143,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
                 return target;
             } else {
                 for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
-                    if(test.getDisplayName().contains(lowPartial)) {
+                    if(test.getNick().contains(lowPartial)) {
                         return test;
                     }
                 }
