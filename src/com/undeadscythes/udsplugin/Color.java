@@ -7,8 +7,17 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public enum Color {
+    /**
+     * Web link color.
+     */
     LINK(ChatColor.BLUE),
+    /**
+     * Special sign color.
+     */
     SIGN(ChatColor.GREEN),
+    /**
+     * Whisper message color.
+     */
     WHISPER(ChatColor.GRAY),
     /**
      * Chat room chat color.
@@ -41,7 +50,7 @@ public enum Color {
 
     ChatColor color;
 
-    Color(ChatColor color) {
+    Color(final ChatColor color) {
         this.color = color;
     }
 
