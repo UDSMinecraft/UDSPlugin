@@ -164,8 +164,8 @@ public class Region implements Saveable {
      */
     public Region(String name, Vector v1, Vector v2, Location warp, SaveablePlayer owner, String data, RegionType type) {
         this.name = name;
-        this.v1 = v1;
-        this.v2 = v2;
+        this.v1 = Vector.getMinimum(v1, v2);
+        this.v2 = Vector.getMaximum(v1, v2);
         this.warp = warp;
         this.owner = owner;
         this.data = data;
