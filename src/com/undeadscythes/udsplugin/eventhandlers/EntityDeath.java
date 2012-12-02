@@ -19,9 +19,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         if(damageEvent instanceof EntityDamageByEntityEvent) {
             final Entity killer = getAbsoluteEntity(((EntityDamageByEntityEvent) damageEvent).getDamager());
             if(killer instanceof Player) {
-                if(killer instanceof Player) {
-                    payReward(UDSPlugin.getPlayers().get(((Player)killer).getName()), victim);
-                }
+                payReward(UDSPlugin.getPlayers().get(((Player)killer).getName()), victim);
             } else if(killer instanceof Tameable) {
                 final Tameable pet = (Tameable) killer;
                 if(pet.isTamed()) {
