@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.Bearing.Direction;
 import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.io.*;
 import java.util.*;
@@ -188,7 +187,7 @@ public class Region implements Saveable {
         name = recordSplit[0];
         v1 = getBlockPos(recordSplit[1]);
         v2 = getBlockPos(recordSplit[2]);
-        warp = (Location)(new Bearing(recordSplit[3]));
+        warp = (Location)(new SaveableLocation(recordSplit[3]));
         owner = UDSPlugin.getPlayers().get(recordSplit[4]);
         members = new HashSet<SaveablePlayer>();
         if(!recordSplit[5].equals("")) {
@@ -227,7 +226,7 @@ public class Region implements Saveable {
         record.add(name);
         record.add(v1.toString());
         record.add(v2.toString());
-        record.add(new Bearing(warp).toString());
+        record.add(new SaveableLocation(warp).toString());
         record.add(owner == null ? "" : owner.getName());
         ArrayList<String> memberList = new ArrayList<String>();
         for(SaveablePlayer member : members) {

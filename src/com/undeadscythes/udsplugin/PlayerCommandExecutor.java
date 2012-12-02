@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.Bearing.Direction;
 import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.util.*;
 import org.bukkit.*;
@@ -307,7 +306,7 @@ public abstract class PlayerCommandExecutor implements CommandExecutor {
     public Direction getCardinalDirection(String dir) {
         Direction direction;
         if((direction = getDirection(dir)) != null) {
-            if(direction.cardinal()) {
+            if(direction.isCardinal()) {
                 return direction;
             } else {
                 player.sendMessage(Color.ERROR + "You must choose a cardinal direction.");

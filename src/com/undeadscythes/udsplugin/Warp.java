@@ -41,7 +41,7 @@ public class Warp implements Saveable {
     public Warp(String record) {
         String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        location = new Bearing(recordSplit[1]);
+        location = new SaveableLocation(recordSplit[1]);
         rank = PlayerRank.getByName(recordSplit[2]);
         price = Integer.parseInt(recordSplit[3]);
     }

@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Bearing.Direction;
 import com.undeadscythes.udsplugin.Region.RegionFlag;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.util.*;
