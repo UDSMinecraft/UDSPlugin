@@ -30,6 +30,8 @@ public class PlayerInteractEntity extends ListenerWrapper implements Listener {
                     event.setCancelled(true);
                 }
             }
+        } else if(event.getRightClicked() instanceof ItemFrame) {
+            event.setCancelled(!(UDSPlugin.getPlayers().get(event.getPlayer().getName())).canBuildHere(event.getRightClicked().getLocation()));
         }
     }
 }

@@ -13,11 +13,9 @@ import org.bukkit.event.hanging.*;
  */
 public class HangingBreak extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(HangingBreakByEntityEvent event) {
-        Entity remover = event.getRemover();
-        Location location = event.getEntity().getLocation();
-        if(getAbsoluteEntity(remover) instanceof Player ? !UDSPlugin.getOnlinePlayers().get(((Player)remover).getName()).canBuildHere(location) : hasFlag(location, RegionFlag.PROTECTION)) {
-            event.setCancelled(true);
-        }
+    public void onEvent(final HangingBreakByEntityEvent event) {
+        final Entity remover = event.getRemover();
+        final Location location = event.getEntity().getLocation();
+        event.setCancelled(getAbsoluteEntity(remover) instanceof Player ? !UDSPlugin.getOnlinePlayers().get(((Player)remover).getName()).canBuildHere(location) : hasFlag(location, RegionFlag.PROTECTION));
     }
 }
