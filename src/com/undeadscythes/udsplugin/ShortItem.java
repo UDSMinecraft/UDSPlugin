@@ -4,10 +4,10 @@ import org.bukkit.*;
 import org.bukkit.inventory.*;
 
 /**
- *
+ * Items with shortened names.
  * @author UndeadScythes
  */
-public enum CustomItem {
+public enum ShortItem {
     WHITE_WOOL(Material.WOOL, 0),
     ORANGE_WOOL(Material.WOOL, 1),
     MAGENTA_WOOL(Material.WOOL, 2),
@@ -56,13 +56,18 @@ public enum CustomItem {
     private Material material;
     private byte data;
 
-    private CustomItem(Material material, int data) {
+    private ShortItem(final Material material, final int data) {
         this.material = material;
         this.data = (byte)data;
     }
 
-    public static CustomItem getByName(String name) {
-        for(CustomItem item : values()) {
+    /**
+     * Get an item by its shortened name.
+     * @param name Name of item.
+     * @return The item or <code>null</code> if there was no match.
+     */
+    public static ShortItem getByName(final String name) {
+        for(ShortItem item : values()) {
             if(item.name().equals(name.toUpperCase())) {
                 return item;
             }
@@ -70,8 +75,13 @@ public enum CustomItem {
         return null;
     }
 
-    public static CustomItem getByItem(Material material) {
-        for(CustomItem item : values()) {
+    /**
+     * Get the shortened name of an item.
+     * @param material The item.
+     * @return The shortened name or <code>null</code> if there is no short name.
+     */
+    public static ShortItem getByItem(final Material material) {
+        for(ShortItem item : values()) {
             if(item.material.equals(material)) {
                 return item;
             }
@@ -84,11 +94,20 @@ public enum CustomItem {
         return name().toLowerCase();
     }
 
+    /**
+     * Get an item stack of this item.
+     * @return Item stack.
+     */
     public ItemStack toItemStack() {
         return new ItemStack(material, 1, (short)0, data);
     }
 
-    public ItemStack toItemStack(int amount) {
+    /**
+     * Get an item stack with a certain amount of this item.
+     * @param amount Item stack.
+     * @return
+     */
+    public ItemStack toItemStack(final int amount) {
         return new ItemStack(material, amount, (short)0, data);
     }
 }
