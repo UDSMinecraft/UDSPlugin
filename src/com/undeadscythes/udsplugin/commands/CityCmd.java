@@ -74,6 +74,11 @@ public class CityCmd extends PlayerCommandExecutor {
                 } else {
                     player.sendMessage(Color.ERROR + target.getDisplayName() + " is not a citizen of " + city.getName() + ".");
                 }
+            } else if(args[0].equals("mayor") && (city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
+                city.addMember(city.getOwner());
+                city.delMember(target);
+                city.changeOwner(target);
+                Bukkit.broadcastMessage(Color.BROADCAST + target.getDisplayName() + " has been elected as the new mayor of " + city.getName());
             } else {
 //                subCmdHelp();
             }
