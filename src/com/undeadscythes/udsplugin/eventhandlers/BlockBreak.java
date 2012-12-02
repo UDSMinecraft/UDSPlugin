@@ -16,8 +16,8 @@ public class BlockBreak implements Listener {
     public static ArrayList<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
 
     @EventHandler
-    public void onEvent(BlockBreakEvent event) {
-        SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
+    public void onEvent(final BlockBreakEvent event) {
+        final SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
         if(player.isJailed()) {
             event.setCancelled(true);
         } else if(!player.canBuildHere(event.getBlock().getLocation().add(UDSPlugin.HALF_BLOCK))) {
@@ -41,9 +41,9 @@ public class BlockBreak implements Listener {
         }
     }
 
-    private boolean isSpecialSign(Block block) {
+    private boolean isSpecialSign(final Block block) {
         if(block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN_POST)) {
-            Sign sign = (Sign)block.getState();
+            final Sign sign = (Sign)block.getState();
             if(SPECIAL_SIGNS.contains(sign.getLine(0))) {
                 return true;
             }
