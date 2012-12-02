@@ -3,49 +3,19 @@ package com.undeadscythes.udsplugin;
 import org.bukkit.*;
 
 /**
- * Geometrical directions..
+ * Geometrical directions.
  * @author UndeadScythes
  */
 public enum Direction {
-    /**
-        * North.
-        */
     NORTH(-22.5, 22.5, true),
-    /**
-        * North east.
-        */
     NORTH_EAST(22.5, 67.5, false),
-    /**
-        * East, where the sun rises.
-        */
     EAST(67.5, 112.5, true),
-    /**
-        * South east.
-        */
     SOUTH_EAST(112.5, 157.5, false),
-    /**
-        * South.
-        */
     SOUTH(157.5, 202.5, true),
-    /**
-        * South west.
-        */
     SOUTH_WEST(202.5, 247.5, false),
-    /**
-        * West, where the sun sets.
-        */
     WEST(247.5, 292.5, true),
-    /**
-        * North west.
-        */
     NORTH_WEST(292.5, 337.5, false),
-    /**
-        * Up.
-        */
     UP(0, 0, true),
-    /**
-        * Down.
-        */
     DOWN(0, 0, true);
 
     private double min;
@@ -59,18 +29,18 @@ public enum Direction {
     }
 
     /**
-        * Get the camera yaw associated with this direction.
-        * @return Camera yaw
-        */
+     * Get the camera yaw associated with this direction.
+     * @return Camera yaw
+     */
     public float getYaw() {
         return (float)((this.max + this.min) / 2 + 180) % 360;
     }
 
     /**
-        * Get a compass direction by name.
-        * @param string The name of the direction.
-        * @return The direction or <code>null</code> if there are no matches.
-        */
+     * Get a compass direction by name.
+     * @param string The name of the direction.
+     * @return The direction or <code>null</code> if there are no matches.
+     */
     public static Direction getByName(final String string) {
         for(Direction test : values()) {
             if(test.name().equals(string.toUpperCase())) {
@@ -81,10 +51,10 @@ public enum Direction {
     }
 
     /**
-        * Get the direction of the camera.
-        * @param location The location of the camera.
-        * @return The direction of the camera or <code>null</code> if there is an error.
-        */
+     * Get the direction of the camera.
+     * @param location The location of the camera.
+     * @return The direction of the camera or <code>null</code> if there is an error.
+     */
     public static Direction valueOf(final Location location) {
         float yaw = (location.getYaw() + 180) % 360;
         if(yaw < -22.5) {
@@ -98,20 +68,16 @@ public enum Direction {
         return null; //This should never happen.
     }
 
-    /**
-        * @inheritDoc
-        */
     @Override
     public String toString() {
         return name().toLowerCase().replace("_", " ");
     }
 
     /**
-        * Check if the direction is a cardinal compass bearing.
-        * @return <code>true</code> if the direction is a cardinal, <code>false</code> otherwise.
-        */
+     * Check if the direction is a cardinal compass bearing.
+     * @return <code>true</code> if the direction is a cardinal, <code>false</code> otherwise.
+     */
     public boolean isCardinal() {
         return cardinal;
     }
 }
-

@@ -7,17 +7,17 @@ import java.util.*;
  * @author UndeadScythes
  */
 public class ChatRoom {
-    private String name;
-    private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>();
+    private final transient String name;
+    private final transient Set<SaveablePlayer> members;
 
     /**
      * Create a brand new private chat room.
      * @param player Player who opened the chat room.
      * @param name Name of the chat room.
      */
-    public ChatRoom (SaveablePlayer player, String name) {
+    public ChatRoom (final SaveablePlayer player, final String name) {
         this.name = name;
-        members.add(player);
+        members = new HashSet<SaveablePlayer>(Arrays.asList(player));
     }
 
     /**
@@ -32,8 +32,8 @@ public class ChatRoom {
      * Get members of the chat room that are currently online.
      * @return Online members.
      */
-    public HashSet<SaveablePlayer> getOnlineMembers() {
-        HashSet<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>();
+    public Set<SaveablePlayer> getOnlineMembers() {
+        final HashSet<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>();
         for(SaveablePlayer member : members) {
             if(member != null) {
                 onlineMembers.add(member);
@@ -48,19 +48,36 @@ public class ChatRoom {
         return name;
     }
 
-    public void addMember(SaveablePlayer player) {
+    /**
+     * Add a new chat room member.
+     * @param player Player to add.
+     */
+    public void addMember(final SaveablePlayer player) {
         members.add(player);
     }
 
-    public boolean isMember(SaveablePlayer player) {
+    /**
+     * Check if a player is in this chat room.
+     * @param player Player to check.
+     * @return <code>true</code> if the player is in the chat room, <code>false</code> otherwise.
+     */
+    public boolean isMember(final SaveablePlayer player) {
         return members.contains(player);
     }
 
-    public void delMember(SaveablePlayer player) {
+    /**
+     * Remove a player from the chat room.
+     * @param player Player to remove.
+     */
+    public void delMember(final SaveablePlayer player) {
         members.remove(player);
     }
 
-    public void sendMessage(String message) {
+    /**
+     * Send a message to players in the chat room.
+     * @param message Message to send.
+     */
+    public void sendMessage(final String message) {
         for(SaveablePlayer member : getOnlineMembers()) {
             member.sendMessage(Color.PRIVATE + "[" + name + "] " + message);
         }

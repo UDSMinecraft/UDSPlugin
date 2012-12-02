@@ -8,8 +8,8 @@ import org.apache.commons.lang.*;
  * @author UndeadScythes
  */
 public final class Censor {
-    private static final String[] ROTTED_WORDS = new String[]{"fuvg", "shpx", "phag", "avttre", "cnxv", "shpxre", "onfgneq", "obyybpxf", "nefrubyr", "juber", "gjng", "fbqqvat", "fcnfgvp", "jnaxre", "fynt", "cvffvat", "qvpx", "chffl", "funt"};
     private static String[] badWords;
+    private static final String[] ROTTED_WORDS = new String[]{"fuvg", "shpx", "phag", "avttre", "cnxv", "shpxre", "onfgneq", "obyybpxf", "nefrubyr", "juber", "gjng", "fbqqvat", "fcnfgvp", "jnaxre", "fynt", "cvffvat", "qvpx", "chffl", "funt"};
     private static final char[] ALPHABET = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
     private Censor() {}
@@ -28,6 +28,11 @@ public final class Censor {
         return true;
     }
 
+    /**
+     * Replace all occurrences of censored words.
+     * @param message The message to 'fix'.
+     * @return The 'fixed' message.
+     */
     public static String fix(final String message) {
         String fixedMessage = message;
         for(String word : badWords) {
@@ -52,6 +57,9 @@ public final class Censor {
         return words.toArray(new String[words.size()]);
     }
 
+    /**
+     * Initialise the censor by rot-ing all the censored words.
+     */
     public static void initCensor() {
         badWords = rotWords();
     }

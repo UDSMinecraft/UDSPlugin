@@ -25,9 +25,6 @@ public class SaveableLocation extends Location {
         super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public String toString() {
         return super.getWorld().getName() + "," + super.getX() + "," + super.getY() + "," + super.getZ() + "," + super.getPitch() + "," + super.getYaw();

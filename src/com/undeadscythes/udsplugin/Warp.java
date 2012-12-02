@@ -13,12 +13,12 @@ public class Warp implements Saveable {
     /**
      * File name of warp file.
      */
-    public static String PATH = "warps.csv";
+    public final static String PATH = "warps.csv";
 
-    private String name;
-    private Location location;
-    private PlayerRank rank;
-    private int price;
+    private final transient String name;
+    private final transient Location location;
+    private final transient PlayerRank rank;
+    private final transient int price;
 
     /**
      * Initialise a brand new warp point.
@@ -27,7 +27,7 @@ public class Warp implements Saveable {
      * @param rank Rank required to use the warp.
      * @param price Money required to use the warp.
      */
-    public Warp(String name, Location location, PlayerRank rank, int price) {
+    public Warp(final String name, final Location location, final PlayerRank rank, final int price) {
         this.name = name;
         this.location = location;
         this.rank = rank;
@@ -38,24 +38,21 @@ public class Warp implements Saveable {
      * Initialise a warp from a string record.
      * @param record A line from a file.
      */
-    public Warp(String record) {
-        String[] recordSplit = record.split("\t");
+    public Warp(final String record) {
+        final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         location = new SaveableLocation(recordSplit[1]);
         rank = PlayerRank.getByName(recordSplit[2]);
         price = Integer.parseInt(recordSplit[3]);
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public String getRecord() {
-        ArrayList<String> record = new ArrayList<String>();
+        final ArrayList<String> record = new ArrayList<String>();
         record.add(name);
         record.add(location.toString());
         record.add(rank.toString());
-        record.add(price + "");
+        record.add(Integer.toString(price));
         return StringUtils.join(record, "\t");
     }
 
@@ -77,6 +74,7 @@ public class Warp implements Saveable {
 
     @Override
     public String toString() {
+        Bukkit.getLogger().info("Implicit Warp.toString()."); // Implicit .toString()
         return name;
     }
 
@@ -96,9 +94,15 @@ public class Warp implements Saveable {
         return rank;
     }
 
+    /**
+     * Find a safe place to warp to from this warp.
+     * @return A safe location.
+     */
     public Location findSafePlace() {
         return findSafePlace(location);
     }
+
+    // Should these methods be moved to SaveableLocation?
 
     /**
      * Find a centered safe place at the given coordinates.
@@ -107,13 +111,18 @@ public class Warp implements Saveable {
      * @param z Z coordinate.
      * @return A safe place centered in a block.
      */
-    public static Location findSafePlace(World world, double x, double z) {
-        Location safePlace = world.getHighestBlockAt((int)x, (int)z).getLocation();
+    public static Location findSafePlace(final World world, final double x, final double z) {
+        final Location safePlace = world.getHighestBlockAt((int)x, (int)z).getLocation();
         safePlace.add(.5, 0, .5);
         return safePlace;
     }
 
-    public static Location findSafePlace(Location location) {
+    /**
+     * Find a safe place to teleport to near this location.
+     * @param location Location to teleport to.
+     * @return A safe place.
+     */
+    public static Location findSafePlace(final Location location) {
         return findSafePlace(location.getWorld(), location.getX(), location.getZ());
     }
 }

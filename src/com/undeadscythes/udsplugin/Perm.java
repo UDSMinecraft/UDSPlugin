@@ -7,27 +7,9 @@ import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
  * @author UndeadScythes
  */
 public enum Perm {
-    MINECART(PlayerRank.DEFAULT, true),
-    PRIZE(PlayerRank.DEFAULT, true),
-    ITEM(PlayerRank.DEFAULT, true),
-    SPLEEF(PlayerRank.DEFAULT, true),
-    SIGN_CHECKPOINT(PlayerRank.MOD, true),
-    SIGN_PRIZE(PlayerRank.ADMIN, true),
-    SIGN_ITEM(PlayerRank.ADMIN, true),
-    SIGN_SPLEEF(PlayerRank.MOD, true),
-    SIGN_MINECART(PlayerRank.MOD, true),
-    SHOP_SERVER(PlayerRank.MOD, true),
-    SHOP_SIGN(PlayerRank.MEMBER, true),
-    SIGN_WARP(PlayerRank.MOD, true),
-    SHOP_ADMIN(PlayerRank.ADMIN, true),
-    WE_VIP(PlayerRank.VIP, false),
-    CHAT_HELP(PlayerRank.DEFAULT, true),
-    ADMIN_HELP(PlayerRank.ADMIN, true),
-    MOD_HELP(PlayerRank.MOD, true),
-    WARDEN_HELP(PlayerRank.WARDEN, true),
-    VIP_HELP(PlayerRank.VIP, true),
     A(PlayerRank.MOD, true),
     ACCEPTRULES(PlayerRank.DEFAULT, false),
+    ADMIN_HELP(PlayerRank.ADMIN, true),
     BACK(PlayerRank.MEMBER, true),
     BACK_ON_DEATH(PlayerRank.VIP, true),
     BAN(PlayerRank.MOD, true),
@@ -38,6 +20,7 @@ public enum Perm {
     C(PlayerRank.MEMBER, true),
     CALL(PlayerRank.DEFAULT, true),
     CHALLENGE(PlayerRank.MEMBER, true),
+    CHAT_HELP(PlayerRank.DEFAULT, true),
     CHECK(PlayerRank.DEFAULT, true),
     CI(PlayerRank.MEMBER, true),
     CITY(PlayerRank.MEMBER, true),
@@ -55,18 +38,21 @@ public enum Perm {
     HOME(PlayerRank.MEMBER, true),
     HOME_OTHER(PlayerRank.MOD, true),
     I(PlayerRank.VIP, true),
-    I_ADMIN(PlayerRank.MOD, true),
     IGNORE(PlayerRank.DEFAULT, true),
     INVSEE(PlayerRank.WARDEN, true),
+    ITEM(PlayerRank.DEFAULT, true),
+    I_ADMIN(PlayerRank.MOD, true),
     JAIL(PlayerRank.WARDEN, true),
     KICK(PlayerRank.MOD, true),
     KIT(PlayerRank.DEFAULT, true),
     LOCKDOWN(PlayerRank.ADMIN, true),
     MAP(PlayerRank.DEFAULT, true),
     ME(PlayerRank.DEFAULT, true),
+    MINECART(PlayerRank.DEFAULT, true),
+    MOD_HELP(PlayerRank.MOD, true),
     MONEY(PlayerRank.DEFAULT, true),
-    MONEY_OTHER(PlayerRank.WARDEN, true),
     MONEY_ADMIN(PlayerRank.MOD, true),
+    MONEY_OTHER(PlayerRank.WARDEN, true),
     N(PlayerRank.DEFAULT, true),
     NICK(PlayerRank.MEMBER, true),
     NICK_OTHER(PlayerRank.MOD, true),
@@ -78,6 +64,7 @@ public enum Perm {
     PET(PlayerRank.MEMBER, true),
     POWERTOOL(PlayerRank.MOD, true),
     PRIVATE(PlayerRank.DEFAULT, true),
+    PRIZE(PlayerRank.DEFAULT, true),
     PROMOTE(PlayerRank.MOD, true),
     R(PlayerRank.DEFAULT, true),
     RAIN(PlayerRank.WARDEN, true),
@@ -88,25 +75,38 @@ public enum Perm {
     SETSPAWN(PlayerRank.ADMIN, true),
     SETWARP(PlayerRank.WARDEN, true),
     SHOP(PlayerRank.MEMBER, true),
+    SHOP_ADMIN(PlayerRank.ADMIN, true),
+    SHOP_SERVER(PlayerRank.MOD, true),
+    SHOP_SIGN(PlayerRank.MEMBER, true),
     SIGNS(PlayerRank.MOD, true),
+    SIGN_CHECKPOINT(PlayerRank.MOD, true),
+    SIGN_ITEM(PlayerRank.ADMIN, true),
+    SIGN_MINECART(PlayerRank.MOD, true),
+    SIGN_PRIZE(PlayerRank.ADMIN, true),
+    SIGN_SPLEEF(PlayerRank.MOD, true),
+    SIGN_WARP(PlayerRank.MOD, true),
     SIT(PlayerRank.DEFAULT, true),
     SPAWN(PlayerRank.DEFAULT, true),
     SPAWNER(PlayerRank.MOD, true),
+    SPLEEF(PlayerRank.DEFAULT, true),
     STACK(PlayerRank.DEFAULT, true),
     STATS(PlayerRank.DEFAULT, true),
     STORM(PlayerRank.WARDEN, true),
     SUN(PlayerRank.WARDEN, true),
-    TP(PlayerRank.MOD, true),
     TELL(PlayerRank.DEFAULT, true),
-    TICKET(PlayerRank.DEFAULT, true),
     TGM(PlayerRank.MOD, true),
+    TICKET(PlayerRank.DEFAULT, true),
+    TP(PlayerRank.MOD, true),
     UNBAN(PlayerRank.MOD, true),
     UNJAIL(PlayerRank.WARDEN, true),
     VIP(PlayerRank.MEMBER, true),
     VIP_BUY(PlayerRank.MEMBER, false),
+    VIP_HELP(PlayerRank.VIP, true),
     WAND(PlayerRank.MEMBER, true),
-    WE(PlayerRank.MOD, true),
+    WARDEN_HELP(PlayerRank.WARDEN, true),
     WARP(PlayerRank.DEFAULT, true),
+    WE(PlayerRank.MOD, true),
+    WE_VIP(PlayerRank.VIP, false),
     WHERE(PlayerRank.DEFAULT, true),
     WHO(PlayerRank.DEFAULT, true),
     WHOIS(PlayerRank.DEFAULT, true),
@@ -116,16 +116,24 @@ public enum Perm {
     private PlayerRank rank;
     private boolean hereditary;
 
-    private Perm(PlayerRank rank, boolean hereditary) {
+    private Perm(final PlayerRank rank, final boolean hereditary) {
         this.rank = rank;
         this.hereditary = hereditary;
     }
 
+    /**
+     * Get the rank assigned to the permission.
+     * @return A player rank.
+     */
     public PlayerRank getRank() {
         return rank;
     }
 
-    public boolean hereditary() {
+    /**
+     * Check if a permission is hereditary.
+     * @return
+     */
+    public boolean isHereditary() {
         return hereditary;
     }
 }

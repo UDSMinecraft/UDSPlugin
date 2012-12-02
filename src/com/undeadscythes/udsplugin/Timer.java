@@ -32,9 +32,8 @@ public class Timer implements Runnable {
      */
     public static final long SECOND = 1000;
 
-    private long now = System.currentTimeMillis();
-    private long lastSlow = System.currentTimeMillis();
-    private long worldBorderSq = (int)Math.pow(Config.WORLD_BORDER, 2);
+    private transient long now = System.currentTimeMillis();
+    private transient long lastSlow = System.currentTimeMillis();
 
     /**
      * Initiates the timer.
@@ -53,7 +52,7 @@ public class Timer implements Runnable {
             dailyTask();
             UDSPlugin.lastDailyEvent = now;
         }
-        if(lastSlow + Config.SLOW_TIME < now) {
+        if(lastSlow + Config.slowTime < now) {
             try {
                 slowTask();
             } catch (IOException ex) {
@@ -66,10 +65,10 @@ public class Timer implements Runnable {
 
     private void dailyTask() {
         for(Region quarry : UDSPlugin.getQuarries().values()) {
-            Material material = Material.getMaterial(quarry.getData().toUpperCase());
-            int dX = quarry.getV2().getBlockX() - quarry.getV1().getBlockX();
-            int dY = quarry.getV2().getBlockY() - quarry.getV1().getBlockY();
-            int dZ = quarry.getV2().getBlockZ() - quarry.getV1().getBlockZ();
+            final Material material = Material.getMaterial(quarry.getData().toUpperCase());
+            final int dX = quarry.getV2().getBlockX() - quarry.getV1().getBlockX();
+            final int dY = quarry.getV2().getBlockY() - quarry.getV1().getBlockY();
+            final int dZ = quarry.getV2().getBlockZ() - quarry.getV1().getBlockZ();
             for(int x = 0; x <= dX; x++) {
                 for(int y = 0; y <= dY; y++) {
                     for(int z = 0; z <= dZ; z++) {
@@ -80,7 +79,7 @@ public class Timer implements Runnable {
         }
         Bukkit.broadcastMessage(Color.BROADCAST + "The quarries have been refilled.");
         for(SaveablePlayer vip : UDSPlugin.getVIPS().values()) {
-            vip.setVIPSpawns(Config.VIP_SPAWNS);
+            vip.setVIPSpawns(Config.vipSpawns);
             if(vip.isOnline()) {
                 vip.sendMessage(Color.MESSAGE + "Your daily item spawns have been refilled.");
             }
@@ -88,7 +87,7 @@ public class Timer implements Runnable {
     }
 
     private void slowTask() throws IOException {
-        if(UDSPlugin.lastEnderDeath > 0 && UDSPlugin.lastEnderDeath + Config.DRAGON_RESPAWN < now) {
+        if(UDSPlugin.lastEnderDeath > 0 && UDSPlugin.lastEnderDeath + Config.dragonRespawn < now) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
                     UDSPlugin.lastEnderDeath = 0;
@@ -102,7 +101,7 @@ public class Timer implements Runnable {
 
     private void fastTask() {
         for(SaveablePlayer player : UDSPlugin.getOnlinePlayers().values()) {
-            if(player.getRank().equals(PlayerRank.VIP) && player.getVIPTime() + Config.VIP_TIME < now) {
+            if(player.getRank().equals(PlayerRank.VIP) && player.getVIPTime() + Config.vipTime < now) {
                 player.setVIPTime(0);
                 player.setRank(PlayerRank.MEMBER);
                 player.sendMessage(Color.MESSAGE + "Your time as a VIP has come to an end.");
@@ -114,25 +113,25 @@ public class Timer implements Runnable {
             if(player.hasGodMode()) {
                 player.setFoodLevel(20);
             }
-            int distanceSq = Math.abs((int)Math.pow(player.getLocation().getBlockX(), 2) + (int)Math.pow(player.getLocation().getBlockZ(), 2));
-            if(distanceSq - worldBorderSq > 100) {
-                double ratio = worldBorderSq / distanceSq;
+            final int distanceSq = Math.abs((int)Math.pow(player.getLocation().getBlockX(), 2) + (int)Math.pow(player.getLocation().getBlockZ(), 2));
+            if(distanceSq - Config.worldBorderSq > 100) {
+                final int ratio = Config.worldBorderSq / distanceSq;
                 player.move(Warp.findSafePlace(player.getWorld(), player.getLocation().getX() * ratio, player.getLocation().getZ() * ratio));
                 player.sendMessage(Color.MESSAGE + "You have reached the edge of the currently explorable world.");
             }
 
         }
         for(Request request : UDSPlugin.getRequests().values()) {
-            if(request.getTime() + Config.REQUEST_TIME < now) {
+            if(request.getTime() + Config.requestTTL < now) {
                 request.getSender().sendMessage(Color.MESSAGE + "Your request has timed out.");
                 UDSPlugin.getRequests().remove(request.getRecipient().getName());
             }
         }
         for(World world : Bukkit.getWorlds()) {
             for(Minecart minecart : world.getEntitiesByClass(Minecart.class)) {
-                if(minecart.isEmpty() && minecart.getTicksLived() > Config.MINECART_LIFE) {
+                if(minecart.isEmpty() && minecart.getTicksLived() > Config.minecartTTL) {
                     minecart.remove();
-                    Bukkit.getLogger().info("" + minecart.getTicksLived());
+                    Bukkit.getLogger().info(Integer.toString(minecart.getTicksLived())); // Debugging
                 }
             }
         }

@@ -13,9 +13,9 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param partial Partial key to search the map with.
      * @return A list of objects corresponding to matches of the partial key.
      */
-    public ArrayList<Object> getKeyMatches(String partial) {
-        String lowPartial = partial.toLowerCase();
-        ArrayList<Object> matches = new ArrayList<Object>();
+    public List<Object> getKeyMatches(final String partial) {
+        final String lowPartial = partial.toLowerCase();
+        final ArrayList<Object> matches = new ArrayList<Object>();
         for(Map.Entry<String, Object> entry : super.entrySet()) {
             if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 matches.add(entry.getValue());
@@ -29,8 +29,8 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param partial Partial key to search the map with.
      * @return The first match or <code>null</code> if there are no matches.
      */
-    public Object matchKey(String partial) {
-        String lowPartial = partial.toLowerCase();
+    public Object matchKey(final String partial) {
+        final String lowPartial = partial.toLowerCase();
         for(Map.Entry<String, Object> entry : super.entrySet()) {
             if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 return entry.getValue();
@@ -40,11 +40,8 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
 
     }
 
-    /**
-     * Add an object to the map, converting the key to lower case.
-     */
     @Override
-    public Object put(String key, Object object) {
+    public Object put(final String key, final Object object) {
         return super.put(key.toLowerCase(), object);
     }
 
@@ -53,7 +50,7 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param key The key to search for.
      * @return The object to which the key relates.
      */
-    public Object get(String key) {
+    public Object get(final String key) {
         return super.get(key.toLowerCase());
     }
 
@@ -62,11 +59,16 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param key The key to remove.
      * @return The object the key used to match or <code>null</code> if the key didn't exist.
      */
-    public Object remove(String key) {
+    public Object remove(final String key) {
         return super.remove(key.toLowerCase());
     }
 
-    public boolean containsKey(String key) {
+    /**
+     * Check if the map contains the key.
+     * @param key Key to check.
+     * @return <code>true</code> if the map contains the key, <code>false</code> otherwise.
+     */
+    public boolean containsKey(final String key) {
         return super.containsKey(key.toLowerCase());
     }
 
@@ -75,13 +77,19 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param comp Comparator to define sort priorities.
      * @return Sorted array of objects.
      */
-    public ArrayList<Object> getSortedValues(Comparator comp) {
-        ArrayList<Object> values = new ArrayList<Object>(this.values());
+    public List<Object> getSortedValues(final Comparator comp) {
+        final ArrayList<Object> values = new ArrayList<Object>(this.values());
         Collections.sort(values, comp);
         return values;
     }
 
-    public void replace(String oldKey, String newKey, Object object) {
+    /**
+     * Replace the key of a value in the map.
+     * @param oldKey Old key.
+     * @param newKey New key.
+     * @param object Object to relate to new key.
+     */
+    public void replace(final String oldKey, final String newKey, final Object object) {
         remove(oldKey);
         put(newKey, object);
     }

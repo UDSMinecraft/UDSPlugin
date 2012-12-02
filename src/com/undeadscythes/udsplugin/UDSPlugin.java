@@ -21,16 +21,29 @@ public class UDSPlugin extends JavaPlugin {
      */
     public final static Vector HALF_BLOCK = new Vector(.5, .5, .5);
     /**
+     * Regex for an integer.
+     */
+    public final static String INT_REGEX = "[0-9][0-9]*";
+    /**
      * Where the issue/suggestion tickets are stored.
      */
     public final static String TICKET_PATH = "tickets.txt";
+    /**
+     * Where the times data is stored.
+     */
     public final static String TIMES_PATH = "times.data";
 
     /**
      * Whether the server is in lockdown mode.
      */
     public static boolean serverInLockdown;
+    /**
+     * The time of the last ender dragon death.
+     */
     public static long lastEnderDeath;
+    /**
+     * The time of the last daily scheduled task.
+     */
     public static long lastDailyEvent;
 
     private static SaveableHashMap clans;
@@ -39,7 +52,7 @@ public class UDSPlugin extends JavaPlugin {
     private static SaveableHashMap warps;
     private static MatchableHashMap<ChatRoom> chatRooms;
     private static MatchableHashMap<Request> requests;
-    private static MatchableHashMap<Session> sessions;
+    private static MatchableHashMap<WESession> sessions;
     private static MatchableHashMap<Region> quarries;
     private static MatchableHashMap<Region> homes;
     private static MatchableHashMap<Region> shops;
@@ -48,8 +61,8 @@ public class UDSPlugin extends JavaPlugin {
     private static MatchableHashMap<Region> arenas;
     private static MatchableHashMap<SaveablePlayer> vips;
     private static MatchableHashMap<SaveablePlayer> onlinePlayers;
-    private static File DATA_PATH = new File("plugins/UDSPlugin/data");
-    private Timer timer;
+    private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
+    private transient Timer timer;
 
     /**
      * Used for testing in NetBeans. Woo! NetBeans!
@@ -57,9 +70,6 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static void main(final String[] args) {}
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public void onEnable() {
         if(DATA_PATH.mkdirs()) {
@@ -76,7 +86,7 @@ public class UDSPlugin extends JavaPlugin {
         warps = new SaveableHashMap();
         chatRooms = new MatchableHashMap<ChatRoom>();
         requests = new MatchableHashMap<Request>();
-        sessions = new MatchableHashMap<Session>();
+        sessions = new MatchableHashMap<WESession>();
         quarries = new MatchableHashMap<Region>();
         homes = new MatchableHashMap<Region>();
         shops = new MatchableHashMap<Region>();
@@ -105,23 +115,20 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info("Recipes added.");
         Censor.initCensor();
         getLogger().info("Censor online.");
-        String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
+        final String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
         getLogger().info(message);
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public void onDisable() {
         try {
             saveFiles();
-            String message = (clans.size() + regions.size() + warps.size() + players.size()) + " clans, regions, warps and players saved.";
+            final String message = (clans.size() + regions.size() + warps.size() + players.size()) + " clans, regions, warps and players saved.";
             getLogger().info(message);
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String message = getName() + " disabled.";
+        final String message = getName() + " disabled.";
         getLogger().info(message);
     }
 
@@ -134,7 +141,7 @@ public class UDSPlugin extends JavaPlugin {
         regions.save(DATA_PATH + File.separator + Region.PATH);
         warps.save(DATA_PATH + File.separator + Warp.PATH);
         players.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
-        BufferedWriter file = new BufferedWriter(new FileWriter(DATA_PATH + File.separator + UDSPlugin.TIMES_PATH));
+        final BufferedWriter file = new BufferedWriter(new FileWriter(DATA_PATH + File.separator + UDSPlugin.TIMES_PATH));
         file.write(Long.toString(lastDailyEvent));
         file.newLine();
         file.write(Long.toString(lastEnderDeath));
@@ -153,7 +160,7 @@ public class UDSPlugin extends JavaPlugin {
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + SaveablePlayer.PATH));
             while((nextLine = file.readLine()) != null) {
-                SaveablePlayer player = new SaveablePlayer(nextLine);
+                final SaveablePlayer player = new SaveablePlayer(nextLine);
                 players.put(nextLine.split("\t")[0], player);
                 if(player.getVIPTime() > 0) {
                     vips.put(player.getName(), player);
@@ -168,7 +175,7 @@ public class UDSPlugin extends JavaPlugin {
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Region.PATH));
             while((nextLine = file.readLine()) != null) {
-                Region region = new Region(nextLine);
+                final Region region = new Region(nextLine);
                 regions.put(region.getName(), region);
                 if(region.getType().equals(RegionType.BASE)) {
                     bases.put(region.getName(), region);
@@ -212,7 +219,7 @@ public class UDSPlugin extends JavaPlugin {
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
             while((nextLine = file.readLine()) != null) {
-                Clan clan = new Clan(nextLine);
+                final Clan clan = new Clan(nextLine);
                 clans.put(nextLine.split("\t")[0], clan);
                 clan.linkMembers();
             }
@@ -348,70 +355,75 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new VehicleExit(), this);
     }
 
+    private final static String ROW = "AAA";
+    private final static String SWJ = "ABA";
+    private final static String GAP = "A A";
+    private final static String DOT = " A ";
+
     private void addRecipes() {
-        ShapedRecipe mossyStoneBrick = new ShapedRecipe(new ItemStack(98, 1, (short) 0, (byte) 1)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.VINE).setIngredient('B', new MaterialData(98, (byte) 0));
+        final ShapedRecipe mossyStoneBrick = new ShapedRecipe(new ItemStack(98, 1, (short) 0, (byte) 1)).shape(ROW, SWJ, ROW).setIngredient('A', Material.VINE).setIngredient('B', new MaterialData(98, (byte) 0));
         this.getServer().addRecipe(mossyStoneBrick);
-        ShapelessRecipe crackedStoneBrick = new ShapelessRecipe(new ItemStack(98, 1, (short) 0, (byte) 2)).addIngredient(Material.WOOD_PICKAXE).addIngredient(new MaterialData(98, (byte) 0));
+        final ShapelessRecipe crackedStoneBrick = new ShapelessRecipe(new ItemStack(98, 1, (short) 0, (byte) 2)).addIngredient(Material.WOOD_PICKAXE).addIngredient(new MaterialData(98, (byte) 0));
         this.getServer().addRecipe(crackedStoneBrick);
-        ShapedRecipe circleStoneBrick = new ShapedRecipe(new ItemStack(98, 8, (short) 0, (byte) 3)).shape("AAA", "A A", "AAA").setIngredient('A', new MaterialData(98, (byte) 0));
+        final ShapedRecipe circleStoneBrick = new ShapedRecipe(new ItemStack(98, 8, (short) 0, (byte) 3)).shape(ROW, GAP, ROW).setIngredient('A', new MaterialData(98, (byte) 0));
         this.getServer().addRecipe(circleStoneBrick);
-        ShapedRecipe mossyCobbleStone = new ShapedRecipe(new ItemStack(48, 1)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.VINE).setIngredient('B', Material.COBBLESTONE);
+        final ShapedRecipe mossyCobbleStone = new ShapedRecipe(new ItemStack(48, 1)).shape(ROW, SWJ, ROW).setIngredient('A', Material.VINE).setIngredient('B', Material.COBBLESTONE);
         this.getServer().addRecipe(mossyCobbleStone);
-        ShapedRecipe iceBlock = new ShapedRecipe(new ItemStack(79, 1)).shape(" A ", "ABA", " A ").setIngredient('A', Material.SNOW_BALL).setIngredient('B', Material.WATER_BUCKET);
+        final ShapedRecipe iceBlock = new ShapedRecipe(new ItemStack(79, 1)).shape(DOT, SWJ, DOT).setIngredient('A', Material.SNOW_BALL).setIngredient('B', Material.WATER_BUCKET);
         this.getServer().addRecipe(iceBlock);
-        ShapedRecipe chainHelmet = new ShapedRecipe(new ItemStack(302, 1)).shape("AAA", "A A").setIngredient('A', Material.FLINT);
+        final ShapedRecipe chainHelmet = new ShapedRecipe(new ItemStack(302, 1)).shape(ROW, GAP).setIngredient('A', Material.FLINT);
         this.getServer().addRecipe(chainHelmet);
-        ShapedRecipe chainChest = new ShapedRecipe(new ItemStack(303, 1)).shape("A A", "AAA" ,"AAA").setIngredient('A', Material.FLINT);
+        final ShapedRecipe chainChest = new ShapedRecipe(new ItemStack(303, 1)).shape(GAP, ROW ,ROW).setIngredient('A', Material.FLINT);
         this.getServer().addRecipe(chainChest);
-        ShapedRecipe chainLegs = new ShapedRecipe(new ItemStack(304, 1)).shape("AAA", "A A", "A A").setIngredient('A', Material.FLINT);
+        final ShapedRecipe chainLegs = new ShapedRecipe(new ItemStack(304, 1)).shape(ROW, GAP, GAP).setIngredient('A', Material.FLINT);
         this.getServer().addRecipe(chainLegs);
-        ShapedRecipe chainBoots = new ShapedRecipe(new ItemStack(305, 1)).shape("A A", "A A").setIngredient('A', Material.FLINT);
+        final ShapedRecipe chainBoots = new ShapedRecipe(new ItemStack(305, 1)).shape(GAP, GAP).setIngredient('A', Material.FLINT);
         this.getServer().addRecipe(chainBoots);
-        ShapedRecipe grassBlock = new ShapedRecipe(new ItemStack(Material.GRASS, 1)).shape("A", "B").setIngredient('A', new MaterialData(31, (byte) 1)).setIngredient('B', Material.DIRT);
+        final ShapedRecipe grassBlock = new ShapedRecipe(new ItemStack(Material.GRASS, 1)).shape("A", "B").setIngredient('A', new MaterialData(31, (byte) 1)).setIngredient('B', Material.DIRT);
         this.getServer().addRecipe(grassBlock);
-        ShapedRecipe snowLayer = new ShapedRecipe(new ItemStack(Material.SNOW, 1)).shape("AAA").setIngredient('A', Material.SNOW_BALL);
+        final ShapedRecipe snowLayer = new ShapedRecipe(new ItemStack(Material.SNOW, 1)).shape(ROW).setIngredient('A', Material.SNOW_BALL);
         this.getServer().addRecipe(snowLayer);
-        ShapedRecipe creeperEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 50)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SULPHUR);
+        final ShapedRecipe creeperEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 50)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SULPHUR);
         this.getServer().addRecipe(creeperEgg);
-        ShapedRecipe skeletonEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 51)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.BONE);
+        final ShapedRecipe skeletonEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 51)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.BONE);
         this.getServer().addRecipe(skeletonEgg);
-        ShapedRecipe spiderEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 52)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SPIDER_EYE);
+        final ShapedRecipe spiderEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 52)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SPIDER_EYE);
         this.getServer().addRecipe(spiderEgg);
-        ShapedRecipe zombieEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 54)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.ROTTEN_FLESH);
+        final ShapedRecipe zombieEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 54)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.ROTTEN_FLESH);
         this.getServer().addRecipe(zombieEgg);
-        ShapedRecipe slimeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 55)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SLIME_BALL);
+        final ShapedRecipe slimeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 55)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SLIME_BALL);
         this.getServer().addRecipe(slimeEgg);
-        ShapedRecipe ghastEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 56)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.GHAST_TEAR);
+        final ShapedRecipe ghastEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 56)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.GHAST_TEAR);
         this.getServer().addRecipe(ghastEgg);
-        ShapedRecipe pigZombieEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 57)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.GOLD_NUGGET);
+        final ShapedRecipe pigZombieEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 57)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.GOLD_NUGGET);
         this.getServer().addRecipe(pigZombieEgg);
-        ShapedRecipe endermanEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 58)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.ENDER_PEARL);
+        final ShapedRecipe endermanEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 58)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.ENDER_PEARL);
         this.getServer().addRecipe(endermanEgg);
-        ShapedRecipe caveSpiderEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 59)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.STRING);
+        final ShapedRecipe caveSpiderEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 59)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.STRING);
         this.getServer().addRecipe(caveSpiderEgg);
-        ShapedRecipe silverFishEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 60)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.STONE);
+        final ShapedRecipe silverFishEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 60)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.STONE);
         this.getServer().addRecipe(silverFishEgg);
-        ShapedRecipe blazeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 61)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.BLAZE_ROD);
+        final ShapedRecipe blazeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 61)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.BLAZE_ROD);
         this.getServer().addRecipe(blazeEgg);
-        ShapedRecipe magmaCubeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 62)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.MAGMA_CREAM);
+        final ShapedRecipe magmaCubeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 62)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.MAGMA_CREAM);
         this.getServer().addRecipe(magmaCubeEgg);
-        ShapedRecipe pigEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 90)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.PORK);
+        final ShapedRecipe pigEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 90)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.PORK);
         this.getServer().addRecipe(pigEgg);
-        ShapedRecipe sheepEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 91)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.WOOL);
+        final ShapedRecipe sheepEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 91)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.WOOL);
         this.getServer().addRecipe(sheepEgg);
-        ShapedRecipe cowEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 92)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.LEATHER);
+        final ShapedRecipe cowEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 92)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.LEATHER);
         this.getServer().addRecipe(cowEgg);
-        ShapedRecipe chickenEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 93)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.FEATHER);
+        final ShapedRecipe chickenEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 93)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.FEATHER);
         this.getServer().addRecipe(chickenEgg);
-        ShapedRecipe squidEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 94)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.INK_SACK);
+        final ShapedRecipe squidEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 94)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.INK_SACK);
         this.getServer().addRecipe(squidEgg);
-        ShapedRecipe wolfEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 95)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.WHEAT);
+        final ShapedRecipe wolfEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 95)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.WHEAT);
         this.getServer().addRecipe(wolfEgg);
-        ShapedRecipe mooshroomEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 96)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.RED_MUSHROOM);
+        final ShapedRecipe mooshroomEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 96)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.RED_MUSHROOM);
         this.getServer().addRecipe(mooshroomEgg);
-        ShapedRecipe villagerEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 120)).shape("AAA", "ABA", "AAA").setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.RED_ROSE);
+        final ShapedRecipe villagerEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 120)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.RED_ROSE);
         this.getServer().addRecipe(villagerEgg);
-        ShapedRecipe webBlock = new ShapedRecipe(new ItemStack(Material.WEB)).shape("AAA", "A A", "AAA").setIngredient('A', Material.STRING);
+        final ShapedRecipe webBlock = new ShapedRecipe(new ItemStack(Material.WEB)).shape(ROW, GAP, ROW).setIngredient('A', Material.STRING);
         this.getServer().addRecipe(webBlock);
     }
 
@@ -459,7 +471,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the sessions map.
      * @return Sessions map.
      */
-    static public MatchableHashMap<Session> getSessions() {
+    static public MatchableHashMap<WESession> getSessions() {
         return sessions;
     }
 

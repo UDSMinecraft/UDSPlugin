@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin;
 
 import java.util.*;
 import org.apache.commons.lang.*;
+import org.bukkit.*;
 
 /**
  * A group of players, used for handling PVP.
@@ -13,29 +14,30 @@ public class Clan implements Saveable {
      */
     public static final String PATH = "clans.csv";
 
-    private String name;
-    private SaveablePlayer leader;
-    private int kills = 0;
-    private int deaths = 0;
-    private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>();
+    private transient String name;
+    private transient SaveablePlayer leader;
+    private transient final Set<SaveablePlayer> members;
+
+    private transient int kills = 0;
+    private transient int deaths = 0;
 
     /**
      * Initialise a brand new clan.
      * @param name Clan name.
      * @param leader Leader name.
      */
-    public Clan(String name, SaveablePlayer leader) {
+    public Clan(final String name, final SaveablePlayer leader) {
         this.name = name;
         this.leader = leader;
-        members.add(leader);
+        members = new HashSet<SaveablePlayer>(Arrays.asList(leader));
     }
 
     /**
      * Initialise a clan from a string record.
      * @param record A line from a save file.
      */
-    public Clan(String record) {
-        String[] recordSplit = record.split("\t");
+    public Clan(final String record) {
+        final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         leader = UDSPlugin.getPlayers().get(recordSplit[1]);
         kills = Integer.parseInt(recordSplit[2]);
@@ -43,21 +45,17 @@ public class Clan implements Saveable {
         members = new HashSet<SaveablePlayer>();
         for(String member : recordSplit[4].split(",")) {
             members.add(UDSPlugin.getPlayers().get(member));
-
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public String getRecord() {
-        ArrayList<String> record = new ArrayList<String>();
+        final List<String> record = new ArrayList<String>();
         record.add(name);
         record.add(leader.getName());
-        record.add(kills + "");
-        record.add(deaths + "");
-        ArrayList<String> memberList = new ArrayList<String>();
+        record.add(Integer.toString(kills));
+        record.add(Integer.toString(deaths));
+        final List<String> memberList = new ArrayList<String>();
         for(SaveablePlayer member : members) {
             memberList.add(member.getName());
         }
@@ -65,6 +63,9 @@ public class Clan implements Saveable {
         return StringUtils.join(record.toArray(), "\t");
     }
 
+    /**
+     *
+     */
     public void linkMembers() {
         for(SaveablePlayer member : members) {
             member.setClan(this);
@@ -75,8 +76,8 @@ public class Clan implements Saveable {
      * Get members of the clan that are currently online.
      * @return Online members.
      */
-    public HashSet<SaveablePlayer> getOnlineMembers() {
-        HashSet<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>();
+    public Set<SaveablePlayer> getOnlineMembers() {
+        final Set<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>();
         for(SaveablePlayer member : members) {
             if(member != null) {
                 onlineMembers.add(member);
@@ -85,25 +86,48 @@ public class Clan implements Saveable {
         return onlineMembers;
     }
 
-    public HashSet<SaveablePlayer> getMembers() {
+    /**
+     *
+     * @return
+     */
+    public Set<SaveablePlayer> getMembers() {
         return members;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
+    /**
+     *
+     * @return
+     */
     public int getKills() {
         return kills;
     }
 
+     /**
+     * Increment the clan's kills stat.
+     */
+    public void newKill() {
+        kills++;
+    }
+
+   /**
+     *
+     * @return
+     */
     public int getDeaths() {
         return deaths;
     }
 
-    public void rename(String name) {
-        this.name = name;
+    /**
+     * Increment the clan's deaths stat.
+     */
+    public void newDeath() {
+        deaths++;
+    }
+
+    @Override
+    public String toString() {
+        Bukkit.getLogger().info("Implicit Clan.toString()."); // Implicit .toString()
+        return name;
     }
 
     /**
@@ -118,7 +142,7 @@ public class Clan implements Saveable {
      * Change the name of the clan.
      * @param name New name.
      */
-    public void changeName(String name) {
+    public void rename(final String name) {
         this.name = name;
     }
 
@@ -135,27 +159,13 @@ public class Clan implements Saveable {
      * @param player Name of the new leader.
      * @return <code>true</code> if successful, <code>false</code> otherwise.
      */
-    public boolean changeLeader(SaveablePlayer player) {
+    public boolean changeLeader(final SaveablePlayer player) {
         if(members.contains(player)) {
             leader = player;
             return true;
         } else {
             return false;
         }
-    }
-
-    /**
-     * Increment the clan's kills stat.
-     */
-    public void newKill() {
-        kills++;
-    }
-
-    /**
-     * Increment the clan's deaths stat.
-     */
-    public void newDeath() {
-        deaths++;
     }
 
     /**
@@ -175,7 +185,7 @@ public class Clan implements Saveable {
      * @param player Name of the player.
      * @return <code>true</code> if player is a clan member, <code>false</code> otherwise.
      */
-    public boolean hasMember(SaveablePlayer player) {
+    public boolean hasMember(final SaveablePlayer player) {
         return members.contains(player);
     }
 
@@ -183,15 +193,16 @@ public class Clan implements Saveable {
      * Add a new clan member.
      * @param player Player name.
      */
-    public void addMember(SaveablePlayer player) {
+    public void addMember(final SaveablePlayer player) {
         members.add(player);
     }
 
     /**
      * Remove a member from the clan.
      * @param player Player name.
+     * @return
      */
-    public boolean delMember(SaveablePlayer player) {
+    public boolean delMember(final SaveablePlayer player) {
         members.remove(player);
         if(leader.equals(player)) {
             if(members.isEmpty()) {
@@ -205,7 +216,11 @@ public class Clan implements Saveable {
         }
     }
 
-    public void sendMessage(String message) {
+    /**
+     *
+     * @param message
+     */
+    public void sendMessage(final String message) {
         for(SaveablePlayer member : getOnlineMembers()) {
             member.sendMessage(Color.CLAN + "[" + name + "] " + message);
         }

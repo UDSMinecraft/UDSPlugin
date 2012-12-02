@@ -16,46 +16,19 @@ public class Region implements Saveable {
      * Region flags.
      */
     public enum RegionFlag {
-        /**
-         * This region is protected from other players building.
-         */
         PROTECTION(true),
-        /**
-         * Mobs can spawn here.
-         */
         MOBS(false),
-        /**
-         * Players can damage passive mobs here.
-         */
         PVE(true),
-        /**
-         * Players cannot interact with anything here.
-         */
         LOCK(true),
-        /**
-         * Vines will grow here.
-         */
         VINES(true),
-        /**
-         * Food items will grow here.
-         */
         FOOD(true),
-        /**
-         * Fire will burn and spread here.
-         */
         FIRE(false),
-        /**
-         * Snow will fall and ice will melt here.
-         */
         SNOW(false),
-        /**
-         * Players can attack other players here.
-         */
         PVP(false);
 
         private boolean defaultValue;
 
-        RegionFlag(boolean value) {
+        RegionFlag(final boolean value) {
             this.defaultValue = value;
         }
 
@@ -63,7 +36,7 @@ public class Region implements Saveable {
          * Get this flag's default value.
          * @return
          */
-        public boolean getDefault() {
+        public boolean isDefault() {
             return defaultValue;
         }
 
@@ -77,7 +50,7 @@ public class Region implements Saveable {
          * @param string The name of the flag.
          * @return The flag or <code>null</code> if there was no match.
          */
-        public static RegionFlag getByName(String string) {
+        public static RegionFlag getByName(final String string) {
             for(RegionFlag flag : values()) {
                 if(flag.name().equals(string.toUpperCase())) {
                     return flag;
@@ -91,33 +64,12 @@ public class Region implements Saveable {
      * Region type.
      */
     public enum RegionType {
-        /**
-         * A standard region.
-         */
         NORMAL,
-        /**
-         * A player ownable shop.
-         */
         SHOP,
-        /**
-         * A clan base.
-         */
         BASE,
-        /**
-         * A respawning quarry.
-         */
         QUARRY,
-        /**
-         * A player owned home.
-         */
         HOME,
-        /**
-         * A PVP arena.
-         */
         ARENA,
-        /**
-         * A player owned city.
-         */
         CITY;
 
         /**
@@ -125,7 +77,7 @@ public class Region implements Saveable {
          * @param string Name of region type.
          * @return The region type or <code>null</code> if there was no match.
          */
-        public static RegionType getByName(String string) {
+        public static RegionType getByName(final String string) {
             for(RegionType type : values()) {
                 if(type.name().equals(string.toUpperCase())) {
                     return type;
@@ -140,15 +92,15 @@ public class Region implements Saveable {
      */
     public static final String PATH = "regions.csv";
 
-    private String name;
-    private Vector v1;
-    private Vector v2;
+    private transient String name;
+    private transient Vector v1;
+    private transient Vector v2;
     private Location warp;
-    private SaveablePlayer owner;
-    private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>();
-    private String data;
-    private HashSet<RegionFlag> flags;
-    private RegionType type;
+    private transient SaveablePlayer owner;
+    private transient Set<SaveablePlayer> members = new HashSet<SaveablePlayer>();
+    private transient String data;
+    private transient Set<RegionFlag> flags;
+    private transient RegionType type;
     private PlayerRank rank = PlayerRank.NONE;
 
     /**
@@ -161,7 +113,7 @@ public class Region implements Saveable {
      * @param data Data of region, if any.
      * @param type Region type.
      */
-    public Region(String name, Vector v1, Vector v2, Location warp, SaveablePlayer owner, String data, RegionType type) {
+    public Region(final String name, final Vector v1, final Vector v2, final Location warp, final SaveablePlayer owner, final String data, final RegionType type) {
         this.name = name;
         this.v1 = Vector.getMinimum(v1, v2);
         this.v2 = Vector.getMaximum(v1, v2);
@@ -170,7 +122,7 @@ public class Region implements Saveable {
         this.data = data;
         flags = new HashSet<RegionFlag>();
         for(RegionFlag flag : RegionFlag.values()) {
-            if(flag.getDefault()) {
+            if(flag.isDefault()) {
                 flags.add(flag);
             }
         }
@@ -182,8 +134,8 @@ public class Region implements Saveable {
      * @param record A line from a save file.
      * @throws IOException Thrown when vectors can't be loaded.
      */
-    public Region(String record) throws IOException {
-        String[] recordSplit = record.split("\t");
+    public Region(final String record) throws IOException {
+        final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         v1 = getBlockPos(recordSplit[1]);
         v2 = getBlockPos(recordSplit[2]);
@@ -209,26 +161,23 @@ public class Region implements Saveable {
      * @param string String containing coded block position.
      * @return The corresponding new block position.
      */
-    private Vector getBlockPos(String string) {
-        String[] split = string.replace("(", "").replace(")", "").split(",");
-        double x = Double.parseDouble(split[0]);
-        double y = Double.parseDouble(split[1]);
-        double z = Double.parseDouble(split[2]);
+    private Vector getBlockPos(final String string) {
+        final String[] split = string.replace("(", "").replace(")", "").split(",");
+        final double x = Double.parseDouble(split[0]);
+        final double y = Double.parseDouble(split[1]);
+        final double z = Double.parseDouble(split[2]);
         return new Vector(x, y, z);
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public String getRecord() {
-        ArrayList<String> record = new ArrayList<String>();
+        final ArrayList<String> record = new ArrayList<String>();
         record.add(name);
         record.add(v1.toString());
         record.add(v2.toString());
         record.add(new SaveableLocation(warp).toString());
         record.add(owner == null ? "" : owner.getName());
-        ArrayList<String> memberList = new ArrayList<String>();
+        final ArrayList<String> memberList = new ArrayList<String>();
         for(SaveablePlayer member : members) {
             memberList.add(member.getName());
         }
@@ -256,7 +205,7 @@ public class Region implements Saveable {
      * Change the owner of the region.
      * @param owner New owner name.
      */
-    public void changeOwner(SaveablePlayer owner) {
+    public void changeOwner(final SaveablePlayer owner) {
         this.owner = owner;
     }
 
@@ -264,7 +213,7 @@ public class Region implements Saveable {
      * Get the region members.
      * @return Region members.
      */
-    public HashSet<SaveablePlayer> getMembers() {
+    public Set<SaveablePlayer> getMembers() {
         return members;
     }
 
@@ -272,15 +221,24 @@ public class Region implements Saveable {
      * Change the name of the region.
      * @param newName New region name.
      */
-    public void changeName(String newName) {
+    public void changeName(final String newName) {
         name = newName;
     }
 
+    /**
+     * Get the name of the owner of this region.
+     * @return Owner name.
+     */
     public String getOwnerName() {
-        return owner != null ? owner.getDisplayName() : "";
+        return owner == null ? "" : owner.getNick();
     }
 
-    public boolean isOwner(SaveablePlayer player) {
+    /**
+     * Check if the player owns this region.
+     * @param player Player to check.
+     * @return <code>true</code> if this is the owner of the region, <code>false</code> otherwise.
+     */
+    public boolean isOwner(final SaveablePlayer player) {
         return player != null && player.equals(owner);
     }
 
@@ -289,7 +247,7 @@ public class Region implements Saveable {
      * @param direction Direction to expand.
      * @param distance Distance to expand.
      */
-    public void expand(Direction direction, int distance) {
+    public void expand(final Direction direction, final int distance) {
         if(direction.equals(Direction.NORTH)) {
             v1.add(new Vector(0, 0, -distance));
         } else if(direction.equals(Direction.SOUTH)) {
@@ -305,11 +263,19 @@ public class Region implements Saveable {
         }
     }
 
+    /**
+     * Get the region's rank.
+     * @return Player rank of the region.
+     */
     public PlayerRank getRank() {
         return rank;
     }
 
-    public void setRank(PlayerRank rank) {
+    /**
+     * Set this regions player rank.
+     * @param rank Rank to set.
+     */
+    public void setRank(final PlayerRank rank) {
         this.rank = rank;
     }
 
@@ -317,7 +283,7 @@ public class Region implements Saveable {
      * Get this regions flags.
      * @return The region flags.
      */
-    public HashSet<RegionFlag> getFlags() {
+    public Set<RegionFlag> getFlags() {
         return flags;
     }
 
@@ -326,7 +292,7 @@ public class Region implements Saveable {
      * @param v1 New v1.
      * @param v2 New v2.
      */
-    public void changeV(Vector v1, Vector v2) {
+    public void changeV(final Vector v1, final Vector v2) {
         this.v1 = v1;
         this.v2 = v2;
     }
@@ -335,7 +301,7 @@ public class Region implements Saveable {
      * Place single corner markers around the region.
      */
     public void placeCornerMarkers() {
-        WEWorld world = new WEWorld(getWorld());
+        final EditableWorld world = new EditableWorld(getWorld());
         world.buildTower(v1.getBlockX(), v1.getBlockZ(), 1, Material.FENCE, Material.TORCH);
         world.buildTower(v2.getBlockX(), v1.getBlockZ(), 1, Material.FENCE, Material.TORCH);
         world.buildTower(v1.getBlockX(), v2.getBlockZ(), 1, Material.FENCE, Material.TORCH);
@@ -346,7 +312,7 @@ public class Region implements Saveable {
      * Place 3 wide side markers around the region.
      */
     public void placeMoreMarkers() {
-        WEWorld world = new WEWorld(getWorld());
+        final EditableWorld world = new EditableWorld(getWorld());
         world.buildLine(v1.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
         world.buildLine(v2.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
         world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v1.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
@@ -357,7 +323,7 @@ public class Region implements Saveable {
      * Place 10 block high towers in each corner of the region.
      */
     public void placeTowers() {
-        WEWorld world = new WEWorld(getWorld());
+        final EditableWorld world = new EditableWorld(getWorld());
         world.buildTower(v1.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
         world.buildTower(v1.getBlockX(), v2.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
         world.buildTower(v2.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
@@ -377,7 +343,7 @@ public class Region implements Saveable {
      * @param region Region to check.
      * @return <code>true</code> if this region overlaps with the other, <code>false</code> otherwise.
      */
-    public boolean hasOverlap(Region region) {
+    public boolean hasOverlap(final Region region) {
         return !(v1.getX() > region.getV2().getX() || v2.getX() < region.getV1().getX() || v1.getZ() > region.getV2().getZ() || v2.getZ() < region.getV1().getZ() || v1.getY() > region.getV2().getY() || v2.getY() < region.getV1().getY());
     }
 
@@ -385,7 +351,7 @@ public class Region implements Saveable {
      * Set the warp point of a region.
      * @param location Location to set as warp.
      */
-    public void setWarp(Location location) {
+    public void setWarp(final Location location) {
         warp = location;
     }
 
@@ -409,7 +375,7 @@ public class Region implements Saveable {
      * Change the name of the region.
      * @param name New name of the region.
      */
-    public void rename(String name) {
+    public void rename(final String name) {
         this.name = name;
     }
 
@@ -418,7 +384,7 @@ public class Region implements Saveable {
      * @param location Location to check.
      * @return <code>true</code> if the location is contained within the region, <code>false</code> otherwise.
      */
-    public boolean contains(Location location) {
+    public boolean contains(final Location location) {
         return contains(location.getWorld(), location.getX(), location.getY(), location.getZ());
     }
 
@@ -430,12 +396,8 @@ public class Region implements Saveable {
      * @param z Z-Coordinate.
      * @return <code>true</code> if the location is contained within the region, <code>false</code> otherwise.
      */
-    public boolean contains(World world, double x, double y, double z) {
-        if(warp.getWorld().equals(world) && x > v1.getX() && x < v2.getX() + 1 && z > v1.getZ() && z < v2.getZ() + 1 && y > v1.getY() && y < v2.getY() + 1) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean contains(final World world, final double x, final double y, final double z) {
+        return warp.getWorld().equals(world) && x > v1.getX() && x < v2.getX() + 1 && z > v1.getZ() && z < v2.getZ() + 1 && y > v1.getY() && y < v2.getY() + 1;
     }
 
     /**
@@ -459,7 +421,7 @@ public class Region implements Saveable {
      * @param player Player name.
      * @return <code>true</code> if player is a member, <code>false</code> otherwise.
      */
-    public boolean hasMember(SaveablePlayer player) {
+    public boolean hasMember(final SaveablePlayer player) {
         return members.contains(player);
     }
 
@@ -468,7 +430,7 @@ public class Region implements Saveable {
      * @param player Player name.
      * @return <code>true</code> if the player was not already a member of the region, <code>false</code> otherwise.
      */
-    public boolean addMember(SaveablePlayer player) {
+    public boolean addMember(final SaveablePlayer player) {
         return members.add(player);
     }
 
@@ -477,7 +439,7 @@ public class Region implements Saveable {
      * @param player Player name.
      * @return <code>true</code> if the player was a member of the region, <code>false</code> otherwise.
      */
-    public boolean delMember(SaveablePlayer player) {
+    public boolean delMember(final SaveablePlayer player) {
         return members.remove(player);
     }
 
@@ -518,7 +480,7 @@ public class Region implements Saveable {
      * @param flag Flag to check.
      * @return <code>true</code> if this flag is set, <code>false</code> otherwise.
      */
-    public boolean hasFlag(RegionFlag flag) {
+    public boolean hasFlag(final RegionFlag flag) {
         return flags.contains(flag);
     }
 
@@ -527,7 +489,7 @@ public class Region implements Saveable {
      * @param flag Flag to set.
      * @return <code>true</code> if this flag was not already set, <code>false</code> otherwise.
      */
-    public boolean setFlag(RegionFlag flag) {
+    public boolean setFlag(final RegionFlag flag) {
         return flags.add(flag);
     }
 
@@ -536,7 +498,7 @@ public class Region implements Saveable {
      * @param flag Flag to toggle.
      * @return <code>true</code> if this flag is now set, <code>false</code> otherwise.
      */
-    public boolean toggleFlag(RegionFlag flag) {
+    public boolean toggleFlag(final RegionFlag flag) {
         if(!flags.add(flag)) {
             return !flags.remove(flag);
         }
