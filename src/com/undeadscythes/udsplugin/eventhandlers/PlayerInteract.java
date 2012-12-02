@@ -19,11 +19,11 @@ import org.bukkit.util.Vector;
  */
 public class PlayerInteract extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerInteractEvent event) {
-        Action action = event.getAction();
-        SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
-        Material inHand = player.getItemInHand().getType();
-        Block block = event.getClickedBlock();
+    public void onEvent(final PlayerInteractEvent event) {
+        final Action action = event.getAction();
+        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final Material inHand = player.getItemInHand().getType();
+        final Block block = event.getClickedBlock();
         if(action == Action.LEFT_CLICK_AIR) {
             if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
                 compassTo(player);
