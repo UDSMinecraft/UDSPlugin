@@ -39,6 +39,8 @@ public class AsyncPlayerChat implements Listener {
     public void onEvent(AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
         SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        String logMessage = player.getDisplayName() + ": " + event.getMessage();
+        Bukkit.getLogger().info(logMessage);
         if(!player.newChat()) {
             player.sendMessage(Color.ERROR + "You have been jailed for spamming chat.");
             Bukkit.broadcastMessage(Color.BROADCAST + player.getDisplayName() + " gets jail time for spamming chat.");
