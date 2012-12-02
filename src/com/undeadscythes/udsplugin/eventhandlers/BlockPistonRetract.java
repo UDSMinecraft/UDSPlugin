@@ -16,12 +16,12 @@ public class BlockPistonRetract extends ListenerWrapper implements Listener {
     public void onEvent(BlockPistonRetractEvent event) {
         Location piston = event.getBlock().getLocation();
         Location block = event.getRetractLocation();
-        ArrayList<Region> testRegions1 = regionsHere(block);
+        List<Region> testRegions1 = regionsHere(block);
         if(!testRegions1.isEmpty()) {
             boolean mixedRegions = false;
             boolean totallyEnclosed = false;
             for(Region i : testRegions1) {
-                ArrayList<Region> testRegions2 = regionsHere(piston);
+                List<Region> testRegions2 = regionsHere(piston);
                 if(!testRegions2.isEmpty()) {
                     for(Region j : testRegions2) {
                         if(!i.equals(j)) {

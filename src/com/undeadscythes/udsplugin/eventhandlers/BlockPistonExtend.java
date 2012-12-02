@@ -20,12 +20,12 @@ public class BlockPistonExtend extends ListenerWrapper implements Listener {
         }
         Location piston = event.getBlock().getLocation();
         for(Iterator<Block> i = blocks.iterator(); i.hasNext();) {
-            ArrayList<Region> testRegions1 = regionsHere(i.next().getLocation());
+            List<Region> testRegions1 = regionsHere(i.next().getLocation());
             if(!testRegions1.isEmpty()) {
                 boolean mixedRegions = false;
                 boolean totallyEnclosed = false;
                 for(Region j : testRegions1) {
-                    ArrayList<Region> testRegions2 = regionsHere(piston);
+                    List<Region> testRegions2 = regionsHere(piston);
                     if(!testRegions2.isEmpty()) {
                         for(Region k : testRegions2) {
                             if(!j.equals(k)) {

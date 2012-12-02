@@ -146,8 +146,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @return <code>true</code> if event needs to be cancelled.
      */
     public void wand1(final SaveablePlayer player, final Block block) {
-        Session session = player.forceSession();
-        session.setV1(new Vector(block.getX(), block.getY(), block.getZ()));
+        WESession session = player.forceSession();
+        session.setV1(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
         player.sendMessage(Color.MESSAGE + "Point 1 set.");
         if(session.getV1() != null && session.getV2() != null) {
             player.sendMessage(Color.MESSAGE.toString() + session.getVolume() + " blocks selected.");
@@ -155,8 +155,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     }
 
     public void wand2(final SaveablePlayer player, final Block block) {
-        Session session = player.forceSession();
-        session.setV2(new Vector(block.getX(), block.getY(), block.getZ()));
+        WESession session = player.forceSession();
+        session.setV2(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
         player.sendMessage(Color.MESSAGE + "Point 2 set.");
         if(session.getV1() != null && session.getV2() != null) {
             player.sendMessage(Color.MESSAGE.toString() + session.getVolume() + " blocks selected.");
@@ -171,7 +171,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param blockFace Face of block clicked.
      */
     public void compassTo(final SaveablePlayer player) {
-        Location location = player.getTargetBlock(null, Config.COMPASS_RANGE).getLocation();
+        Location location = player.getTargetBlock(null, Config.compassRange).getLocation();
         location.setYaw(player.getLocation().getYaw());
         location.setPitch(player.getLocation().getPitch());
         player.move(Warp.findSafePlace(location));
@@ -196,7 +196,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      */
     public void paperSimple(final SaveablePlayer player, final Location location) {
         if(!regionsHere(location).isEmpty()) {
-            ArrayList<Region> testRegions = regionsHere(location);
+            List<Region> testRegions = regionsHere(location);
             for(Region region : testRegions) {
                 if(region.getOwner().equals(player)) {
                     player.sendMessage(Color.MESSAGE + "You own this block.");
@@ -213,7 +213,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
 
     public void paperComplex(final SaveablePlayer player, final Location location) {
         if(!regionsHere(location).isEmpty()) {
-            ArrayList<Region> testRegions = regionsHere(location);
+            List<Region> testRegions = regionsHere(location);
             for(Region region : testRegions) {
                 player.sendMessage(Color.MESSAGE + "--- Region " + region.getName() + " ---");
                 player.sendMessage(Color.TEXT + "Owner: " + region.getOwnerName());

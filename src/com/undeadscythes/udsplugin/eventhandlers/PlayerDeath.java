@@ -15,7 +15,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         SaveablePlayer victim = UDSPlugin.getOnlinePlayers().get(event.getEntity().getName());
         String victimName = victim.getName();
         SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victimName);
-        event.setDeathMessage(event.getDeathMessage().replace(victimName, udsVictim.getDisplayName()));
+        event.setDeathMessage(event.getDeathMessage().replace(victimName, udsVictim.getNick()));
         if(victim.hasPermission(Perm.BACK_ON_DEATH)) {
             udsVictim.setBackPoint(victim.getLocation());
         }
@@ -76,7 +76,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
 
     public void bountyKill(SaveablePlayer udsKiller, SaveablePlayer udsVictim) {
         int total = udsVictim.getBounty();
-        Bukkit.broadcastMessage(Color.BROADCAST + udsKiller.getDisplayName() + " collected the " + total + " " + Config.CURRENCY + " bounty on " + udsVictim.getDisplayName() + ".");
+        Bukkit.broadcastMessage(Color.BROADCAST + udsKiller.getNick() + " collected the " + total + " " + Config.currency + " bounty on " + udsVictim.getNick() + ".");
         udsKiller.credit(total);
         udsVictim.setBounty(0);
     }
