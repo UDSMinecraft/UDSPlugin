@@ -76,19 +76,7 @@ public class RegionCmd extends AbstractPlayerCommand {
                 }
             } else if(args[0].equals("info")) {
                 if((region = getRegion(args[1])) != null) {
-                    player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " info:");
-                    player.sendMessage(Color.TEXT + "Owner: " + region.getOwnerName());
-                    player.sendMessage(Color.TEXT + "Members: " + StringUtils.join(region.getMembers(), ", "));
-                    player.sendMessage(Color.TEXT + "Type: " + region.getType().toString());
-                    String flags = "";
-                    if(!region.getFlags().isEmpty()) {
-                        for(RegionFlag test : region.getFlags()) {
-                            flags = flags.concat(test.toString() + ", ");
-                        }
-                    }
-                    if(!flags.isEmpty()) {
-                        player.sendMessage(Color.TEXT + "Flags: " + flags.substring(0, flags.length() - 2));
-                    }
+                    region.sendInfo(player);
                 }
             } else if(args[0].equals("reset")) {
                 if((session = getSession()) != null && hasTwoPoints(session) && (region = getRegion(args[1])) != null) {

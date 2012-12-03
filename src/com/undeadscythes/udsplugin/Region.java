@@ -243,6 +243,35 @@ public class Region implements Saveable {
     }
 
     /**
+     *
+     * @param player
+     */
+    public void sendInfo(final SaveablePlayer player) {
+        player.sendMessage(Color.MESSAGE + "Region " + name + " info:");
+        player.sendMessage(Color.TEXT + "Owner: " + owner.getName() + (rank.equals(PlayerRank.NONE) ? "" : " (" + rank.toString() + ")"));
+        player.sendMessage(Color.TEXT + "Members: " + StringUtils.join(members, ", "));
+        player.sendMessage(Color.TEXT + "Type: " + type.toString());
+        String flagString = "";
+        if(!flags.isEmpty()) {
+            for(RegionFlag test : flags) {
+                flagString = flagString.concat(test.toString() + ", ");
+            }
+            player.sendMessage(Color.TEXT + "Flags: " + flagString.substring(0, flagString.length() - 2));
+        } else {
+            player.sendMessage(Color.TEXT + "No flags.");
+        }
+        player.sendMessage(Color.TEXT + "Volume: " + getVolume());
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public int getVolume() {
+        return (v2.getBlockX() - v1.getBlockX()) * (v2.getBlockY() - v1.getBlockY()) * (v2.getBlockZ() - v1.getBlockZ());
+    }
+
+    /**
      * Expand this region in some direction.
      * @param direction Direction to expand.
      * @param distance Distance to expand.
