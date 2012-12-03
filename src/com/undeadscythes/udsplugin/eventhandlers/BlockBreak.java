@@ -9,7 +9,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.inventory.*;
 
 /**
- * Description
+ * Fired when a player breaks a block.
  * @author UndeadScythes
  */
 public class BlockBreak implements Listener {
@@ -20,7 +20,7 @@ public class BlockBreak implements Listener {
         final SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
         if(player.isJailed()) {
             event.setCancelled(true);
-        } else if(!player.canBuildHere(event.getBlock().getLocation().add(UDSPlugin.HALF_BLOCK))) {
+        } else if(!player.canBuildHere(event.getBlock().getLocation())) {
             event.setCancelled(true);
             player.sendMessage(Message.CANT_BUILD_HERE);
         } else if(isSpecialSign(event.getBlock()) && !player.isSneaking()) {
