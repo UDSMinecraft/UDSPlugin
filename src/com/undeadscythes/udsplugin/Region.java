@@ -248,27 +248,27 @@ public class Region implements Saveable {
      */
     public void sendInfo(final SaveablePlayer player) {
         player.sendMessage(Color.MESSAGE + "Region " + name + " info:");
-        player.sendMessage(Color.TEXT + "Owner: " + owner.getName() + (rank.equals(PlayerRank.NONE) ? "" : " (" + rank.toString() + ")"));
+        player.sendMessage(Color.TEXT + "Owner: " + (owner == null ? "" : owner.getName()) + (rank.equals(PlayerRank.NONE) ? "" : " (" + rank.toString() + ")"));
         player.sendMessage(Color.TEXT + "Members: " + StringUtils.join(members, ", "));
         player.sendMessage(Color.TEXT + "Type: " + type.toString());
-        String flagString = "";
-        if(!flags.isEmpty()) {
+        if(flags.isEmpty()) {
+            player.sendMessage(Color.TEXT + "No flags.");
+        } else {
+            String flagString = "";
             for(RegionFlag test : flags) {
                 flagString = flagString.concat(test.toString() + ", ");
             }
             player.sendMessage(Color.TEXT + "Flags: " + flagString.substring(0, flagString.length() - 2));
-        } else {
-            player.sendMessage(Color.TEXT + "No flags.");
         }
         player.sendMessage(Color.TEXT + "Volume: " + getVolume());
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getVolume() {
-        return (v2.getBlockX() - v1.getBlockX()) * (v2.getBlockY() - v1.getBlockY()) * (v2.getBlockZ() - v1.getBlockZ());
+        return (v2.getBlockX() - v1.getBlockX() + 1) * (v2.getBlockY() - v1.getBlockY() + 1) * (v2.getBlockZ() - v1.getBlockZ() + 1);
     }
 
     /**
