@@ -1,31 +1,34 @@
 package com.undeadscythes.udsplugin;
 
 import org.bukkit.*;
+import org.bukkit.util.*;
 
 /**
  * Geometrical directions.
  * @author UndeadScythes
  */
 public enum Direction {
-    NORTH(-22.5, 22.5, true),
-    NORTH_EAST(22.5, 67.5, false),
-    EAST(67.5, 112.5, true),
-    SOUTH_EAST(112.5, 157.5, false),
-    SOUTH(157.5, 202.5, true),
-    SOUTH_WEST(202.5, 247.5, false),
-    WEST(247.5, 292.5, true),
-    NORTH_WEST(292.5, 337.5, false),
-    UP(0, 0, true),
-    DOWN(0, 0, true);
+    NORTH(-22.5, 22.5, true, new Vector(0, 0 , -1)),
+    NORTH_EAST(22.5, 67.5, false, null),
+    EAST(67.5, 112.5, true, new Vector(1, 0, 0)),
+    SOUTH_EAST(112.5, 157.5, false, null),
+    SOUTH(157.5, 202.5, true, new Vector(0, 0, 1)),
+    SOUTH_WEST(202.5, 247.5, false, null),
+    WEST(247.5, 292.5, true, new Vector(-1, 0, 0)),
+    NORTH_WEST(292.5, 337.5, false, null),
+    UP(0, 0, true, new Vector(0, 1, 0)),
+    DOWN(0, 0, true, new Vector(0, -1, 0));
 
     private double min;
     private double max;
     private boolean cardinal;
+    private Vector vector;
 
-    private Direction(final double min, final double max, final boolean cardinal) {
+    private Direction(final double min, final double max, final boolean cardinal, final Vector vector) {
         this.min = min;
         this.max = max;
         this.cardinal = cardinal;
+        this.vector = vector;
     }
 
     /**
@@ -79,5 +82,13 @@ public enum Direction {
      */
     public boolean isCardinal() {
         return cardinal;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Vector toVector() {
+        return vector;
     }
 }
