@@ -21,10 +21,6 @@ public class UDSPlugin extends JavaPlugin {
      */
     public final static Vector HALF_BLOCK = new Vector(.5, .5, .5);
     /**
-     * Regex for an integer.
-     */
-    public final static String INT_REGEX = "[0-9][0-9]*";
-    /**
      * Where the issue/suggestion tickets are stored.
      */
     public final static String TICKET_PATH = "tickets.txt";
