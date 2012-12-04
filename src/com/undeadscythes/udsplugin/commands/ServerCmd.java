@@ -12,7 +12,7 @@ public class ServerCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(numArgsHelp(1) && args[0].equals("stop")) {
             for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
                 target.kickPlayer("Server is shutting down.");

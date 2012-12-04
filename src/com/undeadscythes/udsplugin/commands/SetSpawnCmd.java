@@ -11,7 +11,7 @@ public class SetSpawnCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         new EditableWorld(player.getWorld()).setSpawnLocation(player.getLocation());
         player.sendMessage(Color.MESSAGE + "Spawn location moved.");
     }

@@ -13,7 +13,7 @@ public class VIPCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(args.length == 0) {
             if(player.getRank().equals(PlayerRank.VIP)) {
                 player.sendMessage(Color.MESSAGE + "You have " + player.getVIPTimeString()+ " left in VIP.");

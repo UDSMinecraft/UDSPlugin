@@ -12,7 +12,7 @@ public class DemoteCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
             PlayerRank rank;

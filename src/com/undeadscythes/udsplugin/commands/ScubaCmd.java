@@ -13,7 +13,7 @@ public class ScubaCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(player.getInventory().getHelmet() == null) {
             if(player.getItemInHand().getType() == Material.GLASS) {
                 player.getInventory().setHelmet(new ItemStack(Material.GLASS));

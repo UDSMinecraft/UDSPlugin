@@ -13,7 +13,7 @@ public class PetCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         UUID pet;
         int price;

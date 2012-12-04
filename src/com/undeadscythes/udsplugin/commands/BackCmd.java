@@ -11,7 +11,7 @@ public class BackCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(!player.quietTeleport(player.getBack())) {
             player.sendMessage(Color.ERROR + "You can't teleport back at this time.");
         }

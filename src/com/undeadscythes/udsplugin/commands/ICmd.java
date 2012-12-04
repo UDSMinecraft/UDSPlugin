@@ -12,7 +12,7 @@ public class ICmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(minArgsHelp(1) && maxArgsHelp(2)) {
             ItemStack item;
             if((item = getItem(args[0])) != null) {

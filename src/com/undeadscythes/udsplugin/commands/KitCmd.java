@@ -12,7 +12,7 @@ public class KitCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "--- Available Kits ---");
             for(Kit kit : Config.kits) {

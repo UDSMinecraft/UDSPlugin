@@ -9,7 +9,7 @@ import org.bukkit.enchantments.*;
  */
 public class EnchantCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         int level;
         Enchantment enchantment;
         if(args.length == 0) {

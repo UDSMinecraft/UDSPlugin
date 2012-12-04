@@ -11,7 +11,7 @@ public class SunCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         player.getWorld().setStorm(false);
         player.getWorld().setThundering(false);
         player.sendMessage(Color.MESSAGE + "Clear skies on the way.");

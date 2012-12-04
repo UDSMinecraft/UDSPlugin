@@ -11,7 +11,7 @@ public class GodCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "You now have god mode " + (player.toggleGodMode() ? "en" : "dis") + "abled.");

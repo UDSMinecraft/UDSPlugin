@@ -14,7 +14,7 @@ public class WhoCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         TreeMap<PlayerRank, String> lists = new TreeMap<PlayerRank, String>();
         for(PlayerRank rank : PlayerRank.values()) {
             lists.put(rank, "");

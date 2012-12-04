@@ -392,7 +392,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Request getRequest() {
@@ -1204,7 +1204,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     /**
      * Used when a player on the server executes a command.
      * @param player Player who ran the command.
-     * @param args Arguements of the command.
+     * @param args Arguments of the command.
      */
-    public abstract void playerExecute(SaveablePlayer player, String[] args);
+    public abstract void playerExecute(final SaveablePlayer player, final String[] args);
 }

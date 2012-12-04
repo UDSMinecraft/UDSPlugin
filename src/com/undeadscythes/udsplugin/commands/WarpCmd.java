@@ -13,7 +13,7 @@ public class WarpCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         Warp warp;
         if(args.length == 0) {
             TreeSet<String> warps = new TreeSet<String>();

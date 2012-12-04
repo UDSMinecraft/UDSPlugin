@@ -11,7 +11,7 @@ public class NCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         Request request;
         if((request = getRequest()) != null) {
             UDSPlugin.getRequests().remove(player.getName());

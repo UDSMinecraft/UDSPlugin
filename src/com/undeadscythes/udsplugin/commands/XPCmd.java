@@ -9,7 +9,7 @@ import org.bukkit.entity.*;
  */
 public class XPCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(numArgsHelp(2) && (target = getMatchingOnlinePlayer(args[0])) != null) {
             if(args[1].matches("[0-9][0-9]*")) {

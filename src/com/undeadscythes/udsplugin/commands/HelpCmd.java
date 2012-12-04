@@ -214,7 +214,7 @@ public class HelpCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(maxArgsHelp(2)) {
             if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
                 TreeSet<Usage> usages = new TreeSet<Usage>();

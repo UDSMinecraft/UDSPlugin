@@ -12,7 +12,7 @@ public class RCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(minArgsHelp(1) && (target = getWhisperer()) != null && isOnline(target)) {
             String message = player.getNick() + " > " + target.getNick() + ": " + StringUtils.join(args, " ");

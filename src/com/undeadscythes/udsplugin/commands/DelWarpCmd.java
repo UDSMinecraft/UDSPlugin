@@ -11,7 +11,7 @@ public class DelWarpCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         Warp warp;
         if(numArgsHelp(1) && (warp = getWarp(args[0])) != null) {
             UDSPlugin.getWarps().remove(warp.getName());

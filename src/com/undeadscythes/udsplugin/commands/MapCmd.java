@@ -13,7 +13,7 @@ public class MapCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(canAfford(Config.mapCost)) {
             player.giveAndDrop(new ItemStack(Material.MAP, 1, (short)0, Config.mapData));
         }

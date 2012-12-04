@@ -14,7 +14,7 @@ public class RegionCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         WESession session;
         Region region;
         Region.RegionType type;

@@ -12,7 +12,7 @@ public class PowertoolCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(args.length >= 1 && notAirHand()) {
             player.setPowertoolID(player.getItemInHand().getTypeId());
             player.setPowertool(StringUtils.join(args, " ").replaceFirst("/", ""));

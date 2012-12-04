@@ -11,7 +11,7 @@ public class InvSeeCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(args.length == 0) {
             if(player.getInventoryCopy() != null) {

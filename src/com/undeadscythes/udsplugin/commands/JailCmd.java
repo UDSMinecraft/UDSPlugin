@@ -13,7 +13,7 @@ public class JailCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(minArgsHelp(1) && maxArgsHelp(3)) {
             if((target = getMatchingPlayer(args[0])) != null && isOnline(target) && notSelf(target) && notJailed(target)) {

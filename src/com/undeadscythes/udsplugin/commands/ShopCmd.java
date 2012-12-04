@@ -12,7 +12,7 @@ public class ShopCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         Region shop;
         SaveablePlayer target;
         int price;

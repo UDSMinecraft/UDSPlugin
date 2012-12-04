@@ -14,7 +14,7 @@ public class SpawnerCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(numArgsHelp(1)) {
             final Block block = player.getTargetBlock(null, 5);
             if(block.getType() == Material.MOB_SPAWNER) {

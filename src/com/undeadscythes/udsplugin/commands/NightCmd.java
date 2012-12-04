@@ -11,7 +11,7 @@ public class NightCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         player.getWorld().setTime(14000);
         player.sendMessage(Color.MESSAGE + "Summoning the moon.");
     }

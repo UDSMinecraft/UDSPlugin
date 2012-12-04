@@ -13,7 +13,7 @@ public class MoneyCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "You have " + player.getMoney() + " credits.");

@@ -11,7 +11,7 @@ public class PrivateCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(numArgsHelp(1)) {
             ChatRoom chatRoom = UDSPlugin.getChatRooms().get(args[0]);
             if(chatRoom == null) {

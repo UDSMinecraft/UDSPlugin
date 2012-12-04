@@ -11,7 +11,7 @@ public class DayCmd extends AbstractPlayerCommand {
      * @inheritDoc
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         player.getWorld().setTime(0);
         player.sendMessage(Color.MESSAGE + "Summoning the sun.");
     }

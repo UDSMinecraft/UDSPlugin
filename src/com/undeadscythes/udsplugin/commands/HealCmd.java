@@ -11,7 +11,7 @@ public class HealCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         String message = Color.MESSAGE + "You have been healed.";
         if(args.length == 0) {

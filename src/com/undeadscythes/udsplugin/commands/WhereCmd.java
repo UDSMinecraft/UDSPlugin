@@ -12,7 +12,7 @@ public class WhereCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         Location playerLocation = player.getLocation();
         Location spawnLocation = player.getWorld().getSpawnLocation();
         int distance = (int)playerLocation.distance(spawnLocation);

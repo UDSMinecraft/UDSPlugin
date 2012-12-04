@@ -12,7 +12,7 @@ public class StackCmd extends AbstractPlayerCommand {
      * @inheritDocs
      */
     @Override
-    public void playerExecute(SaveablePlayer player, String[] args) {
+    public void playerExecute(final SaveablePlayer player, final String[] args) {
         ItemStack[] items = player.getInventory().getContents();
         final int len = items.length;
         boolean affected = false;
