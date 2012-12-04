@@ -10,7 +10,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerShearEntity extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerShearEntityEvent event) {
+    public void onEvent(final PlayerShearEntityEvent event) {
 
     }
 }

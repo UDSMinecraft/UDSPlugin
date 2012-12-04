@@ -11,7 +11,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerRespawn extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerRespawnEvent event) {
+    public void onEvent(final PlayerRespawnEvent event) {
         final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         Location location = null;
         Region home;

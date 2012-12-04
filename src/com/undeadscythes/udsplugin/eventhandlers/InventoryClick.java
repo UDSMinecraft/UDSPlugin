@@ -15,7 +15,7 @@ import org.bukkit.inventory.*;
  */
 public class InventoryClick extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(InventoryClickEvent event) {
+    public void onEvent(final InventoryClickEvent event) {
         if(event.getInventory().getHolder() instanceof Chest) {
             final Chest chest = (Chest) event.getInventory().getHolder();
             if(chest.getBlock().getRelative(BlockFace.UP).getType() == Material.WALL_SIGN) {

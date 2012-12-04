@@ -11,7 +11,7 @@ import org.bukkit.event.entity.*;
  */
 public class PlayerDeath extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerDeathEvent event) {
+    public void onEvent(final PlayerDeathEvent event) {
         SaveablePlayer victim = UDSPlugin.getOnlinePlayers().get(event.getEntity().getName());
         String victimName = victim.getName();
         SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victimName);

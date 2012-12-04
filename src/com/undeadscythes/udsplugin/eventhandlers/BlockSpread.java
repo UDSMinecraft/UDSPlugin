@@ -12,7 +12,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockSpread extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockSpreadEvent event) {
+    public void onEvent(final BlockSpreadEvent event) {
         if(event.getSource().getType().equals(Material.FIRE) && !hasFlag(event.getNewState().getLocation(), RegionFlag.FIRE)) {
             event.setCancelled(true);
         } else if(event.getSource().getType().equals(Material.RED_MUSHROOM) || event.getSource().getType().equals(Material.BROWN_MUSHROOM) && !hasFlag(event.getNewState().getLocation(), RegionFlag.FOOD)) {

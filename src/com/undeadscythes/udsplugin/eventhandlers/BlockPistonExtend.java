@@ -13,7 +13,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockPistonExtend extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockPistonExtendEvent event) {
+    public void onEvent(final BlockPistonExtendEvent event) {
         List<Block> blocks = event.getBlocks();
         if(blocks.isEmpty()) {
             return;

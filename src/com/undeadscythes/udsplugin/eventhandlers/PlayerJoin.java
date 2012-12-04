@@ -13,7 +13,7 @@ import org.bukkit.inventory.*;
  */
 public class PlayerJoin implements Listener {
     @EventHandler
-    public void onEvent(PlayerJoinEvent event) {
+    public void onEvent(final PlayerJoinEvent event) {
         String playerName = event.getPlayer().getName();
         SaveablePlayer player;
         if(UDSPlugin.getPlayers().containsKey(playerName)) {

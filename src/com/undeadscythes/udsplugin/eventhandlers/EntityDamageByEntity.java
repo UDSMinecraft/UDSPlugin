@@ -12,7 +12,7 @@ import org.bukkit.event.entity.*;
  */
 public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(EntityDamageByEntityEvent event) {
+    public void onEvent(final EntityDamageByEntityEvent event) {
         Entity attacker = getAbsoluteEntity(event.getDamager());
         Entity defender = event.getEntity();
         if(attacker instanceof Player && defender instanceof Player) {

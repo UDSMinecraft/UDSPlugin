@@ -11,7 +11,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockForm extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockFormEvent event) {
+    public void onEvent(final BlockFormEvent event) {
         if(!hasFlag(event.getNewState().getLocation(), RegionFlag.SNOW)) {
             event.setCancelled(true);
         }

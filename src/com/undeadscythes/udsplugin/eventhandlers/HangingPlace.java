@@ -10,7 +10,7 @@ import org.bukkit.event.hanging.*;
  */
 public class HangingPlace extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(HangingPlaceEvent event) {
+    public void onEvent(final HangingPlaceEvent event) {
         SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         if(!player.canBuildHere(event.getBlock().getLocation())) {
             event.setCancelled(true);

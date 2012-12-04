@@ -10,7 +10,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerPortal extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerPortalEvent event) {
+    public void onEvent(final PlayerPortalEvent event) {
 
     }
 }

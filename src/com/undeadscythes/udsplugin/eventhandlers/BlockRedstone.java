@@ -10,7 +10,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockRedstone extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockRedstoneEvent event) {
+    public void onEvent(final BlockRedstoneEvent event) {
 
     }
 }

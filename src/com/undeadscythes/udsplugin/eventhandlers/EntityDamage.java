@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
  */
 public class EntityDamage extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(EntityDamageEvent event) {
+    public void onEvent(final EntityDamageEvent event) {
         if((event.getEntity() instanceof Player)) {
             SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(((Player)event.getEntity()).getName());
             if(player.hasGodMode() || (event.getCause().equals(DamageCause.DROWNING) && player.hasScuba())) {

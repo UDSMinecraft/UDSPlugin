@@ -10,7 +10,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerBucketFill extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerBucketFillEvent event) {
+    public void onEvent(final PlayerBucketFillEvent event) {
 
     }
 }

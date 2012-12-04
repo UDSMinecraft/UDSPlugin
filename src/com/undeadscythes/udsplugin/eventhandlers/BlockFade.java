@@ -11,7 +11,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockFade extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockFadeEvent event) {
+    public void onEvent(final BlockFadeEvent event) {
         if(!hasFlag(event.getBlock().getLocation(), RegionFlag.SNOW)) {
             event.setCancelled(true);
         }

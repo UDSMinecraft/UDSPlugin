@@ -12,7 +12,7 @@ import org.bukkit.event.block.*;
  */
 public class EntityBlockForm extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(EntityBlockFormEvent event) {
+    public void onEvent(final EntityBlockFormEvent event) {
         if(event.getEntity() instanceof Snowman && !hasFlag(event.getNewState().getLocation(), RegionFlag.SNOW)) {
             event.setCancelled(true);
         }

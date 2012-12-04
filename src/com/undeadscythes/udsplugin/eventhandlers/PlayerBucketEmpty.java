@@ -11,7 +11,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerBucketEmpty extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(PlayerBucketEmptyEvent event) {
+    public void onEvent(final PlayerBucketEmptyEvent event) {
         SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         Location location1 = event.getBlockClicked().getLocation();
         Location location2 = event.getBlockClicked().getRelative(event.getBlockFace()).getLocation();

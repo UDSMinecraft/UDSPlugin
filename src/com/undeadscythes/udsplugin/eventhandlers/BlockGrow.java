@@ -11,7 +11,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockGrow extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockGrowEvent event) {
+    public void onEvent(final BlockGrowEvent event) {
         if(!hasFlag(event.getNewState().getLocation(), RegionFlag.VINES)) {
             event.setCancelled(true);
         }

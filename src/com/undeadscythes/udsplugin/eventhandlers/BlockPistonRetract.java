@@ -13,7 +13,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockPistonRetract extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockPistonRetractEvent event) {
+    public void onEvent(final BlockPistonRetractEvent event) {
         Location piston = event.getBlock().getLocation();
         Location block = event.getRetractLocation();
         List<Region> testRegions1 = regionsHere(block);

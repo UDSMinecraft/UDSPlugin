@@ -11,7 +11,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockBurn extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockBurnEvent event) {
+    public void onEvent(final BlockBurnEvent event) {
         if(!hasFlag(event.getBlock().getLocation(), RegionFlag.FIRE)) {
             event.setCancelled(true);
         }

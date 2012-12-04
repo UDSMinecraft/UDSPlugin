@@ -11,7 +11,7 @@ import org.bukkit.event.vehicle.*;
  */
 public class VehicleEntityCollision extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(VehicleEntityCollisionEvent event) {
+    public void onEvent(final VehicleEntityCollisionEvent event) {
         final Vehicle vehicle = event.getVehicle();
         if(vehicle instanceof Minecart) {
             final Minecart cart = (Minecart)vehicle;

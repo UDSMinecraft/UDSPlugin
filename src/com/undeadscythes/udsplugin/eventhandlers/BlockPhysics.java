@@ -10,7 +10,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockPhysics extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockPhysicsEvent event) {
+    public void onEvent(final BlockPhysicsEvent event) {
         if(isInQuarry(event.getBlock().getLocation())) {
             event.setCancelled(true);
         }

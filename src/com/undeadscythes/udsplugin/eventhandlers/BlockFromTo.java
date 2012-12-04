@@ -11,7 +11,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockFromTo extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(BlockFromToEvent event) {
+    public void onEvent(final BlockFromToEvent event) {
         List<Region> regions = regionsHere(event.getToBlock().getLocation());
         if(!regions.isEmpty() && !regionsContain(regions, event.getBlock().getLocation())) {
             event.setCancelled(true);

@@ -13,7 +13,7 @@ import org.bukkit.inventory.*;
  */
 public class VehicleDestroy extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(VehicleDestroyEvent event) {
+    public void onEvent(final VehicleDestroyEvent event) {
         final Vehicle vehicle = event.getVehicle();
         if(vehicle instanceof Boat) {
             if(event.getAttacker() != null) {

@@ -14,7 +14,7 @@ import org.bukkit.inventory.*;
  */
 public class InventoryOpen extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(InventoryOpenEvent event) {
+    public void onEvent(final InventoryOpenEvent event) {
         InventoryHolder inventoryHolder = event.getInventory().getHolder();
         if(inventoryHolder instanceof Player) {
             return;

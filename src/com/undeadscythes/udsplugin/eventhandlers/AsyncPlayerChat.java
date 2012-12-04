@@ -24,7 +24,7 @@ public class AsyncPlayerChat implements Listener {
     }
 
     @EventHandler
-    public void onEvent(AsyncPlayerChatEvent event) throws IOException {
+    public void onEvent(final AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
         SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         String logMessage = player.getNick() + ": " + event.getMessage();

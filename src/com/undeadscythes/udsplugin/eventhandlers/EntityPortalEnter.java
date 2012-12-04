@@ -10,7 +10,7 @@ import org.bukkit.event.entity.*;
  */
 public class EntityPortalEnter extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(EntityPortalEnterEvent event) {
+    public void onEvent(final EntityPortalEnterEvent event) {
 
     }
 }

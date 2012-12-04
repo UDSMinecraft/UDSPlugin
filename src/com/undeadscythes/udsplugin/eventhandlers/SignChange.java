@@ -13,7 +13,7 @@ import org.bukkit.inventory.*;
  */
 public class SignChange extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(SignChangeEvent event) {
+    public void onEvent(final SignChangeEvent event) {
         final Block block = event.getBlock();
         final String line0 = event.getLine(0);
         final String line1 = event.getLine(1);

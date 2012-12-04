@@ -13,7 +13,7 @@ import org.bukkit.event.entity.*;
  */
 public class EntityDeath extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(EntityDeathEvent event) {
+    public void onEvent(final EntityDeathEvent event) {
         final Entity victim = event.getEntity();
         final EntityDamageEvent damageEvent = victim.getLastDamageCause();
         if(damageEvent instanceof EntityDamageByEntityEvent) {
