@@ -7,9 +7,6 @@ import com.undeadscythes.udsplugin.*;
  * @author UndeadScythes
  */
 public class DayCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDoc
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         player.getWorld().setTime(0);

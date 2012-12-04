@@ -12,7 +12,7 @@ public class RCmd extends AbstractPlayerCommand {
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(minArgsHelp(1) && (target = getWhisperer()) != null && isOnline(target)) {
-            String message = player.getNick() + " > " + target.getNick() + ": " + StringUtils.join(args, " ");
+            final String message = player.getNick() + " > " + target.getNick() + ": " + StringUtils.join(args, " ");
             player.sendMessage(Color.WHISPER + message);
             target.sendMessage(Color.WHISPER + message);
             player.setWhisperer(target);

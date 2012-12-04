@@ -1,12 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import org.bukkit.material.*;
-import org.bukkit.util.*;
 
 /**
  * Lets a player 'sit' on stair blocks.

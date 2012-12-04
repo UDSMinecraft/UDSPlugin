@@ -13,7 +13,7 @@ public class TGMCmd extends AbstractPlayerCommand {
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "You now have creative mode " + (player.toggleGameMode() ? "en" : "dis") + "abled.");
         } else if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
-            boolean gameMode = target.toggleGameMode();
+            final boolean gameMode = target.toggleGameMode();
             if(!player.equals(target)) {
                 player.sendMessage(Color.MESSAGE + target.getNick() + " now has creative mode " + (gameMode ? "en" : "dis") + "abled.");
             }

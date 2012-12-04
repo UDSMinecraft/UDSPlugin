@@ -11,12 +11,12 @@ public class InvSeeCmd extends AbstractPlayerCommand {
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(args.length == 0) {
-            if(player.getInventoryCopy() != null) {
+            if(player.getInventoryCopy() == null) {
+                player.sendMessage(Color.ERROR + "You have no saved inventory.");
+            } else {
                 player.loadInventory();
                 player.loadArmor();
                 player.sendMessage(Color.MESSAGE + "Your inventory has been restored.");
-            } else {
-                player.sendMessage(Color.ERROR + "You have no saved inventory.");
             }
         } else if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notSelf(target)) {
             if(player.getInventoryCopy() == null) {

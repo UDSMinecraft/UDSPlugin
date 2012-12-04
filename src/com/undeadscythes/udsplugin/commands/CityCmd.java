@@ -28,8 +28,8 @@ public class CityCmd extends AbstractPlayerCommand {
             int page;
             if(args[0].equals("new")) {
                 if(canAfford(Config.cityCost) && noCensor(args[1]) && notRegion(args[1])) {
-                    Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
-                    Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
+                    final Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
+                    final Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
                     city = new Region(args[1], min, max, player.getLocation(), player, "", Region.RegionType.CITY);
                     if(noOverlaps(city)) {
                         player.debit(Config.cityCost);
@@ -105,9 +105,9 @@ public class CityCmd extends AbstractPlayerCommand {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, SaveablePlayer player) {
-        List<Region> cities = UDSPlugin.getCities().getSortedValues(new SortByPop());
-        int pages = (cities.size() + 8) / 9;
+    private void sendPage(final int page, final SaveablePlayer player) {
+        final List<Region> cities = UDSPlugin.getCities().getSortedValues(new SortByPop());
+        final int pages = (cities.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There are no cities yet.");
         } else if(page > pages) {
@@ -133,11 +133,8 @@ public class CityCmd extends AbstractPlayerCommand {
  * @author UndeadScythe
  */
 class SortByPop implements Comparator<Region> {
-    /**
-     * @inheritDoc
-     */
     @Override
-    public int compare(Region region1, Region region2) {
+    public int compare(final Region region1, final Region region2) {
         return region2.getMemberNo() - region1.getMemberNo();
     }
 }

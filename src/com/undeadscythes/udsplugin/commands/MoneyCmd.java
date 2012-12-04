@@ -26,7 +26,7 @@ public class MoneyCmd extends AbstractPlayerCommand {
                 player.sendMessage(Color.ITEM + "Clan base cost: " + Color.TEXT + Config.baseCost + " " + Config.currencies);
                 player.sendMessage(Color.ITEM + "City cost: " + Color.TEXT + Config.cityCost + " " + Config.currencies);
             } else if(args[0].equals("rank")) {
-                List<SaveablePlayer> players = UDSPlugin.getPlayers().getSortedValues(new SortByMoney());
+                final List<SaveablePlayer> players = UDSPlugin.getPlayers().getSortedValues(new SortByMoney());
                 int printed = 0;
                 player.sendMessage(Color.MESSAGE + "Top 5 Richest Players:");
                 for(SaveablePlayer ranker : players) {
@@ -35,7 +35,7 @@ public class MoneyCmd extends AbstractPlayerCommand {
                         printed++;
                     }
                 }
-                int rank = players.indexOf(player);
+                final int rank = players.indexOf(player);
                 if(rank > 5 && player.getRank().compareTo(PlayerRank.MOD) < 0) {
                     player.sendMessage(Color.MESSAGE + "Your rank is " + rank + ".");
                 }
@@ -79,7 +79,7 @@ class SortByMoney implements Comparator<SaveablePlayer> {
      * @inheritDoc
      */
     @Override
-    public int compare(SaveablePlayer player1, SaveablePlayer player2) {
+    public int compare(final SaveablePlayer player1, final SaveablePlayer player2) {
         return player2.getMoney() - player1.getMoney();
     }
 }

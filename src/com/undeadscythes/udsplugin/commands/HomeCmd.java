@@ -21,8 +21,8 @@ public class HomeCmd extends AbstractPlayerCommand {
         } else if(args.length == 1) {
             if(args[0].equals("make")) {
                 if(canAfford(Config.homeCost) && noHome()) {
-                    Vector min = player.getLocation().add(-10, 28, -10).toVector();
-                    Vector max = player.getLocation().add(10, 12, 10).toVector();
+                    final Vector min = player.getLocation().add(-10, 28, -10).toVector();
+                    final Vector max = player.getLocation().add(10, 12, 10).toVector();
                     home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", Region.RegionType.HOME);
                     if(noOverlaps(home)) {
                         player.debit(Config.homeCost);
@@ -59,11 +59,11 @@ public class HomeCmd extends AbstractPlayerCommand {
                             message = message.concat(member.getNick() + ", ");
                         }
                     }
-                    if(!message.equals("")) {
+                    if(message.equals("")) {
+                        player.sendMessage(Color.MESSAGE + "You have no room mates.");
+                    } else {
                         player.sendMessage(Color.MESSAGE + "Your room mates are:");
                         player.sendMessage(Color.TEXT + message.substring(0, message.length() - 2));
-                    } else {
-                        player.sendMessage(Color.MESSAGE + "You have no room mates.");
                     }
                 }
             } else if(args[0].equals("lock")) {

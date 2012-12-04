@@ -12,7 +12,7 @@ public class TellCmd extends AbstractPlayerCommand {
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(minArgsHelp(2) && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notIgnored(target)) {
-            String message = player.getNick() + " > " + target.getNick() + ": " + StringUtils.join(args, " ", 1, args.length);
+            final String message = player.getNick() + " > " + target.getNick() + ": " + StringUtils.join(args, " ", 1, args.length);
             player.sendMessage(Color.WHISPER + message);
             target.sendMessage(Color.WHISPER + message);
             player.setWhisperer(target);

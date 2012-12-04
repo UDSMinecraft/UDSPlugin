@@ -32,9 +32,9 @@ public class EnchantCmd extends AbstractPlayerCommand {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, SaveablePlayer player) {
-        Enchantment[] enchantments = Enchantment.values();
-        int pages = (enchantments.length + 8) / 9;
+    private void sendPage(final int page, final SaveablePlayer player) {
+        final Enchantment[] enchantments = Enchantment.values();
+        final int pages = (enchantments.length + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Message.NO_ENCHANTMENTS);
         } else if(page > pages) {

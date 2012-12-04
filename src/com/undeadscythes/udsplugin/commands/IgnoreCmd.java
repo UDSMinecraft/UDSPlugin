@@ -11,14 +11,12 @@ public class IgnoreCmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
-        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
-            if(target.getRank().compareTo(PlayerRank.WARDEN) < 0) {
-                if(player.ignorePlayer(target)) {
-                    player.sendMessage(Color.MESSAGE + "You are now ignoring " + target.getNick() + ".");
-                } else {
-                    player.unignorePlayer(target);
-                    player.sendMessage(Color.MESSAGE + "You are no longer ignoring " + target.getNick() + ".");
-                }
+        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target) && target.getRank().compareTo(PlayerRank.WARDEN) < 0) {
+            if(player.ignorePlayer(target)) {
+                player.sendMessage(Color.MESSAGE + "You are now ignoring " + target.getNick() + ".");
+            } else {
+                player.unignorePlayer(target);
+                player.sendMessage(Color.MESSAGE + "You are no longer ignoring " + target.getNick() + ".");
             }
         }
     }

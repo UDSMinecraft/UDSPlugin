@@ -39,8 +39,8 @@ public class VIPCmd extends AbstractPlayerCommand {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, SaveablePlayer player) {
-        int pages = (Config.whitelistVIP.size() + 8) / 9;
+    private void sendPage(final int page, final SaveablePlayer player) {
+        final int pages = (Config.whitelistVIP.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There are no currently whitelisted items.");
         } else if(page > pages) {

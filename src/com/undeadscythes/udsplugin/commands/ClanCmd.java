@@ -48,11 +48,11 @@ public class ClanCmd extends AbstractPlayerCommand {
                     if(!clan.getLeader().equals(player)) {
                         player.sendMessage(Color.MESSAGE + "Your clan leader is " + clan.getLeader() + ".");
                     }
-                    if(!members.isEmpty()) {
+                    if(members.isEmpty()) {
+                        player.sendMessage(Color.MESSAGE + "Your clan has no other members.");
+                    } else {
                         player.sendMessage(Color.MESSAGE + "Your fellow clan members are:");
                         player.sendMessage(Color.TEXT + members.substring(0, members.length() - 2));
-                    } else {
-                        player.sendMessage(Color.MESSAGE + "Your clan has no other members.");
                     }
                 }
             } else if(args[0].equals("list")) {
@@ -69,7 +69,7 @@ public class ClanCmd extends AbstractPlayerCommand {
                 }
             } else if(args[0].equals("stats")) {
                 if((clan = getClan()) != null) {
-                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                    final DecimalFormat decimalFormat = new DecimalFormat("#.##");
                     player.sendMessage(Color.MESSAGE + clan.getName() + "'s stats:");
                     player.sendMessage(Color.ITEM + "Members: " + Color.TEXT + clan.getMembers().size());
                     player.sendMessage(Color.ITEM + "Kills: " + Color.TEXT + clan.getKills());
@@ -123,7 +123,7 @@ public class ClanCmd extends AbstractPlayerCommand {
                 }
             } else if(args[0].equals("stats")) {
                 if((clan = getClan(args[1])) != null) {
-                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                    final DecimalFormat decimalFormat = new DecimalFormat("#.##");
                     player.sendMessage(Color.MESSAGE + clan.getName() + "'s stats:");
                     player.sendMessage(Color.ITEM + "Members: " + Color.TEXT + clan.getMembers().size());
                     player.sendMessage(Color.ITEM + "Kills: " + Color.TEXT + clan.getKills());
@@ -158,8 +158,8 @@ public class ClanCmd extends AbstractPlayerCommand {
                 if((clan = getClan()) != null && isLeader(clan)) {
                     if(args[1].equals("make")) {
                         if(noBase(clan) && canAfford(Config.baseCost)) {
-                            Vector min = player.getLocation().add(-25, 0, -25).toVector().setY(20);
-                            Vector max = player.getLocation().add(25, 0, 25).toVector().setY(220);
+                            final Vector min = player.getLocation().add(-25, 0, -25).toVector().setY(20);
+                            final Vector max = player.getLocation().add(25, 0, 25).toVector().setY(220);
                             base = new Region(clan.getName() + "base", min, max, player.getLocation(), null, "", Region.RegionType.BASE);
                             if(noOverlaps(base)) {
                                 player.debit(Config.baseCost);
@@ -195,8 +195,8 @@ public class ClanCmd extends AbstractPlayerCommand {
     }
 
     private void sendPage(int page, SaveablePlayer player) {
-        List<Clan> clans = UDSPlugin.getClans().getSortedValues(new SortByKDR());
-        int pages = (clans.size() + 8) / 9;
+        final List<Clan> clans = UDSPlugin.getClans().getSortedValues(new SortByKDR());
+        final int pages = (clans.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There are no clans on the server.");
         } else if(page > pages) {
@@ -205,7 +205,7 @@ public class ClanCmd extends AbstractPlayerCommand {
             player.sendMessage(Color.MESSAGE + "--- Current Clans " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
-            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+            final DecimalFormat decimalFormat = new DecimalFormat("#.##");
             for(Clan clan : clans) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
                     player.sendMessage(Color.ITEM + clan.getName() + " - " + Color.TEXT + clan.getLeader().getNick() + " KDR: " + decimalFormat.format(clan.getRatio()));
@@ -219,11 +219,8 @@ public class ClanCmd extends AbstractPlayerCommand {
 }
 
 class SortByKDR implements Comparator<Clan> {
-    /**
-     * @inheritDoc
-     */
     @Override
-    public int compare(Clan clan1, Clan clan2) {
+    public int compare(final Clan clan1, final Clan clan2) {
         return (int)((clan2.getRatio() - clan1.getRatio()) * 100);
     }
 }

@@ -18,7 +18,7 @@ public class YCmd extends AbstractPlayerCommand {
                 case TP:    sender.teleport(player);
                             break;
 
-                case CLAN:  Clan clan = UDSPlugin.getClans().get(request.getData());
+                case CLAN:  final Clan clan = UDSPlugin.getClans().get(request.getData());
                             clan.addMember(player);
                             clan.sendMessage(player.getNick() + " has joined the clan.");
                             Region base;
@@ -28,7 +28,7 @@ public class YCmd extends AbstractPlayerCommand {
                             break;
 
                 case HOME:  if(canAfford(price = Integer.parseInt(request.getData())) && noHome()) {
-                                Region home = UDSPlugin.getHomes().get(sender.getName() + "home");
+                                final Region home = UDSPlugin.getHomes().get(sender.getName() + "home");
                                 home.clearMembers();
                                 home.changeOwner(player);
                                 player.debit(price);
@@ -61,7 +61,7 @@ public class YCmd extends AbstractPlayerCommand {
                             break;
 
                 case SHOP:  if(canAfford(price = Integer.parseInt(request.getData())) && noShop()) {
-                                Region shop = UDSPlugin.getShops().get(sender.getName() + "shop");
+                                final Region shop = UDSPlugin.getShops().get(sender.getName() + "shop");
                                 shop.clearMembers();
                                 shop.changeOwner(player);
                                 player.debit(price);

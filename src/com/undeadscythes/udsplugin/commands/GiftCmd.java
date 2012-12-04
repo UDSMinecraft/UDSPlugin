@@ -14,8 +14,8 @@ public class GiftCmd extends AbstractPlayerCommand {
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
         if(minArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
-            ItemStack gift = player.getItemInHand().clone();
             if(notAirHand()) {
+                final ItemStack gift = player.getItemInHand().clone();
                 String message = Color.MESSAGE + "[Gifting Service] You have recieved a free gift!";
                 if(args.length > 1) {
                     message = Color.MESSAGE + "[Gifting Service] ".concat(StringUtils.join(args, " ", 1, args.length - 1));

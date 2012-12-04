@@ -12,12 +12,12 @@ import org.bukkit.*;
 public class WhoCmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
-        TreeMap<PlayerRank, String> lists = new TreeMap<PlayerRank, String>();
+        final Map<PlayerRank, String> lists = new TreeMap<PlayerRank, String>();
         for(PlayerRank rank : PlayerRank.values()) {
             lists.put(rank, "");
         }
         for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
-            String current = lists.get(onlinePlayer.getRank());
+            final String current = lists.get(onlinePlayer.getRank());
             lists.put(onlinePlayer.getRank(), current + (player.getGameMode() == GameMode.CREATIVE ? "[C]" : (player.hasGodMode() ? "[G]" : "")) + onlinePlayer.getNick() + " ");
         }
         player.sendMessage(Color.MESSAGE + "--- Online Players (" + UDSPlugin.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers() + ") ---");
@@ -27,5 +27,4 @@ public class WhoCmd extends AbstractPlayerCommand {
             }
         }
     }
-
 }

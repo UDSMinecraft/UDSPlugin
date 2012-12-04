@@ -9,9 +9,6 @@ import org.apache.commons.lang.*;
  * @author UndeadScythes
  */
 public class CCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDoc
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(args.length == 0 && isInClan()) {

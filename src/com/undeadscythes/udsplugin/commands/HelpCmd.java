@@ -82,7 +82,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         CITY_LEAVE(Perm.CITY, "/city leave <city>", "Leave a city.", false, true),
         CITY_BANISH(Perm.CITY, "/city banish <city> <player>", "Banish a player from a city.", false, true),
         CLAN(Perm.CLAN, "/help clan", "Show more clan commands.", true, false),
-        CLAN_HELP(Perm.CLAN, "/clan help [page]", "Show these help pages.", false, true),
+        CLAN_HELP(Perm.CLAN, "/clan help [page]", "Show these clan help pages.", false, true),
         CLAN_C(Perm.C, "/c", "Switch to the clan chat channel.", false, true),
         CLAN_C_MSG(Perm.C, "/c <message>", "Send a message in the clan chat channel.", false, true),
         CLAN_BASE(Perm.CLAN, "/clan base", "Teleport to your clan base.", false, true),
@@ -105,7 +105,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         FACE_GET(Perm.FACE, "/face", "Find out which way you are facing.", false, false),
         GIFT(Perm.GIFT, "/gift <player> [message]", "Send a player a gift.", false, false),
         HOME(Perm.HOME, "/help home", "Show more home commands.", true, false),
-        HOME_HELP(Perm.HOME, "/home help [page]", "Show these help pages.", false, true),
+        HOME_HELP(Perm.HOME, "/home help [page]", "Show these home help pages.", false, true),
         HOME_TP(Perm.HOME, "/home", "Teleport to your home.", false, true),
         HOME_TP_OTHER(Perm.HOME, "/home <player>", "Teleport to a room mates home.", false, true),
         HOME_ADD(Perm.HOME, "/home add <player>", "Add a player as a room mate.", false, true),
@@ -135,7 +135,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         PET_GIVE(Perm.PET, "/pet give <player>", "Give your pet to a player.", false, false),
         PET_SELL(Perm.PET, "/pet sell <player> <price>", "Sell your pet to a player.", false, false),
         REGION(Perm.REGION, "/help region", "Show more region commands.", true, false),
-        REGION_HELP(Perm.REGION, "/region help [page]", "Show these help pages.", false, true),
+        REGION_HELP(Perm.REGION, "/region help [page]", "Show these region help pages.", false, true),
         REGION_ADDMEMBER(Perm.REGION, "/region addmember <region> <player>", "Add a member.", false, true),
         REGION_DELMEMBER(Perm.REGION, "/region delmember <region> <player>", "Remove a member.", false, true),
         REGION_FLAG(Perm.REGION, "/region flag <region> <flag>", "Toggle a region flag.", false, true),
@@ -154,7 +154,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         SERVER(Perm.SERVER, "/help server", "Show more server commands.", true, false),
         SERVER_STOP(Perm.SERVER, "/server stop", "Stop the server.", false, true),
         SHOP(Perm.SHOP, "/help shop", "Show more shop commands.", true, false),
-        SHOP_HELP(Perm.SHOP, "/shop help [page]", "Show these help pages.", false, true),
+        SHOP_HELP(Perm.SHOP, "/shop help [page]", "Show these shop help pages.", false, true),
         SHOP_TP(Perm.SHOP, "/shop", "Teleport to your shop.", false, true),
         SHOP_TP_OTHER(Perm.SHOP, "/shop <player>", "Teleport to another players shop.", false, true),
         SHOP_BUY(Perm.SHOP, "/shop buy", "Buy the shop plot you are standing in.", false, true),
@@ -185,7 +185,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         private boolean extension;
         private boolean extended;
 
-        private Usage(Perm perm, String usage, String description, boolean extended, boolean extension) {
+        private Usage(final Perm perm, final String usage, final String description, final boolean extended, final boolean extension) {
             this.perm = perm;
             this.usage = usage;
             this.description = description;
@@ -193,7 +193,7 @@ public class HelpCmd extends AbstractPlayerCommand {
             this.extended = extended;
         }
 
-        public static Usage get(String name) {
+        public static Usage get(final String name) {
             for(Usage use : values()) {
                 if(use.name().equalsIgnoreCase(name) || use.name().matches("[A-Z]*_" + name.toUpperCase())) {
                     return use;
@@ -209,15 +209,35 @@ public class HelpCmd extends AbstractPlayerCommand {
                 return name().toLowerCase().split("_")[0];
             }
         }
+
+        public Perm getPerm() {
+            return perm;
+        }
+
+        public String getUsage() {
+            return usage;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public boolean isExtension() {
+            return extension;
+        }
+
+        public boolean isExtended() {
+            return extended;
+        }
     }
 
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(maxArgsHelp(2)) {
             if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
-                TreeSet<Usage> usages = new TreeSet<Usage>();
+                final Set<Usage> usages = new TreeSet<Usage>();
                 for(Usage usage : Usage.values()) {
-                    if(player.hasPermission(usage.perm) && !usage.extension) {
+                    if(player.hasPermission(usage.getPerm()) && !usage.isExtension()) {
                         usages.add(usage);
                     }
                 }
@@ -227,32 +247,32 @@ public class HelpCmd extends AbstractPlayerCommand {
                 }
                 sendPage(page, player, usages, "Help");
             } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
-                Usage usage = Usage.get(args[0]);
-                if(usage != null) {
-                    if(usage.extended) {
+                final Usage usage = Usage.get(args[0]);
+                if(usage == null) {
+                    player.sendMessage(Color.ERROR + "No command exists by that name.");
+                } else {
+                    if(usage.isExtended()) {
                         int page = 1;
                         if(args.length == 2) {
                             page = Integer.parseInt(args[1]);
                         }
-                        TreeSet<Usage> extensions = new TreeSet<Usage>();
+                        final Set<Usage> extensions = new TreeSet<Usage>();
                         for(Usage extension : Usage.values()) {
-                            if(extension.cmd().contains(usage.cmd() + "_") && player.hasPermission(extension.perm) && extension.extension) {
+                            if(extension.cmd().contains(usage.cmd() + "_") && player.hasPermission(extension.getPerm()) && extension.isExtension()) {
                                 extensions.add(extension);
                             }
                         }
                         sendPage(page, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
                     } else {
-                        player.sendMessage(Color.ITEM + usage.usage + Color.TEXT + " - " + usage.description);
+                        player.sendMessage(Color.ITEM + usage.getUsage() + Color.TEXT + " - " + usage.getDescription());
                     }
-                } else {
-                    player.sendMessage(Color.ERROR + "No command exists by that name.");
                 }
             }
         }
     }
 
-    private void sendPage(int page, SaveablePlayer player, TreeSet<Usage> list, String title) {
-        int pages = (list.size() + 8) / 9;
+    private void sendPage(final int page, final SaveablePlayer player, final Set<Usage> list, final String title) {
+        final int pages = (list.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There is no help available.");
         } else if(page > pages) {
@@ -263,7 +283,7 @@ public class HelpCmd extends AbstractPlayerCommand {
             int skipped = 1;
             for(Usage usage : list) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + usage.usage + Color.TEXT + " - " + usage.description);
+                    player.sendMessage(Color.ITEM + usage.getUsage() + Color.TEXT + " - " + usage.getDescription());
                     posted++;
                 } else {
                     skipped++;

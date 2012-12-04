@@ -10,9 +10,9 @@ import org.bukkit.*;
 public class WhereCmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
-        Location playerLocation = player.getLocation();
-        Location spawnLocation = player.getWorld().getSpawnLocation();
-        int distance = (int)playerLocation.distance(spawnLocation);
+        final Location playerLocation = player.getLocation();
+        final Location spawnLocation = player.getWorld().getSpawnLocation();
+        final int distance = (int)playerLocation.distance(spawnLocation);
         String message = "You are " + distance + " blocks from spawn,";
         if(player.getLocation().getBlockY() < 64) {
             message = message.concat(" " + (64 - player.getLocation().getBlockY()) + " blocks below sea level");

@@ -3,7 +3,6 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.Region.RegionFlag;
 import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.*;
-import org.apache.commons.lang.*;
 
 /**
  * Region related commands.
@@ -30,11 +29,11 @@ public class RegionCmd extends AbstractPlayerCommand {
                         list = list.concat(test.getName() + ", ");
                     }
                 }
-                if(!list.isEmpty()) {
+                if(list.isEmpty()) {
+                    player.sendMessage(Color.MESSAGE + "There are no " + RegionType.NORMAL.name().toLowerCase() + " regions.");
+                } else {
                     player.sendMessage(Color.MESSAGE + RegionType.NORMAL.name().toLowerCase() + " Regions:");
                     player.sendMessage(Color.TEXT + list.substring(0, list.length() - 2));
-                } else {
-                    player.sendMessage(Color.MESSAGE + "There are no " + RegionType.NORMAL.name().toLowerCase() + " regions.");
                 }
             } else if(args[0].equals("flag")) {
                 player.sendMessage(Color.MESSAGE + "Available region flags:");
@@ -60,11 +59,11 @@ public class RegionCmd extends AbstractPlayerCommand {
                             list = list.concat(test.getName() + ", ");
                         }
                     }
-                    if(!list.isEmpty()) {
+                    if(list.isEmpty()) {
+                        player.sendMessage(Color.MESSAGE + "There are no " + type.name().toLowerCase() + " regions.");
+                    } else {
                         player.sendMessage(Color.MESSAGE + type.name().toLowerCase() + " Regions:");
                         player.sendMessage(Color.TEXT + list.substring(0, list.length() - 2));
-                    } else {
-                        player.sendMessage(Color.MESSAGE + "There are no " + type.name().toLowerCase() + " regions.");
                     }
                 }
             } else if(args[0].equals("tp")) {
@@ -117,7 +116,7 @@ public class RegionCmd extends AbstractPlayerCommand {
                 }
             } else if(args[0].equals("rename")) {
                 if((region = getRegion(args[1])) != null && noCensor(args[1]) && notRegion(args[2])) {
-                    String oldName = region.getName();
+                    final String oldName = region.getName();
                     UDSPlugin.getRegions().remove(oldName);
                     region.changeName(args[2]);
                     UDSPlugin.getRegions().put(region.getName(), region);

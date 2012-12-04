@@ -14,7 +14,7 @@ public class ShopCmd extends AbstractPlayerCommand {
         SaveablePlayer target;
         int price;
         if(args.length == 0) {
-            if( (shop = getShop()) != null && notJailed() && notPinned()) {
+            if((shop = getShop()) != null && notJailed() && notPinned()) {
                 player.teleport(shop.getWarp());
             }
         } else if(args.length == 1) {
@@ -76,7 +76,7 @@ public class ShopCmd extends AbstractPlayerCommand {
                 player.sendMessage(Color.TEXT + "The buy price is how much people pay to buy from the shop.");
                 player.sendMessage(Color.TEXT + "The sell price is how much people pay to sell to the shop.");
             } else if(args[0].equals("item")) {
-                ItemStack item = player.getItemInHand();
+                final ItemStack item = player.getItemInHand();
                 player.sendMessage(Color.MESSAGE + item.getType().name() + " - " + Color.TEXT + item.getTypeId() + ":" + item.getData().getData());
             } else if(args[0].equals("help")) {
                 sendHelp(1);
@@ -120,10 +120,8 @@ public class ShopCmd extends AbstractPlayerCommand {
     private String nextShopName() {
         int high = 0;
         for(Region shop : UDSPlugin.getShops().values()) {
-            if(shop.getName().startsWith("shop")) {
-                if(Integer.parseInt(shop.getName().replace("shop", "")) > high) {
-                    high = Integer.parseInt(shop.getName().replace("shop", ""));
-                }
+            if(shop.getName().startsWith("shop") && Integer.parseInt(shop.getName().replace("shop", "")) > high) {
+                high = Integer.parseInt(shop.getName().replace("shop", ""));
             }
         }
         return "shop" + high + 1;

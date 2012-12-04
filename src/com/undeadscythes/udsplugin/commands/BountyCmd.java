@@ -12,12 +12,13 @@ public class BountyCmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         int bounty;
-        int page;
+
         SaveablePlayer target;
         if(args.length == 0) {
             sendPage(1, player);
         } else if(args.length == 1) {
-            if((page = parseInt(args[0])) != -1) {
+            final int page = parseInt(args[0]);
+            if(page > -1) {
                 sendPage(page, player);
             }
         } else if(numArgsHelp(2) && (target = getMatchingOtherPlayer(args[0])) != null && (bounty = getAffordablePrice(args[1])) != -1) {
@@ -32,14 +33,15 @@ public class BountyCmd extends AbstractPlayerCommand {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(int page, SaveablePlayer player) {
-        ArrayList<SaveablePlayer> bounties = new ArrayList<SaveablePlayer>();
-        for(SaveablePlayer test : UDSPlugin.getPlayers().getSortedValues(new SortByBounty())) {
+    private void sendPage(final int page, final SaveablePlayer player) {
+        final List<SaveablePlayer> bounties = new ArrayList<SaveablePlayer>();
+        final List<SaveablePlayer> sortedPlayers = UDSPlugin.getPlayers().getSortedValues(new SortByBounty());
+        for(SaveablePlayer test : sortedPlayers) {
             if(test.getBounty() > 0) {
                 bounties.add(test);
             }
         }
-        int pages = (bounties.size() + 8) / 9;
+        final int pages = (bounties.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There are no bounties to collect.");
         } else if(page > pages) {
@@ -62,7 +64,7 @@ public class BountyCmd extends AbstractPlayerCommand {
 
 class SortByBounty implements Comparator<SaveablePlayer> {
     @Override
-    public int compare(SaveablePlayer player1, SaveablePlayer player2) {
+    public int compare(final SaveablePlayer player1, final SaveablePlayer player2) {
         return player2.getBounty() - player1.getBounty();
     }
 }

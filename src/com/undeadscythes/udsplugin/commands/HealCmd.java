@@ -10,7 +10,7 @@ public class HealCmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;
-        String message = Color.MESSAGE + "You have been healed.";
+        final String message = Color.MESSAGE + "You have been healed.";
         if(args.length == 0) {
             player.setHealth(player.getMaxHealth());
             player.setFoodLevel(20);

@@ -9,9 +9,6 @@ import org.apache.commons.lang.*;
  * @author UndeadScythes
  */
 public class PCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDoc
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(inChatRoom()) {
