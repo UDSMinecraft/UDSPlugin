@@ -37,7 +37,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param string String to check.
      * @return The rank if the rank is valid, <code>null</code> otherwise.
      */
-    protected PlayerRank getRank(String string) {
+    protected PlayerRank getRank(final String string) {
         PlayerRank rank = PlayerRank.getByName(string);
         if(rank != null) {
             return rank;
@@ -66,7 +66,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param item
      * @return
      */
-    protected boolean canEnchant(Enchantment enchantment, ItemStack item) {
+    protected boolean canEnchant(final Enchantment enchantment, final ItemStack item) {
         if(enchantment.canEnchantItem(item)) {
             return true;
         } else {
@@ -109,7 +109,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param num
      * @return
      */
-    protected boolean numArgsHelp(int num) {
+    protected boolean numArgsHelp(final int num) {
         if(argsLength == num) {
             return true;
         } else {
@@ -123,7 +123,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param num
      * @return
      */
-    protected boolean minArgsHelp(int num) {
+    protected boolean minArgsHelp(final int num) {
         if(argsLength >= num) {
             return true;
         } else {
@@ -137,7 +137,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param num
      * @return
      */
-    protected boolean maxArgsHelp(int num) {
+    protected boolean maxArgsHelp(final int num) {
         if(argsLength <= num) {
             return true;
         } else {
@@ -158,7 +158,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      *
      * @param args
      */
-    protected void subCmdHelp(String[] args) {
+    protected void subCmdHelp(final String[] args) {
         if(args[0].equalsIgnoreCase("help")) {
             if(args.length == 2 && args[1].matches("[0-9][0-9]*")) {
                 sendHelp(Integer.parseInt(args[1]));
@@ -182,7 +182,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      *
      * @param page
      */
-    protected void sendHelp(int page) {
+    protected void sendHelp(final int page) {
         player.performCommand("help " + commandName + " " + page);
     }
 
@@ -191,7 +191,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target
      * @return
      */
-    protected boolean canRequest(SaveablePlayer target) {
+    protected boolean canRequest(final SaveablePlayer target) {
         if(noRequests(target) && notIgnored(target)) {
             return true;
         } else {
@@ -216,7 +216,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target
      * @return
      */
-    protected Region getShop(SaveablePlayer target) {
+    protected Region getShop(final SaveablePlayer target) {
         Region shop;
         if((shop = UDSPlugin.getShops().get(target.getName() + "shop")) != null) {
             return shop;
@@ -233,7 +233,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param level
      * @return
      */
-    protected boolean goodEnchantLevel(Enchantment enchantment, int level) {
+    protected boolean goodEnchantLevel(final Enchantment enchantment, final int level) {
         if(level <= enchantment.getMaxLevel()) {
             return true;
         } else {
@@ -247,7 +247,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param amount
      * @return
      */
-    protected int getAffordablePrice(String amount) {
+    protected int getAffordablePrice(final String amount) {
         int cash;
         if((cash = parseInt(amount)) != -1 && canAfford(cash)) {
             return cash;
@@ -302,7 +302,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param regionName
      * @return
      */
-    protected Region getRegion(String regionName) {
+    protected Region getRegion(final String regionName) {
         Region region;
         if((region = UDSPlugin.getRegions().get(regionName)) != null) {
             return region;
@@ -317,7 +317,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param name
      * @return
      */
-    protected Region.RegionFlag getFlag(String name) {
+    protected Region.RegionFlag getFlag(final String name) {
         Region.RegionFlag flag;
         if((flag = Region.RegionFlag.getByName(name)) != null) {
             return flag;
@@ -332,7 +332,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param name
      * @return
      */
-    protected Region.RegionType getRegionType(String name) {
+    protected Region.RegionType getRegionType(final String name) {
         Region.RegionType type;
         if((type = Region.RegionType.getByName(name)) != null) {
             return type;
@@ -347,7 +347,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param session
      * @return
      */
-    protected boolean hasTwoPoints(WESession session) {
+    protected boolean hasTwoPoints(final WESession session) {
         if(session.getV1() != null && session.getV2() != null) {
             return true;
         } else {
@@ -374,7 +374,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target
      * @return
      */
-    protected boolean isBanned(SaveablePlayer target) {
+    protected boolean isBanned(final SaveablePlayer target) {
         if(target.isBanned()) {
             return true;
         } else {
@@ -416,7 +416,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param dir
      * @return
      */
-    protected Direction getDirection(String dir) {
+    protected Direction getDirection(final String dir) {
         Direction direction;
         if((direction = Direction.getByName(dir)) != null) {
             return direction;
@@ -431,7 +431,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param dir
      * @return
      */
-    protected Direction getCardinalDirection(String dir) {
+    protected Direction getCardinalDirection(final String dir) {
         Direction direction;
         if((direction = getDirection(dir)) != null) {
             if(direction.isCardinal()) {
@@ -463,7 +463,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param clan
      * @return
      */
-    protected boolean noBase(Clan clan) {
+    protected boolean noBase(final Clan clan) {
         if(!UDSPlugin.getBases().containsKey(clan.getName() + "base")) {
             return true;
         } else {
@@ -477,7 +477,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param name
      * @return
      */
-    protected Clan getClan(String name) {
+    protected Clan getClan(final String name) {
         Clan clan;
         if((clan = UDSPlugin.getClans().get(name)) != null) {
             return clan;
@@ -506,7 +506,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param clan
      * @return
      */
-    protected boolean isInClan(SaveablePlayer player, Clan clan) {
+    protected boolean isInClan(final SaveablePlayer player, final Clan clan) {
         if(player.getClan().equals(clan)) {
             return true;
         } else {
@@ -520,7 +520,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param name
      * @return
      */
-    protected boolean notClan(String name) {
+    protected boolean notClan(final String name) {
         if(!UDSPlugin.getClans().containsKey(name)) {
             return true;
         } else {
@@ -534,7 +534,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param clan
      * @return
      */
-    protected boolean isLeader(Clan clan) {
+    protected boolean isLeader(final Clan clan) {
         if(clan.getLeader().equals(player)) {
             return true;
         } else {
@@ -562,7 +562,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param clan The players clan.
      * @return The clan's base or <code>null</code> if the clan does not have a base.
      */
-    protected Region getBase(Clan clan) {
+    protected Region getBase(final Clan clan) {
         Region region;
         if((region = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
             return region;
@@ -577,7 +577,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param string String to check.
      * @return <code>true</code> if the word was clean, <code>false</code> otherwise.
      */
-    protected boolean noCensor(String string) {
+    protected boolean noCensor(final String string) {
         if(Censor.noCensor(string)) {
             return true;
         } else {
@@ -591,7 +591,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param name
      * @return
      */
-    protected SaveablePlayer getMatchingOtherPlayer(String name) {
+    protected SaveablePlayer getMatchingOtherPlayer(final String name) {
         SaveablePlayer target;
         if((target = getMatchingPlayer(name)) != null && notSelf(target)) {
             return target;
@@ -605,7 +605,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param warpName Warp name to check.
      * @return <code>true</code> if no warp exists by this name, <code>false</code> otherwise.
      */
-    protected boolean notWarp(String warpName) {
+    protected boolean notWarp(final String warpName) {
         if(UDSPlugin.getWarps().get(warpName) == null) {
             return true;
         } else {
@@ -632,7 +632,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target Player to check.
      * @return <code>true</code> if the player is in jail, <code>false</code> otherwise.
      */
-    protected boolean isJailed(SaveablePlayer target) {
+    protected boolean isJailed(final SaveablePlayer target) {
         if(target.isJailed()) {
             return true;
         } else {
@@ -646,7 +646,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param string Material to check.
      * @return The material if it exists, <code>null</code> otherwise.
      */
-    protected ItemStack getItem(String string) {
+    protected ItemStack getItem(final String string) {
         Material material;
         String matString = string.toUpperCase();
         byte data = 0;
@@ -677,7 +677,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param enchant Enchantment name.
      * @return The enchantment if it exists, <code>null</code> otherwise.
      */
-    protected Enchantment getEnchantment(String enchant) {
+    protected Enchantment getEnchantment(final String enchant) {
         Enchantment enchantment = Enchantment.getByName(enchant.toUpperCase());
         if(enchantment != null) {
             return enchantment;
@@ -692,7 +692,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param rank Rank required.
      * @return <code>true</code> if the player has the required rank, <code>false</code> otherwise.
      */
-    protected boolean hasRank(PlayerRank rank) {
+    protected boolean hasRank(final PlayerRank rank) {
         if(player.getRank().compareTo(rank) >= 0) {
             return true;
         } else {
@@ -720,7 +720,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param home
      * @return
      */
-    protected boolean isRoomie(Region home) {
+    protected boolean isRoomie(final Region home) {
         if(home.hasMember(player)) {
             return true;
         } else {
@@ -734,7 +734,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param shop
      * @return
      */
-    protected boolean isWorker(Region shop) {
+    protected boolean isWorker(final Region shop) {
         if(shop.hasMember(player)) {
             return true;
         } else {
@@ -749,7 +749,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param shop
      * @return
      */
-    protected boolean isWorker(SaveablePlayer target, Region shop) {
+    protected boolean isWorker(final SaveablePlayer target, final Region shop) {
         if(shop.hasMember(target)) {
             return true;
         } else {
@@ -763,7 +763,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param shop
      * @return
      */
-    protected boolean isEmptyShop(Region shop) {
+    protected boolean isEmptyShop(final Region shop) {
         if(shop.getOwner() == null) {
             return true;
         } else {
@@ -792,7 +792,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param home
      * @return
      */
-    protected boolean isRoomie(SaveablePlayer target, Region home) {
+    protected boolean isRoomie(final SaveablePlayer target, final Region home) {
         if(home.hasMember(target)) {
             return true;
         } else {
@@ -806,7 +806,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target
      * @return
      */
-    protected Region getHome(SaveablePlayer target) {
+    protected Region getHome(final SaveablePlayer target) {
         Region home;
         if((home = UDSPlugin.getHomes().get(target.getName() + "home")) != null) {
             return home;
@@ -822,7 +822,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param home
      * @return
      */
-    protected boolean isInHome(SaveablePlayer target, Region home) {
+    protected boolean isInHome(final SaveablePlayer target, final Region home) {
         if(target.getLocation().toVector().isInAABB(home.getV1(), home.getV2())) {
             return true;
         } else {
@@ -836,7 +836,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param name Name to check.
      * @return <code>true</code> if no region already exists with the given name, <code>false</code> otherwise.
      */
-    protected boolean notRegion(String name) {
+    protected boolean notRegion(final String name) {
         if(!UDSPlugin.getRegions().containsKey(name)) {
             return true;
         } else {
@@ -850,7 +850,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param cityName City to check.
      * @return The city if it exists, <code>null</code> otherwise.
      */
-    protected Region getMatchingCity(String cityName) {
+    protected Region getMatchingCity(final String cityName) {
         Region city;
         if((city = UDSPlugin.getCities().get(cityName)) != null) {
             return city;
@@ -869,7 +869,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param city
      * @return
      */
-    protected boolean notMayor(Region city) {
+    protected boolean notMayor(final Region city) {
         if(!city.isOwner(player)) {
             return true;
         } else {
@@ -883,7 +883,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param cityName City to check.
      * @return The city if both the city exists and the player is the mayor, <code>null</code> otherwise.
      */
-    protected Region getMunicipality(String cityName) {
+    protected Region getMunicipality(final String cityName) {
         Region city;
         if((city = getMatchingCity(cityName)) != null) {
             if(city.getOwner().equals(player)) {
@@ -902,7 +902,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param region Region to check for overlaps.
      * @return <code>true</code> if there are no overlaps with other regions, <code>false</code> otherwise.
      */
-    protected boolean noOverlaps(Region region) {
+    protected boolean noOverlaps(final Region region) {
         for(Region test : UDSPlugin.getRegions().values()) {
             if(test.hasOverlap(region)) {
                 player.sendMessage(Color.ERROR + "You cannot do that here, you are too close to another protected area.");
@@ -917,7 +917,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target Player to check.
      * @return <code>true</code> if the player is not duelling, <code>false</code> otherwise.
      */
-    protected boolean notDueling(SaveablePlayer target) {
+    protected boolean notDueling(final SaveablePlayer target) {
         if(!target.isDuelling()) {
             return true;
         } else {
@@ -931,7 +931,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target Target to check.
      * @return <code>true</code> if target and this player are distinct, <code>false</code> otherwise.
      */
-    protected boolean notSelf(SaveablePlayer target) {
+    protected boolean notSelf(final SaveablePlayer target) {
         if(!target.equals(player)) {
             return true;
         } else {
@@ -984,7 +984,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target
      * @return <code>true</code> if the target player is not in jail, <code>false</code> otherwise.
      */
-    protected boolean notJailed(SaveablePlayer target) {
+    protected boolean notJailed(final SaveablePlayer target) {
         if(!target.isJailed()) {
             return true;
         } else {
@@ -998,7 +998,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target The player to check.
      * @return <code>true</code> if the target player has no requests pending, <code>false</code> otherwise.
      */
-    protected boolean noRequests(SaveablePlayer target) {
+    protected boolean noRequests(final SaveablePlayer target) {
         if(!UDSPlugin.getRequests().containsKey(target.getName())) {
             return true;
         } else {
@@ -1012,7 +1012,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param name
      * @return
      */
-    protected SaveablePlayer getMatchingOtherOnlinePlayer(String name) {
+    protected SaveablePlayer getMatchingOtherOnlinePlayer(final String name) {
         SaveablePlayer target;
         if((target = getMatchingOnlinePlayer(name)) != null && notSelf(target)) {
             return target;
@@ -1026,7 +1026,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target Player to check.
      * @return <code>true</code> if the target player is not ignoring the command sender, <code>false</code> otherwise.
      */
-    protected boolean notIgnored(SaveablePlayer target) {
+    protected boolean notIgnored(final SaveablePlayer target) {
         if(!target.isIgnoringPlayer(player)) {
             return true;
         } else {
@@ -1040,7 +1040,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param number String to check.
      * @return The number if it was one, -1 otherwise.
      */
-    protected int parseInt(String number) {
+    protected int parseInt(final String number) {
         if(number.matches("[0-9][0-9]*")) {
             return Integer.parseInt(number);
         } else {
@@ -1054,7 +1054,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param target Player to check.
      * @return <code>true</code> if the player is online, <code>false</code> otherwise.
      */
-    protected boolean isOnline(SaveablePlayer target) {
+    protected boolean isOnline(final SaveablePlayer target) {
         if(target.isOnline()) {
             return true;
         } else {
@@ -1068,7 +1068,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param partial Partial player name.
      * @return The first player matched or <code>null</code> if no players matched.
      */
-    protected SaveablePlayer getMatchingPlayer(String partial) {
+    protected SaveablePlayer getMatchingPlayer(final String partial) {
         String lowPartial = partial.toLowerCase();
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
         if(target != null) {
@@ -1119,7 +1119,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param partial
      * @return
      */
-    protected SaveablePlayer getMatchingOnlinePlayer(String partial) {
+    protected SaveablePlayer getMatchingOnlinePlayer(final String partial) {
         String lowPartial = partial.toLowerCase();
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
         if(target!= null) {
@@ -1150,7 +1150,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param partial Partial warp name.
      * @return The warp matched or <code>null</code> if there were no matches.
      */
-    protected Warp getWarp(String partial) {
+    protected Warp getWarp(final String partial) {
         Warp warp = UDSPlugin.getWarps().get(partial);
         if(warp != null) {
             return warp;
@@ -1170,7 +1170,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param cost The cost to check.
      * @return <code>true</code> if the player can afford the cost, <code>false</code> otherwise.
      */
-    protected boolean canAfford(int cost) {
+    protected boolean canAfford(final int cost) {
         if(player.canAfford(cost)) {
             return true;
         } else {
@@ -1184,7 +1184,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param perm The permission suffix.
      * @return <code>true</code> if player has the permission or is opped, <code>false</code> otherwise.
      */
-    protected boolean hasPerm(Perm perm) {
+    protected boolean hasPerm(final Perm perm) {
         if(player.hasPermission(perm) || player.isOp()) {
             return true;
         } else {
