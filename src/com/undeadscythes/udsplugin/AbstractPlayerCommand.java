@@ -35,7 +35,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
             player = UDSPlugin.getOnlinePlayers().get(sender.getName());
             if(hasPerm(Perm.valueOf(commandName.toUpperCase()))) {
                 this.args = args.clone();
-                playerExecute(player, args);
+                playerExecute();
             }
             return true;
         } else {
@@ -1155,5 +1155,5 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param player Player who ran the command.
      * @param args Arguments of the command.
      */
-    public abstract void playerExecute(final SaveablePlayer player, final String[] args);
+    public abstract void playerExecute();
 }
