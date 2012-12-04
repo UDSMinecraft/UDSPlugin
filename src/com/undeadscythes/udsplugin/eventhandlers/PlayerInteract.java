@@ -110,12 +110,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      */
     public boolean lockCheck(final Block block, final SaveablePlayer player) {
         final Material material = block.getType();
-        if(material == Material.WOODEN_DOOR
-        || material == Material.IRON_DOOR_BLOCK
-        || material == Material.STONE_BUTTON
-        || material == Material.LEVER
-        || material == Material.TRAP_DOOR
-        || material == Material.FENCE_GATE) {
+        if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.STONE_BUTTON || material == Material.LEVER || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
             final Location location = block.getLocation();
             if(!player.canBuildHere(location) && hasFlag(location, RegionFlag.LOCK)) {
                 player.sendMessage(Color.ERROR + "You can't do that here.");
