@@ -200,6 +200,15 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
         return notPinned() && notJailed();
     }
 
+    protected boolean hasUndo(WESession session) {
+        if(session.hasUndo()) {
+            return true;
+        } else {
+            player.sendMessage(Color.ERROR + "You have nothing to undo.");
+            return false;
+        }
+    }
+
     /**
      * Get the targets shop.
      * @param target The player.
