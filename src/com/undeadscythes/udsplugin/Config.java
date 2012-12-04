@@ -43,6 +43,7 @@ public final class Config {
     public static String serverOwner;
     public static int spawnerEXP;
     public static int moveRange;
+    public static int editRange;
     public static long pvpTime;
     public static int butcherRange;
     public static Material welcomeGift;
@@ -92,6 +93,7 @@ public final class Config {
         baseCost = config.getInt("cost.base");
         drainRange = config.getInt("range.drain");
         moveRange = config.getInt("range.move");
+        editRange = config.getInt("range.edit");
         whitelistVIP = new ArrayList<Material>();
         for(int id : config.getIntegerList("item-whitelist")) {
             whitelistVIP.add(Material.getMaterial(id));

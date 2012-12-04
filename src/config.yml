@@ -29,6 +29,7 @@ range:
   compass: 100
   drain: 50
   move: 50
+  edit: 1000
 pvp-time: 5
 exp:
   spawner: 3
