@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class NCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Request request;
         if((request = getRequest()) != null) {
             UDSPlugin.getRequests().remove(player.getName());

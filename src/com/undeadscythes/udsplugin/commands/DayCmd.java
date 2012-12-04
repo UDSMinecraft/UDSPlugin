@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class DayCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.getWorld().setTime(0);
         player.sendMessage(Color.MESSAGE + "Summoning the sun.");
     }

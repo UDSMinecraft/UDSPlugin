@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class DelWarpCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Warp warp;
         if(numArgsHelp(1) && (warp = getWarp(args[0])) != null) {
             UDSPlugin.getWarps().remove(warp.getName());

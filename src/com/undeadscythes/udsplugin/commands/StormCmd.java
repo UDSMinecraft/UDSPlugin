@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class StormCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         int duration;
         if(args.length == 0) {
             player.getWorld().setStorm(true);

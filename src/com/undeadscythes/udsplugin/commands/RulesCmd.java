@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class RulesCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.sendMessage(Color.MESSAGE + "--- Server Rules ---");
         for(String rules : Config.serverRules) {
             player.sendMessage(Color.TEXT + "- " + rules);

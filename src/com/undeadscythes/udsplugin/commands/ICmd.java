@@ -9,7 +9,7 @@ import org.bukkit.inventory.*;
  */
 public class ICmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(minArgsHelp(1) && maxArgsHelp(2)) {
             ItemStack item;
             if((item = getItem(args[0])) != null) {

@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class TPCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer targetFrom;
         SaveablePlayer targetTo;
         if(args.length == 1) {

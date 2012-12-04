@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class LockdownCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(args.length == 0) {
             UDSPlugin.serverInLockdown ^= true;

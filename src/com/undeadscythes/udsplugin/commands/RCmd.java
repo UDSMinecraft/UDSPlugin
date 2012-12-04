@@ -9,7 +9,7 @@ import org.apache.commons.lang.*;
  */
 public class RCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(minArgsHelp(1) && (target = getWhisperer()) != null && isOnline(target)) {
             final String message = player.getNick() + " > " + target.getNick() + ": " + StringUtils.join(args, " ");

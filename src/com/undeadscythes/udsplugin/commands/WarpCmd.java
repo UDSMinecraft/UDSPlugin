@@ -10,7 +10,7 @@ import org.apache.commons.lang.*;
  */
 public class WarpCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Warp warp;
         if(args.length == 0) {
             final Set<String> warps = new TreeSet<String>();

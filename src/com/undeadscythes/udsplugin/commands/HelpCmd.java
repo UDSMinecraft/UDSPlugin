@@ -232,7 +232,7 @@ public class HelpCmd extends AbstractPlayerCommand {
     }
 
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(maxArgsHelp(2)) {
             if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
                 final Set<Usage> usages = new TreeSet<Usage>();

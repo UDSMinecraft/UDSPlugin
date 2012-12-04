@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class RainCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         int duration;
         if(args.length == 0) {
             player.getWorld().setStorm(true);

@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class NightCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.getWorld().setTime(14000);
         player.sendMessage(Color.MESSAGE + "Summoning the moon.");
     }

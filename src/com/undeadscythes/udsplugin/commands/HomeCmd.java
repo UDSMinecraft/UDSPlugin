@@ -10,7 +10,7 @@ import org.bukkit.util.*;
  */
 public class HomeCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Region home;
         SaveablePlayer target;
         int price;
@@ -117,7 +117,7 @@ public class HomeCmd extends AbstractPlayerCommand {
                     }
                 }
             } else {
-                subCmdHelp(args);
+                subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
             if(args[0].equals("sell")) {

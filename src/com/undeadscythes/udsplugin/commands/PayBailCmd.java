@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class PayBailCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(isJailed() && canAfford(player.getBail())) {
             player.debit(player.getBail());
             player.sendMessage(Color.MESSAGE + "You have paid your bail.");

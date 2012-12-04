@@ -9,7 +9,7 @@ import org.bukkit.inventory.*;
  */
 public class StackCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         ItemStack[] items = player.getInventory().getContents();
         final int len = items.length;
         boolean affected = false;

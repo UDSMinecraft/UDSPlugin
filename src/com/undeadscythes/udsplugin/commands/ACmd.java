@@ -10,7 +10,7 @@ import org.apache.commons.lang.*;
  */
 public class ACmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(args.length == 0) {
             if(player.toggleChannel(Channel.ADMIN)) {
                 player.sendMessage(Color.MESSAGE + "You are now talking in admin chat.");

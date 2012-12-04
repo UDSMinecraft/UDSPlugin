@@ -9,7 +9,7 @@ import org.bukkit.entity.*;
  */
 public class XPCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(numArgsHelp(2) && (target = getMatchingOnlinePlayer(args[0])) != null) {
             if(args[1].matches("[0-9][0-9]*")) {
@@ -23,7 +23,7 @@ public class XPCmd extends AbstractPlayerCommand {
                 target.setLevel(0);
                 player.sendMessage(Color.MESSAGE + target.getNick() + "'s experience has been reset.");
             } else {
-                subCmdHelp(args);
+                subCmdHelp();
             }
         }
     }

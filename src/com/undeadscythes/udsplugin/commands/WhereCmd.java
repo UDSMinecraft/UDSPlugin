@@ -9,7 +9,7 @@ import org.bukkit.*;
  */
 public class WhereCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         final Location playerLocation = player.getLocation();
         final Location spawnLocation = player.getWorld().getSpawnLocation();
         final int distance = (int)playerLocation.distance(spawnLocation);

@@ -11,7 +11,7 @@ import org.bukkit.entity.*;
  */
 public class SpawnerCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(numArgsHelp(1)) {
             final Block block = player.getTargetBlock(null, 5);
             if(block.getType() == Material.MOB_SPAWNER) {

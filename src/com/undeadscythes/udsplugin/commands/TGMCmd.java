@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class TGMCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "You now have creative mode " + (player.toggleGameMode() ? "en" : "dis") + "abled.");

@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class UnJailCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isJailed(target)) {
             target.release();

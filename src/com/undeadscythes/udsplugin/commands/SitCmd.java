@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SitCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.sendMessage(Color.ERROR + "Sorry, you can't sit on blocks at the moment.");
 //        if(!player.isInsideVehicle()) {
 //            final Block target = player.getTargetBlock(null, 3);

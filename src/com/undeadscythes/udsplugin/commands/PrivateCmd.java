@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class PrivateCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(numArgsHelp(1)) {
             final ChatRoom chatRoom = UDSPlugin.getChatRooms().get(args[0]);
             if(chatRoom == null) {

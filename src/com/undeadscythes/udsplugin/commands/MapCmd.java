@@ -10,7 +10,7 @@ import org.bukkit.inventory.*;
  */
 public class MapCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(canAfford(Config.mapCost)) {
             player.giveAndDrop(new ItemStack(Material.MAP, 1, (short)0, Config.mapData));
         }

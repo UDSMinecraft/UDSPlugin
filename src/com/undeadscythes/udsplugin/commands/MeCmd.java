@@ -10,7 +10,7 @@ import org.bukkit.*;
  */
 public class MeCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         final String action = StringUtils.join(args, " ");
         if(minArgsHelp(1) && noCensor(action)) {
             Bukkit.broadcastMessage(Color.TEXT + "*" + player.getNick() + " " + action);

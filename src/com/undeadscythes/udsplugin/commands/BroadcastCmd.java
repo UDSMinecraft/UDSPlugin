@@ -10,7 +10,7 @@ import org.bukkit.*;
  */
 public class BroadcastCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(minArgsHelp(1)) {
             Bukkit.broadcastMessage(Color.BROADCAST + StringUtils.join(args, " "));
         }

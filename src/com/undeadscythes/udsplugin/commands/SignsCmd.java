@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SignsCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.sendMessage(Color.MESSAGE + "Special signs available to you and format (lines 1-4):");
         if(player.hasPermission(Perm.SIGN_CHECKPOINT)) {
             player.sendMessage(Color.ITEM + "Checkpoint - " + Color.TEXT + "1: [checkpoint], 2-4: Anything");

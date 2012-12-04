@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
  */
 public class CityCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Region city;
         if(args.length == 1) {
             if(args[0].equals("set")) {
@@ -22,7 +22,7 @@ public class CityCmd extends AbstractPlayerCommand {
             } else if(args[0].equals("list")) {
                 sendPage(1, player);
             } else {
-                subCmdHelp(args);
+                subCmdHelp();
             }
         } else if(args.length == 2) {
             int page;
@@ -64,7 +64,7 @@ public class CityCmd extends AbstractPlayerCommand {
                     Bukkit.broadcastMessage(Color.BROADCAST + city.getName() + " has been abandoned.");
                 }
             } else {
-                subCmdHelp(args);
+                subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
             SaveablePlayer target;

@@ -10,7 +10,7 @@ import org.bukkit.*;
  */
 public class BanCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(minArgsHelp(1) && (target = getMatchingOtherPlayer(args[0])) != null) {
             String message = "You have been banned for breaking the rules.";

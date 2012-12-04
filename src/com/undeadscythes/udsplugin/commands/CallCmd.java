@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class CallCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingOtherOnlinePlayer(args[0])) != null && canRequest(target) && notJailed(target) && canTP()) {
             UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.TP, "", target));

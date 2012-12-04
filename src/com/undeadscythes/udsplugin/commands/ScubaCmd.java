@@ -10,7 +10,7 @@ import org.bukkit.inventory.*;
  */
 public class ScubaCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(player.getInventory().getHelmet() == null) {
             if(player.getItemInHand().getType() == Material.GLASS) {
                 player.getInventory().setHelmet(new ItemStack(Material.GLASS));

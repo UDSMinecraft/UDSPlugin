@@ -9,7 +9,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SetWarpCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         PlayerRank rank;
         int price;
         final String message = Color.MESSAGE + "Warp point set.";

@@ -10,7 +10,7 @@ import org.apache.commons.lang.*;
  */
 public class PCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(inChatRoom()) {
             if(args.length == 0) {
                 if(player.toggleChannel(Channel.PRIVATE)) {

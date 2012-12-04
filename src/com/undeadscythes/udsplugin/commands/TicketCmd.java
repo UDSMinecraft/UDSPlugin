@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class TicketCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.sendMessage(Color.MESSAGE + "Please post issues to:");
         player.sendMessage(Color.LINK + "https://github.com/UndeadScythes/UDSPlugin1/issues");
     }

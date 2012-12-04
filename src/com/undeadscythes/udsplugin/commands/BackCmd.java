@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class BackCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(!player.quietTeleport(player.getBack())) {
             player.sendMessage(Color.ERROR + "You can't teleport back at this time.");
         }

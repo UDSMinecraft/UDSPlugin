@@ -12,7 +12,7 @@ import org.bukkit.util.Vector;
  */
 public class ClanCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Clan clan;
         Region base;
         SaveablePlayer target;
@@ -77,7 +77,7 @@ public class ClanCmd extends AbstractPlayerCommand {
                     player.sendMessage(Color.ITEM + "KDR: " + Color.TEXT + decimalFormat.format(clan.getRatio()));
                 }
             } else {
-                subCmdHelp(args);
+                subCmdHelp();
             }
         } else if(numArgsHelp(2)) {
             int page;
@@ -189,7 +189,7 @@ public class ClanCmd extends AbstractPlayerCommand {
                     }
                 }
             } else {
-                subCmdHelp(args);
+                subCmdHelp();
             }
         }
     }

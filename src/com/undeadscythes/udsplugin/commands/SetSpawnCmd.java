@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SetSpawnCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         new EditableWorld(player.getWorld()).setSpawnLocation(player.getLocation());
         player.sendMessage(Color.MESSAGE + "Spawn location moved.");
     }

@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SpawnCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(notPinned() && notJailed()) {
             player.teleport(Config.mainWorld.getSpawnLocation());
         }

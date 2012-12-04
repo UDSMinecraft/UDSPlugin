@@ -9,7 +9,7 @@ import org.bukkit.entity.*;
  */
 public class YCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Request request;
         SaveablePlayer sender;
         if((request = getRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {

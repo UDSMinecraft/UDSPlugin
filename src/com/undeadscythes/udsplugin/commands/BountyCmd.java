@@ -10,7 +10,7 @@ import org.bukkit.*;
  */
 public class BountyCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         int bounty;
 
         SaveablePlayer target;

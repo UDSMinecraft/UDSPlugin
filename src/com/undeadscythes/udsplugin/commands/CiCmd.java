@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class CiCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.getInventory().clear(-1, -1);
         player.sendMessage(Color.MESSAGE + "Inventory cleared.");
     }

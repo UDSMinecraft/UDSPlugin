@@ -9,7 +9,7 @@ import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
  */
 public class IgnoreCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target) && target.getRank().compareTo(PlayerRank.WARDEN) < 0) {
             if(player.ignorePlayer(target)) {

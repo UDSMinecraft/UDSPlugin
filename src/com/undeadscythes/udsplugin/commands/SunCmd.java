@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SunCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         player.getWorld().setStorm(false);
         player.getWorld().setThundering(false);
         player.sendMessage(Color.MESSAGE + "Clear skies on the way.");

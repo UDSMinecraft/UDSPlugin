@@ -11,7 +11,7 @@ import org.bukkit.*;
  */
 public class WhoCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         final Map<PlayerRank, String> lists = new TreeMap<PlayerRank, String>();
         for(PlayerRank rank : PlayerRank.values()) {
             lists.put(rank, "");

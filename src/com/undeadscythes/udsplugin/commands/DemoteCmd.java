@@ -9,7 +9,7 @@ import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
  */
 public class DemoteCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
             PlayerRank rank;

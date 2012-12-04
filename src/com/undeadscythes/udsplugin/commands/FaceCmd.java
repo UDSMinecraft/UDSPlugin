@@ -9,7 +9,7 @@ import org.bukkit.*;
  */
 public class FaceCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Direction direction;
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "You are facing " + Direction.valueOf(player.getLocation()).toString() + ".");

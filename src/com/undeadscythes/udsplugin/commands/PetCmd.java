@@ -10,7 +10,7 @@ import org.bukkit.entity.*;
  */
 public class PetCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         UUID pet;
         int price;

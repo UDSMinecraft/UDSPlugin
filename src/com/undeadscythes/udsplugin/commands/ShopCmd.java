@@ -9,7 +9,7 @@ import org.bukkit.inventory.*;
  */
 public class ShopCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         Region shop;
         SaveablePlayer target;
         int price;
@@ -101,7 +101,7 @@ public class ShopCmd extends AbstractPlayerCommand {
                     }
                 }
             } else {
-                subCmdHelp(args);
+                subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
             if(args[0].equals("shop")) {

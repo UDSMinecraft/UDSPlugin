@@ -10,7 +10,7 @@ import org.bukkit.*;
  */
 public class AcceptRulesCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(canAfford(Config.buildCost)) {
             player.setRank(PlayerRank.MEMBER);
             player.debit(Config.buildCost);

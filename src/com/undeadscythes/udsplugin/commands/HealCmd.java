@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class HealCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         final String message = Color.MESSAGE + "You have been healed.";
         if(args.length == 0) {

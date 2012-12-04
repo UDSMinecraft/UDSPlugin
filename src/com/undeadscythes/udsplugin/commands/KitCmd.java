@@ -9,7 +9,7 @@ import org.bukkit.inventory.*;
  */
 public class KitCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "--- Available Kits ---");
             for(Kit kit : Config.kits) {

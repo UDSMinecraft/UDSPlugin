@@ -9,7 +9,7 @@ import org.bukkit.*;
  */
 public class ServerCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(numArgsHelp(1) && args[0].equals("stop")) {
             for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
                 target.kickPlayer("Server is shutting down.");

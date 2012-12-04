@@ -8,7 +8,7 @@ import com.undeadscythes.udsplugin.*;
  */
 public class ChallengeCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         SaveablePlayer target;
         int wager;
         if(numArgsHelp(2) && notJailed() && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notJailed(target) && (wager = parseInt(args[1])) != -1 && canAfford(wager) && noRequests(target) && notDueling(target) && notSelf(target)) {

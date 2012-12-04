@@ -10,7 +10,7 @@ import org.apache.commons.lang.*;
  */
 public class CCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
+    public void playerExecute() {
         if(args.length == 0 && isInClan()) {
             if(player.toggleChannel(Channel.CLAN)) {
                 player.sendMessage(Color.MESSAGE + "You are now talking in clan chat.");
