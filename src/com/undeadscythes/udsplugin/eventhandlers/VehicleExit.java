@@ -8,18 +8,20 @@ import org.bukkit.event.vehicle.*;
 import org.bukkit.inventory.*;
 
 /**
- * When a player leaves a vehicle.
+ * Fired when an entity leaves a vehicle.
+ * If the vehicle is a minecart it is removed from the world.
+ * If the entity is a player a minecart is added to their inventory or dropped.
  * @author UndeadScythes
  */
 public class VehicleExit extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(VehicleExitEvent event) {
+    public void onEvent(final VehicleExitEvent event) {
         if(event.getVehicle() instanceof Minecart) {
             if(event.getExited() instanceof Player) {
-                Player player = (Player) event.getExited();
-                player.getInventory().addItem(new ItemStack(Material.MINECART.getId()));
+                final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(((Player)event.getExited()).getName());
+                player.giveAndDrop(new ItemStack(Material.MINECART.getId()));
+                player.sendMessage(Color.MESSAGE + "You picked up your minecart.");
             }
-            event.setCancelled(true);
             event.getVehicle().remove();
         }
     }
