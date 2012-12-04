@@ -75,9 +75,6 @@ public class MoneyCmd extends AbstractPlayerCommand {
  * @author UndeadScythe
  */
 class SortByMoney implements Comparator<SaveablePlayer> {
-    /**
-     * @inheritDoc
-     */
     @Override
     public int compare(final SaveablePlayer player1, final SaveablePlayer player2) {
         return player2.getMoney() - player1.getMoney();

@@ -7,9 +7,6 @@ import com.undeadscythes.udsplugin.*;
  * @author UndeadScythes
  */
 public class WECmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDoc
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         player.sendMessage(Color.MESSAGE + "This command has not been re-written yet, sorry for the inconvienience.");
