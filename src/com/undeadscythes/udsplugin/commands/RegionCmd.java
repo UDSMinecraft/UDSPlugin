@@ -138,7 +138,7 @@ public class RegionCmd extends AbstractPlayerCommand {
     private void select() {
         final Region region = getRegion(args[1]);
         if(region != null) {
-            final WESession session = player.forceSession();
+            final WESession session = getSession();
             session.setVPair(region.getV1(), region.getV2(), region.getWorld());
             player.sendMessage(Color.MESSAGE + "Points set. " + session.getVolume() + " blocks selected.");
         }

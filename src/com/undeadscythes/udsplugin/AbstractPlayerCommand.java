@@ -277,14 +277,10 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
 
     /**
      * Get the players WorldEdit session.
-     * @return The players WE session, <code>null</code> if the player does not currently have a session.
+     * @return The players WE session, if the player does not currently have a session one is created.
      */
     protected WESession getSession() {
-        final WESession session = UDSPlugin.getSessions().get(player.getName());
-        if(session == null) {
-            player.sendMessage(Color.ERROR + "You do not have a current WE session.");
-        }
-        return session;
+        return player.forceSession();
     }
 
     /**
