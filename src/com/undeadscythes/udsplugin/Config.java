@@ -26,6 +26,7 @@ public final class Config {
     public static List<String> serverRules;
     public static byte mapData;
     public static int compassRange;
+    public static int drainRange;
     public static List<Material> whitelistVIP;
     public static int expandCost;
     public static int mapCost;
@@ -88,6 +89,7 @@ public final class Config {
         vipCost = config.getInt("cost.vip");
         clanCost = config.getInt("cost.clan");
         baseCost = config.getInt("cost.base");
+        drainRange = config.getInt("range.drain");
         whitelistVIP = new ArrayList<Material>();
         for(int id : config.getIntegerList("item-whitelist")) {
             whitelistVIP.add(Material.getMaterial(id));

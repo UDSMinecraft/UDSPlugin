@@ -27,6 +27,7 @@ range:
   world: 10000
   butcher: 50
   compass: 100
+  drain: 50
 pvp-time: 5
 exp:
   spawner: 3
