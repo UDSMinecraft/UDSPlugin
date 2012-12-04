@@ -10,9 +10,6 @@ import org.bukkit.entity.*;
  * @author UndeadScythes
  */
 public class SpawnerCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(numArgsHelp(1)) {

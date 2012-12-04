@@ -9,9 +9,6 @@ import org.bukkit.util.*;
  * @author UndeadScythes
  */
 public class HomeCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         Region home;

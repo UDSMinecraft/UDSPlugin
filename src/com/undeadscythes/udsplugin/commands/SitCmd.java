@@ -13,9 +13,6 @@ import org.bukkit.util.*;
  * @author UndeadScythes
  */
 public class SitCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         player.sendMessage(Color.ERROR + "Sorry, you can't sit on blocks at the moment.");

@@ -7,9 +7,6 @@ import com.undeadscythes.udsplugin.*;
  * @author UndeadScythes
  */
 public class NCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         Request request;

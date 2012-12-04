@@ -8,9 +8,6 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class KitCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(args.length == 0) {

@@ -7,9 +7,6 @@ import com.undeadscythes.udsplugin.*;
  * @author UndeadScythes
  */
 public class PayBailCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(isJailed() && canAfford(player.getBail())) {

@@ -8,9 +8,6 @@ import org.apache.commons.lang.*;
  * @author UndeadScythes
  */
 public class RCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;

@@ -8,9 +8,6 @@ import org.bukkit.entity.*;
  * @author UndeadScythes
  */
 public class ButcherCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(maxArgsHelp(1)) {

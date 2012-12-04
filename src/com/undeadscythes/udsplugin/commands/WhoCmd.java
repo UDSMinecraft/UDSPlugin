@@ -10,9 +10,6 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class WhoCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         TreeMap<PlayerRank, String> lists = new TreeMap<PlayerRank, String>();

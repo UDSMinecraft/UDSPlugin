@@ -9,9 +9,6 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class ScubaCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(player.getInventory().getHelmet() == null) {

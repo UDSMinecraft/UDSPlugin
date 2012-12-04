@@ -8,9 +8,6 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class ServerCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(numArgsHelp(1) && args[0].equals("stop")) {

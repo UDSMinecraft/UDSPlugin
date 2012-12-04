@@ -9,9 +9,6 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class MeCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         String action = StringUtils.join(args, " ");

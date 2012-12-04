@@ -10,9 +10,6 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class GiftCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;

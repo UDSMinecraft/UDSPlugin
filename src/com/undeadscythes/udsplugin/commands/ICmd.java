@@ -8,9 +8,6 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class ICmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(minArgsHelp(1) && maxArgsHelp(2)) {

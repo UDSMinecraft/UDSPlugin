@@ -8,9 +8,6 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class FaceCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         Direction direction;

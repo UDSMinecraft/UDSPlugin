@@ -8,9 +8,6 @@ import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
  * @author UndeadScythes
  */
 public class PromoteCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         SaveablePlayer target;

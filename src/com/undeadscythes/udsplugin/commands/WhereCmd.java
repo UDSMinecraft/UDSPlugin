@@ -8,9 +8,6 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class WhereCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         Location playerLocation = player.getLocation();

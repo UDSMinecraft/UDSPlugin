@@ -17,14 +17,6 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     private transient String commandName;
     private transient int argsLength;
 
-    /**
-     *
-     * @param sender
-     * @param command
-     * @param label
-     * @param args
-     * @return
-     */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if(sender instanceof Player) {

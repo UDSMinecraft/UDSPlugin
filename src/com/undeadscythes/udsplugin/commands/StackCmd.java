@@ -8,9 +8,6 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class StackCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         ItemStack[] items = player.getInventory().getContents();

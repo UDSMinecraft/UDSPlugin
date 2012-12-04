@@ -9,9 +9,6 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class MapCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(canAfford(Config.mapCost)) {

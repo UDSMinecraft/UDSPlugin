@@ -210,9 +210,7 @@ public class HelpCmd extends AbstractPlayerCommand {
             }
         }
     }
-    /**
-     * @inheritDocs
-     */
+
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(maxArgsHelp(2)) {

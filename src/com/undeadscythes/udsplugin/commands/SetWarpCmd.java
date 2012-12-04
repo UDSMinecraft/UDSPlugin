@@ -8,9 +8,6 @@ import com.undeadscythes.udsplugin.*;
  * @author UndeadScythes
  */
 public class SetWarpCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         PlayerRank rank;

@@ -9,9 +9,6 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class VIPCmd extends AbstractPlayerCommand {
-    /**
-     * @inheritDocs
-     */
     @Override
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         if(args.length == 0) {
