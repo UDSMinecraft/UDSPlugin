@@ -60,8 +60,8 @@ public class InventoryClick extends ListenerWrapper implements Listener {
                                 shopIsSelling = false;
                             }
                             if(shopIsSelling) {
-                                if(tradeValue != 0) {
-                                    if(customer.canAfford(tradeValue)) {
+                                if(tradeValue == 0) {
+                                    customer.sendMessage(Color.ERROR + "This shop does not sell that item.");if(customer.canAfford(tradeValue)) {
                                         final HashMap<Integer, ItemStack> overflow = pack.addItem(tradingItem.clone());
                                         int overflowAmount = 0;
                                         if(!overflow.isEmpty()) {
@@ -77,10 +77,26 @@ public class InventoryClick extends ListenerWrapper implements Listener {
                                         customer.sendMessage(Color.ERROR + "You do not have enough money to buy that.");
                                     }
                                 } else {
-                                    customer.sendMessage(Color.ERROR + "This shop does not sell that item.");
+                                    if(customer.canAfford(tradeValue)) {
+                                        final HashMap<Integer, ItemStack> overflow = pack.addItem(tradingItem.clone());
+                                        int overflowAmount = 0;
+                                        if(!overflow.isEmpty()) {
+                                            overflowAmount = overflow.get(0).getAmount();
+                                        }
+                                        customer.debit(tradeValue - overflowAmount * buyPrice);
+                                        if(!serverShop) {
+                                            owner.credit(tradeValue - overflowAmount * buyPrice);
+                                        }
+                                        tradingItem.setAmount(event.getCurrentItem().getAmount() - tradingItem.getAmount() + overflowAmount);
+                                        shop.setItem(rawSlot, tradingItem);
+                                    } else {
+                                        customer.sendMessage(Color.ERROR + "You do not have enough money to buy that.");
+                                    }
                                 }
                             } else {
-                                if(tradeValue != 0) {
+                                if(tradeValue == 0) {
+                                    customer.sendMessage(Color.ERROR + "This shop does not buy that item.");
+                                } else {
                                     if(serverShop || owner.canAfford(tradeValue)) {
                                         final HashMap<Integer, ItemStack> overflow = shop.addItem(tradingItem.clone());
                                         int overflowAmount = 0;
@@ -96,8 +112,6 @@ public class InventoryClick extends ListenerWrapper implements Listener {
                                     } else {
                                         customer.sendMessage(Color.ERROR + "This shop does not have enough money to buy that.");
                                     }
-                                } else {
-                                    customer.sendMessage(Color.ERROR + "This shop does not buy that item.");
                                 }
                             }
                         } else {

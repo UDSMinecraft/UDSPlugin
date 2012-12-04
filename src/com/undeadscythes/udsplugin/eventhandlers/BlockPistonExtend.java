@@ -14,19 +14,21 @@ import org.bukkit.event.block.*;
 public class BlockPistonExtend extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPistonExtendEvent event) {
-        List<Block> blocks = event.getBlocks();
+        final List<Block> blocks = event.getBlocks();
         if(blocks.isEmpty()) {
             return;
         }
-        Location piston = event.getBlock().getLocation();
-        for(Iterator<Block> i = blocks.iterator(); i.hasNext();) {
-            List<Region> testRegions1 = regionsHere(i.next().getLocation());
+        final Location piston = event.getBlock().getLocation();
+        for(Block i : blocks) {
+            final List<Region> testRegions1 = regionsHere(i.getLocation());
             if(!testRegions1.isEmpty()) {
                 boolean mixedRegions = false;
                 boolean totallyEnclosed = false;
                 for(Region j : testRegions1) {
-                    List<Region> testRegions2 = regionsHere(piston);
-                    if(!testRegions2.isEmpty()) {
+                    final List<Region> testRegions2 = regionsHere(piston);
+                    if(testRegions2.isEmpty()) {
+                        mixedRegions = true;
+                    } else {
                         for(Region k : testRegions2) {
                             if(!j.equals(k)) {
                                 mixedRegions = true;
@@ -35,9 +37,6 @@ public class BlockPistonExtend extends ListenerWrapper implements Listener {
                                 totallyEnclosed = true;
                             }
                         }
-                    }
-                    else {
-                        mixedRegions = true;
                     }
                 }
                 if(mixedRegions && !totallyEnclosed) {

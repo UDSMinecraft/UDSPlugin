@@ -15,7 +15,9 @@ import org.bukkit.inventory.*;
 public class InventoryOpen extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final InventoryOpenEvent event) {
-        InventoryHolder inventoryHolder = event.getInventory().getHolder();
+        final String protectionBypassed = Color.MESSAGE + "Protection bypassed.";
+        final String noAccess = Color.ERROR + "You do not have access to this block.";
+        final InventoryHolder inventoryHolder = event.getInventory().getHolder();
         if(inventoryHolder instanceof Player) {
             return;
         }
@@ -44,27 +46,27 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
         if(block.getType().equals(Material.DISPENSER)) {
             location = block.getLocation();
         }
-        SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         if(location != null && !player.canBuildHere(location)) {
             if(player.hasPermission(Perm.BYPASS)) {
-                player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                player.sendMessage(protectionBypassed);
                 return;
             }
             event.setCancelled(true);
-            player.sendMessage(Color.ERROR + "You do not have access to this block.");
+            player.sendMessage(noAccess);
             return;
         }
         boolean checkDouble = true;
         if(block.getType().equals(Material.CHEST)) {
             location = block.getLocation();
             if(block.getBlock().getRelative(BlockFace.UP).getType().equals(Material.WALL_SIGN)) {
-                InventoryView inventoryView = event.getView();
-                Inventory shop = inventoryView.getTopInventory();
-                Sign sign = (Sign)block.getBlock().getRelative(BlockFace.UP).getState();
+                final InventoryView inventoryView = event.getView();
+                final Inventory shop = inventoryView.getTopInventory();
+                final Sign sign = (Sign)block.getBlock().getRelative(BlockFace.UP).getState();
                 if(isShopSign(sign.getLines())) {
                     checkDouble = false;
-                    String playerName = sign.getLine(0).replace(Color.SIGN.toString(), "");
-                    ItemStack item = findItem(sign.getLine(2));
+                    final String playerName = sign.getLine(0).replace(Color.SIGN.toString(), "");
+                    final ItemStack item = findItem(sign.getLine(2));
                     item.setAmount(64);
                     if("Server".equals(playerName)) {
                         for(int i = 0; i < 27; i++) {
@@ -74,31 +76,31 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
                 } else if(!player.canBuildHere(location)) {
                     checkDouble = false;
                     if(player.hasPermission(Perm.BYPASS)) {
-                        player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                        player.sendMessage(protectionBypassed);
                         return;
                     }
                     event.setCancelled(true);
-                    player.sendMessage(Color.ERROR + "You do not have access to this block.");
+                    player.sendMessage(noAccess);
                 }
             } else if(!player.canBuildHere(location)) {
                 checkDouble = false;
                 if(player.hasPermission(Perm.BYPASS)) {
-                    player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                    player.sendMessage(protectionBypassed);
                     return;
                 }
                 event.setCancelled(true);
-                player.sendMessage(Color.ERROR + "You do not have access to this block.");
+                player.sendMessage(noAccess);
             }
         }
-        if(checkDouble == true && block2 != null && block2.getType().equals(Material.CHEST)) {
+        if(checkDouble && block2 != null && block2.getType().equals(Material.CHEST)) {
             location = block2.getLocation();
             if(block2.getBlock().getRelative(BlockFace.UP).getType().equals(Material.WALL_SIGN)) {
-                InventoryView inventoryView = event.getView();
-                Inventory shop = inventoryView.getTopInventory();
-                Sign sign = (Sign)block2.getBlock().getRelative(BlockFace.UP).getState();
+                final InventoryView inventoryView = event.getView();
+                final Inventory shop = inventoryView.getTopInventory();
+                final Sign sign = (Sign)block2.getBlock().getRelative(BlockFace.UP).getState();
                 if(isShopSign(sign.getLines())) {
-                    String playerName = sign.getLine(0).replace(Color.SIGN.toString(), "");
-                    ItemStack item = findItem(sign.getLine(2));
+                    final String playerName = sign.getLine(0).replace(Color.SIGN.toString(), "");
+                    final ItemStack item = findItem(sign.getLine(2));
                     item.setAmount(64);
                     if("Server".equals(playerName)) {
                         for(int i = 0; i < 27; i++) {
@@ -107,19 +109,19 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
                     }
                 } else if(!player.canBuildHere(location)) {
                     if(player.hasPermission(Perm.BYPASS)) {
-                        player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                        player.sendMessage(protectionBypassed);
                         return;
                     }
                     event.setCancelled(true);
-                    player.sendMessage(Color.ERROR + "You do not have access to this block.");
+                    player.sendMessage(noAccess);
                 }
             } else if(!player.canBuildHere(location)) {
                 if(player.hasPermission(Perm.BYPASS)) {
-                    player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                    player.sendMessage(protectionBypassed);
                     return;
                 }
                 event.setCancelled(true);
-                player.sendMessage(Color.ERROR + "You do not have access to this block.");
+                player.sendMessage(noAccess);
             }
         }
     }

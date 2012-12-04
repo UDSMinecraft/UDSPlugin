@@ -13,7 +13,7 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class BlockBreak implements Listener {
-    public static ArrayList<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
+    public final static List<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
 
     @EventHandler
     public void onEvent(final BlockBreakEvent event) {
@@ -30,11 +30,12 @@ public class BlockBreak implements Listener {
             player.getWorld().dropItemNaturally(event.getBlock().getLocation().add(UDSPlugin.HALF_BLOCK), new ItemStack(Material.MOB_SPAWNER));
             event.setExpToDrop(Config.spawnerEXP);
         } else if(event.getBlock().getType().equals(Material.SNOW_BLOCK)) {
+            final ItemStack item = new ItemStack(player.getItemInHand());
             for(Region arena : UDSPlugin.getArenas().values()) {
                 if(arena.getData().equals("spleef")) {
                     event.setCancelled(true);
                     event.getBlock().setType(Material.AIR);
-                    player.setItemInHand(new ItemStack(player.getItemInHand()));
+                    player.setItemInHand(item);
                     player.updateInventory();
                 }
             }

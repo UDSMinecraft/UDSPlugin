@@ -22,12 +22,12 @@ public class PlayerInteractEntity extends ListenerWrapper implements Listener {
                 if(pet instanceof Ocelot) {
                     ownerName = ((Ocelot)pet).getOwner().getName();
                 }
-                if(!ownerName.equals(event.getPlayer().getName())) {
-                    event.getPlayer().sendMessage(Color.MESSAGE + "This animal belongs to " + UDSPlugin.getPlayers().get(ownerName).getNick());
-                } else if(event.getPlayer().isSneaking()){
+                if(ownerName.equals(event.getPlayer().getName())) {
                     UDSPlugin.getPlayers().get(event.getPlayer().getName()).selectPet(event.getRightClicked().getUniqueId());
                     event.getPlayer().sendMessage(Color.MESSAGE + "Pet selected.");
                     event.setCancelled(true);
+                } else if(event.getPlayer().isSneaking()){
+                    event.getPlayer().sendMessage(Color.MESSAGE + "This animal belongs to " + UDSPlugin.getPlayers().get(ownerName).getNick());
                 }
             }
         } else if(event.getRightClicked() instanceof ItemFrame) {

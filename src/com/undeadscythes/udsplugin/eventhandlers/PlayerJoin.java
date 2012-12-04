@@ -14,7 +14,7 @@ import org.bukkit.inventory.*;
 public class PlayerJoin implements Listener {
     @EventHandler
     public void onEvent(final PlayerJoinEvent event) {
-        String playerName = event.getPlayer().getName();
+        final String playerName = event.getPlayer().getName();
         SaveablePlayer player;
         if(UDSPlugin.getPlayers().containsKey(playerName)) {
             player = UDSPlugin.getPlayers().get(playerName);
@@ -29,8 +29,9 @@ public class PlayerJoin implements Listener {
                 player.sendMessage(ChatColor.GOLD + "Welcome to your new server, I hope everything goes well.");
             } else {
                 Bukkit.broadcastMessage(Color.BROADCAST + "A new player, free gifts for everyone!");
+                final ItemStack gift = new ItemStack(Config.welcomeGift);
                 for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
-                    onlinePlayer.giveAndDrop(new ItemStack(Config.welcomeGift));
+                    onlinePlayer.giveAndDrop(gift);
                 }
             }
             player.quietTeleport(UDSPlugin.getWarps().get("spawn"));

@@ -14,15 +14,17 @@ import org.bukkit.event.block.*;
 public class BlockPistonRetract extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPistonRetractEvent event) {
-        Location piston = event.getBlock().getLocation();
-        Location block = event.getRetractLocation();
-        List<Region> testRegions1 = regionsHere(block);
+        final Location piston = event.getBlock().getLocation();
+        final Location block = event.getRetractLocation();
+        final List<Region> testRegions1 = regionsHere(block);
         if(!testRegions1.isEmpty()) {
             boolean mixedRegions = false;
             boolean totallyEnclosed = false;
             for(Region i : testRegions1) {
-                List<Region> testRegions2 = regionsHere(piston);
-                if(!testRegions2.isEmpty()) {
+                final List<Region> testRegions2 = regionsHere(piston);
+                if(testRegions2.isEmpty()) {
+                    mixedRegions = true;
+                } else {
                     for(Region j : testRegions2) {
                         if(!i.equals(j)) {
                             mixedRegions = true;
@@ -31,9 +33,6 @@ public class BlockPistonRetract extends ListenerWrapper implements Listener {
                             totallyEnclosed = true;
                         }
                     }
-                }
-                else {
-                    mixedRegions = true;
                 }
             }
             if(mixedRegions && !totallyEnclosed) {

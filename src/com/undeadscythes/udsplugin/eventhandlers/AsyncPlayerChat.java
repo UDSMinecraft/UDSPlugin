@@ -26,8 +26,8 @@ public class AsyncPlayerChat implements Listener {
     @EventHandler
     public void onEvent(final AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
-        SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
-        String logMessage = player.getNick() + ": " + event.getMessage();
+        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final String logMessage = player.getNick() + ": " + event.getMessage();
         Bukkit.getLogger().info(logMessage);
         if(!player.newChat()) {
             player.sendMessage(Color.ERROR + "You have been jailed for spamming chat.");
@@ -36,7 +36,7 @@ public class AsyncPlayerChat implements Listener {
         } else if(player.getChannel() == Channel.PUBLIC) {
             String message = event.getMessage();
             if(Censor.noCensor(message)) {
-                message = player.getRank().getColor() + player.getNick() + ": " + Color.TEXT + message;
+                message = (player.getRank().getColor() + player.getNick() + ": " + Color.TEXT).concat(message);
             } else {
                 player.sendMessage(Color.ERROR + "Please do not use bad language.");
                 message = player.getRank().getColor() + player.getNick() + ": " + Color.TEXT + Censor.fix(message);
@@ -55,21 +55,21 @@ public class AsyncPlayerChat implements Listener {
                 }
             }
         } else if(player.getChannel() == Channel.ADMIN) {
-            String message = PlayerRank.ADMIN.getColor() + "[ADMIN] " + player.getNick() + ": " + event.getMessage();
+            final String message = PlayerRank.ADMIN.getColor() + "[ADMIN] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
                 if(target.getRank().compareTo(PlayerRank.MOD) >= 0) {
                     target.sendMessage(message);
                 }
             }
         } else if(player.getChannel() == Channel.CLAN) {
-            Clan clan = player.getClan();
-            String message = Color.CLAN + "[" + clan.getName() + "] " + player.getNick() + ": " + event.getMessage();
+            final Clan clan = player.getClan();
+            final String message = Color.CLAN + "[" + clan.getName() + "] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : clan.getOnlineMembers()) {
                 target.sendMessage(message);
             }
         } else if(player.getChannel() == Channel.PRIVATE) {
-            ChatRoom chatRoom = player.getChatRoom();
-            String message = Color.PRIVATE + "[" + chatRoom.getName() + "] " + player.getNick() + ": " + event.getMessage();
+            final ChatRoom chatRoom = player.getChatRoom();
+            final String message = Color.PRIVATE + "[" + chatRoom.getName() + "] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : chatRoom.getOnlineMembers()) {
                 target.sendMessage(message);
             }

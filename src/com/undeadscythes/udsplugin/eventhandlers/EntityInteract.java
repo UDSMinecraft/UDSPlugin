@@ -14,7 +14,7 @@ import org.bukkit.event.entity.*;
 public class EntityInteract extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final EntityInteractEvent event) {
-        Block block = event.getBlock();
+        final Block block = event.getBlock();
         event.setCancelled(hasFlag(block.getLocation(), RegionFlag.PROTECTION) && block.getType() == Material.SOIL);
     }
 }

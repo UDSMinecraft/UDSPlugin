@@ -18,7 +18,7 @@ public class SignChange extends ListenerWrapper implements Listener {
         final String line0 = event.getLine(0);
         final String line1 = event.getLine(1);
         final String line2 = event.getLine(2);
-        SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         if(event.getLine(1).equalsIgnoreCase("shop")) {
             if(player.hasPermission(Perm.SHOP_SERVER) && line0.equalsIgnoreCase("server")) {
                 if(isShopSign(event.getLines())) {
@@ -33,7 +33,7 @@ public class SignChange extends ListenerWrapper implements Listener {
                 }
             } else if(player.hasPermission(Perm.SHOP_SIGN)) {
                 if(isShopSign(event.getLines())) {
-                    Location pLoc = event.getBlock().getLocation();
+                    final Location pLoc = event.getBlock().getLocation();
                     if(UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName()).isInShop(pLoc)) {
                         event.setLine(0, Color.SIGN + findShopOwner(pLoc).getName());
                         event.setLine(1, Color.SIGN + "Shop");

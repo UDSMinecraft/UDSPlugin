@@ -15,7 +15,7 @@ public class EntityDamage extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final EntityDamageEvent event) {
         if((event.getEntity() instanceof Player)) {
-            SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(((Player)event.getEntity()).getName());
+            final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(((Player)event.getEntity()).getName());
             if(player.hasGodMode() || (event.getCause().equals(DamageCause.DROWNING) && player.hasScuba())) {
                 event.setCancelled(true);
             }

@@ -13,8 +13,8 @@ import org.bukkit.event.entity.*;
 public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final EntityDamageByEntityEvent event) {
-        Entity attacker = getAbsoluteEntity(event.getDamager());
-        Entity defender = event.getEntity();
+        final Entity attacker = getAbsoluteEntity(event.getDamager());
+        final Entity defender = event.getEntity();
         if(attacker instanceof Player && defender instanceof Player) {
             event.setCancelled(pvp(UDSPlugin.getOnlinePlayers().get(((Player)attacker).getName()), UDSPlugin.getOnlinePlayers().get(((Player)defender).getName())));
         } else {
@@ -22,15 +22,15 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
         }
     }
 
-    private boolean pvp(SaveablePlayer attacker, SaveablePlayer defender) {
+    private boolean pvp(final SaveablePlayer attacker, final SaveablePlayer defender) {
         return defender.hasGodMode() || attacker.getClan().equals(defender.getClan()) || !defender.isInClan() || !attacker.isInClan() || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
     }
 
-    private boolean godMode(Entity defender) {
+    private boolean godMode(final Entity defender) {
         return defender instanceof Player && UDSPlugin.getOnlinePlayers().get(((Player)defender).getName()).hasGodMode();
     }
 
-    private boolean pve(Entity defender) {
+    private boolean pve(final Entity defender) {
         return Config.PASSIVE_MOBS.contains(defender.getType()) && !hasFlag(defender.getLocation(), RegionFlag.PVE);
     }
 }
