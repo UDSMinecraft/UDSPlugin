@@ -1,7 +1,8 @@
 package com.undeadscythes.udsplugin;
 
+import java.util.*;
 import org.bukkit.*;
-import org.bukkit.util.*;
+import org.bukkit.util.Vector;
 
 /**
  * A WorldEdit session belonging to a player.
@@ -11,6 +12,8 @@ public class WESession {
     private Vector v1 = null;
     private Vector v2 = null;
     private transient World world = null;
+    private Cuboid clipboard;
+    private Stack<Cuboid> history;
 
     /**
      *
@@ -53,6 +56,12 @@ public class WESession {
 
     }
 
+    /**
+     *
+     * @param v1
+     * @param v2
+     * @param world
+     */
     public void setVPair(final Vector v1, final Vector v2, final World world) {
         this.v1 = v1;
         this.v2 = v2;
@@ -74,5 +83,45 @@ public class WESession {
      */
     public int getVolume() {
         return (Math.abs(v2.getBlockX() - v1.getBlockX()) + 1) * (Math.abs(v2.getBlockY() - v1.getBlockY()) + 1) * (Math.abs(v2.getBlockZ() - v1.getBlockZ()) + 1);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Cuboid getClipboard() {
+        return clipboard;
+    }
+
+    /**
+     *
+     * @param blocks
+     */
+    public void setClipboard(final Cuboid blocks) {
+        clipboard = blocks;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean hasUndo() {
+        return !history.empty();
+    }
+
+    /**
+     *
+     * @param blocks
+     */
+    public void save(final Cuboid blocks) {
+        history.push(blocks);
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public Cuboid load() {
+        return history.pop();
     }
 }
