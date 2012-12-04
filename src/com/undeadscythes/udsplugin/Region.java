@@ -198,6 +198,7 @@ public class Region implements Saveable {
 
     @Override
     public String toString() {
+        Bukkit.getLogger().info("Implicit Region.toString()."); // Implicit .toString()
         return name;
     }
 

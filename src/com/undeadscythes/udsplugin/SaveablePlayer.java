@@ -3,23 +3,13 @@ package com.undeadscythes.udsplugin;
 import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.eventhandlers.AsyncPlayerChat.Channel;
 import java.io.*;
-import java.net.*;
 import java.util.*;
 import java.util.logging.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
-import org.bukkit.conversations.*;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.InventoryView.Property;
-import org.bukkit.map.*;
-import org.bukkit.metadata.*;
-import org.bukkit.permissions.*;
-import org.bukkit.plugin.*;
-import org.bukkit.potion.*;
 
 /**
  * An extension of Minecraft players adding various fields and methods.
@@ -198,6 +188,7 @@ public class SaveablePlayer implements Saveable {
 
     @Override
     public String toString() {
+        Bukkit.getLogger().info("Implicit Player.toString()."); // Implicit .toString()
         return name;
     }
 
@@ -1346,7 +1337,7 @@ public class SaveablePlayer implements Saveable {
      *
      * @param health
      */
-    public void setHealth(int health) {
+    public void setHealth(final int health) {
         base.setHealth(health);
     }
 }
