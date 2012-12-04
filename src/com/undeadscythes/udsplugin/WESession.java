@@ -101,6 +101,10 @@ public class WESession {
         clipboard = blocks;
     }
 
+    public boolean hasClipboard() {
+        return clipboard != null;
+    }
+
     /**
      *
      * @return
@@ -118,7 +122,7 @@ public class WESession {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Cuboid load() {

@@ -60,46 +60,44 @@ public class WECmd extends AbstractPlayerCommand {
         if(hasPerm(Perm.WE_DRAIN)) {
             if(range <= Config.drainRange) {
                 final WESession session = getSession();
-                if(session != null) {
-                    final Location location = player.getLocation();
-                    final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
-                    final Vector v2 = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
-                    final Vector min = Vector.getMinimum(v1, v2);
-                    final Vector max = Vector.getMaximum(v1, v2);
-                    int count = 0;
-                    final World world = player.getWorld();
-                    session.save(new Cuboid(world, v1, v2, player.getLocation()));
-                    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-                        for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
-                            for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-                                final Block block = world.getBlockAt(x, y, z);
-                                if(block.getType() == Material.STATIONARY_LAVA || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.WATER || block.getType() == Material.LAVA) {
-                                    if(x == min.getX() || x == max.getX() || z == max.getZ() || z == max.getZ()) {
-                                        if(block.getType() == Material.LAVA) {
-                                            block.setType(Material.STATIONARY_LAVA);
-                                        } else {
-                                            block.setType(Material.STATIONARY_WATER);
-                                        }
+                final Location location = player.getLocation();
+                final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
+                final Vector v2 = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
+                final Vector min = Vector.getMinimum(v1, v2);
+                final Vector max = Vector.getMaximum(v1, v2);
+                int count = 0;
+                final World world = player.getWorld();
+                session.save(new Cuboid(world, v1, v2, player.getLocation()));
+                for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                    for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                        for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                            final Block block = world.getBlockAt(x, y, z);
+                            if(block.getType() == Material.STATIONARY_LAVA || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.WATER || block.getType() == Material.LAVA) {
+                                if(x == min.getX() || x == max.getX() || z == max.getZ() || z == max.getZ()) {
+                                    if(block.getType() == Material.LAVA) {
+                                        block.setType(Material.STATIONARY_LAVA);
                                     } else {
-                                        block.setType(Material.AIR);
-                                        count++;
+                                        block.setType(Material.STATIONARY_WATER);
                                     }
+                                } else {
+                                    block.setType(Material.AIR);
+                                    count++;
                                 }
                             }
                         }
                     }
-                    player.sendMessage(Color.MESSAGE + "Drained " + count + " blocks.");
                 }
-            } else {
-                player.sendMessage(Color.ERROR + "Value is out of range.");
+                player.sendMessage(Color.MESSAGE + "Drained " + count + " blocks.");
             }
+        } else {
+            player.sendMessage(Color.ERROR + "Value is out of range.");
         }
     }
 
     public void set() {
         if(hasPerm(Perm.WE_SET)) {
             final WESession session = getSession();
-            if(session != null && hasTwoPoints(session)) {
+            if(hasTwoPoints(session)) {
                 final ItemStack item = getItem(args[1]);
                 if(item != null) {
                     final Vector v1 = session.getV1();
@@ -134,7 +132,7 @@ public class WECmd extends AbstractPlayerCommand {
 
     public void undo() {
         final WESession session = getSession();
-        if(session != null && hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
+        if(hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
             put(session.load());
         }
     }
@@ -142,7 +140,7 @@ public class WECmd extends AbstractPlayerCommand {
     public void replace() {
         if(hasPerm(Perm.WE_REPLACE)) {
             final WESession session = getSession();
-            if(session != null && hasTwoPoints(session)) {
+            if(hasTwoPoints(session)) {
                 final Vector v1 = session.getV1();
                 final Vector v2 = session.getV2();
                 if(session.getVolume() <= Config.editRange) {
@@ -182,7 +180,7 @@ public class WECmd extends AbstractPlayerCommand {
             if(distance > -1) {
                 if(distance <= Config.moveRange) {
                     final WESession session = getSession();
-                    if(session != null && hasTwoPoints(session)) {
+                    if(hasTwoPoints(session)) {
                         final Vector v1 = session.getV1();
                         final Vector v2 = session.getV2();
                         if(session.getVolume() <= Config.editRange) {
@@ -225,7 +223,7 @@ public class WECmd extends AbstractPlayerCommand {
 
     public void copy() {
         final WESession session = getSession();
-        if(session != null && hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
+        if(hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
             session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation()));
             player.sendMessage(Color.MESSAGE + "Copied " + session.getClipboard().getVolume() + " blocks.");
         }
@@ -233,13 +231,15 @@ public class WECmd extends AbstractPlayerCommand {
 
     public void paste() {
         final WESession session = getSession();
-        if(session != null) {
+        if(session.hasClipboard() && hasPerm(Perm.WE_PASTE)) {
             final Cuboid clipboard = session.getClipboard();
             final Vector v1 = player.getLocation().toVector().clone().add(clipboard.getOffset());
             final Vector v2 = v1.clone().add(clipboard.getDV());
             session.save(new Cuboid(player.getWorld(), v1, v2, player.getLocation()));
             put(clipboard, v1);
             player.sendMessage(Color.MESSAGE + "Pasted " + clipboard.getVolume() + " blocks.");
+        } else {
+            player.sendMessage(Color.ERROR + "You have nothing to paste.");
         }
     }
 
@@ -253,7 +253,7 @@ public class WECmd extends AbstractPlayerCommand {
 
     public void ext(final int range) {
         final WESession session = getSession();
-        if(hasPerm(Perm.WE_EXT) && session != null) {
+        if(hasPerm(Perm.WE_EXT)) {
             if (range <= Config.drainRange) {
                 final Location location = player.getLocation();
                 final Vector max = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
