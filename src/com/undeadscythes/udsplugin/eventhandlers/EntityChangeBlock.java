@@ -7,7 +7,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * Description.
+ * When an entity changes a block.
  * @author UndeadScythes
  */
 public class EntityChangeBlock extends ListenerWrapper implements Listener {

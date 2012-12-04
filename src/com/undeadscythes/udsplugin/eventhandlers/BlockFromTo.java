@@ -6,7 +6,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * Description.
+ * When a block moves from on location to another.
  * @author UndeadScythes
  */
 public class BlockFromTo extends ListenerWrapper implements Listener {

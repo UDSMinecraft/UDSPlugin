@@ -5,7 +5,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Description.
+ * When a player fills a bucket.
  * @author UndeadScythes
  */
 public class PlayerBucketFill extends ListenerWrapper implements Listener {

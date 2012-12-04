@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
 import org.apache.commons.lang.*;
 
 /**
- * Description.
+ * Region related commands.
  * @author UndeadScythes
  */
 public class RegionCmd extends AbstractPlayerCommand {

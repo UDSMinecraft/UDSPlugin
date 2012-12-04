@@ -5,7 +5,7 @@ import java.util.*;
 import org.bukkit.*;
 
 /**
- * Description.
+ * Place and check bounties on players.
  * @author UndeadScythes
  */
 public class BountyCmd extends AbstractPlayerCommand {

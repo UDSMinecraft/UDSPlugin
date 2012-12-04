@@ -6,7 +6,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * Description.
+ * When an entity explodes.
  * @author UndeadScythes
  */
 public class EntityExplode extends ListenerWrapper implements Listener {

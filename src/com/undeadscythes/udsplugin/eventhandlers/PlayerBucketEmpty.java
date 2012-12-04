@@ -6,7 +6,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Description.
+ * When a player empties a bucket.
  * @author UndeadScythes
  */
 public class PlayerBucketEmpty extends ListenerWrapper implements Listener {

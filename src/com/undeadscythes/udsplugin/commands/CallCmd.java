@@ -3,7 +3,7 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Description.
+ * Request to teleport to another player.
  * @author UndeadScythes
  */
 public class CallCmd extends AbstractPlayerCommand {

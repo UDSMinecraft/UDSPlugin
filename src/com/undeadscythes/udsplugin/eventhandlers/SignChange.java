@@ -8,7 +8,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.inventory.*;
 
 /**
- * Description.
+ * When a player changes the text of a sign.
  * @author UndeadScythes
  */
 public class SignChange extends ListenerWrapper implements Listener {

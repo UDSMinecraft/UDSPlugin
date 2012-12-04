@@ -5,7 +5,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Description
+ * When a player leaves the server.
  * @author UndeadScythes
  */
 public class PlayerQuit implements Listener {

@@ -4,7 +4,7 @@ import com.undeadscythes.udsplugin.*;
 import org.bukkit.entity.*;
 
 /**
- * Description.
+ * Remove all monsters around the player.
  * @author UndeadScythes
  */
 public class ButcherCmd extends AbstractPlayerCommand {

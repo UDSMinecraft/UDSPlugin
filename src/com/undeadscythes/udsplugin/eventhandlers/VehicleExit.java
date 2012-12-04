@@ -8,7 +8,7 @@ import org.bukkit.event.vehicle.*;
 import org.bukkit.inventory.*;
 
 /**
- * Description.
+ * When a player leaves a vehicle.
  * @author UndeadScythes
  */
 public class VehicleExit extends ListenerWrapper implements Listener {

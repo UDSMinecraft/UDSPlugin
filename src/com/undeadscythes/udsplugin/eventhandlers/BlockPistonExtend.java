@@ -8,7 +8,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * Description.
+ * When a piston extends.
  * @author UndeadScythes
  */
 public class BlockPistonExtend extends ListenerWrapper implements Listener {

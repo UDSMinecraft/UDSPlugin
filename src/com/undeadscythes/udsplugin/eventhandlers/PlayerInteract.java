@@ -14,7 +14,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.util.Vector;
 
 /**
- * Description.
+ * When a player interacts with a block.
  * @author UndeadScythes
  */
 public class PlayerInteract extends ListenerWrapper implements Listener {

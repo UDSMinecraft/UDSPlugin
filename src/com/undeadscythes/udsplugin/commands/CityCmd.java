@@ -6,7 +6,7 @@ import org.bukkit.*;
 import org.bukkit.util.Vector;
 
 /**
- * Description.
+ * City related commands.
  * @author UndeadScythes
  */
 public class CityCmd extends AbstractPlayerCommand {

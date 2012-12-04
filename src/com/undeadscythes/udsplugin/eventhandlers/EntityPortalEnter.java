@@ -5,7 +5,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * Description.
+ * When an entity enters a portal.
  * @author UndeadScythes
  */
 public class EntityPortalEnter extends ListenerWrapper implements Listener {

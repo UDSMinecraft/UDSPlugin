@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 
 /**
- * Description.
+ * When a player opens an inventory window.
  * @author UndeadScythes
  */
 public class InventoryOpen extends ListenerWrapper implements Listener {

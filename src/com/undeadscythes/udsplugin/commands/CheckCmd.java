@@ -3,7 +3,7 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Description.
+ * Teleport to a previously saved checkpoint.
  * @author UndeadScythes
  */
 public class CheckCmd extends AbstractPlayerCommand {

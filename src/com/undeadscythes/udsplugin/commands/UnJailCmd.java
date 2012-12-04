@@ -3,7 +3,7 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Description. Sends help on wrong arguments.
+ * Remove a player from jail.
  * @author UndeadScythes
  */
 public class UnJailCmd extends AbstractPlayerCommand {

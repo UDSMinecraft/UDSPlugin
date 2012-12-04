@@ -8,7 +8,7 @@ import org.bukkit.event.vehicle.*;
 import org.bukkit.inventory.*;
 
 /**
- * Description.
+ * When a vehicle is destroyed.
  * @author UndeadScythes
  */
 public class VehicleDestroy extends ListenerWrapper implements Listener {

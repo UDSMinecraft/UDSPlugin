@@ -6,7 +6,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.vehicle.*;
 
 /**
- * Description.
+ * When a vehicle collides with an entity.
  * @author UndeadScythes
  */
 public class VehicleEntityCollision extends ListenerWrapper implements Listener {

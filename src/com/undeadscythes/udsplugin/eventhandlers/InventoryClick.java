@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 
 /**
- * Description.
+ * When a player clicks in an inventory window.
  * @author UndeadScythes
  */
 public class InventoryClick extends ListenerWrapper implements Listener {

@@ -8,7 +8,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * Description.
+ * When an entity interacts with a block.
  * @author UndeadScythes
  */
 public class EntityInteract extends ListenerWrapper implements Listener {

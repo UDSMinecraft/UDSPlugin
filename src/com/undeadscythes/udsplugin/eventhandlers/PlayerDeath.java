@@ -6,7 +6,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * Description.
+ * When a player dies.
  * @author UndeadScythes
  */
 public class PlayerDeath extends ListenerWrapper implements Listener {

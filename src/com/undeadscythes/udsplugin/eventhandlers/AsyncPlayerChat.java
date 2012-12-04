@@ -8,7 +8,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Description
+ * When a player chats in game.
  * @author UndeadScythes
  */
 public class AsyncPlayerChat implements Listener {

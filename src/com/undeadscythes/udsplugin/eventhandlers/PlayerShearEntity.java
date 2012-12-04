@@ -5,7 +5,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Description.
+ * When a player shears a sheep.
  * @author UndeadScythes
  */
 public class PlayerShearEntity extends ListenerWrapper implements Listener {

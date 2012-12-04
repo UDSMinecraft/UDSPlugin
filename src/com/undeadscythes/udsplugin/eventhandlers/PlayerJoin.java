@@ -8,7 +8,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 
 /**
- * Description
+ * When a player logs onto the server.
  * @author UndeadScythes
  */
 public class PlayerJoin implements Listener {

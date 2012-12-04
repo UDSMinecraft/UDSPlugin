@@ -5,7 +5,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * Description.
+ * When a block is powered by redstone.
  * @author UndeadScythes
  */
 public class BlockRedstone extends ListenerWrapper implements Listener {
