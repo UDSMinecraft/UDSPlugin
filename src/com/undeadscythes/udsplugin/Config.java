@@ -42,6 +42,7 @@ public final class Config {
     public static long dragonRespawn;
     public static String serverOwner;
     public static int spawnerEXP;
+    public static int moveRange;
     public static long pvpTime;
     public static int butcherRange;
     public static Material welcomeGift;
@@ -90,6 +91,7 @@ public final class Config {
         clanCost = config.getInt("cost.clan");
         baseCost = config.getInt("cost.base");
         drainRange = config.getInt("range.drain");
+        moveRange = config.getInt("range.move");
         whitelistVIP = new ArrayList<Material>();
         for(int id : config.getIntegerList("item-whitelist")) {
             whitelistVIP.add(Material.getMaterial(id));

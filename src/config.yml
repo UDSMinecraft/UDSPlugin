@@ -28,6 +28,7 @@ range:
   butcher: 50
   compass: 100
   drain: 50
+  move: 50
 pvp-time: 5
 exp:
   spawner: 3
