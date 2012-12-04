@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.Region.RegionFlag;
+import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.util.*;
 import org.bukkit.*;
@@ -10,6 +12,7 @@ import org.bukkit.inventory.*;
 
 /**
  * A command that is designed to be run by a player.
+ * Methods allow various checks to be made and messages to be sent to the players on errors.
  * @author UndeadScythes
  */
 public abstract class AbstractPlayerCommand implements CommandExecutor {
@@ -17,6 +20,14 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     private transient String commandName;
     private transient int argsLength;
 
+    /**
+     * Checks player permission then passes arguments to executor.
+     * @param sender Player who sent the command.
+     * @param command The command sent.
+     * @param label ?
+     * @param args Arguments to the command.
+     * @return <code>true</code> if the commands has been handled fully, <code>false</code> otherwise.
+     */
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if(sender instanceof Player) {
@@ -35,36 +46,34 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     /**
      * Checks if a string corresponds to a valid rank.
      * @param string String to check.
-     * @return The rank if the rank is valid, <code>null</code> otherwise.
+     * @return The rank if it is valid, <code>null</code> otherwise.
      */
     protected PlayerRank getRank(final String string) {
-        PlayerRank rank = PlayerRank.getByName(string);
-        if(rank != null) {
-            return rank;
-        } else {
+        final PlayerRank rank = PlayerRank.getByName(string);
+        if(rank == null) {
             player.sendMessage(Color.ERROR + "You have not entered a valid rank.");
-            return null;
         }
+        return rank;
     }
 
     /**
-     *
-     * @return
+     * Checks the player has an item in their hand.
+     * @return <code>true</code> if the player is holding an item, <code>false</code> otherwise.
      */
     protected boolean notAirHand() {
-        if(!player.getItemInHand().getType().equals(Material.AIR)) {
-            return true;
-        } else {
+        if(player.getItemInHand().getType().equals(Material.AIR)) {
             player.sendMessage(Color.ERROR + "You need an item in your hand.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @param enchantment
-     * @param item
-     * @return
+     * Check that the item is enchantable.
+     * @param enchantment The enchantment.
+     * @param item The item.
+     * @return <code>true</code> if the item can be enchanted, <code>false</code> otherwise.
      */
     protected boolean canEnchant(final Enchantment enchantment, final ItemStack item) {
         if(enchantment.canEnchantItem(item)) {
@@ -76,38 +85,33 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @return
+     * Gets the players selected pet.
+     * @return The UUID of the pet or <code>null</code> if the player has no pet selected.
      */
     protected UUID getSelectedPet() {
-        UUID pet;
-        if((pet = player.getSelectedPet()) != null) {
-            return pet;
-        } else {
+        final UUID pet = player.getSelectedPet();
+        if(pet == null) {
             player.sendMessage(Color.ERROR + "Right click a pet while sneaking to select it first.");
-            return null;
         }
+        return pet;
     }
 
     /**
-     *
-     * @return
+     * Get the players shop.
+     * @return The shop region or <code>null</code> if the player does not own a shop.
      */
     protected Region getShop() {
-        Region shop;
-        if((shop = UDSPlugin.getShops().get(player.getName() + "shop")) != null) {
-            return shop;
-        } else {
+        final Region shop = UDSPlugin.getShops().get(player.getName() + "shop");
+        if(shop == null) {
             player.sendMessage(Color.ERROR + "You do not own a shop.");
-            return null;
         }
-
+        return shop;
     }
 
     /**
-     *
-     * @param num
-     * @return
+     * Check the number of arguments and send help if there are the wrong number.
+     * @param num Number of arguments required.
+     * @return <code>true</code> if there are the correct number of arguments, <code>false</code> otherwise.
      */
     protected boolean numArgsHelp(final int num) {
         if(argsLength == num) {
@@ -119,9 +123,9 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param num
-     * @return
+     * Check the number of arguments and send help if there are the wrong number.
+     * @param num Number of arguments required.
+     * @return <code>true</code> if there are the correct number of arguments, <code>false</code> otherwise.
      */
     protected boolean minArgsHelp(final int num) {
         if(argsLength >= num) {
@@ -133,9 +137,9 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param num
-     * @return
+     * Check the number of arguments and send help if there are the wrong number.
+     * @param num Number of arguments required.
+     * @return <code>true</code> if there are the correct number of arguments, <code>false</code> otherwise.
      */
     protected boolean maxArgsHelp(final int num) {
         if(argsLength <= num) {
@@ -147,7 +151,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
+     * Send the player help relating to the number of arguments used.
      */
     protected void numArgsHelp() {
         player.sendMessage(Color.ERROR + "You have made an error using this command.");
@@ -155,12 +159,12 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param args
+     * If the arguments are asking for help, send help otherwise advise about bad arguments.
+     * @param args Arguments to the command.
      */
     protected void subCmdHelp(final String[] args) {
         if(args[0].equalsIgnoreCase("help")) {
-            if(args.length == 2 && args[1].matches("[0-9][0-9]*")) {
+            if(argsLength == 2 && args[1].matches(Config.INT_REGEX)) {
                 sendHelp(Integer.parseInt(args[1]));
             } else {
                 sendHelp(1);
@@ -171,7 +175,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
+     * Send help about an invalid sub command.
      */
     protected void subCmdHelp() {
         player.sendMessage(Color.ERROR + "That is not a valid sub command.");
@@ -179,59 +183,48 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param page
+     * Send the player a help file for the command.
+     * @param page The page to display.
      */
     protected void sendHelp(final int page) {
         player.performCommand("help " + commandName + " " + page);
     }
 
     /**
-     *
-     * @param target
-     * @return
+     * Check that the player can send a request.
+     * @param target The requestee.
+     * @return <code>true</code> if the player can send a request, <code>false</code> otherwise.
      */
     protected boolean canRequest(final SaveablePlayer target) {
-        if(noRequests(target) && notIgnored(target)) {
-            return true;
-        } else {
-            return false;
-        }
+        return noRequests(target) && notIgnored(target);
     }
 
     /**
-     *
-     * @return
+     * Check that the player can teleport.
+     * @return <code>true</code> if the player is free to teleport, <code>false</code> otherwise.
      */
     protected boolean canTP() {
-        if(notPinned() && notJailed()) {
-            return true;
-        } else {
-            return false;
-        }
+        return notPinned() && notJailed();
     }
 
     /**
-     *
-     * @param target
-     * @return
+     * Get the targets shop.
+     * @param target The player.
+     * @return The targets shop if they own one, <code>null</code> otherwise.
      */
     protected Region getShop(final SaveablePlayer target) {
-        Region shop;
-        if((shop = UDSPlugin.getShops().get(target.getName() + "shop")) != null) {
-            return shop;
-        } else {
+        final Region shop = UDSPlugin.getShops().get(target.getName() + "shop");
+        if(shop == null) {
             player.sendMessage(Color.ERROR + "That player does not own a shop.");
-            return null;
         }
-
+        return shop;
     }
 
     /**
-     *
-     * @param enchantment
-     * @param level
-     * @return
+     * Check that the enchantment can accept the level.
+     * @param enchantment Enchantment.
+     * @param level Level to check.
+     * @return <code>true</code> if the enchantment can accept the level, <code>false</code> otherwise.
      */
     protected boolean goodEnchantLevel(final Enchantment enchantment, final int level) {
         if(level <= enchantment.getMaxLevel()) {
@@ -243,136 +236,125 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param amount
-     * @return
+     * Check that a price is both a valid price and that the player can afford it.
+     * @param amount The price.
+     * @return The price if the player can afford it, <code>-1</code> otherwise.
      */
     protected int getAffordablePrice(final String amount) {
-        int cash;
-        if((cash = parseInt(amount)) != -1 && canAfford(cash)) {
-            return cash;
-        } else {
+        final int cash = parseInt(amount);
+        if(cash > -1 && !canAfford(cash)) {
             return -1;
         }
+        return cash;
     }
 
     /**
-     *
-     * @return
+     * Get the players whisperer.
+     * @return The players whisperer, <code>null</code> if the player is not whispering.
      */
     protected SaveablePlayer getWhisperer() {
-        SaveablePlayer target;
-        if((target = player.getWhisperer()) != null) {
-            return target;
-        } else {
+        final SaveablePlayer target = player.getWhisperer();
+        if(target == null) {
             player.sendMessage(Color.ERROR + "There is no one to send this message to.");
-            return null;
         }
+        return target;
     }
 
     /**
-     *
-     * @return
+     * Check if the player is in a chat room.
+     * @return <code>true</code> if the player is in a chat room, <code>false</code> otherwise.
      */
     protected boolean inChatRoom() {
-        if(player.getChatRoom() != null) {
-            return true;
-        } else {
+        if(player.getChatRoom() == null) {
             player.sendMessage(Color.ERROR + "You are not in any private chat rooms.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @return
+     * Get the players WorldEdit session.
+     * @return The players WE session, <code>null</code> if the player does not currently have a session.
      */
     protected WESession getSession() {
-        WESession session;
-        if((session = UDSPlugin.getSessions().get(player.getName())) != null) {
-            return session;
-        } else {
+        final WESession session = UDSPlugin.getSessions().get(player.getName());
+        if(session == null) {
             player.sendMessage(Color.ERROR + "You do not have a current WE session.");
-            return null;
         }
+        return session;
     }
 
     /**
-     *
-     * @param regionName
-     * @return
+     * Get a region by name.
+     * @param regionName Region name.
+     * @return The region or <code>null</code> if no region exists by this name.
      */
     protected Region getRegion(final String regionName) {
-        Region region;
-        if((region = UDSPlugin.getRegions().get(regionName)) != null) {
-            return region;
-        } else {
+        final Region region = UDSPlugin.getRegions().get(regionName);
+        if(region == null) {
             player.sendMessage(Color.ERROR + "No region exists by that name.");
-            return null;
         }
+        return region;
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Get a region flag by name.
+     * @param name Region flag name.
+     * @return The region flag if it exists, <code>null</code> otherwise.
      */
-    protected Region.RegionFlag getFlag(final String name) {
-        Region.RegionFlag flag;
-        if((flag = Region.RegionFlag.getByName(name)) != null) {
-            return flag;
-        } else {
+    protected RegionFlag getFlag(final String name) {
+        final RegionFlag flag = Region.RegionFlag.getByName(name);
+        if(flag == null) {
             player.sendMessage(Color.ERROR + "That is not a valid region type.");
-            return null;
         }
+        return flag;
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Get a region type by name.
+     * @param name The region type name.
+     * @return The region type if it exists, <code>null</code> otherwise.
      */
-    protected Region.RegionType getRegionType(final String name) {
-        Region.RegionType type;
-        if((type = Region.RegionType.getByName(name)) != null) {
-            return type;
-        } else {
+    protected RegionType getRegionType(final String name) {
+        final RegionType type = Region.RegionType.getByName(name);
+        if(type == null) {
             player.sendMessage(Color.ERROR + "That is not a valid region type.");
-            return null;
         }
+        return type;
     }
 
     /**
-     *
-     * @param session
-     * @return
+     * Check that the player has two World Edit points selected.
+     * @param session The players session.
+     * @return <code>true</code> if the session has two points, <code>false</code> otherwise.
      */
     protected boolean hasTwoPoints(final WESession session) {
-        if(session.getV1() != null && session.getV2() != null) {
-            return true;
-        } else {
+        if(session.getV1() == null || session.getV2() == null) {
             player.sendMessage(Color.ERROR + "You need to select two points.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @return
+     * Check that the player does not own a shop.
+     * @return <code>true</code> if the players does not own a shop, <code>false</code> otherwise.
      */
     protected boolean noShop() {
-        if(!UDSPlugin.getShops().containsKey(player.getName() + "shop")) {
-            return true;
-        } else {
+        if(UDSPlugin.getShops().containsKey(player.getName() + "shop")) {
             player.sendMessage(Color.ERROR + "You already own a shop.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @param target
-     * @return
+     * Check that the target player is banned.
+     * @param target Target player.
+     * @return <code>true</code> if the target is banned, <code>false</code> otherwise.
      */
     protected boolean isBanned(final SaveablePlayer target) {
         if(target.isBanned()) {
@@ -384,112 +366,104 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @return
+     * Get the players currently pending request.
+     * @return The players current request if it exists, <code>null</code> otherwise.
      */
     protected Request getRequest() {
-        Request request;
-        if((request = UDSPlugin.getRequests().get(player.getName())) != null) {
-            return request;
-        } else {
+        final Request request = UDSPlugin.getRequests().get(player.getName());
+        if(request == null) {
             player.sendMessage(Color.ERROR + "You have no pending requests.");
-            return null;
         }
+        return request;
     }
 
     /**
-     *
-     * @return
+     * Get the players home region.
+     * @return The players home region if it exists, <code>null</code> otherwise.
      */
     protected Region getHome() {
-        Region home;
-        if((home = UDSPlugin.getHomes().get(player.getName() + "home")) != null) {
-            return home;
-        } else {
+        final Region home = UDSPlugin.getHomes().get(player.getName() + "home");
+        if(home == null) {
             player.sendMessage(Color.ERROR + "You do not have a home.");
-            return null;
         }
+        return home;
     }
 
     /**
-     *
-     * @param dir
-     * @return
+     * Get a direction by name.
+     * @param dir The direction name.
+     * @return The direction if it exists, <code>null</code> otherwise.
      */
     protected Direction getDirection(final String dir) {
-        Direction direction;
-        if((direction = Direction.getByName(dir)) != null) {
-            return direction;
-        } else {
+        final Direction direction = Direction.getByName(dir);
+        if(direction == null) {
             player.sendMessage(Color.ERROR + "That is not a valid direction.");
-            return null;
         }
+        return direction;
     }
 
     /**
-     *
-     * @param dir
-     * @return
+     * Get a cardinal direction by name.
+     * @param dir The direction name.
+     * @return The cardinal direction if it exists, <code>null</code> otherwise.
      */
     protected Direction getCardinalDirection(final String dir) {
-        Direction direction;
-        if((direction = getDirection(dir)) != null) {
+        final Direction direction = getDirection(dir);
+        if(direction == null) {
+            return null;
+        } else {
             if(direction.isCardinal()) {
                 return direction;
             } else {
                 player.sendMessage(Color.ERROR + "You must choose a cardinal direction.");
                 return null;
             }
-        } else {
-            return null;
         }
     }
 
     /**
-     *
-     * @return
+     * Check that the player is homeless.
+     * @return <code>true</code> if the player does not have a home, <code>false</code> otherwise.
      */
     protected boolean noHome() {
-        if(!UDSPlugin.getHomes().containsKey(player.getName() + "home")) {
-            return true;
-        } else {
+        if(UDSPlugin.getHomes().containsKey(player.getName() + "home")) {
             player.sendMessage(Color.ERROR + "You already have a home.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @param clan
-     * @return
+     * Check that the clan has no base region.
+     * @param clan The clan to check.
+     * @return <code>true</code> if the clan does not have a base, <code>false</code> otherwise.
      */
     protected boolean noBase(final Clan clan) {
-        if(!UDSPlugin.getBases().containsKey(clan.getName() + "base")) {
-            return true;
-        } else {
+        if(UDSPlugin.getBases().containsKey(clan.getName() + "base")) {
             player.sendMessage(Color.ERROR + "Your clan already has a base.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Get a clan by name.
+     * @param name Clan name.
+     * @return The clan if it exists, <code>null</code> otherwise.
      */
     protected Clan getClan(final String name) {
-        Clan clan;
-        if((clan = UDSPlugin.getClans().get(name)) != null) {
-            return clan;
-        } else {
+        final Clan clan = UDSPlugin.getClans().get(name);
+        if(clan == null) {
             player.sendMessage(Color.ERROR + "That clan does not exist.");
-            return null;
         }
+        return clan;
     }
 
     /**
-     *
-     * @return
+     * Check that a player is clanless.
+     * @return <code>true</code> if the player is clanless, <code>false</code> otherwise.
      */
     protected boolean isClanless() {
         if(player.getClan() == null) {
@@ -501,10 +475,10 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param player
-     * @param clan
-     * @return
+     * Check that the target player is in the clan.
+     * @param player Target player.
+     * @param clan Clan to check.
+     * @return <code>true</code> if the player is a member of the clan, <code>false</code> otherwise.
      */
     protected boolean isInClan(final SaveablePlayer player, final Clan clan) {
         if(player.getClan().equals(clan)) {
@@ -516,23 +490,23 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Check that no clan exists by this name.
+     * @param name Clan name.
+     * @return <code>true</code> if no clan exists by this name, <code>false</code> otherwise.
      */
     protected boolean notClan(final String name) {
-        if(!UDSPlugin.getClans().containsKey(name)) {
-            return true;
-        } else {
+        if(UDSPlugin.getClans().containsKey(name)) {
             player.sendMessage(Color.ERROR + "A clan already exists with that name.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @param clan
-     * @return
+     * Check this player is leader of the clan.
+     * @param clan Clan to check.
+     * @return <code>true</code> if this player is clan leader, <code>false</code> otherwise.
      */
     protected boolean isLeader(final Clan clan) {
         if(clan.getLeader().equals(player)) {
@@ -548,13 +522,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The player's clan or <code>null</code> if the player is clanless.
      */
     protected Clan getClan() {
-        Clan clan;
-        if((clan = player.getClan()) != null) {
-            return clan;
-        } else {
+        final Clan clan = player.getClan();
+        if(clan == null) {
             player.sendMessage(Color.ERROR + "You are not in a clan.");
-            return null;
         }
+        return clan;
     }
 
     /**
@@ -563,13 +535,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The clan's base or <code>null</code> if the clan does not have a base.
      */
     protected Region getBase(final Clan clan) {
-        Region region;
-        if((region = UDSPlugin.getBases().get(clan.getName() + "base")) != null) {
-            return region;
-        } else {
+        final Region region = UDSPlugin.getBases().get(clan.getName() + "base");
+        if(region == null) {
             player.sendMessage(Color.ERROR + "Your clan does not have a base.");
-            return null;
         }
+        return region;
     }
 
     /**
@@ -587,13 +557,13 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Match an online player by name.
+     * @param name Player name.
+     * @return The player if they are online, <code>null</code> otherwise.
      */
     protected SaveablePlayer getMatchingOtherPlayer(final String name) {
-        SaveablePlayer target;
-        if((target = getMatchingPlayer(name)) != null && notSelf(target)) {
+        final SaveablePlayer target = getMatchingPlayer(name);
+        if(target != null && notSelf(target)) {
             return target;
         } else {
             return null;
@@ -664,11 +634,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
         } else {
             material = Material.getMaterial(matString);
         }
-        if(material != null) {
-            return new ItemStack(material, 1, (short)0, data);
-        } else {
+        if(material == null) {
             player.sendMessage(Color.ERROR + "That is not a valid item.");
             return null;
+        } else {
+            return new ItemStack(material, 1, (short)0, data);
         }
     }
 
@@ -678,12 +648,12 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The enchantment if it exists, <code>null</code> otherwise.
      */
     protected Enchantment getEnchantment(final String enchant) {
-        Enchantment enchantment = Enchantment.getByName(enchant.toUpperCase());
-        if(enchantment != null) {
-            return enchantment;
-        } else {
+        final Enchantment enchantment = Enchantment.getByName(enchant.toUpperCase());
+        if(enchantment == null) {
             player.sendMessage(Color.ERROR + "That is not a valid enchantment.");
             return null;
+        } else {
+            return enchantment;
         }
     }
 
@@ -706,19 +676,17 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The first region the player is in or <code>null</code> if none found.
      */
     protected Region getCurrentRegion() {
-        Region region;
-        if((region = player.getCurrentRegion(Region.RegionType.CITY)) != null) {
-            return region;
-        } else {
+        final Region region = player.getCurrentRegion(Region.RegionType.CITY);
+        if(region == null) {
             player.sendMessage(Color.ERROR + "You are not in a city.");
-            return null;
         }
+        return region;
     }
 
     /**
-     *
-     * @param home
-     * @return
+     * Check this player is a room mate in this home.
+     * @param home Home to check.
+     * @return <code>true</code> if this player is a room mate in this home, <code>false</code> otherwise.
      */
     protected boolean isRoomie(final Region home) {
         if(home.hasMember(player)) {
@@ -730,9 +698,9 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param shop
-     * @return
+     * Check this player is a worker in this shop.
+     * @param shop Shop to check.
+     * @return <code>true</code> if this player works in this shop, <code>false</code> otherwise.
      */
     protected boolean isWorker(final Region shop) {
         if(shop.hasMember(player)) {
@@ -744,10 +712,10 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param target
-     * @param shop
-     * @return
+     * Check the target player works in the shop.
+     * @param target Player to check.
+     * @param shop Shop to check.
+     * @return <code>true</code> if the target player works in the shop, <code>false</code> otherwise.
      */
     protected boolean isWorker(final SaveablePlayer target, final Region shop) {
         if(shop.hasMember(target)) {
@@ -759,9 +727,9 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param shop
-     * @return
+     * Check the shop is not owned by another player.
+     * @param shop Shop to check.
+     * @return <code>true</code> if the shop is empty, <code>false</code> otherwise.
      */
     protected boolean isEmptyShop(final Region shop) {
         if(shop.getOwner() == null) {
@@ -773,24 +741,22 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @return
+     * Get the shop the player is standing in.
+     * @return The shop the player is standing in or <code>null</code>.
      */
     protected Region getContainingShop() {
-        Region shop;
-        if((shop = player.getCurrentRegion(Region.RegionType.SHOP)) != null) {
-            return shop;
-        } else {
+        final Region shop = player.getCurrentRegion(Region.RegionType.SHOP);
+        if(shop == null) {
             player.sendMessage(Color.ERROR + "You must be stood inside a shop to buy it.");
-            return null;
         }
+        return shop;
     }
 
     /**
-     *
-     * @param target
-     * @param home
-     * @return
+     * Check the target player is a room mate in the home.
+     * @param target Player to check.
+     * @param home Home region to check.
+     * @return <code>true</code> if the player is a room mate, <code>false</code> otherwise.
      */
     protected boolean isRoomie(final SaveablePlayer target, final Region home) {
         if(home.hasMember(target)) {
@@ -802,25 +768,23 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param target
-     * @return
+     * Get the target players home.
+     * @param target Target player.
+     * @return The target players home if it exists, <code>null</code> otherwise.
      */
     protected Region getHome(final SaveablePlayer target) {
-        Region home;
-        if((home = UDSPlugin.getHomes().get(target.getName() + "home")) != null) {
-            return home;
-        } else {
+        final Region home = UDSPlugin.getHomes().get(target.getName() + "home");
+        if(home == null) {
             player.sendMessage(Color.ERROR + "That player does not have a home.");
-            return null;
         }
+        return home;
     }
 
     /**
-     *
-     * @param target
-     * @param home
-     * @return
+     * Check the target player is in the home region.
+     * @param target Target player.
+     * @param home Home region.
+     * @return <code>true</code> if the player is in the home region, <code>false</code> otherwise.
      */
     protected boolean isInHome(final SaveablePlayer target, final Region home) {
         if(target.getLocation().toVector().isInAABB(home.getV1(), home.getV2())) {
@@ -837,11 +801,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if no region already exists with the given name, <code>false</code> otherwise.
      */
     protected boolean notRegion(final String name) {
-        if(!UDSPlugin.getRegions().containsKey(name)) {
-            return true;
-        } else {
+        if(UDSPlugin.getRegions().containsKey(name)) {
             player.sendMessage(Color.ERROR + "A protected area already exists with that name.");
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -865,16 +829,16 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param city
-     * @return
+     * Check that the player is not the mayor of the city region.
+     * @param city City region.
+     * @return <code>true</code> if the player is the mayor of the city, <code>false</code> otherwise.
      */
     protected boolean notMayor(final Region city) {
-        if(!city.isOwner(player)) {
-            return true;
-        } else {
+        if(city.isOwner(player)) {
             player.sendMessage(Color.ERROR + "You cannot do that while you are the mayor.");
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -918,11 +882,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if the player is not duelling, <code>false</code> otherwise.
      */
     protected boolean notDueling(final SaveablePlayer target) {
-        if(!target.isDuelling()) {
-            return true;
-        } else {
+        if(target.isDuelling()) {
             player.sendMessage(Color.MESSAGE + "That player is already dueling someone else.");
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -932,11 +896,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if target and this player are distinct, <code>false</code> otherwise.
      */
     protected boolean notSelf(final SaveablePlayer target) {
-        if(!target.equals(player)) {
-            return true;
-        } else {
+        if(target.equals(player)) {
             player.sendMessage(Color.ERROR + "You cannot use that command on yourself.");
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -971,11 +935,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if the player is not in jail, <code>false</code> otherwise.
      */
     protected boolean notJailed() {
-        if(!player.isJailed()) {
-            return true;
-        } else {
+        if(player.isJailed()) {
             player.sendMessage(Color.ERROR + "You cannot do this while you are in jail.");
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -985,11 +949,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if the target player is not in jail, <code>false</code> otherwise.
      */
     protected boolean notJailed(final SaveablePlayer target) {
-        if(!target.isJailed()) {
-            return true;
-        } else {
+        if(target.isJailed()) {
             player.sendMessage(Color.ERROR + "You can't do this while that player is in jail.");
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -999,18 +963,18 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if the target player has no requests pending, <code>false</code> otherwise.
      */
     protected boolean noRequests(final SaveablePlayer target) {
-        if(!UDSPlugin.getRequests().containsKey(target.getName())) {
-            return true;
-        } else {
+        if(UDSPlugin.getRequests().containsKey(target.getName())) {
             player.sendMessage(Color.ERROR + "That player already has a request pending.");
             return false;
+        } else {
+            return true;
         }
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Match an online player that is not this player.
+     * @param name Player name.
+     * @return The player if it matched and was not this player, <code>null</code> otherwise.
      */
     protected SaveablePlayer getMatchingOtherOnlinePlayer(final String name) {
         SaveablePlayer target;
@@ -1027,11 +991,11 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if the target player is not ignoring the command sender, <code>false</code> otherwise.
      */
     protected boolean notIgnored(final SaveablePlayer target) {
-        if(!target.isIgnoringPlayer(player)) {
-            return true;
-        } else {
+        if(target.isIgnoringPlayer(player)) {
             player.sendMessage(Color.ERROR + "This player can't be reached at this time.");
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -1041,7 +1005,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The number if it was one, -1 otherwise.
      */
     protected int parseInt(final String number) {
-        if(number.matches("[0-9][0-9]*")) {
+        if(number.matches(Config.INT_REGEX)) {
             return Integer.parseInt(number);
         } else {
             player.sendMessage(Color.ERROR + "The number you entered was invalid.");
@@ -1069,7 +1033,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The first player matched or <code>null</code> if no players matched.
      */
     protected SaveablePlayer getMatchingPlayer(final String partial) {
-        String lowPartial = partial.toLowerCase();
+        final String lowPartial = partial.toLowerCase();
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
         if(target != null) {
             return target;
@@ -1115,12 +1079,12 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     }
 
     /**
-     *
-     * @param partial
-     * @return
+     * Match an online player by name.
+     * @param partial Partial name.
+     * @return A player matching the partial name if it can be found, <code>null</code> otherwise.
      */
     protected SaveablePlayer getMatchingOnlinePlayer(final String partial) {
-        String lowPartial = partial.toLowerCase();
+        final String lowPartial = partial.toLowerCase();
         SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
         if(target!= null) {
             return target;
