@@ -1,6 +1,10 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import org.bukkit.*;
+import org.bukkit.block.*;
+import org.bukkit.inventory.*;
+import org.bukkit.util.*;
 
 /**
  * WorldEdit-like tools.
@@ -8,299 +12,305 @@ import com.undeadscythes.udsplugin.*;
  */
 public class WECmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute(final SaveablePlayer player, final String[] args) {
-        player.sendMessage(Color.MESSAGE + "This command has not been re-written yet, sorry for the inconvienience.");
+    public void playerExecute() {
+        if(args.length == 1) {
+            if(args[0].equals("undo")) {
+                undo();
+            } else if(args[0].equals("copy")) {
+                copy();
+            } else if(args[0].equals("paste")) {
+                paste();
+            } else if(args[0].equals("regen")) {
+                regen();
+            } else if(args[0].equals("ext")) {
+                ext(5);
+            } else if(args[0].equals("drain")) {
+                drain(5);
+            } else {
+                subCmdHelp();
+            }
+        } else if(args.length == 2) {
+            if(args[0].equals("set")) {
+                set();
+            } else if(args[0].equals("ext")) {
+                final int range = parseInt(args[1]);
+                if(range > -1) {
+                    ext(range);
+                }
+            } else if(args[0].equals("drain")) {
+                final int range = parseInt(args[1]);
+                if(range > -1) {
+                    drain(range);
+                }
+            } else {
+                subCmdHelp();
+            }
+        } else if(numArgsHelp(3)) {
+            if(args[0].equals("replace")) {
+                replace();
+            } else if(args[0].equals("move")) {
+                move();
+            } else {
+                subCmdHelp();
+            }
+        }
     }
-//        final String senderName = commandSender.getName();
-//        final Server server = Bukkit.getServer();
-//        final Player sender = server.getPlayer(senderName);
-//        if(args.length != 0) {
-//            final String subCommand = args[0];
-//            if(subCommand.equalsIgnoreCase("set")) {
-//                if(sender.hasPermission("udsplugin.we.set")) {
-//                    if(args.length == 2) {
-//                        final ItemStack item = ItemUtils.findItem(args[1]);
-//                        if(item != null) {
-//                            set(sender, item);
-//                        } else sender.sendMessage(UDSMessage.NO_BLOCK);
-//                    } else sender.sendMessage(UDSMessage.BAD_ARGS);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equalsIgnoreCase("undo")) {
-//                if(sender.hasPermission("udsplugin.we.undo")) {
-//                    undo(sender);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equalsIgnoreCase("replace")) {
-//                if(sender.hasPermission("udsplugin.we.replace")) {
-//                    final UDSPlayer senderPlayer = UDSPlugin.getPlayers().get(senderName);
-//                    final Vector vector1 = senderPlayer.getEditPoint1();
-//                    final Vector vector2 = senderPlayer.getEditPoint2();
-//                    if(vector1 != null && vector2 != null) {
-//                        final UDSConfig config = UDSPlugin.getUDSConfig();
-//                        if(RegionUtils.findVolume(vector1, vector2) <= config.getEditRange()) {
-//                            if(args.length == 3) {
-//                                final ItemStack itemFrom = ItemUtils.findItem(args[1]);
-//                                final ItemStack itemTo = ItemUtils.findItem(args[2]);
-//                                replace(sender, itemFrom, itemTo);
-//                            } else sender.sendMessage(UDSMessage.BAD_ARGS);
-//                        } else sender.sendMessage(UDSMessage.BAD_VOLUME);
-//                    } else sender.sendMessage(UDSMessage.NO_POINTS);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equalsIgnoreCase("regen")) {
-//                if(sender.hasPermission("udsplugin.we.regen")) {
-//                    regen(sender);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equalsIgnoreCase("drain")) {
-//                if(sender.hasPermission("udsplugin.we.drain")) {
-//                    if(args.length < 3) {
-//                        int range = 5;
-//                        if(args.length == 2 && args[1].matches("[0-9][0-9]*")) {
-//                            range = Integer.parseInt(args[1]);
-//                        }
-//                        if(range <= UDSPlugin.getUDSConfig().getDrainRange()) {
-//                            drain(sender, range);
-//                        } else sender.sendMessage(UDSMessage.OUT_OF_RANGE);
-//                    } else sender.sendMessage(UDSMessage.BAD_ARGS);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equals("move")) {
-//                if(sender.hasPermission("udsplugin.we.move")) {
-//                    if(args.length == 3) {
-//                        if(args[2].matches("[0-9][0-9]*")) {
-//                            final int distance = Integer.parseInt(args[2]);
-//                            if(distance <= plugin.getConfig().getInt("range.move")) {
-//                                final UDSPlayer senderPlayer = PlayerUtils.getUDS(sender);
-//                                final Vector v1 = senderPlayer.getEditPoint1();
-//                                final Vector v2 = senderPlayer.getEditPoint2();
-//                                if(v1 != null && v2 != null) {
-//                                    if(RegionUtils.findVolume(v1, v2) <= UDSPlugin.getUDSConfig().getEditRange()) {
-//                                        Direction direction = Direction.getDirection(args[1]);
-//                                        if(direction != Direction.NEUTRAL) {
-//                                            move(sender, distance, direction);
-//                                        } else sender.sendMessage(UDSMessage.BAD_DIRECTION);
-//                                    } else sender.sendMessage(UDSMessage.BAD_VOLUME);
-//                                } else sender.sendMessage(UDSMessage.NO_POINTS);
-//                            } else sender.sendMessage(UDSMessage.BAD_MOVE);
-//                        } else sender.sendMessage(UDSMessage.NO_NUMBER);
-//                    } else sender.sendMessage(UDSMessage.BAD_ARGS);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equalsIgnoreCase("ext")) {
-//                if(sender.hasPermission("udsplugin.we.ext")) {
-//                    if (args.length < 3) {
-//                        final UDSConfig config = UDSPlugin.getUDSConfig();
-//                        int radius = 5;
-//                        if(args.length == 2 && args[1].matches("[0-9][0-9]*")) {
-//                            radius = Integer.parseInt(args[1]);
-//                        }
-//                        if (radius <= config.getDrainRange()) {
-//                            final Location location = sender.getLocation();
-//                            final Vector vector1 = new Vector(location.getX() + (radius), location.getY() + (radius), location.getZ() + (radius));
-//                            final Vector vector2 = new Vector(location.getX() - (radius), location.getY() - (radius), location.getZ() - (radius));
-//                            final Vector min = VectorUtils.findMin(vector1, vector2);
-//                            final Vector max = VectorUtils.findMax(vector1, vector2);
-//                            final LinkedList<UDSBlock> blocks = new LinkedList();
-//                            int count = 0;
-//                            final World world = server.getWorld(config.getWorldName());
-//                            for(int ix = (int) min.getX(); ix <= (int) max.getX(); ix++) {
-//                                for(int iy = (int) min.getY(); iy <= (int) max.getY(); iy++) {
-//                                    for(int iz = (int) min.getZ(); iz <= (int) max.getZ(); iz++) {
-//                                        blocks.add(new UDSBlock(world.getBlockAt(ix, iy, iz)));
-//                                        final Block block = world.getBlockAt(ix, iy, iz);
-//                                        if(block.getType() == Material.FIRE) {
-//                                            block.setType(Material.AIR);
-//                                            count++;
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            UDSPlugin.getPlayers().get(sender.getName()).saveUndo(min, max, blocks);
-//                            sender.sendMessage(Color.MESSAGE + "Extinguished " + count + " fires.");
-//                        } else sender.sendMessage(UDSMessage.OUT_OF_RANGE);
-//                    } else sender.sendMessage(UDSMessage.BAD_ARGS);
-//                }
-//            } else if(subCommand.equalsIgnoreCase("copy")) {
-//                if(sender.hasPermission("udsplugin.we.copy")) {
-//                    copy(sender);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equalsIgnoreCase("paste")) {
-//                if(sender.hasPermission("udsplugin.we.paste")) {
-//                    paste(sender);
-//                } else sender.sendMessage(UDSMessage.NO_PERM);
-//            } else if(subCommand.equalsIgnoreCase("help")) {
-//                sender.performCommand("help we");
-//            } else sender.sendMessage(UDSMessage.BAD_COMMAND);
-//        } else {
-//            sender.performCommand("help we");
-//        }
-//        return true;
-//    }
-//
-//    public void drain(Player player, int range) {
-//        final Location location = player.getLocation();
-//        final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
-//        final Vector v2 = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
-//        final Vector min = VectorUtils.findMin(v1, v2);
-//        final Vector max = VectorUtils.findMax(v1, v2);
-//        final LinkedList<UDSBlock> blocks = new LinkedList();
-//        int count = 0;
-//        final World world = player.getWorld();
-//        WEUtils.forceSession(player).save(new Cuboid(world, v1, v2));
-//        for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-//            for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
-//                for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-//                    blocks.add(new UDSBlock(world.getBlockAt(x, y, z)));
-//                    final Block block = world.getBlockAt(x, y, z);
-//                    if(block.getType() == Material.STATIONARY_LAVA
-//                    || block.getType() == Material.STATIONARY_WATER
-//                    || block.getType() == Material.WATER
-//                    || block.getType() == Material.LAVA) {
-//                        if(x == min.getX()
-//                        || x == max.getX()
-//                        || z == max.getZ()
-//                        || z == max.getZ()) {
-//                            if(block.getType() == Material.LAVA) {
-//                                block.setType(Material.STATIONARY_LAVA);
-//                            } else {
-//                                block.setType(Material.STATIONARY_WATER);
-//                            }
-//                        } else {
-//                            block.setType(Material.AIR);
-//                            count++;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        player.sendMessage(Color.MESSAGE + "Drained " + count + " blocks.");
-//    }
-//
-//    public void set(Player player, ItemStack item) {
-//        final UDSPlayer udsPlayer = PlayerUtils.getUDS(player);
-//        final Vector v1 = udsPlayer.getEditPoint1();
-//        final Vector v2 = udsPlayer.getEditPoint2();
-//        if(v1 != null && v2 != null) {
-//            final UDSConfig config = UDSPlugin.getUDSConfig();
-//            final int volume = RegionUtils.findVolume(v1, v2);
-//            if(volume <= config.getEditRange()) {
-//                if(item.getType().isBlock()) {
-//                    WESession session = WEUtils.getSession(player);
-//                    if(session == null) {
-//                        session = new WESession(player);
-//                        WEUtils.addSession(session);
-//                    }
-//                    final Vector min = VectorUtils.findMin(v1, v2);
-//                    final Vector max = VectorUtils.findMax(v1, v2);
-//                    final World world = player.getWorld();
-//                    session.save(new Cuboid(world, player));
-//                    final byte itemData = item.getData().getData();
-//                    final int itemId = item.getTypeId();
-//                    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-//                        for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
-//                            for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-//                                world.getBlockAt(x, y, z).setTypeIdAndData(itemId, itemData, true);
-//                            }
-//                        }
-//                    }
-//                    player.sendMessage(Color.MESSAGE + "Set " + volume + " blocks.");
-//                } else {
-//                    player.sendMessage(UDSMessage.BAD_BLOCK);
-//                }
-//            } else {
-//                player.sendMessage(UDSMessage.BAD_VOLUME);
-//            }
-//        } else {
-//            player.sendMessage(UDSMessage.NO_POINTS);
-//        }
-//    }
-//
-//    public void undo(Player player) {
-//        WESession session = WEUtils.getSession(player);
-//        if(session != null && session.hasUndo()) {
-//            WEUtils.put(session.load());
-//        } else {
-//            player.sendMessage(UDSMessage.NO_UNDO);
-//        }
-//    }
-//
-//    public void replace(Player player, ItemStack block, ItemStack replacement) {
-//        final World world = player.getWorld();
-//        UDSPlayer udsPlayer = PlayerUtils.getUDS(player);
-//        final Vector min = VectorUtils.findMin(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//        final Vector max = VectorUtils.findMax(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//        WEUtils.forceSession(player).save(new Cuboid(world, min, max));
-//        int count = 0;
-//        for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-//            for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
-//                for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-//                    if(world.getBlockAt(x, y, z).getTypeId() == block.getTypeId() &&
-//                        world.getBlockAt(x, y, z).getData() == block.getData().getData()) {
-//                        world.getBlockAt(x, y, z).setTypeIdAndData(replacement.getTypeId(), replacement.getData().getData(), true);
-//                        count++;
-//                    }
-//                }
-//            }
-//        }
-//        player.sendMessage(Color.MESSAGE + "Replaced " + count + " blocks.");
-//    }
-//
-//    public void move(Player player, int distance, Direction direction) {
-//        if(direction == Direction.UP || direction == Direction.EAST || direction == Direction.SOUTH) {
-//            UDSPlayer udsPlayer = PlayerUtils.getUDS(player);
-//            final Vector min = VectorUtils.findMin(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//            final Vector max = VectorUtils.findMax(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//            final World world = player.getWorld();
-//            Cuboid cuboid = new Cuboid(world, min, max);
-//            int volume = RegionUtils.findVolume(min, max);
-//            WEUtils.forceSession(player).save(new Cuboid(world, min, max.clone().add(direction.toVector().clone().multiply(distance))));
-//            WEUtils.put(world, min, max, Material.AIR);
-//            min.add((direction.toVector().clone().multiply(distance)));
-//            max.add((direction.toVector().clone().multiply(distance)));
-//            WEUtils.put(world, cuboid.getBlocks(), min, max);
-//            player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
-//        } else if(direction == Direction.DOWN || direction == Direction.WEST || direction == Direction.NORTH) {
-//            UDSPlayer udsPlayer = PlayerUtils.getUDS(player);
-//            final Vector min = VectorUtils.findMin(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//            final Vector max = VectorUtils.findMax(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//            final World world = player.getWorld();
-//            Cuboid cuboid = new Cuboid(world, min, max);
-//            int volume = RegionUtils.findVolume(min, max);
-//            WEUtils.forceSession(player).save(new Cuboid(world, min.clone().add((direction.toVector().clone().multiply(distance))), max));
-//            WEUtils.put(world, min, max, Material.AIR);
-//            min.add((direction.toVector().clone().multiply(distance)));
-//            max.add((direction.toVector().clone().multiply(distance)));
-//            WEUtils.put(world, cuboid.getBlocks(), min, max);
-//            player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
-//        } else {
-//            player.sendMessage(UDSMessage.NO_DIRECTION);
-//        }
-//    }
-//
-//    public void copy(Player player) {
-//        UDSPlayer udsPlayer = PlayerUtils.getUDS(player);
-//        final Vector min = VectorUtils.findMin(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//        final Vector max = VectorUtils.findMax(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//        final World world = player.getWorld();
-//        WEUtils.forceSession(player).copy(new Cuboid(world, player));
-//        player.sendMessage(Color.MESSAGE + "Copied " + RegionUtils.findVolume(min, max) + " blocks.");
-//    }
-//
-//    public void paste(Player player) {
-//        UDSPlayer udsPlayer = PlayerUtils.getUDS(player);
-//        Cuboid clipboard = WEUtils.forceSession(player).get();
-//        Location location = player.getLocation();
-//        int dX = location.getBlockX() - clipboard.getPOV().getBlockX();
-//        int dY = location.getBlockY() - clipboard.getPOV().getBlockY();
-//        int dZ = location.getBlockZ() - clipboard.getPOV().getBlockZ();
-//        Vector dV = new Vector(dX, dY, dZ);
-//        WEUtils.forceSession(player).save(new Cuboid(clipboard.getWorld(), clipboard.getV1().clone().add(dV), clipboard.getV2().clone().add(dV)));
-//        Location pastePoint = new Location(player.getWorld(), player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
-//        WEUtils.put(clipboard, pastePoint);
-//        final Vector min = VectorUtils.findMin(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//        final Vector max = VectorUtils.findMax(udsPlayer.getEditPoint1(), udsPlayer.getEditPoint2());
-//        player.sendMessage(Color.MESSAGE + "Pasted " + RegionUtils.findVolume(min, max) + " blocks.");
-//    }
-//
-//    public void regen(Player player) {
-//        final Chunk chunk = player.getLocation().getChunk();
-//        World world = player.getWorld();
-//        world.regenerateChunk(chunk.getX(), chunk.getZ());
-//    }
+
+    public void drain(final int range) {
+        if(hasPerm(Perm.WE_DRAIN)) {
+            if(range <= Config.drainRange) {
+                final WESession session = getSession();
+                if(session != null) {
+                    final Location location = player.getLocation();
+                    final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
+                    final Vector v2 = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
+                    final Vector min = Vector.getMinimum(v1, v2);
+                    final Vector max = Vector.getMaximum(v1, v2);
+                    int count = 0;
+                    final World world = player.getWorld();
+                    session.save(new Cuboid(world, v1, v2, player.getLocation()));
+                    for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                        for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                            for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                                final Block block = world.getBlockAt(x, y, z);
+                                if(block.getType() == Material.STATIONARY_LAVA || block.getType() == Material.STATIONARY_WATER || block.getType() == Material.WATER || block.getType() == Material.LAVA) {
+                                    if(x == min.getX() || x == max.getX() || z == max.getZ() || z == max.getZ()) {
+                                        if(block.getType() == Material.LAVA) {
+                                            block.setType(Material.STATIONARY_LAVA);
+                                        } else {
+                                            block.setType(Material.STATIONARY_WATER);
+                                        }
+                                    } else {
+                                        block.setType(Material.AIR);
+                                        count++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    player.sendMessage(Color.MESSAGE + "Drained " + count + " blocks.");
+                }
+            } else {
+                player.sendMessage(Color.ERROR + "Value is out of range.");
+            }
+        }
+    }
+
+    public void set() {
+        if(hasPerm(Perm.WE_SET)) {
+            final WESession session = getSession();
+            if(session != null && hasTwoPoints(session)) {
+                final ItemStack item = getItem(args[1]);
+                if(item != null) {
+                    final Vector v1 = session.getV1();
+                    final Vector v2 = session.getV2();
+                    final int volume = session.getVolume();
+                    if(volume <= Config.editRange) {
+                        if(item.getType().isBlock()) {
+                            final Vector min = Vector.getMinimum(v1, v2);
+                            final Vector max = Vector.getMaximum(v1, v2);
+                            final World world = player.getWorld();
+                            session.save(new Cuboid(world, min, max, player.getLocation()));
+                            final byte itemData = item.getData().getData();
+                            final int itemId = item.getTypeId();
+                            for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                                for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                                    for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                                        world.getBlockAt(x, y, z).setTypeIdAndData(itemId, itemData, true);
+                                    }
+                                }
+                            }
+                            player.sendMessage(Color.MESSAGE + "Set " + volume + " blocks.");
+                        } else {
+                            player.sendMessage(Color.ERROR + "You have selected a bad block.");
+                        }
+                    } else {
+                        player.sendMessage(Color.ERROR + "You have selected too many blocks.");
+                    }
+                }
+            }
+        }
+    }
+
+    public void undo() {
+        final WESession session = getSession();
+        if(session != null && hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
+            put(session.load());
+        }
+    }
+
+    public void replace() {
+        if(hasPerm(Perm.WE_REPLACE)) {
+            final WESession session = getSession();
+            if(session != null && hasTwoPoints(session)) {
+                final Vector v1 = session.getV1();
+                final Vector v2 = session.getV2();
+                if(session.getVolume() <= Config.editRange) {
+                    if(args.length == 3) {
+                        final ItemStack itemFrom = getItem(args[1]);
+                        final ItemStack itemTo = getItem(args[2]);
+                        if(itemFrom != null && itemTo != null) {
+                            final World world = player.getWorld();
+                            final Vector min = Vector.getMinimum(v1, v2);
+                            final Vector max = Vector.getMaximum(v1, v2);
+                            session.save(new Cuboid(world, min, max, player.getLocation()));
+                            int count = 0;
+                            for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                                for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                                    for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                                        if(world.getBlockAt(x, y, z).getTypeId() == itemFrom.getTypeId() &&
+                                            world.getBlockAt(x, y, z).getData() == itemFrom.getData().getData()) {
+                                            world.getBlockAt(x, y, z).setTypeIdAndData(itemTo.getTypeId(), itemTo.getData().getData(), true);
+                                            count++;
+                                        }
+                                    }
+                                }
+                            }
+                            player.sendMessage(Color.MESSAGE + "Replaced " + count + " blocks.");
+                        }
+                    }
+                } else {
+                    player.sendMessage(Color.ERROR + "You have selected too many blocks.");
+                }
+            }
+        }
+    }
+
+    public void move() {
+        if(hasPerm(Perm.WE_MOVE)) {
+            final int distance = parseInt(args[2]);
+            if(distance > -1) {
+                if(distance <= Config.moveRange) {
+                    final WESession session = getSession();
+                    if(session != null && hasTwoPoints(session)) {
+                        final Vector v1 = session.getV1();
+                        final Vector v2 = session.getV2();
+                        if(session.getVolume() <= Config.editRange) {
+                            Direction direction = getDirection(args[1]);
+                            if(direction != null) {
+                                if(direction == Direction.UP || direction == Direction.EAST || direction == Direction.SOUTH) {
+                                    final Vector min = Vector.getMinimum(v1, v2);
+                                    final Vector max = Vector.getMaximum(v1, v2);
+                                    final World world = player.getWorld();
+                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation());
+                                    int volume = cuboid.getVolume();
+                                    session.save(new Cuboid(world, min, max.clone().add(direction.toVector().clone().multiply(distance)), player.getLocation()));
+                                    put(world, min, max, Material.AIR);
+                                    min.add(direction.toVector().clone().multiply(distance));
+                                    put(world, cuboid, min);
+                                    player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
+                                } else if(direction == Direction.DOWN || direction == Direction.WEST || direction == Direction.NORTH) {
+                                    final Vector min = Vector.getMinimum(v1, v2);
+                                    final Vector max = Vector.getMaximum(v1, v2);
+                                    final World world = player.getWorld();
+                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation());
+                                    int volume = cuboid.getVolume();
+                                    session.save(new Cuboid(world, min.clone().add(direction.toVector().clone().multiply(distance)), max, player.getLocation()));
+                                    put(world, min, max, Material.AIR);
+                                    min.add((direction.toVector().clone().multiply(distance)));
+                                    put(world, cuboid, min);
+                                    player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
+                                }
+                            }
+                        } else player.sendMessage(Color.ERROR + "The area you have selected is too large.");
+                    }
+                } else {
+                    player.sendMessage(Color.ERROR + "That value is out of range.");
+                }
+            }
+        }
+
+
+    }
+
+    public void copy() {
+        final WESession session = getSession();
+        if(session != null && hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
+            session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation()));
+            player.sendMessage(Color.MESSAGE + "Copied " + session.getClipboard().getVolume() + " blocks.");
+        }
+    }
+
+    public void paste() {
+        final WESession session = getSession();
+        if(session != null) {
+            final Cuboid clipboard = session.getClipboard();
+            final Vector v1 = player.getLocation().toVector().clone().add(clipboard.getOffset());
+            final Vector v2 = v1.clone().add(clipboard.getDV());
+            session.save(new Cuboid(player.getWorld(), v1, v2, player.getLocation()));
+            put(clipboard, v1);
+            player.sendMessage(Color.MESSAGE + "Pasted " + clipboard.getVolume() + " blocks.");
+        }
+    }
+
+    public void regen() {
+        if(hasPerm(Perm.WE_REGEN)) {
+            final Chunk chunk = player.getLocation().getChunk();
+            final World world = player.getWorld();
+            world.regenerateChunk(chunk.getX(), chunk.getZ());
+        }
+    }
+
+    public void ext(final int range) {
+        final WESession session = getSession();
+        if(hasPerm(Perm.WE_EXT) && session != null) {
+            if (range <= Config.drainRange) {
+                final Location location = player.getLocation();
+                final Vector max = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
+                final Vector min = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
+                session.save(new Cuboid(player.getWorld(), min, max, player.getLocation()));
+                int count = 0;
+                final World world = player.getWorld();
+                for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                    for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                        for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                            final Block block = world.getBlockAt(x, y, z);
+                            if(block.getType() == Material.FIRE) {
+                                block.setType(Material.AIR);
+                                count++;
+                            }
+                        }
+                    }
+                }
+                player.sendMessage(Color.MESSAGE + "Extinguished " + count + " fires.");
+            } else {
+                player.sendMessage(Color.ERROR + "That value is out of range.");
+            }
+        }
+    }
+
+    public void put(final Cuboid blocks) {
+        put(blocks, blocks.getV1());
+    }
+
+    public void put(final Cuboid blocks, final Vector place) {
+        put(player.getWorld(), blocks, place);
+    }
+
+    public void put(final World world, final Vector min, final Vector max, final Material material) {
+        for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+            for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                    world.getBlockAt(x, y, z).setType(material);
+                }
+            }
+        }
+    }
+
+    public void put(final World world, final Cuboid blocks, final Vector place) {
+        final int dX = blocks.getDV().getBlockX();
+        final int dY = blocks.getDV().getBlockY();
+        final int dZ = blocks.getDV().getBlockZ();
+        final int pX = place.getBlockX();
+        final int pY = place.getBlockY();
+        final int pZ = place.getBlockZ();
+        for(int x = 0; x <= dX; x++) {
+            for(int y = 0; y <= dY; y++) {
+                for(int z= 0; z <= dZ; z++) {
+                    Block block = blocks.getBlocks()[x][y][z];
+                    world.getBlockAt(pX + x, pY + y, pZ + z).setTypeIdAndData(block.getType().getId(), block.getData(), true);
+                }
+            }
+        }
+    }
 }
