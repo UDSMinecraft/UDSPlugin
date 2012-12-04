@@ -12,7 +12,7 @@ public class SetWarpCmd extends AbstractPlayerCommand {
     public void playerExecute(final SaveablePlayer player, final String[] args) {
         PlayerRank rank;
         int price;
-        String message = Color.MESSAGE + "Warp point set.";
+        final String message = Color.MESSAGE + "Warp point set.";
         if(args.length == 1) {
             if(notWarp(args[0]) && noCensor(args[0])) {
                 UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), PlayerRank.DEFAULT, 0));
