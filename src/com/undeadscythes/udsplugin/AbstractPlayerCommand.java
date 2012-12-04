@@ -16,9 +16,9 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public abstract class AbstractPlayerCommand implements CommandExecutor {
-    private transient SaveablePlayer player;
+    protected transient SaveablePlayer player;
     private transient String commandName;
-    private transient int argsLength;
+    protected transient String[] args;
 
     /**
      * Checks player permission then passes arguments to executor.
@@ -34,7 +34,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
             commandName = command.getName();
             player = UDSPlugin.getOnlinePlayers().get(sender.getName());
             if(hasPerm(Perm.valueOf(commandName.toUpperCase()))) {
-                argsLength = args.length;
+                this.args = args.clone();
                 playerExecute(player, args);
             }
             return true;
@@ -114,7 +114,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if there are the correct number of arguments, <code>false</code> otherwise.
      */
     protected boolean numArgsHelp(final int num) {
-        if(argsLength == num) {
+        if(args.length == num) {
             return true;
         } else {
             numArgsHelp();
@@ -128,7 +128,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if there are the correct number of arguments, <code>false</code> otherwise.
      */
     protected boolean minArgsHelp(final int num) {
-        if(argsLength >= num) {
+        if(args.length >= num) {
             return true;
         } else {
             numArgsHelp();
@@ -142,7 +142,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if there are the correct number of arguments, <code>false</code> otherwise.
      */
     protected boolean maxArgsHelp(final int num) {
-        if(argsLength <= num) {
+        if(args.length <= num) {
             return true;
         } else {
             numArgsHelp();
@@ -162,24 +162,17 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * If the arguments are asking for help, send help otherwise advise about bad arguments.
      * @param args Arguments to the command.
      */
-    protected void subCmdHelp(final String[] args) {
+    protected void subCmdHelp() {
         if(args[0].equalsIgnoreCase("help")) {
-            if(argsLength == 2 && args[1].matches(Config.INT_REGEX)) {
+            if(args.length == 2 && args[1].matches(Config.INT_REGEX)) {
                 sendHelp(Integer.parseInt(args[1]));
             } else {
                 sendHelp(1);
             }
         } else {
-            subCmdHelp();
+            player.sendMessage(Color.ERROR + "That is not a valid sub command.");
+            player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the available sub commands.");
         }
-    }
-
-    /**
-     * Send help about an invalid sub command.
-     */
-    protected void subCmdHelp() {
-        player.sendMessage(Color.ERROR + "That is not a valid sub command.");
-        player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the available sub commands.");
     }
 
     /**
