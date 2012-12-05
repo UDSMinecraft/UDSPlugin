@@ -67,13 +67,4 @@ public class EditableWorld {
             }
         }
     }
-
-    /**
-     * Set the spawn location of the world.
-     * @param location Location of new spawn.
-     * @return ?
-     */
-    public boolean setSpawnLocation(final Location location) {
-        return base.setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-    }
 }

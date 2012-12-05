@@ -10,7 +10,7 @@ public class SpawnCmd extends AbstractPlayerCommand {
     @Override
     public void playerExecute() {
         if(notPinned() && notJailed()) {
-            player.teleport(Config.mainWorld.getSpawnLocation());
+            player.teleport(UDSPlugin.getData().getSpawn());
         }
     }
 }

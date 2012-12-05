@@ -18,7 +18,9 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
         if((home = UDSPlugin.getHomes().get(player.getName() + "home")) != null) {
             location = home.getWarp();
         }
-        if(location != null) {
+        if(location == null) {
+            event.setRespawnLocation(UDSPlugin.getData().getSpawn());
+        } else {
             event.setRespawnLocation(Warp.findSafePlace(location));
         }
         if(player.isDuelling()) {
