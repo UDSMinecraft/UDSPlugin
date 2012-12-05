@@ -33,14 +33,8 @@ public class UDSPlugin extends JavaPlugin {
      * Whether the server is in lockdown mode.
      */
     public static boolean serverInLockdown;
-    /**
-     * The time of the last ender dragon death.
-     */
-    public static long lastEnderDeath;
-    /**
-     * The time of the last daily scheduled task.
-     */
-    public static long lastDailyEvent;
+
+    public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
 
     private static SaveableHashMap clans;
     private static SaveableHashMap players;
@@ -57,8 +51,8 @@ public class UDSPlugin extends JavaPlugin {
     private static MatchableHashMap<Region> arenas;
     private static MatchableHashMap<SaveablePlayer> vips;
     private static MatchableHashMap<SaveablePlayer> onlinePlayers;
-    private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
-    private transient Timer timer;
+    private static transient Timer timer;
+    private static Data data;
 
     /**
      * Used for testing in NetBeans. Woo! NetBeans!
@@ -76,6 +70,11 @@ public class UDSPlugin extends JavaPlugin {
         saveConfig();
         Config.loadConfig(getConfig());
         getLogger().info("Config loaded.");
+        data = new Data(this);
+        data.reloadData();
+        data.saveDefaultData();
+        data.saveData();
+        getLogger().info("Data loaded.");
         clans = new SaveableHashMap();
         players = new SaveableHashMap();
         regions = new SaveableHashMap();
@@ -133,15 +132,11 @@ public class UDSPlugin extends JavaPlugin {
      * @throws IOException When a file can't be opened.
      */
     public static void saveFiles() throws IOException {
+        data.saveData();
         clans.save(DATA_PATH + File.separator + Clan.PATH);
         regions.save(DATA_PATH + File.separator + Region.PATH);
         warps.save(DATA_PATH + File.separator + Warp.PATH);
         players.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
-        final BufferedWriter file = new BufferedWriter(new FileWriter(DATA_PATH + File.separator + UDSPlugin.TIMES_PATH));
-        file.write(Long.toString(lastDailyEvent));
-        file.newLine();
-        file.write(Long.toString(lastEnderDeath));
-        file.close();
     }
 
     /**
@@ -203,14 +198,6 @@ public class UDSPlugin extends JavaPlugin {
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
             getLogger().info("No warp file exists yet.");
-        }
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + TIMES_PATH));
-            lastDailyEvent = Long.parseLong(file.readLine());
-            lastEnderDeath = Long.parseLong(file.readLine());
-            file.close();
-        } catch (FileNotFoundException ex) {
-            lastDailyEvent = System.currentTimeMillis();
         }
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
@@ -541,5 +528,13 @@ public class UDSPlugin extends JavaPlugin {
      */
     static public MatchableHashMap<SaveablePlayer> getOnlinePlayers() {
         return onlinePlayers;
+    }
+
+    /**
+     *
+     * @return
+     */
+    static public Data getData() {
+        return data;
     }
 }

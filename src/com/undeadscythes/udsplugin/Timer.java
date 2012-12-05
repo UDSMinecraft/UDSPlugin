@@ -48,9 +48,9 @@ public class Timer implements Runnable {
     @Override
     public void run() {
         now = System.currentTimeMillis();
-        if(UDSPlugin.lastDailyEvent + DAY < now) {
+        if(UDSPlugin.getData().getLastDaily() + DAY < now) {
             dailyTask();
-            UDSPlugin.lastDailyEvent = now;
+            UDSPlugin.getData().setLastDaily();
         }
         if(lastSlow + Config.slowTime < now) {
             try {
@@ -87,10 +87,10 @@ public class Timer implements Runnable {
     }
 
     private void slowTask() throws IOException {
-        if(UDSPlugin.lastEnderDeath > 0 && UDSPlugin.lastEnderDeath + Config.dragonRespawn < now) {
+        if(UDSPlugin.getData().getLastEnderDeath() > 0 && UDSPlugin.getData().getLastEnderDeath() + Config.dragonRespawn < now) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
-                    UDSPlugin.lastEnderDeath = 0;
+                    UDSPlugin.getData().setLastEnderDeath(0);
                     world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);
                     Bukkit.broadcastMessage(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End.");
                 }
