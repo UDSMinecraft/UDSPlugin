@@ -1,7 +1,7 @@
 name: UDSPlugin
 main: com.undeadscythes.udsplugin.UDSPlugin
 version: 0.40
-description: UDSPlugin1 for CB 1.4.5-R0.3 #2508.
+description: UDSPlugin1 for CB 1.4.5-R0.3 #2514.
 author: UndeadScythes - daveyognaut2@gmail.com
 website: http://undeadscythes.webs.com/
 depend: []
