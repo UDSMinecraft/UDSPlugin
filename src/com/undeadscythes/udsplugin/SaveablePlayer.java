@@ -1329,6 +1329,7 @@ public class SaveablePlayer implements Saveable {
     /**
      *
      */
+    @SuppressWarnings("deprecation")
     public void updateInventory() {
         if(base != null) {
             base.updateInventory();
