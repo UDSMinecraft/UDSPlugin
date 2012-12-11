@@ -152,6 +152,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         RULES(Perm.RULES, "/rules", "View the server rules.", false, false),
         SCUBA(Perm.SCUBA, "/scuba", "Use scuba gear to dive underwater.", false, false),
         SERVER(Perm.SERVER, "/server help", "Show more server commands.", true, false),
+        SERVER_RELOAD(Perm.SERVER, "/server reload", "Reload changes from the config.yml file.", false, true),
         SERVER_STOP(Perm.SERVER, "/server stop", "Stop the server.", false, true),
         SHOP(Perm.SHOP, "/shop help", "Show more shop commands.", true, false),
         SHOP_HELP(Perm.SHOP, "/shop help [page]", "Show these shop help pages.", false, true),
