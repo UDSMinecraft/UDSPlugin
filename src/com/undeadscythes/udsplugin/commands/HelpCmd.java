@@ -202,9 +202,14 @@ public class HelpCmd extends AbstractPlayerCommand {
             this.extended = extended;
         }
 
-        public static Usage get(final String name) {
+        public static Usage getByName(final String name) {
             for(Usage use : values()) {
-                if(use.name().equalsIgnoreCase(name) || use.name().matches("[A-Z]*_" + name.toUpperCase())) {
+                if(use.name().equalsIgnoreCase(name)) {
+                    return use;
+                }
+            }
+            for(Usage use : values()) {
+                if(use.name().matches("[A-Z]*_" + name.toUpperCase())) {
                     return use;
                 }
             }
@@ -246,7 +251,7 @@ public class HelpCmd extends AbstractPlayerCommand {
             if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
                 sendHelpFiles();
             } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
-                final Usage usage = Usage.get(args[0]);
+                final Usage usage = Usage.getByName(args[0]);
                 if(usage == null) {
                     player.sendMessage(Color.ERROR + "No command exists by that name.");
                 } else {
