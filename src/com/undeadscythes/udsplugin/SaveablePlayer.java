@@ -350,6 +350,13 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
+     * Sets the base player reference to <code>null</code>.
+     */
+    public void nullBase() {
+        base = null;
+    }
+
+    /**
      * Get the players saved inventory.
      * @return The players saved inventory, <code>null</code> if none exists.
      */
