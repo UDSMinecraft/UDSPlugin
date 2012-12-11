@@ -67,7 +67,11 @@ public final class Config {
      * Load the online 'easy-access' config class with values from the file on disk.
      * @param config
      */
-    public static void loadConfig(final FileConfiguration config) {
+    public static void loadConfig() {
+        UDSPlugin.plugin.saveDefaultConfig();
+        UDSPlugin.plugin.getConfig();
+        UDSPlugin.plugin.reloadConfig();
+        final FileConfiguration config = UDSPlugin.plugin.getConfig();
         buildCost = config.getInt("cost.build");
         currencies = config.getString("currency.plural");
         requestTTL = config.getLong("request-timeout") * Timer.SECOND;
@@ -127,6 +131,22 @@ public final class Config {
         }
         mainWorld = Bukkit.getWorld(config.getString("world-name"));
         minecartTTL = config.getInt("minecart.life");
+    }
+
+    /**
+     * 
+     */
+    public static void updateConfig() {
+        UDSPlugin.plugin.getConfig().options().copyDefaults(true);
+        UDSPlugin.plugin.saveConfig();
+        loadConfig();
+    }
+
+    /**
+     *
+     */
+    public static void reload() {
+        loadConfig();
     }
 
     private Config() {}

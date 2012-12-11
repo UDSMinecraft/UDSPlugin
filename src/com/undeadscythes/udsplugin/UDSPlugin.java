@@ -9,7 +9,6 @@ import org.bukkit.*;
 import org.bukkit.inventory.*;
 import org.bukkit.material.*;
 import org.bukkit.plugin.java.*;
-import org.bukkit.util.*;
 
 /**
  * The main plugin. The heart of UDSPlugin.
@@ -29,6 +28,8 @@ public class UDSPlugin extends JavaPlugin {
      * Whether the server is in lockdown mode.
      */
     public static boolean serverInLockdown;
+
+    public static UDSPlugin plugin;
 
     public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
 
@@ -58,13 +59,12 @@ public class UDSPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        UDSPlugin.plugin = this;
         if(DATA_PATH.mkdirs()) {
             getLogger().info("Created directory tree.");
         }
-        saveDefaultConfig();
-        getConfig().options().copyDefaults(true);
-        saveConfig();
-        Config.loadConfig(getConfig());
+        Config.loadConfig();
+        Config.updateConfig();
         getLogger().info("Config loaded.");
         data = new Data(this);
         data.reloadData();
