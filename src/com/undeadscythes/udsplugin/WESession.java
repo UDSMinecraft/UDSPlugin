@@ -12,8 +12,8 @@ public class WESession {
     private Vector v1 = null;
     private Vector v2 = null;
     private transient World world = null;
-    private Cuboid clipboard;
-    private Stack<Cuboid> history;
+    private Cuboid clipboard = null;
+    private Stack<Cuboid> history = new Stack<Cuboid>();
 
     /**
      *
