@@ -23,9 +23,9 @@ public class WECmd extends AbstractPlayerCommand {
             } else if(args[0].equals("regen")) {
                 regen();
             } else if(args[0].equals("ext")) {
-                ext(5);
+                ext(10);
             } else if(args[0].equals("drain")) {
-                drain(5);
+                drain(10);
             } else {
                 subCmdHelp();
             }
@@ -67,7 +67,7 @@ public class WECmd extends AbstractPlayerCommand {
                 final Vector max = Vector.getMaximum(v1, v2);
                 int count = 0;
                 final World world = player.getWorld();
-                session.save(new Cuboid(world, v1, v2, player.getLocation()));
+                session.save(new Cuboid(world, v1, v2, player.getLocation().toVector()));
                 for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
                     for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
                         for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
@@ -108,7 +108,7 @@ public class WECmd extends AbstractPlayerCommand {
                             final Vector min = Vector.getMinimum(v1, v2);
                             final Vector max = Vector.getMaximum(v1, v2);
                             final World world = player.getWorld();
-                            session.save(new Cuboid(world, min, max, player.getLocation()));
+                            session.save(new Cuboid(world, min, max, player.getLocation().toVector()));
                             final byte itemData = item.getData().getData();
                             final int itemId = item.getTypeId();
                             for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
@@ -133,7 +133,9 @@ public class WECmd extends AbstractPlayerCommand {
     public void undo() {
         final WESession session = getSession();
         if(hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
-            put(session.load());
+            final Cuboid undo = session.load();
+            undo.revert();
+            player.sendMessage(Color.MESSAGE + "Undone " + undo.getVolume() + " blocks.");
         }
     }
 
@@ -151,7 +153,7 @@ public class WECmd extends AbstractPlayerCommand {
                             final World world = player.getWorld();
                             final Vector min = Vector.getMinimum(v1, v2);
                             final Vector max = Vector.getMaximum(v1, v2);
-                            session.save(new Cuboid(world, min, max, player.getLocation()));
+                            session.save(new Cuboid(world, min, max, player.getLocation().toVector()));
                             int count = 0;
                             for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
                                 for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
@@ -190,23 +192,23 @@ public class WECmd extends AbstractPlayerCommand {
                                     final Vector min = Vector.getMinimum(v1, v2);
                                     final Vector max = Vector.getMaximum(v1, v2);
                                     final World world = player.getWorld();
-                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation());
+                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation().toVector());
                                     int volume = cuboid.getVolume();
-                                    session.save(new Cuboid(world, min, max.clone().add(direction.toVector().clone().multiply(distance)), player.getLocation()));
+                                    session.save(new Cuboid(world, min, max.clone().add(direction.toVector().clone().multiply(distance)), player.getLocation().toVector()));
                                     put(world, min, max, Material.AIR);
                                     min.add(direction.toVector().clone().multiply(distance));
-                                    put(world, cuboid, min);
+                                    cuboid.place(world, min);
                                     player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
                                 } else if(direction == Direction.DOWN || direction == Direction.WEST || direction == Direction.NORTH) {
                                     final Vector min = Vector.getMinimum(v1, v2);
                                     final Vector max = Vector.getMaximum(v1, v2);
                                     final World world = player.getWorld();
-                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation());
+                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation().toVector());
                                     int volume = cuboid.getVolume();
-                                    session.save(new Cuboid(world, min.clone().add(direction.toVector().clone().multiply(distance)), max, player.getLocation()));
+                                    session.save(new Cuboid(world, min.clone().add(direction.toVector().clone().multiply(distance)), max, player.getLocation().toVector()));
                                     put(world, min, max, Material.AIR);
                                     min.add((direction.toVector().clone().multiply(distance)));
-                                    put(world, cuboid, min);
+                                    cuboid.place(world, min);
                                     player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
                                 }
                             }
@@ -224,7 +226,7 @@ public class WECmd extends AbstractPlayerCommand {
     public void copy() {
         final WESession session = getSession();
         if(hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
-            session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation()));
+            session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation().toVector()));
             player.sendMessage(Color.MESSAGE + "Copied " + session.getClipboard().getVolume() + " blocks.");
         }
     }
@@ -233,10 +235,7 @@ public class WECmd extends AbstractPlayerCommand {
         final WESession session = getSession();
         if(session.hasClipboard() && hasPerm(Perm.WE_PASTE)) {
             final Cuboid clipboard = session.getClipboard();
-            final Vector v1 = player.getLocation().toVector().clone().add(clipboard.getOffset());
-            final Vector v2 = v1.clone().add(clipboard.getDV());
-            session.save(new Cuboid(player.getWorld(), v1, v2, player.getLocation()));
-            put(clipboard, v1);
+            session.save(clipboard.offset(player.getWorld(), player.getLocation().toVector()));
             player.sendMessage(Color.MESSAGE + "Pasted " + clipboard.getVolume() + " blocks.");
         } else {
             player.sendMessage(Color.ERROR + "You have nothing to paste.");
@@ -254,11 +253,11 @@ public class WECmd extends AbstractPlayerCommand {
     public void ext(final int range) {
         final WESession session = getSession();
         if(hasPerm(Perm.WE_EXT)) {
-            if (range <= Config.drainRange) {
+            if(range <= Config.drainRange) {
                 final Location location = player.getLocation();
                 final Vector max = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
                 final Vector min = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
-                session.save(new Cuboid(player.getWorld(), min, max, player.getLocation()));
+                session.save(new Cuboid(player.getWorld(), min, max, player.getLocation().toVector()));
                 int count = 0;
                 final World world = player.getWorld();
                 for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
@@ -279,36 +278,11 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void put(final Cuboid blocks) {
-        put(blocks, blocks.getV1());
-    }
-
-    public void put(final Cuboid blocks, final Vector place) {
-        put(player.getWorld(), blocks, place);
-    }
-
     public void put(final World world, final Vector min, final Vector max, final Material material) {
         for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
             for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
                 for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
                     world.getBlockAt(x, y, z).setType(material);
-                }
-            }
-        }
-    }
-
-    public void put(final World world, final Cuboid blocks, final Vector place) {
-        final int dX = blocks.getDV().getBlockX();
-        final int dY = blocks.getDV().getBlockY();
-        final int dZ = blocks.getDV().getBlockZ();
-        final int pX = place.getBlockX();
-        final int pY = place.getBlockY();
-        final int pZ = place.getBlockZ();
-        for(int x = 0; x <= dX; x++) {
-            for(int y = 0; y <= dY; y++) {
-                for(int z= 0; z <= dZ; z++) {
-                    Block block = blocks.getBlocks()[x][y][z];
-                    world.getBlockAt(pX + x, pY + y, pZ + z).setTypeIdAndData(block.getType().getId(), block.getData(), true);
                 }
             }
         }
