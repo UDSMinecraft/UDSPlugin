@@ -145,7 +145,7 @@ public class SaveablePlayer implements Saveable {
      * @param player Player to connect to this extension.
      */
     public SaveablePlayer(final Player player) {
-        this.base = player;
+        base = player;
         nick = player.getName();
         name = player.getName();
     }
@@ -197,7 +197,7 @@ public class SaveablePlayer implements Saveable {
      * @param player Player to wrap.
      */
     public void wrapPlayer(final Player player) {
-        this.base = player;
+        base = player;
         player.setDisplayName(nick);
     }
 
@@ -253,7 +253,7 @@ public class SaveablePlayer implements Saveable {
      * @return <code>true</code> if the player is wearing scuba gear, <code>false</code> otherwise.
      */
     public boolean hasScuba() {
-        return base.getInventory().getHelmet().getType().equals(Material.GLASS);
+        return base == null ? false : base.getInventory().getHelmet().getType().equals(Material.GLASS);
     }
 
     /**
@@ -270,15 +270,19 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public int countItems(final ItemStack search) {
-        final ItemStack[] inventory = base.getInventory().getContents();
-        int count = 0;
-        for(int i = 0; i < inventory.length; i++) {
-            final ItemStack item = inventory[i];
-            if(item != null && item.getType() == search.getType() && item.getData().getData() == search.getData().getData()) {
-                count += item.getAmount();
+        if(base == null) {
+            return 0;
+        } else {
+            final ItemStack[] inventory = base.getInventory().getContents();
+            int count = 0;
+            for(int i = 0; i < inventory.length; i++) {
+                final ItemStack item = inventory[i];
+                if(item != null && item.getType() == search.getType() && item.getData().getData() == search.getData().getData()) {
+                    count += item.getAmount();
+                }
             }
+            return count;
         }
-        return count;
     }
 
     /**
@@ -390,7 +394,9 @@ public class SaveablePlayer implements Saveable {
      * Save this players inventory for later retrieval.
      */
     public void saveInventory() {
-        inventoryCopy = base.getInventory().getContents();
+        if(base != null) {
+            inventoryCopy = base.getInventory().getContents();
+        }
     }
 
     /**
@@ -405,8 +411,10 @@ public class SaveablePlayer implements Saveable {
      * Load this players armor.
      */
     public void loadArmor() {
-        base.getInventory().setArmorContents(armorCopy);
-        armorCopy = new ItemStack[0];
+        if(base != null) {
+            base.getInventory().setArmorContents(armorCopy);
+            armorCopy = new ItemStack[0];
+        }
     }
 
     /**
@@ -421,15 +429,19 @@ public class SaveablePlayer implements Saveable {
      * Load this players inventory.
      */
     public void loadInventory() {
-        base.getInventory().setContents(inventoryCopy);
-        inventoryCopy = new ItemStack[0];
+        if(base != null) {
+            base.getInventory().setContents(inventoryCopy);
+            inventoryCopy = new ItemStack[0];
+        }
     }
 
     /**
      * Save this players armor for later retrieval.
      */
     public void saveArmor() {
-        armorCopy = base.getInventory().getArmorContents();
+        if(base != null) {
+            armorCopy = base.getInventory().getArmorContents();
+        }
     }
 
     /**
@@ -476,7 +488,16 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public String getLastSeen() {
-        return timeToString(System.currentTimeMillis() - base.getLastPlayed());
+        if(base == null) {
+            final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+            if(offlinePlayer == null) {
+                return "Unknown";
+            } else {
+                return timeToString(System.currentTimeMillis() - Bukkit.getOfflinePlayer(name).getLastPlayed());
+            }
+        } else {
+            return timeToString(System.currentTimeMillis() - base.getLastPlayed());
+        }
     }
 
     /**
@@ -531,7 +552,9 @@ public class SaveablePlayer implements Saveable {
      * Set the players back warp point to their current location.
      */
     public void setBackPoint() {
-        back = base.getLocation();
+        if(base != null) {
+            back = base.getLocation();
+        }
     }
 
     /**
@@ -547,12 +570,16 @@ public class SaveablePlayer implements Saveable {
      * @return <code>true</code> if the players game mode is now set to creative, <code>false</code> otherwise.
      */
     public boolean toggleGameMode() {
-        if(base.getGameMode().equals(GameMode.SURVIVAL)) {
-            base.setGameMode(GameMode.CREATIVE);
-            return true;
-        } else {
-            base.setGameMode(GameMode.SURVIVAL);
+        if(base == null) {
             return false;
+        } else {
+            if(base.getGameMode().equals(GameMode.SURVIVAL)) {
+                base.setGameMode(GameMode.CREATIVE);
+                return true;
+            } else {
+                base.setGameMode(GameMode.SURVIVAL);
+                return false;
+            }
         }
     }
 
@@ -597,14 +624,16 @@ public class SaveablePlayer implements Saveable {
      * @throws IOException
      */
     public void jail(final long sentence, final int bail) {
-        base.getWorld().strikeLightningEffect(base.getLocation());
-        quietTeleport(UDSPlugin.getWarps().get("jailin"));
-        jailTime = System.currentTimeMillis();
-        jailSentence = sentence * Timer.MINUTE;
-        this.bail = bail;
-        base.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
-        if(bail != 0) {
-            base.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + Config.currencies + ".");
+        if(base != null) {
+            base.getWorld().strikeLightningEffect(base.getLocation());
+            quietTeleport(UDSPlugin.getWarps().get("jailin"));
+            jailTime = System.currentTimeMillis();
+            jailSentence = sentence * Timer.MINUTE;
+            this.bail = bail;
+            base.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
+            if(bail != 0) {
+                base.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + Config.currencies + ".");
+            }
         }
     }
 
@@ -614,16 +643,18 @@ public class SaveablePlayer implements Saveable {
      * @return The first region the player is in, <code>null</code> otherwise.
      */
     public Region getCurrentRegion(final RegionType type) {
-        if(type == Region.RegionType.CITY) {
-            for(Region region : UDSPlugin.getCities().values()) {
-                if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
-                    return region;
+        if(base != null) {
+            if(type == Region.RegionType.CITY) {
+                for(Region region : UDSPlugin.getCities().values()) {
+                    if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
+                        return region;
+                    }
                 }
-            }
-        } else if(type == Region.RegionType.SHOP) {
-            for(Region region : UDSPlugin.getShops().values()) {
-                if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
-                    return region;
+            } else if(type == Region.RegionType.SHOP) {
+                for(Region region : UDSPlugin.getShops().values()) {
+                    if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
+                        return region;
+                    }
                 }
             }
         }
@@ -725,9 +756,11 @@ public class SaveablePlayer implements Saveable {
      * @param item Item to give the player.
      */
     public void giveAndDrop(final ItemStack item) {
-        final Map<Integer, ItemStack> drops = base.getInventory().addItem(item);
-        for(ItemStack drop : drops.values()) {
-            base.getWorld().dropItemNaturally(base.getLocation(), drop);
+        if(base != null) {
+            final Map<Integer, ItemStack> drops = base.getInventory().addItem(item);
+            for(ItemStack drop : drops.values()) {
+                base.getWorld().dropItemNaturally(base.getLocation(), drop);
+            }
         }
     }
 
@@ -834,7 +867,9 @@ public class SaveablePlayer implements Saveable {
      * @param warp Warp to teleport to.
      */
     public void teleport(final Warp warp) {
-        base.teleport(warp.getLocation());
+        if(base != null) {
+            base.teleport(warp.getLocation());
+        }
     }
 
     /**
@@ -979,10 +1014,12 @@ public class SaveablePlayer implements Saveable {
      * @param message Message to send.
      */
     public void chat(final Channel channel, final String message) {
-        final Channel temp = this.channel;
-        this.channel = channel;
-        base.chat(message);
-        this.channel = temp;
+        if(base != null) {
+            final Channel temp = this.channel;
+            this.channel = channel;
+            base.chat(message);
+            this.channel = temp;
+        }
     }
 
     /**
@@ -1040,10 +1077,12 @@ public class SaveablePlayer implements Saveable {
      * @param location Location to teleport to.
      */
     public void move(final Location location) {
-        final Location destination = location;
-        destination.setPitch(base.getLocation().getPitch());
-        destination.setYaw(base.getLocation().getYaw());
-        base.teleport(destination);
+        if(base != null) {
+            final Location destination = location;
+            destination.setPitch(base.getLocation().getPitch());
+            destination.setYaw(base.getLocation().getYaw());
+            base.teleport(destination);
+        }
     }
 
     /**
@@ -1055,22 +1094,27 @@ public class SaveablePlayer implements Saveable {
         if(location == null) {
             return false;
         } else {
-            base.teleport(location);
+            if(base != null) {
+                base.teleport(location);
+            }
             return true;
         }
     }
 
     /**
-     * Teleport a player but fail quietly if warp is <code>null</code>.
+     * Teleport a player but fail quietly if warp or location are <code>null</code>.
      * @param warp Warp to teleport player to.
-     * @return <code>true</code> if warp is not <code>null</code>, <code>false</code> otherwise.
+     * @return <code>true</code> if warp and location are not <code>null</code>, <code>false</code> otherwise.
      */
     public boolean quietTeleport(final Warp warp) {
         if(warp == null) {
             return false;
         } else {
-            base.teleport(warp.getLocation());
-            return true;
+            if(base == null) {
+                return warp.getLocation() != null;
+            } else {
+                return base.teleport(warp.getLocation());
+            }
         }
     }
 
@@ -1108,7 +1152,9 @@ public class SaveablePlayer implements Saveable {
      * @param message
      */
     public void sendMessage(final String message) {
-        base.sendMessage(message);
+        if(base != null) {
+            base.sendMessage(message);
+        }
     }
 
     /**
@@ -1116,7 +1162,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public boolean isOnline() {
-        return base.isOnline();
+        return base == null ? false : base.isOnline();
     }
 
     /**
@@ -1124,7 +1170,9 @@ public class SaveablePlayer implements Saveable {
      * @param level
      */
     public void setFoodLevel(final int level) {
-        base.setFoodLevel(level);
+        if(base != null) {
+            base.setFoodLevel(level);
+        }
     }
 
     /**
@@ -1132,7 +1180,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public Location getLocation() {
-        return base.getLocation();
+        return base == null ? null : base.getLocation();
     }
 
     /**
@@ -1140,7 +1188,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public World getWorld() {
-        return base.getWorld();
+        return base == null ? null : base.getWorld();
     }
 
     /**
@@ -1148,7 +1196,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public long getLastPlayed() {
-        return base.getLastPlayed();
+        return base == null ? Bukkit.getOfflinePlayer(name).getLastPlayed() : base.getLastPlayed();
     }
 
     /**
@@ -1156,7 +1204,9 @@ public class SaveablePlayer implements Saveable {
      * @param message
      */
     public void kickPlayer(final String message) {
-        base.kickPlayer(message);
+        if(base != null) {
+            base.kickPlayer(message);
+        }
     }
 
     /**
@@ -1164,7 +1214,11 @@ public class SaveablePlayer implements Saveable {
      * @param banned
      */
     public void setBanned(final boolean banned) {
-        base.setBanned(banned);
+        if(base == null) {
+            Bukkit.getOfflinePlayer(name).setBanned(banned);
+        } else {
+            base.setBanned(banned);
+        }
     }
 
     /**
@@ -1172,7 +1226,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public boolean isBanned() {
-        return base.isBanned();
+        return base == null ? Bukkit.getOfflinePlayer(name).isBanned() : base.isBanned();
     }
 
     /**
@@ -1180,7 +1234,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public PlayerInventory getInventory() {
-        return base.getInventory();
+        return base == null ? null : base.getInventory();
     }
 
     /**
@@ -1189,7 +1243,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public boolean teleport(final Location location) {
-        return base.teleport(location);
+        return base == null? false : base.teleport(location);
     }
 
     /**
@@ -1197,7 +1251,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public ItemStack getItemInHand() {
-        return base.getItemInHand();
+        return base == null ? null : base.getItemInHand();
     }
 
     /**
@@ -1206,7 +1260,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public boolean performCommand(final String command) {
-        return base.performCommand(command);
+        return base == null ? false : base.performCommand(command);
     }
 
     /**
@@ -1214,7 +1268,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public boolean isOp() {
-        return base.isOp();
+        return base == null ? false : base.isOp();
     }
 
     /**
@@ -1222,7 +1276,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public boolean isSneaking() {
-        return base.isSneaking();
+        return base == null ? false : base.isSneaking();
     }
 
     /**
@@ -1230,7 +1284,9 @@ public class SaveablePlayer implements Saveable {
      * @param item
      */
     public void setItemInHand(final ItemStack item) {
-        base.setItemInHand(item);
+        if(base != null) {
+            base.setItemInHand(item);
+        }
     }
 
     /**
@@ -1240,7 +1296,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public Block getTargetBlock(final HashSet<Byte> transparent, final int range) {
-        return base.getTargetBlock(transparent, range);
+        return base == null ? null : base.getTargetBlock(transparent, range);
     }
 
     /**
@@ -1250,7 +1306,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public List<Block> getLastTwoTargetBlocks(final HashSet<Byte> transparent, final int range) {
-        return base.getLastTwoTargetBlocks(transparent, range);
+        return base == null ? null : base.getLastTwoTargetBlocks(transparent, range);
     }
 
     /**
@@ -1258,7 +1314,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public Player getKiller() {
-        return base.getKiller();
+        return base == null ? null : base.getKiller();
     }
 
     /**
@@ -1266,14 +1322,16 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public GameMode getGameMode() {
-        return base.getGameMode();
+        return base == null ? null : base.getGameMode();
     }
 
     /**
      *
      */
     public void updateInventory() {
-        base.updateInventory();
+        if(base != null) {
+            base.updateInventory();
+        }
     }
 
     /**
@@ -1281,7 +1339,9 @@ public class SaveablePlayer implements Saveable {
      * @param player
      */
     public void teleport(final SaveablePlayer player) {
-        base.teleport(player.getBase());
+        if(base != null) {
+            base.teleport(player.getBase());
+        }
     }
 
     /**
@@ -1289,7 +1349,9 @@ public class SaveablePlayer implements Saveable {
      * @param entity
      */
     public void teleportHere(final Entity entity) {
-        entity.teleport(base);
+        if(base != null) {
+            entity.teleport(base);
+        }
     }
 
     /**
@@ -1297,7 +1359,9 @@ public class SaveablePlayer implements Saveable {
      * @param pet
      */
     public void setPet(final Tameable pet) {
-        pet.setOwner(base);
+        if(base != null) {
+            pet.setOwner(base);
+        }
     }
 
     /**
@@ -1305,7 +1369,9 @@ public class SaveablePlayer implements Saveable {
      * @param levels
      */
     public void giveExpLevels(final int levels) {
-        base.giveExpLevels(levels);
+        if(base != null) {
+            base.giveExpLevels(levels);
+        }
     }
 
     /**
@@ -1313,7 +1379,9 @@ public class SaveablePlayer implements Saveable {
      * @param exp
      */
     public void setExp(final int exp) {
-        base.setExp(exp);
+        if(base != null) {
+            base.setExp(exp);
+        }
     }
 
     /**
@@ -1321,7 +1389,9 @@ public class SaveablePlayer implements Saveable {
      * @param level
      */
     public void setLevel(final int level) {
-        base.setLevel(level);
+        if(base != null) {
+            base.setLevel(level);
+        }
     }
 
     /**
@@ -1329,7 +1399,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public int getLevel() {
-        return base.getLevel();
+        return base == null ? 0 : base.getLevel();
     }
 
     /**
@@ -1337,7 +1407,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public int getMaxHealth() {
-        return base.getMaxHealth();
+        return base == null ? 0 : base.getMaxHealth();
     }
 
     /**
@@ -1345,6 +1415,8 @@ public class SaveablePlayer implements Saveable {
      * @param health
      */
     public void setHealth(final int health) {
-        base.setHealth(health);
+        if(base != null) {
+            base.setHealth(health);
+        }
     }
 }
