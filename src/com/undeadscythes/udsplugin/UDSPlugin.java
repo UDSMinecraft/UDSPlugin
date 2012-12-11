@@ -220,6 +220,7 @@ public class UDSPlugin extends JavaPlugin {
     private void setCommandExecutors() {
         getCommand("a").setExecutor(new ACmd());
         getCommand("acceptrules").setExecutor(new AcceptRulesCmd());
+        getCommand("admin").setExecutor(new AdminCmd());
         getCommand("back").setExecutor(new BackCmd());
         getCommand("ban").setExecutor(new BanCmd());
         getCommand("bounty").setExecutor(new BountyCmd());
@@ -251,6 +252,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("lockdown").setExecutor(new LockdownCmd());
         getCommand("map").setExecutor(new MapCmd());
         getCommand("me").setExecutor(new MeCmd());
+        getCommand("mod").setExecutor(new ModCmd());
         getCommand("money").setExecutor(new MoneyCmd());
         getCommand("n").setExecutor(new NCmd());
         getCommand("nick").setExecutor(new NickCmd());
@@ -286,6 +288,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("unjail").setExecutor(new UnJailCmd());
         getCommand("vip").setExecutor(new VIPCmd());
         getCommand("we").setExecutor(new WECmd());
+        getCommand("warden").setExecutor(new WardenCmd());
         getCommand("warp").setExecutor(new WarpCmd());
         getCommand("where").setExecutor(new WhereCmd());
         getCommand("who").setExecutor(new WhoCmd());

@@ -9,6 +9,7 @@ softdepend: []
 commands:
   a:
   acceptrules:
+  admin:
   back:
   ban:
   bounty:
@@ -43,6 +44,7 @@ commands:
   lockdown:
   map:
   me:
+  mod:
   money:
   n:
   nick:
@@ -80,6 +82,7 @@ commands:
   unban:
   unjail:
   vip:
+  warden:
   warp:
     aliases: warps
   we:
