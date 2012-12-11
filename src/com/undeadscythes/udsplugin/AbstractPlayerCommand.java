@@ -171,7 +171,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
             }
         } else {
             player.sendMessage(Color.ERROR + "That is not a valid sub command.");
-            player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the available sub commands.");
+            player.sendMessage(Color.MESSAGE + "Use /" + commandName + " help to check the available sub commands.");
         }
     }
 
