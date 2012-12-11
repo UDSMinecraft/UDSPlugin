@@ -17,10 +17,6 @@ import org.bukkit.util.*;
  */
 public class UDSPlugin extends JavaPlugin {
     /**
-     * A vector that defines the center of a block.
-     */
-    public final static Vector HALF_BLOCK = new Vector(.5, .5, .5);
-    /**
      * Where the issue/suggestion tickets are stored.
      */
     public final static String TICKET_PATH = "tickets.txt";

@@ -27,7 +27,7 @@ public class BlockBreak implements Listener {
             event.setCancelled(true);
             player.sendMessage(Color.ERROR + "Sneak while punching if you want to break this block.");
         } else if(event.getBlock().getType().equals(Material.MOB_SPAWNER)) {
-            player.getWorld().dropItemNaturally(event.getBlock().getLocation().add(UDSPlugin.HALF_BLOCK), new ItemStack(Material.MOB_SPAWNER));
+            player.getWorld().dropItemNaturally(event.getBlock().getLocation().add(Config.HALF_BLOCK), new ItemStack(Material.MOB_SPAWNER));
             event.setExpToDrop(Config.spawnerEXP);
         } else if(event.getBlock().getType().equals(Material.SNOW_BLOCK)) {
             final ItemStack item = new ItemStack(player.getItemInHand());
