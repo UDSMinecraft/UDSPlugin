@@ -244,40 +244,48 @@ public class HelpCmd extends AbstractPlayerCommand {
     public void playerExecute() {
         if(maxArgsHelp(2)) {
             if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
-                final Set<Usage> usages = new TreeSet<Usage>();
-                for(Usage usage : Usage.values()) {
-                    if(player.hasPermission(usage.getPerm()) && !usage.isExtension()) {
-                        usages.add(usage);
-                    }
-                }
-                int page = 1;
-                if(args.length == 1) {
-                    page = Integer.parseInt(args[0]);
-                }
-                sendPage(page, player, usages, "Help");
+                sendHelpFiles();
             } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
                 final Usage usage = Usage.get(args[0]);
                 if(usage == null) {
                     player.sendMessage(Color.ERROR + "No command exists by that name.");
                 } else {
                     if(usage.isExtended()) {
-                        int page = 1;
-                        if(args.length == 2) {
-                            page = Integer.parseInt(args[1]);
-                        }
-                        final Set<Usage> extensions = new TreeSet<Usage>();
-                        for(Usage extension : Usage.values()) {
-                            if(extension.cmd().contains(usage.cmd() + "_") && player.hasPermission(extension.getPerm()) && extension.isExtension()) {
-                                extensions.add(extension);
-                            }
-                        }
-                        sendPage(page, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+                        sendCommandHelp(usage);
                     } else {
                         player.sendMessage(Color.ITEM + usage.getUsage() + Color.TEXT + " - " + usage.getDescription());
                     }
                 }
             }
         }
+    }
+
+    private void sendHelpFiles() {
+        final Set<Usage> usages = new TreeSet<Usage>();
+        for(Usage usage : Usage.values()) {
+            if(player.hasPermission(usage.getPerm()) && !usage.isExtension()) {
+                usages.add(usage);
+            }
+        }
+        int page = 1;
+        if(args.length == 1) {
+            page = Integer.parseInt(args[0]);
+        }
+        sendPage(page, player, usages, "Help");
+    }
+
+    private void sendCommandHelp(final Usage usage) {
+        int page = 1;
+        if(args.length == 2) {
+            page = Integer.parseInt(args[1]);
+        }
+        final Set<Usage> extensions = new TreeSet<Usage>();
+        for(Usage extension : Usage.values()) {
+            if(extension.cmd().contains(usage.cmd() + "_") && player.hasPermission(extension.getPerm()) && extension.isExtension()) {
+                extensions.add(extension);
+            }
+        }
+        sendPage(page, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
     }
 
     private void sendPage(final int page, final SaveablePlayer player, final Set<Usage> list, final String title) {
