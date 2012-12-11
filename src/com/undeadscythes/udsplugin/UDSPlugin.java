@@ -426,7 +426,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Clans map.
      */
     static public MatchableHashMap<Clan> getClans() {
-        return (MatchableHashMap)clans;
+        return clans.toMatchableHashMap(Clan.class);
     }
 
     /**
@@ -434,7 +434,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Players map.
      */
     static public MatchableHashMap<SaveablePlayer> getPlayers() {
-        return (MatchableHashMap)players;
+        return players.toMatchableHashMap(SaveablePlayer.class);
     }
 
     /**
@@ -442,7 +442,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Regions map.
      */
     static public MatchableHashMap<Region> getRegions() {
-        return (MatchableHashMap)regions;
+        return regions.toMatchableHashMap(Region.class);
     }
 
     /**
@@ -466,7 +466,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Warps map.
      */
     static public MatchableHashMap<Warp> getWarps() {
-        return (MatchableHashMap)warps;
+        return warps.toMatchableHashMap(Warp.class);
     }
 
     /**

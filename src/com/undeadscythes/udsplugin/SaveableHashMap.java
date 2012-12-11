@@ -20,4 +20,13 @@ public class SaveableHashMap extends MatchableHashMap<Saveable> {
         }
         file.close();
     }
+
+    /**
+     * Convert this SaveableHashMap into a MatchableHashMap.
+     * @return A MatchableHashMap of this SaveableHashMap.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Saveable> MatchableHashMap<T> toMatchableHashMap(final Class<T> c) {
+        return (MatchableHashMap)this;
+    }
 }
