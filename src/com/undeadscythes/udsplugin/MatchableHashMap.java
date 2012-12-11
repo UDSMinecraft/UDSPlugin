@@ -77,7 +77,7 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param comp Comparator to define sort priorities.
      * @return Sorted array of objects.
      */
-    public List<Object> getSortedValues(final Comparator comp) {
+    public List<Object> getSortedValues(final Comparator<Object> comp) {
         final ArrayList<Object> values = new ArrayList<Object>(this.values());
         Collections.sort(values, comp);
         return values;
