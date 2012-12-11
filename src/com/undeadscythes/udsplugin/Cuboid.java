@@ -10,89 +10,153 @@ import org.bukkit.util.*;
  */
 public class Cuboid {
     final private transient World world;
-    final private transient Vector origin;
-    final private transient int dX;
-    final private transient int dY;
-    final private transient int dZ;
-    final private transient Block[][][] blocks;
-    final private transient Vector pov;
+    final private transient Vector min;
+    final private transient Vector max;
+    final private transient Vector offset;
+    final private transient Vector diagonal;
+    final private transient int dx;
+    final private transient int dy;
+    final private transient int dz;
+    final private transient int px;
+    final private transient int py;
+    final private transient int pz;
+    final private transient MiniBlock[][][] blocks;
 
     /**
      *
      * @param world
      * @param v1
      * @param v2
+     * @param pov
      */
-    public Cuboid(final World world, final Vector v1, final Vector v2, final Location pov) {
+    public Cuboid(final World world, final Vector v1, final Vector v2, final Vector pov) {
         this.world = world;
-        origin = Vector.getMinimum(v1, v2);
-        dX = Math.abs(v1.getBlockX() - v2.getBlockX());
-        dY = Math.abs(v1.getBlockY() - v2.getBlockY());
-        dZ = Math.abs(v1.getBlockZ() - v2.getBlockZ());
-        blocks = new Block[dX][dY][dZ];
-        for(int x = 0; x < dX; x++) {
-            for(int y = 0; y < dY; y++) {
-                for(int z = 0; z < dZ; z++) {
-                    blocks[x][y][z] = world.getBlockAt(origin.getBlockX() + x, origin.getBlockY() + y, origin.getBlockZ() + z);
+        min = Vector.getMinimum(v1, v2);
+        px = min.getBlockX();
+        py = min.getBlockY();
+        pz = min.getBlockZ();
+        max = Vector.getMaximum(v1, v2);
+        diagonal = max.clone().subtract(min);
+        dx = diagonal.getBlockX() + 1;
+        dy = diagonal.getBlockY() + 1;
+        dz = diagonal.getBlockZ() + 1;
+        blocks = new MiniBlock[dx][dy][dz];
+        for(int x = 0; x < dx; x++) {
+            for(int y = 0; y < dy; y++) {
+                for(int z = 0; z < dz; z++) {
+                    blocks[x][y][z] = new MiniBlock(world.getBlockAt(px + x, py + y, pz + z));
                 }
             }
         }
-        this.pov = new Vector(pov.getBlockX(), pov.getBlockY(), pov.getBlockZ());
+        offset = min.clone().subtract(pov);
     }
 
-    /**
-     *
-     * @return
-     */
-    public Vector getPOV() {
-        return pov;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Vector getOffset() {
-        return origin.clone().subtract(pov);
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Vector getV1() {
-        return origin;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Vector getV2() {
-        return origin.clone().add(new Vector(dX, dY, dZ));
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Vector getDV() {
-        return new Vector(dX, dY, dZ);
-    }
+//    /**
+//     *
+//     * @return
+//     */
+//    public Vector getPOV() {
+//        return pov;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    public Vector getOffset() {
+//        return origin.clone().subtract(pov);
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    public Vector getV1() {
+//        return origin;
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    public Vector getV2() {
+//        return origin.clone().add(new Vector(dX, dY, dZ));
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    public Vector getDV() {
+//        return new Vector(dX, dY, dZ);
+//    }
 
     /**
      *
      * @return
      */
     public int getVolume() {
-        return dX * dY * dZ;
+        return dx * dy * dz;
     }
 
     /**
      *
+     * @param world
+     * @param place
      * @return
      */
-    public Block[][][] getBlocks() {
-        return blocks.clone();
+    public Cuboid offset(final World world, final Vector place) {
+        final Vector min = place.clone().add(offset);
+        final Cuboid undo = new Cuboid(world, min, min.clone().add(diagonal), place);
+        place(world, min);
+        return undo;
+    }
+
+    /**
+     *
+     */
+    public void revert() {
+        for(int x = 0; x < dx; x++) {
+            for(int y = 0; y < dy; y++) {
+                for(int z= 0; z < dz; z++) {
+                    blocks[x][y][z].replace(world.getBlockAt(px + x, py + y, pz + z));
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param world
+     * @param place
+     * @return
+     */
+    public Cuboid place(final World world, final Vector place) {
+        final Cuboid undo = new Cuboid(world, place, place.clone().add(diagonal), new Vector());
+        final int nx = place.getBlockX();
+        final int ny = place.getBlockY();
+        final int nz = place.getBlockZ();
+        for(int x = 0; x < dx; x++) {
+            for(int y = 0; y < dy; y++) {
+                for(int z= 0; z < dz; z++) {
+                    blocks[x][y][z].replace(world.getBlockAt(nx + x, ny + y, nz + z));
+                }
+            }
+        }
+        return undo;
+    }
+}
+
+class MiniBlock {
+    private final transient int type;
+    private final transient byte data;
+
+    public MiniBlock(final Block block) {
+        type = block.getTypeId();
+        data = block.getData();
+    }
+
+    public void replace(final Block block) {
+        block.setTypeIdAndData(type, data, true);
     }
 }
