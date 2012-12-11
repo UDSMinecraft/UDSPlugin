@@ -267,25 +267,25 @@ public class HelpCmd extends AbstractPlayerCommand {
                 usages.add(usage);
             }
         }
-        int page = 1;
         if(args.length == 1) {
-            page = Integer.parseInt(args[0]);
+            sendPage(Integer.parseInt(args[0]), player, usages, "Help");
+        } else {
+            sendPage(1, player, usages, "Help");
         }
-        sendPage(page, player, usages, "Help");
     }
 
     private void sendCommandHelp(final Usage usage) {
-        int page = 1;
-        if(args.length == 2) {
-            page = Integer.parseInt(args[1]);
-        }
         final Set<Usage> extensions = new TreeSet<Usage>();
         for(Usage extension : Usage.values()) {
             if(extension.cmd().contains(usage.cmd() + "_") && player.hasPermission(extension.getPerm()) && extension.isExtension()) {
                 extensions.add(extension);
             }
         }
-        sendPage(page, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+        if(args.length == 2) {
+            sendPage(Integer.parseInt(args[1]), player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+        } else {
+            sendPage(1, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+        }
     }
 
     private void sendPage(final int page, final SaveablePlayer player, final Set<Usage> list, final String title) {
