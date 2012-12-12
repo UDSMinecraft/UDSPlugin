@@ -245,12 +245,24 @@ public class Region implements Saveable {
 
     /**
      *
+     * @return
+     */
+    public String getMemberList() {
+        String membersString = "";
+        for(SaveablePlayer member : members) {
+            membersString = membersString.concat(", " + member.getName());
+        }
+        return membersString.replaceFirst(", ", "");
+    }
+
+    /**
+     *
      * @param player
      */
     public void sendInfo(final SaveablePlayer player) {
         player.sendMessage(Color.MESSAGE + "Region " + name + " info:");
         player.sendMessage(Color.TEXT + "Owner: " + (owner == null ? "" : owner.getName()) + (rank.equals(PlayerRank.NONE) ? "" : " (" + rank.toString() + ")"));
-        player.sendMessage(Color.TEXT + "Members: " + StringUtils.join(members, ", "));
+        player.sendMessage(Color.TEXT + "Members: " + getMemberList());
         player.sendMessage(Color.TEXT + "Type: " + type.toString());
         if(flags.isEmpty()) {
             player.sendMessage(Color.TEXT + "No flags.");
