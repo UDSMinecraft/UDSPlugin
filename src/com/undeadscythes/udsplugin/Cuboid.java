@@ -48,48 +48,17 @@ public class Cuboid {
                 }
             }
         }
-        offset = min.clone().subtract(pov);
+        offset = min.clone().subtract(blockify(pov));
     }
 
-//    /**
-//     *
-//     * @return
-//     */
-//    public Vector getPOV() {
-//        return pov;
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public Vector getOffset() {
-//        return origin.clone().subtract(pov);
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public Vector getV1() {
-//        return origin;
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public Vector getV2() {
-//        return origin.clone().add(new Vector(dX, dY, dZ));
-//    }
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    public Vector getDV() {
-//        return new Vector(dX, dY, dZ);
-//    }
+    /**
+     *
+     * @param vector
+     * @return
+     */
+    public final Vector blockify(final Vector vector) {
+        return new Vector(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+    }
 
     /**
      *
@@ -106,8 +75,8 @@ public class Cuboid {
      * @return
      */
     public Cuboid offset(final World world, final Vector place) {
-        final Vector min = place.clone().add(offset);
-        final Cuboid undo = new Cuboid(world, min, min.clone().add(diagonal), place);
+        final Vector min = blockify(place).add(offset);
+        final Cuboid undo = new Cuboid(world, min, min.clone().add(diagonal), blockify(place));
         place(world, min);
         return undo;
     }
