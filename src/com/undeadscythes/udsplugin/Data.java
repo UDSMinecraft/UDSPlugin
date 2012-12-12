@@ -30,6 +30,8 @@ public class Data {
             dataConfig.setDefaults(defaultData);
         }
         spawn = new Location(Bukkit.getWorld(dataConfig.getString("spawn.world")), dataConfig.getDouble("spawn.x"), dataConfig.getDouble("spawn.y"), dataConfig.getDouble("spawn.z"), (float)dataConfig.getDouble("spawn.yaw"), (float)dataConfig.getDouble("spawn.pitch"));
+        enderDeath = dataConfig.getLong("ender-death");
+        lastDaily = dataConfig.getLong("last-daily");
     }
 
     public FileConfiguration getData() {
