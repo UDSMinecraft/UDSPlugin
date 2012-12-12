@@ -113,8 +113,12 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.STONE_BUTTON || material == Material.LEVER || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
             final Location location = block.getLocation();
             if(!player.canBuildHere(location) && hasFlag(location, RegionFlag.LOCK)) {
-                player.sendMessage(Color.ERROR + "You can't do that here.");
-                return true;
+                if(player.hasPermission(Perm.BYPASS)) {
+                    player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                } else {
+                    player.sendMessage(Color.ERROR + "You can't do that here.");
+                    return true;
+                }
             }
         }
         return false;
