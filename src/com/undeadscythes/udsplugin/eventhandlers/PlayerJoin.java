@@ -43,7 +43,7 @@ public class PlayerJoin implements Listener {
             if(player.getRank().equals(PlayerRank.DEFAULT)) {
                 player.sendMessage(Color.MESSAGE + "Kill monsters or trade with players to earn " + Config.buildCost + " credits then type /acceptrules in chat.");
             } else if(player.getRank().compareTo(PlayerRank.MOD) >= 0) {
-                player.sendMessage(Color.MESSAGE + "As a member of staff be polite helpful and lead by example.");
+                player.sendMessage(Config.welcomeAdmin);
             }
             event.setJoinMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
         }
