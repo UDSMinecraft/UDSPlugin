@@ -94,7 +94,7 @@ public class SaveablePlayer implements Saveable {
 
         @Override
         public String toString() {
-            return name().toLowerCase().replaceFirst("[a-z]", name().substring(0, 1).toUpperCase());
+            return StringUtils.capitalize(name().toLowerCase());
         }
     }
 

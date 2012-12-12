@@ -42,7 +42,7 @@ public class Region implements Saveable {
 
         @Override
         public String toString() {
-            return name().toLowerCase();
+            return StringUtils.capitalize(name().toLowerCase());
         }
 
         /**
@@ -84,6 +84,11 @@ public class Region implements Saveable {
                 }
             }
             return null;
+        }
+
+        @Override
+        public String toString() {
+            return StringUtils.capitalize(name().toLowerCase());
         }
     }
 
@@ -261,7 +266,7 @@ public class Region implements Saveable {
      */
     public void sendInfo(final SaveablePlayer player) {
         player.sendMessage(Color.MESSAGE + "Region " + name + " info:");
-        player.sendMessage(Color.TEXT + "Owner: " + (owner == null ? "" : owner.getName()) + (rank.equals(PlayerRank.NONE) ? "" : " (" + rank.toString() + ")"));
+        player.sendMessage(Color.TEXT + "Owner:" + (owner == null ? "" : " " + owner.getName()) + (rank.equals(PlayerRank.NONE) ? "" : " " + rank.toString() + "+"));
         player.sendMessage(Color.TEXT + "Members: " + getMemberList());
         player.sendMessage(Color.TEXT + "Type: " + type.toString());
         if(flags.isEmpty()) {
