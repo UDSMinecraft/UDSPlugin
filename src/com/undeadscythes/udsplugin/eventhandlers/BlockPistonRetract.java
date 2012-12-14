@@ -3,7 +3,6 @@ package com.undeadscythes.udsplugin.eventhandlers;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
 import org.bukkit.*;
-import org.bukkit.block.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
@@ -52,14 +51,14 @@ public class BlockPistonRetract extends ListenerWrapper implements Listener {
                         case NORTH: // Acually is East
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 4, true);
                             break;
-                        case SOUTH:
-                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 2, true);
-                            break;
-                        case WEST:
+                        case SOUTH: // Acually is West
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 5, true);
                             break;
-                        case EAST: // Acually is North
+                        case WEST: // Acually is North
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 3, true);
+                            break;
+                        case EAST: // Acually is South
+                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 2, true);
                             break;
                     }
                     event.getBlock().getRelative(event.getDirection()).setTypeId(0);
