@@ -89,7 +89,7 @@ public class HomeCmd extends AbstractPlayerCommand {
                     home.expand(direction, 1);
                     if(noOverlaps(home)) {
                         player.debit(Config.expandCost);
-                        player.sendMessage(Color.MESSAGE + "Your home ahs been expanded.");
+                        player.sendMessage(Color.MESSAGE + "Your home has been expanded.");
                     } else {
                         home.expand(direction, -1);
                     }
