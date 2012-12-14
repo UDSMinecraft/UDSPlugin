@@ -171,7 +171,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         SIT(Perm.SIT, "/sit", "Sit on a stair block or get up again.", false, false),
         SPAWN(Perm.SPAWN, "/spawn", "Teleport to spawn.", false, false),
         STACK(Perm.STACK, "/stack", "Stack the items in your inventory.", false, false),
-        STATS(Perm.STATS, "/stats <player>", "View stats on a player.", false, false),
+        STATS(Perm.STATS, "/stats [player]", "View stats on a player.", false, false),
         VIP_BUY(Perm.VIP_BUY, "/vip", "Rent VIP rank.", false, false),
         WARP_LIST(Perm.WARP, "/warp", "Get a list of availbable warp points.", false, false),
         WARP(Perm.WARP, "/warp <warp>", "Teleport to a warp point.", false, false),
