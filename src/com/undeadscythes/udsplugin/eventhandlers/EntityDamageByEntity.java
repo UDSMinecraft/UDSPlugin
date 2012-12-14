@@ -23,7 +23,13 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     }
 
     private boolean pvp(final SaveablePlayer attacker, final SaveablePlayer defender) {
-        return defender.hasGodMode() || attacker.getClan().equals(defender.getClan()) || !defender.isInClan() || !attacker.isInClan() || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
+        if(!defender.isInClan()) {
+            return true;
+        } else if(!attacker.isInClan()) {
+            return true;
+        } else {
+            return defender.hasGodMode() || attacker.getClan().equals(defender.getClan()) || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
+        }
     }
 
     private boolean godMode(final Entity defender) {
