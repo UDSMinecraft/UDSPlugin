@@ -518,22 +518,22 @@ public class SaveablePlayer implements Saveable {
         String timeString = "";
         if(timeRemaining >= Timer.DAY) {
             final int days = (int)(timeRemaining / Timer.DAY);
-            timeString = timeString.concat(days + (days == 1 ? " day" : " days "));
+            timeString = timeString.concat(days + (days == 1 ? " day " : " days "));
             timeRemaining -= days * Timer.DAY;
         }
         if(timeRemaining >= Timer.HOUR) {
             final int hours = (int)(timeRemaining / Timer.HOUR);
-            timeString = timeString.concat(hours + (hours == 1 ? " hour" : " hours "));
+            timeString = timeString.concat(hours + (hours == 1 ? " hour " : " hours "));
             timeRemaining -= hours * Timer.HOUR;
         }
         if(timeRemaining >= Timer.MINUTE) {
             final int minutes = (int)(timeRemaining / Timer.MINUTE);
-            timeString = timeString.concat(minutes + (minutes == 1 ? " minute" : " minutes "));
+            timeString = timeString.concat(minutes + (minutes == 1 ? " minute " : " minutes "));
             timeRemaining -= minutes * Timer.MINUTE;
         }
         if(timeRemaining >= Timer.SECOND) {
             final int seconds = (int)(timeRemaining / Timer.SECOND);
-            timeString = timeString.concat(seconds + (seconds == 1 ? " second" : " seconds "));
+            timeString = timeString.concat(seconds + (seconds == 1 ? " second " : " seconds "));
             timeRemaining -= seconds * Timer.SECOND;
         }
         return timeString;
