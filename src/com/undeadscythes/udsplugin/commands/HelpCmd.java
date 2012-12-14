@@ -111,7 +111,7 @@ public class HelpCmd extends AbstractPlayerCommand {
         HOME_ADD(Perm.HOME, "/home add <player>", "Add a player as a room mate.", false, true),
         HOME_KICK(Perm.HOME, "/home kick <player>", "Kick a player from your room mates.", false, true),
         HOME_BOOT(Perm.HOME, "/home boot <player>", "Forcibly boot a player from your home.", false, true),
-        HOME_EXPAND(Perm.HOME, "/home expand <direction>", "Expand your home protection.", false, true),
+        HOME_EXPAND(Perm.HOME, "/home expand <direction>", "Expand your home.", false, true),
         HOME_LOCK(Perm.HOME, "/home lock", "Lock your house.", false, true),
         HOME_UNLOCK(Perm.HOME, "/home unlock", "Unlock your house.", false, true),
         HOME_MAKE(Perm.HOME, "/home make", "Set a new home protection.", false, true),
@@ -236,7 +236,28 @@ public class HelpCmd extends AbstractPlayerCommand {
         }
 
         public String getDescription() {
-            return description;
+            switch(this) {
+                case ACCEPTRULES:
+                    return description + " (" + Color.ITEM + Config.buildCost + " credits" + Color.TEXT + ")";
+                case CITY_NEW:
+                    return description + " (" + Color.ITEM + Config.cityCost + " credits" + Color.TEXT + ")";
+                case MAP:
+                    return description + " (" + Color.ITEM + Config.mapCost + " credits" + Color.TEXT + ")";
+                case HOME_SET:
+                    return description + " (" + Color.ITEM + Config.homeCost + " credits" + Color.TEXT + ")";
+                case SHOP_BUY:
+                    return description + " (" + Color.ITEM + Config.shopCost + " credits" + Color.TEXT + ")";
+                case VIP:
+                    return description + " (" + Color.ITEM + Config.vipCost + " credits" + Color.TEXT + ")";
+                case CLAN_NEW:
+                    return description + " (" + Color.ITEM + Config.clanCost + " credits" + Color.TEXT + ")";
+                case CLAN_BASE_SET:
+                    return description + " (" + Color.ITEM + Config.baseCost + " credits" + Color.TEXT + ")";
+                case HOME_EXPAND:
+                    return description + " (" + Color.ITEM + Config.expandCost + " credits" + Color.TEXT + ")";
+                default:
+                    return description;
+            }
         }
 
         public boolean isExtension() {
