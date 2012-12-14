@@ -5,6 +5,7 @@ import java.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
+import org.bukkit.util.Vector;
 
 /**
  * Provides checks for listeners.
@@ -124,8 +125,10 @@ public class ListenerWrapper {
      */
     public List<Region> regionsHere(final Location location) {
         final List<Region> regions = new ArrayList<Region>();
+        final Vector vector = location.toVector();
+        final World world = location.getWorld();
         for(Region region : UDSPlugin.getRegions().values()) {
-            if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
+            if(world.equals(region.getWorld()) && vector.isInAABB(region.getV1(), region.getV2())) {
                 regions.add(region);
             }
         }
