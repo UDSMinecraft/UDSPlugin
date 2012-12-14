@@ -17,8 +17,8 @@ public class StatsCmd extends AbstractPlayerCommand {
             player.sendMessage(Color.TEXT + "Clan: " + (target.isInClan() ? target.getClan().getName() : "not in clan"));
             player.sendMessage(Color.TEXT + "Current bounty: " + target.getBounty());
             player.sendMessage(Color.TEXT + "Current level: " + target.getLevel());
-            player.sendMessage(Color.TEXT + "Time logged: " + player.getTimeLogged());
-            player.sendMessage(Color.TEXT + "Last seen: " + (player.isOnline() ? "online now" : player.getLastSeen()));
+            player.sendMessage(Color.TEXT + "Time logged: " + target.getTimeLogged());
+            player.sendMessage(Color.TEXT + "Last seen: " + (target.isOnline() ? "online now" : target.getLastSeen()));
         }
     }
 }
