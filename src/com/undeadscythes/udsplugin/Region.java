@@ -311,6 +311,27 @@ public class Region implements Saveable {
     }
 
     /**
+     * Expand this region in some direction.
+     * @param direction Direction to expand.
+     * @param distance Distance to expand.
+     */
+    public void contract(final Direction direction, final int distance) {
+        if(direction.equals(Direction.NORTH)) {
+            v2.add(new Vector(0, 0, -distance));
+        } else if(direction.equals(Direction.SOUTH)) {
+            v1.add(new Vector(0, 0, distance));
+        } else if(direction.equals(Direction.EAST)) {
+            v1.add(new Vector(distance, 0, 0));
+        } else if(direction.equals(Direction.WEST)) {
+            v2.add(new Vector(-distance, 0, 0));
+        } else if(direction.equals(Direction.UP)) {
+            v1.add(new Vector(0, distance, 0));
+        } else if(direction.equals(Direction.DOWN)) {
+            v2.add(new Vector(0, -distance, 0));
+        }
+    }
+
+    /**
      * Get the region's rank.
      * @return Player rank of the region.
      */
