@@ -365,7 +365,7 @@ public class SaveablePlayer implements Saveable {
      * @return The players saved inventory, <code>null</code> if none exists.
      */
     public ItemStack[] getInventoryCopy() {
-        return inventoryCopy.clone();
+        return inventoryCopy == null ? null : inventoryCopy.clone();
     }
 
     /**
