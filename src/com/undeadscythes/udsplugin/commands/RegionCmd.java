@@ -42,7 +42,7 @@ public class RegionCmd extends AbstractPlayerCommand {
             } else {
                 subCmdHelp();
             }
-        } else if(numArgsHelp(3)) {
+        } else if(args.length == 3) {
             if(args[0].equals("addmember")) {
                 addMember();
             } else if(args[0].equals("delmember")) {
@@ -61,6 +61,34 @@ public class RegionCmd extends AbstractPlayerCommand {
             } else {
                 subCmdHelp();
             }
+        } else if(numArgsHelp(4)) {
+            if(args[0].equals("expand")) {
+                expand();
+            } else if(args[0].equals("contract")) {
+                contract();
+            } else {
+                subCmdHelp();
+            }
+        }
+    }
+
+    private void contract() {
+        Direction direction;
+        Region region;
+        int distance;
+        if((region = getRegion(args[1])) != null && (direction = getCardinalDirection(args[3])) != null && (distance = parseInt(args[2])) > -1) {
+            region.contract(direction, distance);
+            player.sendMessage(Color.MESSAGE + "Region has been contracted.");
+        }
+    }
+
+    private void expand() {
+        Direction direction;
+        Region region;
+        int distance;
+        if((region = getRegion(args[1])) != null && (direction = getCardinalDirection(args[3])) != null && (distance = parseInt(args[2])) > -1) {
+            region.expand(direction, distance);
+            player.sendMessage(Color.MESSAGE + "Region has been expanded.");
         }
     }
 

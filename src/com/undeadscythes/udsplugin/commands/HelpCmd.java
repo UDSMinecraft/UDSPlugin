@@ -138,6 +138,8 @@ public class HelpCmd extends AbstractPlayerCommand {
         REGION_HELP(Perm.REGION, "/region help [page]", "Show these region help pages.", false, true),
         REGION_ADDMEMBER(Perm.REGION, "/region addmember <region> <player>", "Add a member.", false, true),
         REGION_DELMEMBER(Perm.REGION, "/region delmember <region> <player>", "Remove a member.", false, true),
+        REGION_EXPAND(Perm.REGION, "/region expand <region> <distance> <direction>", "Grow a region.", false, true),
+        REGION_CONTRACT(Perm.REGION, "/region contract <region> <distance> <direction>", "Shrink a region.", false, true),
         REGION_FLAG(Perm.REGION, "/region flag <region> <flag>", "Toggle a region flag.", false, true),
         REGION_INFO(Perm.REGION, "/region info <region>", "Get detailed info on a region.", false, true),
         REGION_LIST(Perm.REGION, "/region list <type>", "List regions of a certain type.", false, true),
