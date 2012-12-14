@@ -633,12 +633,12 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
             material = Material.getMaterial(matString);
         }
         if(material == null) {
-            ItemStack item = ShortItem.getByName(matString).toItemStack();
+            final ShortItem item = ShortItem.getByName(matString);
             if(item == null) {
                 player.sendMessage(Color.ERROR + "That is not a valid item.");
                 return null;
             } else {
-                return item;
+                return item.toItemStack();
             }
         } else {
             return new ItemStack(material, 1, (short)0, data);
