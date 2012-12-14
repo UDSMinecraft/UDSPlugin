@@ -14,50 +14,57 @@ import org.bukkit.event.block.*;
 public class BlockPistonRetract extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPistonRetractEvent event) {
-        final Location piston = event.getBlock().getLocation();
-        final Location block = event.getRetractLocation();
-        final List<Region> testRegions1 = regionsHere(block);
-        if(!testRegions1.isEmpty()) {
-            boolean mixedRegions = false;
-            boolean totallyEnclosed = false;
-            for(Region i : testRegions1) {
-                final List<Region> testRegions2 = regionsHere(piston);
-                if(testRegions2.isEmpty()) {
+        if(event.isSticky()) {
+            final Location pistonLocation = event.getBlock().getLocation();
+            final Location blockLocation = event.getRetractLocation();
+            final List<Region> blockRegions = regionsHere(blockLocation);
+            if(!blockRegions.isEmpty()) {
+                boolean mixedRegions = false;
+                boolean totallyEnclosed = false;
+                final List<Region> pistonRegions = regionsHere(pistonLocation);
+                if(pistonRegions.isEmpty()) {
                     mixedRegions = true;
                 } else {
-                    for(Region j : testRegions2) {
-                        if(!i.equals(j)) {
-                            mixedRegions = true;
+                    for(Region blockRegion : blockRegions) {
+                        for(Region pistonRegion : pistonRegions) {
+                            if(blockRegion.equals(pistonRegion)) {
+                                totallyEnclosed = true;
+                            } else {
+                                mixedRegions = true;
+                            }
+                            if(mixedRegions && totallyEnclosed) {
+                                break;
+                            }
                         }
-                        if(i.equals(j)) {
-                            totallyEnclosed = true;
+                        if(mixedRegions && totallyEnclosed) {
+                            break;
                         }
                     }
                 }
-            }
-            if(mixedRegions && !totallyEnclosed) {
-                if(event.isSticky()) {
-                    if(event.getDirection() == BlockFace.DOWN) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 0, true);
-                    }
-                    if(event.getDirection() == BlockFace.UP) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 1, true);
-                    }
-                    if(event.getDirection() == BlockFace.NORTH) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 2, true);
-                    }
-                    if(event.getDirection() == BlockFace.SOUTH) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 3, true);
-                    }
-                    if(event.getDirection() == BlockFace.WEST) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 4, true);
-                    }
-                    if(event.getDirection() == BlockFace.EAST) {
-                        event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 5, true);
+                if(mixedRegions && !totallyEnclosed) {
+                    switch(event.getDirection()) {
+                        case DOWN:
+                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 0, true);
+                            break;
+                        case UP:
+                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 1, true);
+                            break;
+                        case NORTH: // Acually is East
+                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 4, true);
+                            break;
+                        case SOUTH:
+                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 2, true);
+                            break;
+                        case WEST:
+                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 5, true);
+                            break;
+                        case EAST: // Acually is North
+                            event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 3, true);
+                            break;
                     }
                     event.getBlock().getRelative(event.getDirection()).setTypeId(0);
+                    event.setCancelled(true);
                 }
-                event.setCancelled(true);
             }
         }
     }

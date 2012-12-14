@@ -14,29 +14,34 @@ import org.bukkit.event.block.*;
 public class BlockPistonExtend extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPistonExtendEvent event) {
-        final List<Block> blocks = event.getBlocks();
-        if(blocks.isEmpty()) {
+        final List<Block> movingBlocks = event.getBlocks();
+        if(movingBlocks.isEmpty()) {
             return;
         }
-        final Location piston = event.getBlock().getLocation();
-        for(Block i : blocks) {
-            final List<Region> testRegions1 = regionsHere(i.getLocation());
-            if(!testRegions1.isEmpty()) {
+        final Location pistonLocation = event.getBlock().getLocation();
+        for(Block movingBlock : movingBlocks) {
+            final List<Region> movingBlockRegions = regionsHere(movingBlock.getLocation());
+            if(!movingBlockRegions.isEmpty()) {
                 boolean mixedRegions = false;
                 boolean totallyEnclosed = false;
-                for(Region j : testRegions1) {
-                    final List<Region> testRegions2 = regionsHere(piston);
-                    if(testRegions2.isEmpty()) {
+                for(Region movingBlockRegion : movingBlockRegions) {
+                    final List<Region> pistonRegions = regionsHere(pistonLocation);
+                    if(pistonRegions.isEmpty()) {
                         mixedRegions = true;
                     } else {
-                        for(Region k : testRegions2) {
-                            if(!j.equals(k)) {
+                        for(Region pistonRegion : pistonRegions) {
+                            if(movingBlockRegion.equals(pistonRegion)) {
+                                totallyEnclosed = true;
+                            } else {
                                 mixedRegions = true;
                             }
-                            if(j.equals(k)) {
-                                totallyEnclosed = true;
+                            if(totallyEnclosed && mixedRegions) {
+                                break;
                             }
                         }
+                    }
+                    if(totallyEnclosed && mixedRegions) {
+                        break;
                     }
                 }
                 if(mixedRegions && !totallyEnclosed) {
