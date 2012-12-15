@@ -14,6 +14,7 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public final class Config {
+    public static long itemTTL;
     public static long minecartTTL;
     public static World mainWorld;
     public static Map<RegionFlag, Boolean> globalFlags;
@@ -131,6 +132,7 @@ public final class Config {
         }
         mainWorld = Bukkit.getWorld(config.getString("world-name"));
         minecartTTL = config.getLong("minecart.life") * Timer.SECOND;
+        itemTTL = config.getLong("sapling.life") * Timer.MINUTE;
     }
 
     /**

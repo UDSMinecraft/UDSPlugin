@@ -1,6 +1,8 @@
 world-name: world
 minecart:
   life: 15
+item:
+  life: 5
 cost:
   build: 3000
   city: 300000
