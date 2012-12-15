@@ -39,6 +39,8 @@ public class BlockBreak implements Listener {
                     player.updateInventory();
                 }
             }
+        } else if(event.getPlayer().getItemInHand().getType().equals(Material.DIAMOND_AXE) && player.getGameMode().equals(GameMode.SURVIVAL)) {
+            chopTree(player, event.getBlock());
         }
     }
 
@@ -50,5 +52,14 @@ public class BlockBreak implements Listener {
             }
         }
         return false;
+    }
+
+    private void chopTree(final SaveablePlayer player, final Block block) {
+        Block blockUp = block.getRelative(BlockFace.UP);
+        while(blockUp.getType().equals(Material.LOG) && player.canBuildHere(block.getLocation())) {
+            blockUp.breakNaturally();
+            player.getItemInHand().setDurability((short)(player.getItemInHand().getDurability() - 1));
+            blockUp = blockUp.getRelative(BlockFace.UP);
+        }
     }
 }
