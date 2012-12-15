@@ -127,13 +127,6 @@ public class Timer implements Runnable {
                 UDSPlugin.getRequests().remove(request.getRecipient().getName());
             }
         }
-        for(World world : Bukkit.getWorlds()) {
-            for(Minecart minecart : world.getEntitiesByClass(Minecart.class)) {
-                if(minecart.isEmpty() && minecart.getTicksLived() > Config.minecartTTL) {
-                    minecart.remove();
-                    Bukkit.getLogger().info(Integer.toString(minecart.getTicksLived())); // Debugging
-                }
-            }
-        }
+        EntityTracker.checkMinecarts();
     }
 }

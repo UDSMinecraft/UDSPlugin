@@ -106,8 +106,10 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info("Recipes added.");
         Censor.initCensor();
         getLogger().info("Censor online.");
+        EntityTracker.findMinecarts();
+        getLogger().info("Tracking minecarts.");
         final String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
-        getLogger().info(message);
+        getLogger().info(message); // Looks a bit like the Sims loading screen right?
     }
 
     @Override
@@ -297,6 +299,7 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AsyncPlayerChat(), this);
         getServer().getPluginManager().registerEvents(new BlockBreak(), this);
         getServer().getPluginManager().registerEvents(new BlockBurn(), this);
+        getServer().getPluginManager().registerEvents(new BlockDispense(), this);
         getServer().getPluginManager().registerEvents(new BlockFade(), this);
         getServer().getPluginManager().registerEvents(new BlockForm(), this);
         getServer().getPluginManager().registerEvents(new BlockFromTo(), this);
@@ -333,6 +336,7 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerShearEntity(), this);
         getServer().getPluginManager().registerEvents(new SignChange(), this);
         getServer().getPluginManager().registerEvents(new VehicleEntityCollision(), this);
+        getServer().getPluginManager().registerEvents(new VehicleCreate(), this);
         getServer().getPluginManager().registerEvents(new VehicleDestroy(), this);
         getServer().getPluginManager().registerEvents(new VehicleExit(), this);
     }
