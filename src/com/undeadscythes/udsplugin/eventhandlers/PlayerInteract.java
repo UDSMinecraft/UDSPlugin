@@ -76,6 +76,9 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
                 powertool(player);
                 event.setCancelled(true);
+            } else if(inHand == Material.MINECART && (block.getType().equals(Material.RAILS) || block.getType().equals(Material.POWERED_RAIL) || block.getType().equals(Material.DETECTOR_RAIL))) {
+                minecart(player, block.getLocation());
+                event.setCancelled(true);
             } else {
                 event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player));
             }
@@ -237,10 +240,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         } else if(sign.getLine(0).equals(Color.SIGN + "[MINECART]")) {
             if(player.hasPermission(Perm.MINECART)) {
                 final Location location = sign.getBlock().getLocation();
-                location.setX(location.getBlockX() + 0.5);
-                location.setY(location.getBlockY() - 0.5);
-                location.setZ(location.getBlockZ() + 0.5);
-                Bukkit.getWorld(location.getWorld().getName()).spawn(location, Minecart.class);
+                if(EntityTracker.minecartNear(location)) {
+                    player.sendMessage(Color.MESSAGE + "There is a minecart already at the station.");
+                } else {
+                    EntityTracker.spawnMinecart(player, location.clone().add(0, -1, 0), false);
+                }
             } else {
                 player.sendMessage(cantDoThat);
             }
@@ -302,5 +306,9 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 player.sendMessage(Color.ERROR + "You can't do that.");
             }
         }
+    }
+
+    private void minecart(final SaveablePlayer player, final Location location) {
+        EntityTracker.spawnMinecart(player, location, true);
     }
 }
