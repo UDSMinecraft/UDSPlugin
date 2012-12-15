@@ -21,6 +21,8 @@ public class VehicleDestroy extends ListenerWrapper implements Listener {
                 vehicle.remove();
             }
             event.setCancelled(true);
+        } else if(vehicle instanceof Minecart) {
+            EntityTracker.minecartRemoved(vehicle.getUniqueId());
         }
     }
 }
