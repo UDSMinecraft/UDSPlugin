@@ -35,7 +35,7 @@ public class PlayerJoin implements Listener {
             }
             player.quietTeleport(UDSPlugin.getWarps().get("spawn"));
         }
-        if(UDSPlugin.serverInLockdown && !player.hasLockdownPass()) {
+        if(UDSPlugin.isLockedDown() && !player.hasLockdownPass()) {
             player.kickPlayer("The server is currently in lockdown please check back later.");
         } else {
             player.sendMessage(Color.MESSAGE + Config.welcome);
