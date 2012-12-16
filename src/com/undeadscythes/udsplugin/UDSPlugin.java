@@ -14,37 +14,27 @@ import org.bukkit.plugin.java.*;
  * @author UndeadScythe
  */
 public class UDSPlugin extends JavaPlugin {
-    /**
-     * Where the issue/suggestion tickets are stored.
-     */
-    public final static String TICKET_PATH = "tickets.txt";
-
-    /**
-     * Whether the server is in lockdown mode.
-     */
-    public static boolean serverInLockdown;
-
-    public static UDSPlugin plugin;
-
     private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
+    private static final SaveableHashMap CLANS = new SaveableHashMap();
+    private static final SaveableHashMap PLAYERS = new SaveableHashMap();
+    private static final SaveableHashMap REGIONS = new SaveableHashMap();
+    private static final SaveableHashMap WARPS = new SaveableHashMap();
+    private static final MatchableHashMap<ChatRoom> CHAT_ROOMS = new MatchableHashMap<ChatRoom>();
+    private static final MatchableHashMap<Request> REQUESTS = new MatchableHashMap<Request>();
+    private static final MatchableHashMap<WESession> SESSIONS = new MatchableHashMap<WESession>();
+    private static final MatchableHashMap<Region> ARENAS = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<Region> BASES = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<Region> CITIES = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<Region> HOMES = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<Region> QUARRIES = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<Region> SHOPS = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<SaveablePlayer> ONLINE_PLAYERS = new MatchableHashMap<SaveablePlayer>();
+    private static final MatchableHashMap<SaveablePlayer> VIPS = new MatchableHashMap<SaveablePlayer>();
 
-    private static SaveableHashMap clans;
-    private static SaveableHashMap players;
-    private static SaveableHashMap regions;
-    private static SaveableHashMap warps;
-    private static MatchableHashMap<ChatRoom> chatRooms;
-    private static MatchableHashMap<Request> requests;
-    private static MatchableHashMap<WESession> sessions;
-    private static MatchableHashMap<Region> quarries;
-    private static MatchableHashMap<Region> homes;
-    private static MatchableHashMap<Region> shops;
-    private static MatchableHashMap<Region> bases;
-    private static MatchableHashMap<Region> cities;
-    private static MatchableHashMap<Region> arenas;
-    private static MatchableHashMap<SaveablePlayer> vips;
-    private static MatchableHashMap<SaveablePlayer> onlinePlayers;
-    private static transient Timer timer;
+    private static Timer timer;
     private static Data data;
+    private static boolean serverLockedDown = false;
+
 
     /**
      * Used for testing in NetBeans. Woo! NetBeans!
@@ -54,11 +44,10 @@ public class UDSPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        UDSPlugin.plugin = this;
         if(DATA_PATH.mkdirs()) {
             getLogger().info("Created directory tree.");
         }
-        Config.loadConfig();
+        Config.loadConfig(this);
         Config.updateConfig();
         getLogger().info("Config loaded.");
         data = new Data(this);
@@ -66,21 +55,6 @@ public class UDSPlugin extends JavaPlugin {
         data.saveDefaultData();
         data.saveData();
         getLogger().info("Data loaded.");
-        clans = new SaveableHashMap();
-        players = new SaveableHashMap();
-        regions = new SaveableHashMap();
-        warps = new SaveableHashMap();
-        chatRooms = new MatchableHashMap<ChatRoom>();
-        requests = new MatchableHashMap<Request>();
-        sessions = new MatchableHashMap<WESession>();
-        quarries = new MatchableHashMap<Region>();
-        homes = new MatchableHashMap<Region>();
-        shops = new MatchableHashMap<Region>();
-        bases = new MatchableHashMap<Region>();
-        cities = new MatchableHashMap<Region>();
-        arenas = new MatchableHashMap<Region>();
-        vips = new MatchableHashMap<SaveablePlayer>();
-        onlinePlayers = new MatchableHashMap<SaveablePlayer>();
         try {
             loadFiles();
         } catch (IOException ex) {
@@ -111,7 +85,7 @@ public class UDSPlugin extends JavaPlugin {
     public void onDisable() {
         try {
             saveFiles();
-            final String message = (clans.size() + regions.size() + warps.size() + players.size()) + " clans, regions, warps and players saved.";
+            final String message = (CLANS.size() + REGIONS.size() + WARPS.size() + PLAYERS.size()) + " clans, regions, warps and players saved.";
             getLogger().info(message);
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,10 +100,10 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static void saveFiles() throws IOException {
         data.saveData();
-        clans.save(DATA_PATH + File.separator + Clan.PATH);
-        regions.save(DATA_PATH + File.separator + Region.PATH);
-        warps.save(DATA_PATH + File.separator + Warp.PATH);
-        players.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
+        CLANS.save(DATA_PATH + File.separator + Clan.PATH);
+        REGIONS.save(DATA_PATH + File.separator + Region.PATH);
+        WARPS.save(DATA_PATH + File.separator + Warp.PATH);
+        PLAYERS.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
     }
 
     /**
@@ -145,13 +119,13 @@ public class UDSPlugin extends JavaPlugin {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + SaveablePlayer.PATH));
             while((nextLine = file.readLine()) != null) {
                 final SaveablePlayer player = new SaveablePlayer(nextLine);
-                players.put(nextLine.split("\t")[0], player);
+                PLAYERS.put(nextLine.split("\t")[0], player);
                 if(player.getVIPTime() > 0) {
-                    vips.put(player.getName(), player);
+                    VIPS.put(player.getName(), player);
                 }
             }
             file.close();
-            message = players.size() + " players loaded.";
+            message = PLAYERS.size() + " players loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
             getLogger().info("No player file exists yet.");
@@ -160,23 +134,23 @@ public class UDSPlugin extends JavaPlugin {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Region.PATH));
             while((nextLine = file.readLine()) != null) {
                 final Region region = new Region(nextLine);
-                regions.put(region.getName(), region);
+                REGIONS.put(region.getName(), region);
                 if(region.getType().equals(RegionType.BASE)) {
-                    bases.put(region.getName(), region);
+                    BASES.put(region.getName(), region);
                 } else if(region.getType().equals(RegionType.HOME)) {
-                    homes.put(region.getName(), region);
+                    HOMES.put(region.getName(), region);
                 } else if(region.getType().equals(RegionType.QUARRY)) {
-                    quarries.put(region.getName(), region);
+                    QUARRIES.put(region.getName(), region);
                 } else if(region.getType().equals(RegionType.SHOP)) {
-                    shops.put(region.getName(), region);
+                    SHOPS.put(region.getName(), region);
                 } else if(region.getType().equals(RegionType.CITY)) {
-                    cities.put(region.getName(), region);
+                    CITIES.put(region.getName(), region);
                 } else if(region.getType().equals(RegionType.ARENA)) {
-                    arenas.put(region.getName(), region);
+                    ARENAS.put(region.getName(), region);
                 }
             }
             file.close();
-            message = regions.size() + " regions loaded.";
+            message = REGIONS.size() + " regions loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
             getLogger().info("No region file exists yet.");
@@ -184,10 +158,10 @@ public class UDSPlugin extends JavaPlugin {
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Warp.PATH));
             while((nextLine = file.readLine()) != null) {
-                warps.put(nextLine.split("\t", 1)[0], new Warp(nextLine));
+                WARPS.put(nextLine.split("\t", 1)[0], new Warp(nextLine));
             }
             file.close();
-            message = warps.size() + " warps loaded.";
+            message = WARPS.size() + " warps loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
             getLogger().info("No warp file exists yet.");
@@ -196,11 +170,11 @@ public class UDSPlugin extends JavaPlugin {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
             while((nextLine = file.readLine()) != null) {
                 final Clan clan = new Clan(nextLine);
-                clans.put(nextLine.split("\t")[0], clan);
+                CLANS.put(nextLine.split("\t")[0], clan);
                 clan.linkMembers();
             }
             file.close();
-            message = clans.size() + " clans loaded.";
+            message = CLANS.size() + " clans loaded.";
             getLogger().info(message);
         } catch (FileNotFoundException ex) {
             getLogger().info("No clan file exists yet.");
@@ -414,7 +388,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Chat rooms map.
      */
     static public MatchableHashMap<ChatRoom> getChatRooms() {
-        return chatRooms;
+        return CHAT_ROOMS;
     }
 
     /**
@@ -422,7 +396,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Clans map.
      */
     static public MatchableHashMap<Clan> getClans() {
-        return clans.toMatchableHashMap(Clan.class);
+        return CLANS.toMatchableHashMap(Clan.class);
     }
 
     /**
@@ -430,7 +404,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Players map.
      */
     static public MatchableHashMap<SaveablePlayer> getPlayers() {
-        return players.toMatchableHashMap(SaveablePlayer.class);
+        return PLAYERS.toMatchableHashMap(SaveablePlayer.class);
     }
 
     /**
@@ -438,7 +412,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Regions map.
      */
     static public MatchableHashMap<Region> getRegions() {
-        return regions.toMatchableHashMap(Region.class);
+        return REGIONS.toMatchableHashMap(Region.class);
     }
 
     /**
@@ -446,7 +420,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Requests map.
      */
     static public MatchableHashMap<Request> getRequests() {
-        return requests;
+        return REQUESTS;
     }
 
     /**
@@ -454,7 +428,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Sessions map.
      */
     static public MatchableHashMap<WESession> getSessions() {
-        return sessions;
+        return SESSIONS;
     }
 
     /**
@@ -462,7 +436,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Warps map.
      */
     static public MatchableHashMap<Warp> getWarps() {
-        return warps.toMatchableHashMap(Warp.class);
+        return WARPS.toMatchableHashMap(Warp.class);
     }
 
     /**
@@ -470,7 +444,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Quarries map.
      */
     static public MatchableHashMap<Region> getQuarries() {
-        return quarries;
+        return QUARRIES;
     }
 
     /**
@@ -478,7 +452,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Homes map.
      */
     static public MatchableHashMap<Region> getHomes() {
-        return homes;
+        return HOMES;
     }
 
     /**
@@ -486,7 +460,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Shops map.
      */
     static public MatchableHashMap<Region> getShops() {
-        return shops;
+        return SHOPS;
     }
 
     /**
@@ -494,7 +468,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Bases map.
      */
     static public MatchableHashMap<Region> getBases() {
-        return bases;
+        return BASES;
     }
 
     /**
@@ -502,7 +476,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Cities map.
      */
     static public MatchableHashMap<Region> getCities() {
-        return cities;
+        return CITIES;
     }
 
     /**
@@ -510,7 +484,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Cities map.
      */
     static public MatchableHashMap<Region> getArenas() {
-        return arenas;
+        return ARENAS;
     }
 
     /**
@@ -518,7 +492,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return VIPs map.
      */
     static public MatchableHashMap<SaveablePlayer> getVIPS() {
-        return vips;
+        return VIPS;
     }
 
     /**
@@ -526,7 +500,7 @@ public class UDSPlugin extends JavaPlugin {
      * @return Online players map.
      */
     static public MatchableHashMap<SaveablePlayer> getOnlinePlayers() {
-        return onlinePlayers;
+        return ONLINE_PLAYERS;
     }
 
     /**
@@ -535,5 +509,13 @@ public class UDSPlugin extends JavaPlugin {
      */
     static public Data getData() {
         return data;
+    }
+
+    static public void toggleLockdown() {
+        serverLockedDown ^= true;
+    }
+
+    static public boolean isLockedDown() {
+        return serverLockedDown;
     }
 }
