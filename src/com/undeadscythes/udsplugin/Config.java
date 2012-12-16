@@ -1,7 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.Region.RegionFlag;
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;

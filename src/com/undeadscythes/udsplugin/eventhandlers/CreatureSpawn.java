@@ -1,7 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.Region.RegionFlag;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 

@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.event.*;

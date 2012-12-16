@@ -5,18 +5,6 @@ package com.undeadscythes.udsplugin;
  * @author UndeadScythes
  */
 public class Request {
-    /**
-     * A request type.
-     */
-    public enum RequestType {
-        CLAN,
-        SHOP,
-        HOME,
-        PVP,
-        PET,
-        TP;
-    }
-
     private final transient RequestType type;
     private final transient SaveablePlayer sender;
     private final transient SaveablePlayer recipient;

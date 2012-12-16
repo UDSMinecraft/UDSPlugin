@@ -19,7 +19,7 @@ public class ItemDespawn extends ListenerWrapper implements Listener {
             final Location location = event.getLocation();
             final Block block = location.getWorld().getBlockAt(location);
             final Material blockUnder = block.getRelative(BlockFace.DOWN).getType();
-            if(!hasFlag(location, Region.RegionFlag.PROTECTION) && (blockUnder.equals(Material.DIRT) && blockUnder.equals(Material.GRASS))) {
+            if(!hasFlag(location, RegionFlag.PROTECTION) && (blockUnder.equals(Material.DIRT) && blockUnder.equals(Material.GRASS))) {
                 block.setTypeIdAndData(Material.SAPLING.getId(), item.getData().getData(), true);
             }
         }

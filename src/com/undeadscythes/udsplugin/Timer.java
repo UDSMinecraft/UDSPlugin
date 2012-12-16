@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.io.*;
 import java.util.logging.*;
 import org.bukkit.*;

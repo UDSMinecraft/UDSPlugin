@@ -1,7 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
-
 /**
  * Permissions to use within UDSPlugin.
  * @author UndeadScythes

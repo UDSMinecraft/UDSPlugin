@@ -91,7 +91,7 @@ public class ClanCmd extends AbstractPlayerCommand {
                 }
             } else if(args[0].equals("invite")) {
                 if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && (clan = getClan()) != null && isLeader(clan) && notSelf(target)) {
-                    UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.CLAN, clan.getName(), target));
+                    UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.CLAN, clan.getName(), target));
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendMessage(Color.MESSAGE + player.getNick() + " has invited you to join " + clan.getName() + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
@@ -160,7 +160,7 @@ public class ClanCmd extends AbstractPlayerCommand {
                         if(noBase(clan) && canAfford(Config.baseCost)) {
                             final Vector min = player.getLocation().add(-25, 0, -25).toVector().setY(20);
                             final Vector max = player.getLocation().add(25, 0, 25).toVector().setY(220);
-                            base = new Region(clan.getName() + "base", min, max, player.getLocation(), null, "", Region.RegionType.BASE);
+                            base = new Region(clan.getName() + "base", min, max, player.getLocation(), null, "", RegionType.BASE);
                             if(noOverlaps(base)) {
                                 player.debit(Config.baseCost);
                                 UDSPlugin.getRegions().put(base.getName(), base);

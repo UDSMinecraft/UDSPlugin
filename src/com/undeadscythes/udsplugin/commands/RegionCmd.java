@@ -1,7 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Region.RegionFlag;
-import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.*;
 
 /**

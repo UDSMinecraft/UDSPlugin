@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.Region.RegionFlag;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;

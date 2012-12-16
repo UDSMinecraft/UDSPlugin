@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Region.RegionFlag;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.util.*;
 
@@ -23,7 +22,7 @@ public class HomeCmd extends AbstractPlayerCommand {
                 if(canAfford(Config.homeCost) && noHome()) {
                     final Vector min = player.getLocation().add(-10, 28, -10).toVector();
                     final Vector max = player.getLocation().add(10, 12, 10).toVector();
-                    home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", Region.RegionType.HOME);
+                    home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", RegionType.HOME);
                     if(noOverlaps(home)) {
                         player.debit(Config.homeCost);
                         UDSPlugin.getRegions().put(home.getName(), home);
@@ -125,7 +124,7 @@ public class HomeCmd extends AbstractPlayerCommand {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their house for " + price + " " + Config.currencies + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
-                    UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.HOME, price, target));
+                    UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.HOME, price, target));
                 }
             } else {
                 subCmdHelp();

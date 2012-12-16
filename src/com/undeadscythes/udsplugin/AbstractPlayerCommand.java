@@ -1,8 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.Region.RegionFlag;
-import com.undeadscythes.udsplugin.Region.RegionType;
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -302,7 +299,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The region flag if it exists, <code>null</code> otherwise.
      */
     protected RegionFlag getFlag(final String name) {
-        final RegionFlag flag = Region.RegionFlag.getByName(name);
+        final RegionFlag flag = RegionFlag.getByName(name);
         if(flag == null) {
             player.sendMessage(Color.ERROR + "That is not a valid region type.");
         }
@@ -315,7 +312,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The region type if it exists, <code>null</code> otherwise.
      */
     protected RegionType getRegionType(final String name) {
-        final RegionType type = Region.RegionType.getByName(name);
+        final RegionType type = RegionType.getByName(name);
         if(type == null) {
             player.sendMessage(Color.ERROR + "That is not a valid region type.");
         }
@@ -679,7 +676,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The first region the player is in or <code>null</code> if none found.
      */
     protected Region getCurrentRegion() {
-        final Region region = player.getCurrentRegion(Region.RegionType.CITY);
+        final Region region = player.getCurrentRegion(RegionType.CITY);
         if(region == null) {
             player.sendMessage(Color.ERROR + "You are not in a city.");
         }
@@ -748,7 +745,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The shop the player is standing in or <code>null</code>.
      */
     protected Region getContainingShop() {
-        final Region shop = player.getCurrentRegion(Region.RegionType.SHOP);
+        final Region shop = player.getCurrentRegion(RegionType.SHOP);
         if(shop == null) {
             player.sendMessage(Color.ERROR + "You must be stood inside a shop to buy it.");
         }

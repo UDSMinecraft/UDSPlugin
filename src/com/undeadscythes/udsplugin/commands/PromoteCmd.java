@@ -1,7 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 
 /**
  * Promote a player by a single rank.

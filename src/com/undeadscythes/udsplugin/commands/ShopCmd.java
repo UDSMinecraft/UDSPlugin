@@ -109,7 +109,7 @@ public class ShopCmd extends AbstractPlayerCommand {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their shop for " + price + " " + Config.currencies + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
-                    UDSPlugin.getRequests().put(target.getName(), new Request(player, Request.RequestType.SHOP, price, target));
+                    UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.SHOP, price, target));
                 }
             } else {
                 subCmdHelp();

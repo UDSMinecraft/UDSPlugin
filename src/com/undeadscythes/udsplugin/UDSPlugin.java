@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.Region.RegionType;
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
 import java.io.*;

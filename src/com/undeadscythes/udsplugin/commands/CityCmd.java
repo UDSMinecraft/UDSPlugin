@@ -15,7 +15,7 @@ public class CityCmd extends AbstractPlayerCommand {
         Region city;
         if(args.length == 1) {
             if(args[0].equals("set")) {
-                if((city = getCurrentRegion()).getType() == Region.RegionType.CITY && getMunicipality(city.getName()) != null) {
+                if((city = getCurrentRegion()).getType() == RegionType.CITY && getMunicipality(city.getName()) != null) {
                     city.setWarp(player.getLocation());
                     player.sendMessage(Color.MESSAGE + "City spawn point set.");
                 }
@@ -30,7 +30,7 @@ public class CityCmd extends AbstractPlayerCommand {
                 if(canAfford(Config.cityCost) && noCensor(args[1]) && notRegion(args[1])) {
                     final Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
                     final Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
-                    city = new Region(args[1], min, max, player.getLocation(), player, "", Region.RegionType.CITY);
+                    city = new Region(args[1], min, max, player.getLocation(), player, "", RegionType.CITY);
                     if(noOverlaps(city)) {
                         player.debit(Config.cityCost);
                         UDSPlugin.getRegions().put(args[1], city);

@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.SaveablePlayer.PlayerRank;
 import java.io.*;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -12,86 +11,6 @@ import org.bukkit.util.Vector;
  * @author UndeadScythes
  */
 public class Region implements Saveable {
-    /**
-     * Region flags.
-     */
-    public enum RegionFlag {
-        PROTECTION(true),
-        MOBS(false),
-        PVE(true),
-        LOCK(true),
-        VINES(true),
-        FOOD(true),
-        FIRE(false),
-        SNOW(false),
-        PVP(false);
-
-        private boolean defaultValue;
-
-        RegionFlag(final boolean value) {
-            this.defaultValue = value;
-        }
-
-        /**
-         * Get this flag's default value.
-         * @return
-         */
-        public boolean isDefault() {
-            return defaultValue;
-        }
-
-        @Override
-        public String toString() {
-            return StringUtils.capitalize(name().toLowerCase());
-        }
-
-        /**
-         * Get a flag by name.
-         * @param string The name of the flag.
-         * @return The flag or <code>null</code> if there was no match.
-         */
-        public static RegionFlag getByName(final String string) {
-            for(RegionFlag flag : values()) {
-                if(flag.name().equals(string.toUpperCase())) {
-                    return flag;
-                }
-            }
-            return null;
-        }
-    }
-
-    /**
-     * Region type.
-     */
-    public enum RegionType {
-        NORMAL,
-        SHOP,
-        BASE,
-        QUARRY,
-        HOME,
-        ARENA,
-        CITY;
-
-        /**
-         * Get a region type by name.
-         * @param string Name of region type.
-         * @return The region type or <code>null</code> if there was no match.
-         */
-        public static RegionType getByName(final String string) {
-            for(RegionType type : values()) {
-                if(type.name().equals(string.toUpperCase())) {
-                    return type;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        public String toString() {
-            return StringUtils.capitalize(name().toLowerCase());
-        }
-    }
-
     /**
      * File name of region storage file.
      */
