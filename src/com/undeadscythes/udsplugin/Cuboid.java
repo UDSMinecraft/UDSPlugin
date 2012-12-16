@@ -56,7 +56,7 @@ public class Cuboid {
      * @param vector
      * @return
      */
-    public final Vector blockify(final Vector vector) {
+    private final Vector blockify(final Vector vector) {
         return new Vector(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
     }
 

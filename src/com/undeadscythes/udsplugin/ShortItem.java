@@ -75,20 +75,6 @@ public enum ShortItem {
         return null;
     }
 
-    /**
-     * Get the shortened name of an item.
-     * @param material The item.
-     * @return The shortened name or <code>null</code> if there is no short name.
-     */
-    public static ShortItem getByItem(final Material material) {
-        for(ShortItem item : values()) {
-            if(item.material.equals(material)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
     @Override
     public String toString() {
         return name().toLowerCase();

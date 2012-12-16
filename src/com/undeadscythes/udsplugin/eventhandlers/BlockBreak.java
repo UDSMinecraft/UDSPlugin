@@ -13,7 +13,7 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class BlockBreak implements Listener {
-    public final static List<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
+    private final static List<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
 
     @EventHandler
     public void onEvent(final BlockBreakEvent event) {

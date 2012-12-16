@@ -367,15 +367,6 @@ public class Region implements Saveable {
     }
 
     /**
-     * Check if a location is contained within the region.
-     * @param location Location to check.
-     * @return <code>true</code> if the location is contained within the region, <code>false</code> otherwise.
-     */
-    public boolean contains(final Location location) {
-        return contains(location.getWorld(), location.getX(), location.getY(), location.getZ());
-    }
-
-    /**
      * Check if coordinates are contained within the region.
      * @param world World of coordinates.
      * @param x X-Coordinate.
@@ -383,7 +374,7 @@ public class Region implements Saveable {
      * @param z Z-Coordinate.
      * @return <code>true</code> if the location is contained within the region, <code>false</code> otherwise.
      */
-    public boolean contains(final World world, final double x, final double y, final double z) {
+    private boolean contains(final World world, final double x, final double y, final double z) {
         return warp.getWorld().equals(world) && x > v1.getX() && x < v2.getX() + 1 && z > v1.getZ() && z < v2.getZ() + 1 && y > v1.getY() && y < v2.getY() + 1;
     }
 

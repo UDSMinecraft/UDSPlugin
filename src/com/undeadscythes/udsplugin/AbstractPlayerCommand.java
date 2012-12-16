@@ -150,7 +150,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
     /**
      * Send the player help relating to the number of arguments used.
      */
-    protected void numArgsHelp() {
+    private void numArgsHelp() {
         player.sendMessage(Color.ERROR + "You have made an error using this command.");
         player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the correct usage.");
     }
@@ -693,20 +693,6 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You are not that players room mate.");
-            return false;
-        }
-    }
-
-    /**
-     * Check this player is a worker in this shop.
-     * @param shop Shop to check.
-     * @return <code>true</code> if this player works in this shop, <code>false</code> otherwise.
-     */
-    protected boolean isWorker(final Region shop) {
-        if(shop.hasMember(player)) {
-            return true;
-        } else {
-            player.sendMessage(Color.ERROR + "You are not that players worker.");
             return false;
         }
     }

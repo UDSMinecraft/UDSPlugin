@@ -60,14 +60,5 @@ public final class EntityTracker {
         }
     }
 
-    public static void grabMinecart(final SaveablePlayer player, final Location location, final boolean returnToSender) {
-        for(Minecart minecart : location.getWorld().getEntitiesByClass(Minecart.class)) {
-            if(minecart.getTicksLived() == 0) {
-                addMinecart(minecart, player, returnToSender);
-                break;
-            }
-        }
-    }
-
     private EntityTracker() {}
 }

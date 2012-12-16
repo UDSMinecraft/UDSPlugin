@@ -38,7 +38,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         }
     }
 
-    public void challengeWin(final SaveablePlayer killer, final SaveablePlayer victim) {
+    private void challengeWin(final SaveablePlayer killer, final SaveablePlayer victim) {
         final SaveablePlayer udsKiller = UDSPlugin.getOnlinePlayers().get(killer.getName());
         final SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victim.getName());
         udsVictim.saveItems();
@@ -47,7 +47,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         killer.sendMessage(Color.MESSAGE + "You won the challenge.");
     }
 
-    public void challengeDraw(final SaveablePlayer victim) {
+    private void challengeDraw(final SaveablePlayer victim) {
         final SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victim.getName());
         final SaveablePlayer challenger = udsVictim.getChallenger();
         challenger.credit(udsVictim.getWager());
@@ -56,7 +56,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         challenger.sendMessage(Color.MESSAGE + "The challenge was a draw.");
     }
 
-    public void clanKill(final SaveablePlayer killer, final SaveablePlayer victim) {
+    private void clanKill(final SaveablePlayer killer, final SaveablePlayer victim) {
         final Clan victimClan = UDSPlugin.getPlayers().get(victim.getName()).getClan();
         final Clan killerClan = UDSPlugin.getPlayers().get(killer.getName()).getClan();
         if(!killerClan.getName().equals(victimClan.getName())) {
@@ -65,7 +65,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         victimClan.newDeath();
     }
 
-    public void pvp(final SaveablePlayer udsKiller, final SaveablePlayer udsVictim) {
+    private void pvp(final SaveablePlayer udsKiller, final SaveablePlayer udsVictim) {
         if(udsVictim.getBounty() > 0) {
                     bountyKill(udsKiller, udsVictim);
         }
@@ -74,7 +74,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         }
     }
 
-    public void bountyKill(final SaveablePlayer udsKiller, final SaveablePlayer udsVictim) {
+    private void bountyKill(final SaveablePlayer udsKiller, final SaveablePlayer udsVictim) {
         final int total = udsVictim.getBounty();
         Bukkit.broadcastMessage(Color.BROADCAST + udsKiller.getNick() + " collected the " + total + " " + Config.currency + " bounty on " + udsVictim.getNick() + ".");
         udsKiller.credit(total);

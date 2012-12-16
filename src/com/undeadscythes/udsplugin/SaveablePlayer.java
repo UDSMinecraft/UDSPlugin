@@ -19,10 +19,6 @@ public class SaveablePlayer implements Saveable {
      * File name of player file.
      */
     public final static String PATH = "players.csv";
-    /**
-     * Current record version.
-     */
-    public final static int VERSION = 1;
 
     private transient String name;
     private transient Player base;
@@ -430,7 +426,7 @@ public class SaveablePlayer implements Saveable {
      * @param time
      * @return
      */
-    public String timeToString(final long time) {
+    private String timeToString(final long time) {
         long timeRemaining = time;
         String timeString = "";
         if(timeRemaining >= Timer.DAY) {
@@ -718,13 +714,6 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
-     * Set the last time this player caused damage to another player to now.
-     */
-    public void setLastDamageCaused() {
-        lastDamageCaused = System.currentTimeMillis();
-    }
-
-    /**
      * Get this players total bounty.
      * @return Players bounty.
      */
@@ -778,16 +767,6 @@ public class SaveablePlayer implements Saveable {
      */
     public boolean isInClan() {
         return clan != null;
-    }
-
-    /**
-     * Teleport to the point indicated by a warp.
-     * @param warp Warp to teleport to.
-     */
-    public void teleport(final Warp warp) {
-        if(base != null) {
-            base.teleport(warp.getLocation());
-        }
     }
 
     /**
@@ -979,15 +958,6 @@ public class SaveablePlayer implements Saveable {
      */
     public void setMoney(final int amount) {
         money = amount;
-    }
-
-    /**
-     * Check if a player has a rank.
-     * @param rank Rank to check.
-     * @return <code>true</code> if player has rank, <code>false</code> otherwise.
-     */
-    public boolean hasRank(final PlayerRank rank) {
-        return this.rank.compareTo(rank) >= 0;
     }
 
     /**

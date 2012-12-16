@@ -155,7 +155,7 @@ public class ListenerWrapper {
      * @param location
      * @return
      */
-    public boolean regionContains(final Region region, final Location location) {
+    private boolean regionContains(final Region region, final Location location) {
         return region != null && location.toVector().isInAABB(region.getV1(), region.getV2());
     }
 

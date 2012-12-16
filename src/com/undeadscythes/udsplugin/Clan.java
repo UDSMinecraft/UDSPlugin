@@ -181,15 +181,6 @@ public class Clan implements Saveable {
     }
 
     /**
-     * Checks if a player is a member of the clan.
-     * @param player Name of the player.
-     * @return <code>true</code> if player is a clan member, <code>false</code> otherwise.
-     */
-    public boolean hasMember(final SaveablePlayer player) {
-        return members.contains(player);
-    }
-
-    /**
      * Add a new clan member.
      * @param player Player name.
      */

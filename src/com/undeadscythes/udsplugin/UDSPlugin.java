@@ -18,10 +18,6 @@ public class UDSPlugin extends JavaPlugin {
      * Where the issue/suggestion tickets are stored.
      */
     public final static String TICKET_PATH = "tickets.txt";
-    /**
-     * Where the times data is stored.
-     */
-    public final static String TIMES_PATH = "times.data";
 
     /**
      * Whether the server is in lockdown mode.
@@ -30,7 +26,7 @@ public class UDSPlugin extends JavaPlugin {
 
     public static UDSPlugin plugin;
 
-    public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
+    private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
 
     private static SaveableHashMap clans;
     private static SaveableHashMap players;

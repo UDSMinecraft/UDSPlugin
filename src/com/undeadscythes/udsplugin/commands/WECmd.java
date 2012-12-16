@@ -56,7 +56,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void drain(final int range) {
+    private void drain(final int range) {
         if(hasPerm(Perm.WE_DRAIN)) {
             if(range <= Config.drainRange) {
                 final WESession session = getSession();
@@ -94,7 +94,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void set() {
+    private void set() {
         if(hasPerm(Perm.WE_SET)) {
             final WESession session = getSession();
             if(hasTwoPoints(session)) {
@@ -130,7 +130,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void undo() {
+    private void undo() {
         final WESession session = getSession();
         if(hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
             final Cuboid undo = session.load();
@@ -139,7 +139,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void replace() {
+    private void replace() {
         if(hasPerm(Perm.WE_REPLACE)) {
             final WESession session = getSession();
             if(hasTwoPoints(session)) {
@@ -176,7 +176,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void move() {
+    private void move() {
         if(hasPerm(Perm.WE_MOVE)) {
             final int distance = parseInt(args[2]);
             if(distance > -1) {
@@ -223,7 +223,7 @@ public class WECmd extends AbstractPlayerCommand {
 
     }
 
-    public void copy() {
+    private void copy() {
         final WESession session = getSession();
         if(hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
             session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation().toVector()));
@@ -231,7 +231,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void paste() {
+    private void paste() {
         final WESession session = getSession();
         if(session.hasClipboard() && hasPerm(Perm.WE_PASTE)) {
             final Cuboid clipboard = session.getClipboard();
@@ -242,7 +242,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void regen() {
+    private void regen() {
         if(hasPerm(Perm.WE_REGEN)) {
             final Chunk chunk = player.getLocation().getChunk();
             final World world = player.getWorld();
@@ -250,7 +250,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void ext(final int range) {
+    private void ext(final int range) {
         final WESession session = getSession();
         if(hasPerm(Perm.WE_EXT)) {
             if(range <= Config.drainRange) {
@@ -278,7 +278,7 @@ public class WECmd extends AbstractPlayerCommand {
         }
     }
 
-    public void put(final World world, final Vector min, final Vector max, final Material material) {
+    private void put(final World world, final Vector min, final Vector max, final Material material) {
         for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
             for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
                 for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {

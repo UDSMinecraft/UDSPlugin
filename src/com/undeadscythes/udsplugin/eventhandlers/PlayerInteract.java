@@ -88,7 +88,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * Powertool events.
      * @param player Player using a powertool.
      */
-    public void powertool(final SaveablePlayer player) {
+    private void powertool(final SaveablePlayer player) {
         player.performCommand(player.getPowertool());
     }
 
@@ -98,7 +98,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player Player using bonemeal.
      * @return
      */
-    public boolean bonemealCheck(final Block block, final SaveablePlayer player) {
+    private boolean bonemealCheck(final Block block, final SaveablePlayer player) {
         return player.getItemInHand().getType() == Material.INK_SACK &&
                player.getItemInHand().getData().getData() == (byte)15 &&
                !player.canBuildHere(block.getLocation());
@@ -110,7 +110,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player Player who is interacting.
      * @return
      */
-    public boolean lockCheck(final Block block, final SaveablePlayer player) {
+    private boolean lockCheck(final Block block, final SaveablePlayer player) {
         final Material material = block.getType();
         if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.STONE_BUTTON || material == Material.LEVER || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
             final Location location = block.getLocation();
@@ -131,7 +131,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param block Block the was clicked.
      * @param player Player who clicked.
      */
-    public void setMobSpawner(final Block block, final SaveablePlayer player) {
+    private void setMobSpawner(final Block block, final SaveablePlayer player) {
         final byte itemData = player.getItemInHand().getData().getData();
         player.setItemInHand(new ItemStack(Material.MONSTER_EGG, player.getItemInHand().getAmount() - 1, (short)0, itemData));
         ((CreatureSpawner)block.getState()).setSpawnedType(EntityType.fromId(itemData));
@@ -145,7 +145,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param block Block clicked.
      * @return <code>true</code> if event needs to be cancelled.
      */
-    public void wand1(final SaveablePlayer player, final Block block) {
+    private void wand1(final SaveablePlayer player, final Block block) {
         final WESession session = player.forceSession();
         session.setV1(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
         player.sendMessage(Color.MESSAGE + "Point 1 set.");
@@ -154,7 +154,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    public void wand2(final SaveablePlayer player, final Block block) {
+    private void wand2(final SaveablePlayer player, final Block block) {
         final WESession session = player.forceSession();
         session.setV2(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
         player.sendMessage(Color.MESSAGE + "Point 2 set.");
@@ -170,14 +170,14 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param block Block clicked.
      * @param blockFace Face of block clicked.
      */
-    public void compassTo(final SaveablePlayer player) {
+    private void compassTo(final SaveablePlayer player) {
         final Location location = player.getTargetBlock(null, Config.compassRange).getLocation();
         location.setYaw(player.getLocation().getYaw());
         location.setPitch(player.getLocation().getPitch());
         player.move(Warp.findSafePlace(location));
     }
 
-    public void compassThru(final SaveablePlayer player) {
+    private void compassThru(final SaveablePlayer player) {
         final List<Block> LOS =  player.getLastTwoTargetBlocks(null, 5);
         if(LOS.size() == 1) {
             return;
@@ -194,7 +194,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player Player using paper.
      * @param block Block clicked.
      */
-    public void paperSimple(final SaveablePlayer player, final Location location) {
+    private void paperSimple(final SaveablePlayer player, final Location location) {
         if(regionsHere(location).isEmpty()) {
             player.sendMessage(Color.MESSAGE + "No regions here.");
         } else {
@@ -211,7 +211,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    public void paperComplex(final SaveablePlayer player, final Location location) {
+    private void paperComplex(final SaveablePlayer player, final Location location) {
         if(regionsHere(location).isEmpty()) {
             player.sendMessage(Color.MESSAGE + "No regions here.");
         } else {
@@ -227,7 +227,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player Player using a sign.
      * @param block Block clicked.
      */
-    public void sign(final SaveablePlayer player, final Sign sign) {
+    private void sign(final SaveablePlayer player, final Sign sign) {
         final String cantDoThat = Color.ERROR + "You can't do that.";
         if(sign.getLine(0).equals(Color.SIGN + "[CHECKPOINT]")) {
             if(player.hasPermission(Perm.CHECK)) {
