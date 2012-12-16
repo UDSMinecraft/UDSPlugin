@@ -7,7 +7,7 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class EditableWorld {
-    private final transient World base;
+    private final World base;
 
     /**
      * Wrap an existing world with these lovely extra methods.

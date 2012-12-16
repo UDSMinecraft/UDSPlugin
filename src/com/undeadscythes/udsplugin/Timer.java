@@ -31,8 +31,8 @@ public class Timer implements Runnable {
      */
     public static final long SECOND = 1000;
 
-    private transient long now = System.currentTimeMillis();
-    private transient long lastSlow = System.currentTimeMillis();
+    private long now = System.currentTimeMillis();
+    private long lastSlow = System.currentTimeMillis();
 
     /**
      * Initiates the timer.

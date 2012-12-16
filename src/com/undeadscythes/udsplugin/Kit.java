@@ -9,10 +9,10 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class Kit {
-    private final transient String name;
-    private final transient int price;
-    private final transient List<ItemStack> items;
-    private final transient PlayerRank rank;
+    private final String name;
+    private final int price;
+    private final List<ItemStack> items;
+    private final PlayerRank rank;
 
     /**
      * Initialise a brand new kit.

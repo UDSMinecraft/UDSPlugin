@@ -10,13 +10,13 @@ import org.bukkit.configuration.file.*;
  * @author UndeadScythes
  */
 public class Data {
-    private transient FileConfiguration dataConfig = null;
-    private final transient File dataFile = new File("plugins/UDSPlugin/data.yml");;
-    private final transient UDSPlugin plugin;
+    private FileConfiguration dataConfig = null;
+    private final File dataFile = new File("plugins/UDSPlugin/data.yml");;
+    private final UDSPlugin plugin;
 
     private Location spawn;
-    private transient long enderDeath;
-    private transient long lastDaily;
+    private long enderDeath;
+    private long lastDaily;
 
     public Data(final UDSPlugin plugin) {
         this.plugin = plugin;

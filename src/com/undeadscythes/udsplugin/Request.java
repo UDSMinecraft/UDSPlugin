@@ -5,11 +5,11 @@ package com.undeadscythes.udsplugin;
  * @author UndeadScythes
  */
 public class Request {
-    private final transient RequestType type;
-    private final transient SaveablePlayer sender;
-    private final transient SaveablePlayer recipient;
-    private final transient String data;
-    private final transient long time = System.currentTimeMillis();
+    private final RequestType type;
+    private final SaveablePlayer sender;
+    private final SaveablePlayer recipient;
+    private final String data;
+    private final long time = System.currentTimeMillis();
 
     /**
      * Initialises a brand new request.

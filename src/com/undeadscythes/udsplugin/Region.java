@@ -16,15 +16,15 @@ public class Region implements Saveable {
      */
     public static final String PATH = "regions.csv";
 
-    private transient String name;
-    private transient Vector v1;
-    private transient Vector v2;
+    private String name;
+    private Vector v1;
+    private Vector v2;
     private Location warp;
-    private transient SaveablePlayer owner;
-    private transient Set<SaveablePlayer> members = new HashSet<SaveablePlayer>();
-    private transient String data;
-    private transient Set<RegionFlag> flags;
-    private transient RegionType type;
+    private SaveablePlayer owner;
+    private Set<SaveablePlayer> members = new HashSet<SaveablePlayer>();
+    private String data;
+    private Set<RegionFlag> flags;
+    private RegionType type;
     private PlayerRank rank = PlayerRank.NONE;
 
     /**

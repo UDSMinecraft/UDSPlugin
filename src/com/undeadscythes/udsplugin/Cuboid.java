@@ -9,18 +9,18 @@ import org.bukkit.util.*;
  * @author UndeadScythes
  */
 public class Cuboid {
-    final private transient World world;
-    final private transient Vector min;
-    final private transient Vector max;
-    final private transient Vector offset;
-    final private transient Vector diagonal;
-    final private transient int dx;
-    final private transient int dy;
-    final private transient int dz;
-    final private transient int px;
-    final private transient int py;
-    final private transient int pz;
-    final private transient MiniBlock[][][] blocks;
+    final private World world;
+    final private Vector min;
+    final private Vector max;
+    final private Vector offset;
+    final private Vector diagonal;
+    final private int dx;
+    final private int dy;
+    final private int dz;
+    final private int px;
+    final private int py;
+    final private int pz;
+    final private MiniBlock[][][] blocks;
 
     /**
      *
@@ -117,8 +117,8 @@ public class Cuboid {
 }
 
 class MiniBlock {
-    private final transient int type;
-    private final transient byte data;
+    private final int type;
+    private final byte data;
 
     public MiniBlock(final Block block) {
         type = block.getTypeId();

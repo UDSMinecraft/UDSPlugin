@@ -13,9 +13,9 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public abstract class AbstractPlayerCommand implements CommandExecutor {
-    protected transient SaveablePlayer player;
-    private transient String commandName;
-    protected transient String[] args;
+    protected SaveablePlayer player;
+    private String commandName;
+    protected String[] args;
 
     /**
      * Checks player permission then passes arguments to executor.

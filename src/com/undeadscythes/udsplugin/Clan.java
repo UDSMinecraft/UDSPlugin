@@ -14,12 +14,12 @@ public class Clan implements Saveable {
      */
     public static final String PATH = "clans.csv";
 
-    private transient String name;
-    private transient SaveablePlayer leader;
-    private transient final Set<SaveablePlayer> members;
+    private String name;
+    private SaveablePlayer leader;
+    private final Set<SaveablePlayer> members;
 
-    private transient int kills = 0;
-    private transient int deaths = 0;
+    private int kills = 0;
+    private int deaths = 0;
 
     /**
      * Initialise a brand new clan.

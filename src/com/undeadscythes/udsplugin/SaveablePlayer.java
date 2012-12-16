@@ -20,38 +20,38 @@ public class SaveablePlayer implements Saveable {
      */
     public final static String PATH = "players.csv";
 
-    private transient String name;
-    private transient Player base;
-    private transient String nick;
+    private String name;
+    private Player base;
+    private String nick;
 
-    private transient long timeLogged = 0;
-    private transient Location back = null;
-    private transient boolean godMode = false;
-    private transient boolean lockdownPass = false;
+    private long timeLogged = 0;
+    private Location back = null;
+    private boolean godMode = false;
+    private boolean lockdownPass = false;
     private long lastDamageCaused = 0;
     private SaveablePlayer challenger = null;
     private int wager = 0;
-    private transient long prizeClaim = 0;
+    private long prizeClaim = 0;
     private Location checkPoint = null;
-    private transient ChatRoom chatRoom = null; // Is this field never modified?
-    private final transient Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
-    private transient Channel channel = Channel.PUBLIC;
-    private final transient LinkedList<Long> lastChats = new LinkedList<Long>();
-    private transient ItemStack[] inventoryCopy = null;
-    private transient ItemStack[] armorCopy = null;
-    private transient UUID selectedPet = null;
+    private ChatRoom chatRoom = null; // Is this field never modified?
+    private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
+    private Channel channel = Channel.PUBLIC;
+    private final LinkedList<Long> lastChats = new LinkedList<Long>();
+    private ItemStack[] inventoryCopy = null;
+    private ItemStack[] armorCopy = null;
+    private UUID selectedPet = null;
     private SaveablePlayer whisperer = null;
     private int powertoolID = 0;
-    private transient String powertoolCmd = "";
+    private String powertoolCmd = "";
     private Clan clan = null;
     private int bounty = 0;
     private int money = 0;
     private PlayerRank rank = PlayerRank.DEFAULT;
-    private transient long vipTime = 0;
-    private transient int vipSpawns = 0;
+    private long vipTime = 0;
+    private int vipSpawns = 0;
     private long jailTime = 0;
     private long jailSentence = 0;
-    private transient int bail = 0;
+    private int bail = 0;
 
     /**
      * Initialise a brand new player extension.
@@ -519,16 +519,7 @@ public class SaveablePlayer implements Saveable {
     public void release() {
         jailTime = 0;
         jailSentence = 0;
-        if(!quietTeleport(UDSPlugin.getWarps().get("jailout"))) {
-            BufferedWriter out;
-            try {
-                out = new BufferedWriter(new FileWriter(UDSPlugin.TICKET_PATH, true));
-                out.write("No jail out warp point has been placed. Use '/setwarp jailout' to do this.");
-                out.close();
-            } catch (IOException ex) {
-                Logger.getLogger(SaveablePlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        quietTeleport(UDSPlugin.getWarps().get("jailout"));
     }
 
     /**

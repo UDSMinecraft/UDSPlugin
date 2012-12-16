@@ -7,8 +7,8 @@ import java.util.*;
  * @author UndeadScythes
  */
 public class ChatRoom {
-    private final transient String name;
-    private final transient Set<SaveablePlayer> members;
+    private final String name;
+    private final Set<SaveablePlayer> members;
 
     /**
      * Create a brand new private chat room.

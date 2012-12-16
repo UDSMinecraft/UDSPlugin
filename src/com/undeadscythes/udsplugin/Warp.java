@@ -14,10 +14,10 @@ public class Warp implements Saveable {
      */
     public final static String PATH = "warps.csv";
 
-    private final transient String name;
-    private final transient Location location;
-    private final transient PlayerRank rank;
-    private final transient int price;
+    private final String name;
+    private final Location location;
+    private final PlayerRank rank;
+    private final int price;
 
     /**
      * Initialise a brand new warp point.

@@ -10,9 +10,9 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class OwnedMinecart {
-    private transient final SaveablePlayer owner;
-    private transient final Minecart minecart;
-    private transient final boolean returnToOwner;
+    private final SaveablePlayer owner;
+    private final Minecart minecart;
+    private final boolean returnToOwner;
 
     public OwnedMinecart(final Minecart minecart, final SaveablePlayer owner, final boolean returnToOwner) {
         this.owner = owner;
