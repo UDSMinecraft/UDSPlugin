@@ -6,7 +6,7 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 
 /**
- * Custom configuration yaml.
+ * Custom configuration yaml for settings designed to be changed in-game.
  * @author UndeadScythes
  */
 public class Data {
