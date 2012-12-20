@@ -11,17 +11,6 @@ import org.bukkit.event.player.*;
  * @author UndeadScythes
  */
 public class AsyncPlayerChat implements Listener {
-    /**
-    * Chat channel for in-game chat.
-    * @author UndeadScythes
-    */
-    public enum Channel {
-        PUBLIC,
-        CLAN,
-        PRIVATE,
-        ADMIN;
-    }
-
     @EventHandler
     public void onEvent(final AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
@@ -32,7 +21,7 @@ public class AsyncPlayerChat implements Listener {
             player.sendMessage(Color.ERROR + "You have been jailed for spamming chat.");
             Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " gets jail time for spamming chat.");
             player.jail(5, 1000);
-        } else if(player.getChannel() == Channel.PUBLIC) {
+        } else if(player.getChannel() == ChatChannel.PUBLIC) {
             String message = event.getMessage();
             if(Censor.noCensor(message)) {
                 message = (player.getRank().getColor() + player.getNick() + ": " + Color.TEXT).concat(message);
@@ -53,20 +42,20 @@ public class AsyncPlayerChat implements Listener {
                     target.sendMessage(message);
                 }
             }
-        } else if(player.getChannel() == Channel.ADMIN) {
+        } else if(player.getChannel() == ChatChannel.ADMIN) {
             final String message = PlayerRank.ADMIN.getColor() + "[ADMIN] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
                 if(target.getRank().compareTo(PlayerRank.MOD) >= 0) {
                     target.sendMessage(message);
                 }
             }
-        } else if(player.getChannel() == Channel.CLAN) {
+        } else if(player.getChannel() == ChatChannel.CLAN) {
             final Clan clan = player.getClan();
             final String message = Color.CLAN + "[" + clan.getName() + "] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : clan.getOnlineMembers()) {
                 target.sendMessage(message);
             }
-        } else if(player.getChannel() == Channel.PRIVATE) {
+        } else if(player.getChannel() == ChatChannel.PRIVATE) {
             final ChatRoom chatRoom = player.getChatRoom();
             final String message = Color.PRIVATE + "[" + chatRoom.getName() + "] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : chatRoom.getOnlineMembers()) {

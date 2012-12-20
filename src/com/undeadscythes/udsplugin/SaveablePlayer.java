@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.eventhandlers.AsyncPlayerChat.Channel;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -35,7 +34,7 @@ public class SaveablePlayer implements Saveable {
     private Location checkPoint = null;
     private ChatRoom chatRoom = null; // Is this field never modified?
     private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
-    private Channel channel = Channel.PUBLIC;
+    private ChatChannel channel = ChatChannel.PUBLIC;
     private final LinkedList<Long> lastChats = new LinkedList<Long>();
     private ItemStack[] inventoryCopy = null;
     private ItemStack[] armorCopy = null;
@@ -594,7 +593,7 @@ public class SaveablePlayer implements Saveable {
      * Get the players current chat channel.
      * @return The players chat channel.
      */
-    public Channel getChannel() {
+    public ChatChannel getChannel() {
         return channel;
     }
 
@@ -781,9 +780,9 @@ public class SaveablePlayer implements Saveable {
      * @param channel Channel to toggle.
      * @return <code>true</code> if channel was toggled on, <code>false</code> if channel switched back to public.
      */
-    public boolean toggleChannel(final Channel channel) {
+    public boolean toggleChannel(final ChatChannel channel) {
         if(this.channel.equals(channel)) {
-            this.channel = Channel.PUBLIC;
+            this.channel = ChatChannel.PUBLIC;
             return false;
         } else {
             this.channel = channel;
@@ -901,9 +900,9 @@ public class SaveablePlayer implements Saveable {
      * @param channel Channel to send message in.
      * @param message Message to send.
      */
-    public void chat(final Channel channel, final String message) {
+    public void chat(final ChatChannel channel, final String message) {
         if(base != null) {
-            final Channel temp = this.channel;
+            final ChatChannel temp = this.channel;
             this.channel = channel;
             base.chat(message);
             this.channel = temp;
