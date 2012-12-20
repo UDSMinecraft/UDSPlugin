@@ -91,7 +91,7 @@ public class RegionCmd extends AbstractPlayerCommand {
     }
 
     private void vert() {
-        final WESession session = getSession();
+        final Session session = getSession();
         if(session != null && hasTwoPoints(session)) {
             session.vert();
             player.sendMessage(Color.MESSAGE + "Region extended from bedrock to build limit.");
@@ -153,7 +153,7 @@ public class RegionCmd extends AbstractPlayerCommand {
     }
 
     private void reset() {
-        final WESession session = getSession();
+        final Session session = getSession();
         final Region region = getRegion(args[1]);
         if(session != null && hasTwoPoints(session) && region != null) {
             region.changeV(session.getV1(), session.getV2());
@@ -164,14 +164,14 @@ public class RegionCmd extends AbstractPlayerCommand {
     private void select() {
         final Region region = getRegion(args[1]);
         if(region != null) {
-            final WESession session = getSession();
+            final Session session = getSession();
             session.setVPair(region.getV1(), region.getV2(), region.getWorld());
             player.sendMessage(Color.MESSAGE + "Points set. " + session.getVolume() + " blocks selected.");
         }
     }
 
     private void set(final RegionType type) {
-        final WESession session = getSession();
+        final Session session = getSession();
         if(session != null && hasTwoPoints(session) && notRegion(args[1]) && noCensor(args[1])) {
             final Region region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), null, "", type);
             UDSPlugin.getRegions().put(region.getName(), region);

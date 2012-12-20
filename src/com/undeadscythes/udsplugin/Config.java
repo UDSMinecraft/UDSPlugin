@@ -18,6 +18,7 @@ public final class Config {
     public static boolean blockTNT;
     public static boolean blockWither;
     public static byte mapData;
+    public static int undoCount;
     public static int compassRange;
     public static int drainRange;
     public static int expandCost;
@@ -73,6 +74,7 @@ public final class Config {
         plugin.getConfig();
         plugin.reloadConfig();
         final FileConfiguration config = plugin.getConfig();
+        undoCount = config.getInt("range.undo");
         buildCost = config.getInt("cost.build");
         currencies = config.getString("currency.plural");
         requestTTL = config.getLong("request-timeout") * Timer.SECOND;

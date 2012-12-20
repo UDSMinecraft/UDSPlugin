@@ -232,10 +232,10 @@ public class SaveablePlayer implements Saveable {
      *
      * @return
      */
-    public WESession forceSession() {
-        WESession session = UDSPlugin.getSessions().get(getName());
+    public Session forceSession() {
+        Session session = UDSPlugin.getSessions().get(getName());
         if(session == null) {
-            session = new WESession();
+            session = new Session();
             UDSPlugin.getSessions().put(getName(), session);
         }
         return session;

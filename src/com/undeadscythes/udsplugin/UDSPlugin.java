@@ -21,7 +21,7 @@ public class UDSPlugin extends JavaPlugin {
     private static final SaveableHashMap WARPS = new SaveableHashMap();
     private static final MatchableHashMap<ChatRoom> CHAT_ROOMS = new MatchableHashMap<ChatRoom>();
     private static final MatchableHashMap<Request> REQUESTS = new MatchableHashMap<Request>();
-    private static final MatchableHashMap<WESession> SESSIONS = new MatchableHashMap<WESession>();
+    private static final MatchableHashMap<Session> SESSIONS = new MatchableHashMap<Session>();
     private static final MatchableHashMap<Region> ARENAS = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> BASES = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> CITIES = new MatchableHashMap<Region>();
@@ -428,7 +428,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the sessions map.
      * @return Sessions map.
      */
-    static public MatchableHashMap<WESession> getSessions() {
+    static public MatchableHashMap<Session> getSessions() {
         return SESSIONS;
     }
 

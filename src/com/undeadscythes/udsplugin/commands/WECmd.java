@@ -62,7 +62,7 @@ public class WECmd extends AbstractPlayerCommand {
     private void drain(final int range) {
         if(hasPerm(Perm.WE_DRAIN)) {
             if(range <= Config.drainRange) {
-                final WESession session = getSession();
+                final Session session = getSession();
                 final Location location = player.getLocation();
                 final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
                 final Vector v2 = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
@@ -99,7 +99,7 @@ public class WECmd extends AbstractPlayerCommand {
 
     private void set() {
         if(hasPerm(Perm.WE_SET)) {
-            final WESession session = getSession();
+            final Session session = getSession();
             if(hasTwoPoints(session)) {
                 final ItemStack item = getItem(args[1]);
                 if(item != null) {
@@ -134,7 +134,7 @@ public class WECmd extends AbstractPlayerCommand {
     }
 
     private void undo() {
-        final WESession session = getSession();
+        final Session session = getSession();
         if(hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
             final Cuboid undo = session.load();
             undo.revert();
@@ -144,7 +144,7 @@ public class WECmd extends AbstractPlayerCommand {
 
     private void replace() {
         if(hasPerm(Perm.WE_REPLACE)) {
-            final WESession session = getSession();
+            final Session session = getSession();
             if(hasTwoPoints(session)) {
                 final Vector v1 = session.getV1();
                 final Vector v2 = session.getV2();
@@ -184,7 +184,7 @@ public class WECmd extends AbstractPlayerCommand {
             final int distance = parseInt(args[2]);
             if(distance > -1) {
                 if(distance <= Config.moveRange) {
-                    final WESession session = getSession();
+                    final Session session = getSession();
                     if(hasTwoPoints(session)) {
                         final Vector v1 = session.getV1();
                         final Vector v2 = session.getV2();
@@ -227,7 +227,7 @@ public class WECmd extends AbstractPlayerCommand {
     }
 
     private void copy() {
-        final WESession session = getSession();
+        final Session session = getSession();
         if(hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
             session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation().toVector()));
             player.sendMessage(Color.MESSAGE + "Copied " + session.getClipboard().getVolume() + " blocks.");
@@ -235,7 +235,7 @@ public class WECmd extends AbstractPlayerCommand {
     }
 
     private void paste() {
-        final WESession session = getSession();
+        final Session session = getSession();
         if(session.hasClipboard() && hasPerm(Perm.WE_PASTE)) {
             final Cuboid clipboard = session.getClipboard();
             session.save(clipboard.offset(player.getWorld(), player.getLocation().toVector()));
@@ -254,7 +254,7 @@ public class WECmd extends AbstractPlayerCommand {
     }
 
     private void ext(final int range) {
-        final WESession session = getSession();
+        final Session session = getSession();
         if(hasPerm(Perm.WE_EXT)) {
             if(range <= Config.drainRange) {
                 final Location location = player.getLocation();

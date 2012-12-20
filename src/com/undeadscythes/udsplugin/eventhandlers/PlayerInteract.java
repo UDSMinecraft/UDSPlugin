@@ -149,7 +149,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @return <code>true</code> if event needs to be cancelled.
      */
     private void wand1(final SaveablePlayer player, final Block block) {
-        final WESession session = player.forceSession();
+        final Session session = player.forceSession();
         session.setV1(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
         player.sendMessage(Color.MESSAGE + "Point 1 set.");
         if(session.getV1() != null && session.getV2() != null) {
@@ -158,7 +158,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     }
 
     private void wand2(final SaveablePlayer player, final Block block) {
-        final WESession session = player.forceSession();
+        final Session session = player.forceSession();
         session.setV2(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
         player.sendMessage(Color.MESSAGE + "Point 2 set.");
         if(session.getV1() != null && session.getV2() != null) {

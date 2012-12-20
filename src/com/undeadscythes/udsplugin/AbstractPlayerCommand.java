@@ -197,7 +197,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
         return notPinned() && notJailed();
     }
 
-    protected boolean hasUndo(WESession session) {
+    protected boolean hasUndo(Session session) {
         if(session.hasUndo()) {
             return true;
         } else {
@@ -276,7 +276,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * Get the players WorldEdit session.
      * @return The players WE session, if the player does not currently have a session one is created.
      */
-    protected WESession getSession() {
+    protected Session getSession() {
         return player.forceSession();
     }
 
@@ -324,7 +324,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param session The players session.
      * @return <code>true</code> if the session has two points, <code>false</code> otherwise.
      */
-    protected boolean hasTwoPoints(final WESession session) {
+    protected boolean hasTwoPoints(final Session session) {
         if(session.getV1() == null || session.getV2() == null) {
             player.sendMessage(Color.ERROR + "You need to select two points.");
             return false;

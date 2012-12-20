@@ -24,6 +24,7 @@ welcome:
   gift: emerald
   admin: As a member of staff be helpful, be polite and lead by example.
 range:
+  undo: 10
   world: 10000
   butcher: 50
   compass: 100
