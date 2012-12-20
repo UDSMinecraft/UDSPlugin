@@ -611,6 +611,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @param string Material to check.
      * @return The material if it exists, <code>null</code> otherwise.
      */
+    @SuppressWarnings("deprecation")
     protected ItemStack getItem(final String string) {
         Material material;
         String matString = string.toUpperCase();

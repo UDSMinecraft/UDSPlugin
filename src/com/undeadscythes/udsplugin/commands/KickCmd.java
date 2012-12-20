@@ -2,7 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import org.apache.commons.lang.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
 
 /**
  * Kick a player from the server.

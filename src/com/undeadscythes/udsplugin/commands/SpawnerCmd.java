@@ -1,9 +1,11 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
+import com.undeadscythes.udsplugin.AbstractPlayerCommand;
+import com.undeadscythes.udsplugin.Color;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.EntityType;
 
 /**
  * Change the mob type of a spawner.

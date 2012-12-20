@@ -1,7 +1,12 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
+import com.undeadscythes.udsplugin.AbstractPlayerCommand;
+import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.Config;
+import com.undeadscythes.udsplugin.PlayerRank;
+import org.bukkit.Bukkit;
+
+
 
 /**
  * Lets a player get build rights and promotes them to member. Ignores extra arguments.
@@ -9,7 +14,7 @@ import org.bukkit.*;
  */
 public class AcceptRulesCmd extends AbstractPlayerCommand {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(canAfford(Config.buildCost)) {
             player.setRank(PlayerRank.MEMBER);
             player.debit(Config.buildCost);

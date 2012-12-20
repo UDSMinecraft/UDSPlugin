@@ -2,7 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
 import org.bukkit.util.Vector;
 
 /**

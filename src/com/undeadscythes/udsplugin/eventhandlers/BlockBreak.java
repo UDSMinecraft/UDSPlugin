@@ -2,7 +2,8 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
-import org.bukkit.*;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;

@@ -316,6 +316,7 @@ public class UDSPlugin extends JavaPlugin {
     private final static String GAP = "A A";
     private final static String DOT = " A ";
 
+    @SuppressWarnings("deprecation")
     private void addRecipes() {
         final ShapedRecipe mossyStoneBrick = new ShapedRecipe(new ItemStack(98, 1, (short) 0, (byte) 1)).shape(ROW, SWJ, ROW).setIngredient('A', Material.VINE).setIngredient('B', new MaterialData(98, (byte) 0));
         this.getServer().addRecipe(mossyStoneBrick);

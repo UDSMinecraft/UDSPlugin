@@ -48,16 +48,16 @@ public class BlockPistonRetract extends ListenerWrapper implements Listener {
                         case UP:
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 1, true);
                             break;
-                        case NORTH: // Acually is East
+                        case WEST:
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 4, true);
                             break;
-                        case SOUTH: // Acually is West
+                        case EAST:
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 5, true);
                             break;
-                        case WEST: // Acually is North
+                        case SOUTH:
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 3, true);
                             break;
-                        case EAST: // Acually is South
+                        case NORTH:
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 2, true);
                             break;
                     }

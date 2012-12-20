@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 

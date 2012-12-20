@@ -2,7 +2,9 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -131,6 +133,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param block Block the was clicked.
      * @param player Player who clicked.
      */
+    @SuppressWarnings("deprecation")
     private void setMobSpawner(final Block block, final SaveablePlayer player) {
         final byte itemData = player.getItemInHand().getData().getData();
         player.setItemInHand(new ItemStack(Material.MONSTER_EGG, player.getItemInHand().getAmount() - 1, (short)0, itemData));

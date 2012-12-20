@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
 
 /**
  * Jail a player.

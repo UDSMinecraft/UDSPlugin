@@ -84,6 +84,7 @@ public enum ShortItem {
      * Get an item stack of this item.
      * @return Item stack.
      */
+    @SuppressWarnings("deprecation")
     public ItemStack toItemStack() {
         return new ItemStack(material, 1, (short)0, data);
     }
@@ -93,6 +94,7 @@ public enum ShortItem {
      * @param amount Item stack.
      * @return
      */
+    @SuppressWarnings("deprecation")
     public ItemStack toItemStack(final int amount) {
         return new ItemStack(material, amount, (short)0, data);
     }

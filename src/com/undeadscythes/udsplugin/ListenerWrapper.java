@@ -16,6 +16,7 @@ public class ListenerWrapper {
      * @param item
      * @return
      */
+    @SuppressWarnings("deprecation")
     public static ItemStack findItem(final String item) {
         ItemStack itemStack;
         if(item.contains(":")) {

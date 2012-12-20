@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.*;
+import org.bukkit.Material;
 
 /**
  * Rent VIP rank and perform other tasks. Sends help on wrong arguments.
