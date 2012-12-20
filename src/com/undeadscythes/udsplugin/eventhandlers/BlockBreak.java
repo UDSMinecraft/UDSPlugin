@@ -1,9 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class BlockBreak implements Listener {
-    private final static List<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
+    private static final List<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
 
     @EventHandler
     public void onEvent(final BlockBreakEvent event) {
@@ -57,10 +57,28 @@ public class BlockBreak implements Listener {
 
     private void chopTree(final SaveablePlayer player, final Block block) {
         Block blockUp = block.getRelative(BlockFace.UP);
-        while(blockUp.getType().equals(Material.LOG) && player.canBuildHere(block.getLocation())) {
+        while(blockUp.getType().equals(Material.LOG) && player.canBuildHere(blockUp.getLocation()) && single(blockUp)) {
             blockUp.breakNaturally();
-            player.getItemInHand().setDurability((short)(player.getItemInHand().getDurability() - 1));
-            blockUp = blockUp.getRelative(BlockFace.UP);
+            short durability = player.getItemInHand().getDurability();
+            durability++;
+            if(durability == 1562) {
+                player.setItemInHand(new ItemStack(Material.AIR));
+                break;
+            } else if(block.getLocation().getBlockY() < UDSPlugin.BUILD_LIMIT) {
+                player.getItemInHand().setDurability(durability);
+                player.updateInventory();
+                blockUp = blockUp.getRelative(BlockFace.UP);
+            } else {
+                break;
+            }
         }
+    }
+
+    private boolean single(final Block block) {
+        boolean northLog = !block.getRelative(BlockFace.NORTH).getType().equals(Material.LOG);
+        boolean southLog = !block.getRelative(BlockFace.SOUTH).getType().equals(Material.LOG);
+        boolean eastLog = !block.getRelative(BlockFace.EAST).getType().equals(Material.LOG);
+        boolean westLog = !block.getRelative(BlockFace.WEST).getType().equals(Material.LOG);
+        return northLog && southLog && eastLog && westLog;
     }
 }

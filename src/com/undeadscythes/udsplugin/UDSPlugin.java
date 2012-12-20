@@ -14,6 +14,8 @@ import org.bukkit.plugin.java.*;
  * @author UndeadScythe
  */
 public class UDSPlugin extends JavaPlugin {
+    public static final int BUILD_LIMIT = 255;
+
     private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
     private static final SaveableHashMap CLANS = new SaveableHashMap();
     private static final SaveableHashMap PLAYERS = new SaveableHashMap();
