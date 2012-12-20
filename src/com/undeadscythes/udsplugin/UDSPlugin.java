@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.*;
  */
 public class UDSPlugin extends JavaPlugin {
     public static final int BUILD_LIMIT = 255;
+    public static final File BLOCKS_PATH = new File("plugins/UDSPlugin/blocks");
 
     private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
     private static final SaveableHashMap CLANS = new SaveableHashMap();
@@ -47,7 +48,10 @@ public class UDSPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         if(DATA_PATH.mkdirs()) {
-            getLogger().info("Created directory tree.");
+            getLogger().info("Created data directory tree.");
+        }
+        if(BLOCKS_PATH.mkdirs()) {
+            getLogger().info("Created blocks directory tree.");
         }
         Config.loadConfig(this);
         Config.updateConfig();

@@ -1,10 +1,9 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import java.io.*;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.inventory.*;
 import org.bukkit.util.*;
@@ -45,6 +44,10 @@ public class WECmd extends AbstractPlayerCommand {
                 if(range > -1) {
                     drain(range);
                 }
+            } else if(args[0].equals("save")) {
+                save(args[1]);
+            } else if(args[0].equals("load")) {
+                load(args[1]);
             } else {
                 subCmdHelp();
             }
@@ -55,6 +58,64 @@ public class WECmd extends AbstractPlayerCommand {
                 move();
             } else {
                 subCmdHelp();
+            }
+        }
+    }
+
+    private void save(final String name) {
+        if(hasPerm(Perm.WE_SAVE)) {
+            final Session session = getSession();
+            if(hasTwoPoints(session)) {
+                final int volume = session.getVolume();
+                if(volume <= Config.editRange) {
+                    try {
+                        final BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.BLOCKS_PATH + File.separator + name + ".blocks"));
+                        final Vector min = Vector.getMinimum(session.getV1(), session.getV2());
+                        final Vector max = Vector.getMaximum(session.getV1(), session.getV2());
+                        final World world = player.getWorld();
+                        out.write(min.toString() + "\t" + max.toString() + "\t" + world.getName() + "\t" + volume);
+                        out.newLine();
+                        for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                            for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                                for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                                    out.write(world.getBlockAt(x, y, z).getTypeId() + "," + world.getBlockAt(x, y, z).getData() + "\t");
+                                }
+                            }
+                        }
+                        out.close();
+                        player.sendMessage(Color.MESSAGE + "Saved " + volume + " blocks to disk.");
+                    } catch (IOException ex) {
+                        player.sendMessage(Color.ERROR + "Error writing file.");
+                    }
+                }
+            }
+        }
+    }
+
+    private void load(final String name) {
+        if(hasPerm(Perm.WE_LOAD)) {
+            final Session session = getSession();
+            try {
+                final BufferedReader in = new BufferedReader(new FileReader(UDSPlugin.BLOCKS_PATH + File.separator + name + ".blocks"));
+                final String[] firstLine = in.readLine().split("\t");
+                final Vector min = new SaveableVector(firstLine[0]);
+                final Vector max = new SaveableVector(firstLine[1]);
+                final World world = Bukkit.getWorld(firstLine[2]);
+                final int volume = Integer.parseInt(firstLine[3]);
+                final String[] blocks = in.readLine().split("\t");
+                int i = 0;
+                for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                    for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                        for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                            world.getBlockAt(x, y, z).setTypeIdAndData(Integer.parseInt(blocks[i].split(",")[0]), Byte.parseByte(blocks[i].split(",")[1]), true);
+                            i++;
+                        }
+                    }
+                }
+                in.close();
+                player.sendMessage(Color.MESSAGE + "Loaded " + volume + " blocks from disk.");
+            } catch (IOException ex) {
+                player.sendMessage(Color.ERROR + "Error reading file.");
             }
         }
     }
