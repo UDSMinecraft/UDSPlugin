@@ -9,7 +9,7 @@ import org.bukkit.entity.*;
  * @author UndeadScythes
  */
 public final class EntityTracker {
-    private final static Set<OwnedMinecart> MINECARTS = new HashSet<OwnedMinecart>();
+    private static final Set<OwnedMinecart> MINECARTS = new HashSet<OwnedMinecart>();
 
     public static boolean minecartNear(final Location location) {
         for(OwnedMinecart minecart : MINECARTS) {
@@ -20,21 +20,22 @@ public final class EntityTracker {
         return false;
     }
 
-    public static void addMinecart(final Minecart minecart, final SaveablePlayer owner, final boolean returnToSender) {
+    public static void addMinecart(final Minecart minecart, final SaveablePlayer owner) {
         for(OwnedMinecart listed : MINECARTS) {
             if(listed.getUUID().equals(minecart.getUniqueId())) {
+                listed.setOwner(owner);
                 return;
             }
         }
-        MINECARTS.add(new OwnedMinecart(minecart, owner, returnToSender));
+        MINECARTS.add(new OwnedMinecart(minecart, owner));
     }
 
-    public static void spawnMinecart(final SaveablePlayer player, final Location location, final boolean returnToSender) {
-        EntityTracker.addMinecart(location.getWorld().spawn(location.clone().add(0.5, 0.5, 0.5), Minecart.class), player, returnToSender);
+    public static void tagMinecart(final SaveablePlayer player, final Location location) {
+        EntityTracker.addMinecart(location.getWorld().spawn(location.clone().add(0.5, 0.5, 0.5), Minecart.class), player);
     }
 
     public static void checkMinecarts() {
-        for(final Iterator<OwnedMinecart> i = MINECARTS.iterator() ; i.hasNext();) {
+        for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
             final OwnedMinecart minecart = i.next();
             if(minecart.isEmpty() && minecart.age(100) > Config.minecartTTL / Timer.TICKS) {
                 minecart.remove();
@@ -44,7 +45,7 @@ public final class EntityTracker {
     }
 
     public static void minecartRemoved(final UUID id) {
-        for(final Iterator<OwnedMinecart> i = MINECARTS.iterator() ; i.hasNext();) {
+        for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
             final OwnedMinecart minecart = i.next();
             if(minecart.getUUID().equals(id)) {
                 i.remove();
@@ -55,7 +56,18 @@ public final class EntityTracker {
     public static void findMinecarts() {
         for(World world : Bukkit.getWorlds()) {
             for(Minecart minecart : world.getEntitiesByClass(Minecart.class)) {
-                addMinecart(minecart, null, false);
+                addMinecart(minecart, null);
+            }
+        }
+    }
+
+    public static void removeMinecart(final UUID minecartId) {
+        for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
+            final OwnedMinecart listed = i.next();
+            if(listed.getUUID().equals(minecartId)) {
+                listed.remove();
+                i.remove();
+                return;
             }
         }
     }

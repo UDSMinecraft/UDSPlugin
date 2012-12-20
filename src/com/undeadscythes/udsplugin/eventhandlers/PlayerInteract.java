@@ -1,10 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -79,6 +78,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 event.setCancelled(true);
             } else if(inHand == Material.MINECART && (block.getType().equals(Material.RAILS) || block.getType().equals(Material.POWERED_RAIL) || block.getType().equals(Material.DETECTOR_RAIL))) {
                 minecart(player, block.getLocation());
+                player.setItemInHand(new ItemStack(Material.AIR));
                 event.setCancelled(true);
             } else {
                 event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player));
@@ -101,9 +101,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @return
      */
     private boolean bonemealCheck(final Block block, final SaveablePlayer player) {
-        return player.getItemInHand().getType() == Material.INK_SACK &&
-               player.getItemInHand().getData().getData() == (byte)15 &&
-               !player.canBuildHere(block.getLocation());
+        return player.getItemInHand().getType() == Material.INK_SACK && player.getItemInHand().getData().getData() == (byte)15 && !player.canBuildHere(block.getLocation());
     }
 
     /**
@@ -181,11 +179,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     }
 
     private void compassThru(final SaveablePlayer player) {
-        final List<Block> LOS =  player.getLastTwoTargetBlocks(null, 5);
-        if(LOS.size() == 1) {
+        final List<Block> los = player.getLastTwoTargetBlocks(null, 5);
+        if(los.size() == 1) {
             return;
         }
-        final Location location = LOS.get(1).getRelative(LOS.get(0).getFace(LOS.get(1))).getLocation();
+        final Location location = los.get(1).getRelative(los.get(0).getFace(los.get(1))).getLocation();
         location.setYaw(player.getLocation().getYaw());
         location.setPitch(player.getLocation().getPitch());
         player.move(Warp.findSafePlace(location));
@@ -245,7 +243,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 if(EntityTracker.minecartNear(location)) {
                     player.sendMessage(Color.MESSAGE + "There is a minecart already at the station.");
                 } else {
-                    EntityTracker.spawnMinecart(player, location.clone().add(0, -1, 0), false);
+                    player.getWorld().spawnEntity(location.clone().add(0.5, -1, 0.5), EntityType.MINECART);
                 }
             } else {
                 player.sendMessage(cantDoThat);
@@ -311,6 +309,6 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     }
 
     private void minecart(final SaveablePlayer player, final Location location) {
-        EntityTracker.spawnMinecart(player, location, true);
+        EntityTracker.tagMinecart(player, location);
     }
 }

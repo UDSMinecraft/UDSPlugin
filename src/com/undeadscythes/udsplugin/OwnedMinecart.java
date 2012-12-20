@@ -10,37 +10,40 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class OwnedMinecart {
-    private final SaveablePlayer owner;
-    private final Minecart minecart;
-    private final boolean returnToOwner;
+    private transient SaveablePlayer owner;
+    private final transient Minecart minecart;
 
-    public OwnedMinecart(final Minecart minecart, final SaveablePlayer owner, final boolean returnToOwner) {
+    public OwnedMinecart(final Minecart minecart, final SaveablePlayer owner) {
         this.owner = owner;
         this.minecart = minecart;
-        this.returnToOwner = returnToOwner;
     }
 
-    public boolean near(final Location location) {
+    public final void setOwner(final SaveablePlayer player) {
+        owner = player;
+    }
+
+    public final boolean near(final Location location) {
         return minecart.getLocation().distance(location) < 2;
     }
 
-    public int age(final int ticks) {
+    public final int age(final int ticks) {
         minecart.setTicksLived(minecart.getTicksLived() + ticks);
         return minecart.getTicksLived();
     }
 
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return minecart.isEmpty();
     }
 
-    public void remove() {
+    public final void remove() {
         this.minecart.remove();
-        if(returnToOwner) {
+        if(owner != null) {
+            owner.sendMessage(Color.MESSAGE + "You picked up your minecart.");
             owner.giveAndDrop(new ItemStack(Material.MINECART));
         }
     }
 
-    public UUID getUUID() {
+    public final UUID getUUID() {
         return minecart.getUniqueId();
     }
 }

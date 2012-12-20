@@ -17,12 +17,7 @@ public class VehicleExit extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final VehicleExitEvent event) {
         if(event.getVehicle() instanceof Minecart) {
-            if(event.getExited() instanceof Player) {
-                final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(((Player)event.getExited()).getName());
-                player.giveAndDrop(new ItemStack(Material.MINECART.getId()));
-                player.sendMessage(Color.MESSAGE + "You picked up your minecart.");
-            }
-            event.getVehicle().remove();
+            EntityTracker.removeMinecart(event.getVehicle().getUniqueId());
         }
     }
 }

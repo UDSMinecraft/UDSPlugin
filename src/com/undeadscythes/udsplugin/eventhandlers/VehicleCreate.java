@@ -13,7 +13,7 @@ public class VehicleCreate extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final VehicleCreateEvent event) {
         if(event.getVehicle() instanceof Minecart) {
-            EntityTracker.addMinecart((Minecart)event.getVehicle(), null, false);
+            EntityTracker.addMinecart((Minecart)event.getVehicle(), null);
         }
     }
 }
