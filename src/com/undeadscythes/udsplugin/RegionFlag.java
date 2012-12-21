@@ -7,43 +7,79 @@ import org.apache.commons.lang.*;
  * @author UndeadScythes
  */
 public enum RegionFlag {
+    /**
+     * Protects region from non members.
+     */
     PROTECTION(true),
+    /**
+     * Allows mobs to spawn.
+     */
     MOBS(false),
+    /**
+     * Allows PvE.
+     */
     PVE(true),
+    /**
+     * Locks objects that players can 'open'.
+     */
     LOCK(true),
+    /**
+     * Allows vines to grow.
+     */
     VINES(true),
+    /**
+     * Allows food to grow.
+     */
     FOOD(true),
+    /**
+     * Allows fire to spread and burn.
+     */
     FIRE(false),
+    /**
+     * Allows snow to form and ice to spread.
+     */
     SNOW(false),
-    PVP(false);
+    /**
+     * Allows PvP.
+     */
+    PVP(false),
+    /**
+     * Dispensers have infinite items.
+     */
+    DISPENSER(false);
 
-    private boolean defaultValue;
+    private boolean defaulted;
 
-    RegionFlag(final boolean value) {
-        this.defaultValue = value;
+    RegionFlag(final boolean defaulted) {
+        this.defaulted = defaulted;
     }
 
     /**
-        * Get this flag's default value.
-        * @return
-        */
-    public boolean isDefault() {
-        return defaultValue;
+     * Get this flag's default value.
+     * @return Default flag value.
+     */
+    public boolean isDefaulted() {
+        return defaulted;
     }
 
+    /**
+     * Get the name of the enum capitalized.
+     * @return Capitalized enum name.
+     */
     @Override
     public String toString() {
         return StringUtils.capitalize(name().toLowerCase());
     }
 
     /**
-        * Get a flag by name.
-        * @param string The name of the flag.
-        * @return The flag or <code>null</code> if there was no match.
-        */
-    public static RegionFlag getByName(final String string) {
+     * Get a flag by name.
+     * @param name Flag name.
+     * @return Flag or <code>null</code> if there was no match.
+     */
+    public static RegionFlag getByName(final String name) {
+        final String uName = name.toUpperCase();
         for(RegionFlag flag : values()) {
-            if(flag.name().equals(string.toUpperCase())) {
+            if(flag.name().equals(uName)) {
                 return flag;
             }
         }

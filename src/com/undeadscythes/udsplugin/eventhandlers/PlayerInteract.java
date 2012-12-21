@@ -76,7 +76,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
                 powertool(player);
                 event.setCancelled(true);
-            } else if(inHand == Material.MINECART && (block.getType().equals(Material.RAILS) || block.getType().equals(Material.POWERED_RAIL) || block.getType().equals(Material.DETECTOR_RAIL))) {
+            } else if(inHand == Material.MINECART && Config.RAILS.contains(block.getType())) {
                 minecart(player, block.getLocation());
                 player.setItemInHand(new ItemStack(Material.AIR));
                 event.setCancelled(true);

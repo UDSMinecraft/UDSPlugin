@@ -46,7 +46,7 @@ public class Region implements Saveable {
         this.data = data;
         flags = new HashSet<RegionFlag>();
         for(RegionFlag flag : RegionFlag.values()) {
-            if(flag.isDefault()) {
+            if(flag.isDefaulted()) {
                 flags.add(flag);
             }
         }
