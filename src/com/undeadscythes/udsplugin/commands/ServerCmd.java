@@ -1,7 +1,9 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
+
 
 /**
  * Server related commands.
@@ -18,6 +20,7 @@ public class ServerCmd extends AbstractPlayerCommand {
                 Bukkit.shutdown();
             } else if(args[0].equals("reload")) {
                 Config.reload();
+                player.sendMessage(Color.MESSAGE + "Configuration file reloaded.");
             } else {
                 subCmdHelp();
             }
