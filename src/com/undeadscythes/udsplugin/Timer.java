@@ -114,8 +114,8 @@ public class Timer implements Runnable {
             }
             final int distanceSq = Math.abs((int)Math.pow(player.getLocation().getBlockX(), 2) + (int)Math.pow(player.getLocation().getBlockZ(), 2));
             if(distanceSq - Config.worldBorderSq > 100) {
-                final int ratio = Config.worldBorderSq / distanceSq;
-                player.move(Warp.findSafePlace(player.getWorld(), player.getLocation().getX() * ratio, player.getLocation().getZ() * ratio));
+                final double ratio = Config.worldBorderSq / distanceSq;
+                player.move(Warp.findSafePlace(player.getLocation().clone().multiply(ratio)));
                 player.sendMessage(Color.MESSAGE + "You have reached the edge of the currently explorable world.");
             }
 

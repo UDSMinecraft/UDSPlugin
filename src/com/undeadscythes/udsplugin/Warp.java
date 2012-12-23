@@ -3,6 +3,7 @@ package com.undeadscythes.udsplugin;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
+import org.bukkit.block.*;
 
 /**
  * A warp point used for player teleportation.
@@ -78,14 +79,6 @@ public class Warp implements Saveable {
     }
 
     /**
-     * Get the location of the warp.
-     * @return Warp location.
-     */
-    public Location getLocation() {
-        return location;
-    }
-
-    /**
      * Get the rank required to use this warp.
      * @return Rank needed to use this warp.
      */
@@ -97,31 +90,30 @@ public class Warp implements Saveable {
      * Find a safe place to warp to from this warp.
      * @return A safe location.
      */
-    public Location findSafePlace() {
+    public Location getLocation() {
         return findSafePlace(location);
     }
 
-    // Should these methods be moved to SaveableLocation?
+    // Should these methods be moved to SaveableLocation? Probably
 
     /**
-     * Find a centered safe place at the given coordinates.
-     * @param world World to search.
-     * @param x X coordinate.
-     * @param z Z coordinate.
-     * @return A safe place centered in a block.
-     */
-    public static Location findSafePlace(final World world, final double x, final double z) {
-        final Location safePlace = world.getHighestBlockAt((int)x, (int)z).getLocation();
-        safePlace.add(.5, 0, .5);
-        return safePlace;
-    }
-
-    /**
-     * Find a safe place to teleport to near this location.
-     * @param location Location to teleport to.
-     * @return A safe place.
-     */
+        * Find a safe place to teleport to near this location.
+        * @param location Location to teleport to.
+        * @return A safe place.
+        */
     public static Location findSafePlace(final Location location) {
-        return findSafePlace(location.getWorld(), location.getX(), location.getZ());
+        final Location testUp = location;
+        final Location testDown = location.clone().subtract(0, 1, 0);
+        while(testUp.getBlockY() < UDSPlugin.BUILD_LIMIT && testDown.getBlockY() > 0) {
+            if(!testUp.getBlock().getType().isSolid() && !testUp.getBlock().getRelative(BlockFace.UP).getType().isSolid()) {
+                return testUp;
+            } else if(!testDown.getBlock().getType().isSolid() && !testDown.getBlock().getRelative(BlockFace.UP).getType().isSolid()) {
+                return testDown;
+            } else {
+                testUp.add(0, 1, 0);
+                testDown.add(0, 1, 0);
+            }
+        }
+        return location.getWorld().getSpawnLocation();
     }
 }

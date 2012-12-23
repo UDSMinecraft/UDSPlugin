@@ -391,7 +391,7 @@ public class Region implements Saveable {
      * @return Location of region warp point.
      */
     public Location getWarp() {
-        return warp;
+        return Warp.findSafePlace(warp);
     }
 
     /**
