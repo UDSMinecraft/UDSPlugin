@@ -132,7 +132,8 @@ public final class Config {
         compassRange = config.getInt("range.compass");
         globalFlags = new HashMap<RegionFlag, Boolean>();
         for(RegionFlag flag : RegionFlag.values()) {
-            globalFlags.put(flag, config.getBoolean("global-flags." + flag.toString()));
+            String flagname = "global-flags." + flag.toString().toLowerCase();
+            globalFlags.put(flag, config.getBoolean(flagname));
         }
         mainWorld = Bukkit.getWorld(config.getString("world-name"));
         minecartTTL = config.getLong("minecart.life") * Timer.SECOND;
