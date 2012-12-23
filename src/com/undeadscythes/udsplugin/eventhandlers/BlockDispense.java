@@ -7,6 +7,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.material.Dispenser;
 import org.bukkit.potion.*;
 import org.bukkit.util.Vector;
@@ -16,54 +17,51 @@ import org.bukkit.util.Vector;
  * @author UndeadScythes
  */
 public class BlockDispense extends ListenerWrapper implements Listener {
-    private static final List<Material> SPECIAL_ITEMS = new ArrayList<Material>(Arrays.asList(Material.ARROW, Material.FIREBALL, Material.EGG, Material.SNOW_BALL, Material.POTION, Material.EXP_BOTTLE, Material.FIREWORK, Material.BOAT, Material.MINECART, Material.MONSTER_EGG));
-
     @EventHandler
     public final void onEvent(final BlockDispenseEvent event) {
         final Material itemType = event.getItem().getType();
         if(hasFlag(event.getBlock().getLocation(), RegionFlag.DISPENSER)) {
             final BlockFace blockFace = ((Dispenser)event.getBlock().getState().getData()).getFacing();
             Location location = event.getBlock().getRelative(blockFace).getLocation().add(0.5, 0.5, 0.5);
-            if(SPECIAL_ITEMS.contains(itemType)) {
-                switch(event.getItem().getType()) {
-                    case ARROW:
-                        event.getBlock().getWorld().spawnArrow(location, toVector(blockFace), 1.5f, 5);
-                        event.setCancelled(true);
-                        break;
-                    case FIREBALL:
-                        fireEntity(location, EntityType.FIREBALL, toVector(blockFace).multiply(5));
-                        break;
-                    case EGG:
-                        fireEntity(location, EntityType.EGG, toVector(blockFace).multiply(1.5));
-                        break;
-                    case SNOW_BALL:
-                        fireEntity(location, EntityType.SNOWBALL, toVector(blockFace).multiply(5));
-                        break;
-                    case EXP_BOTTLE:
-                        fireEntity(location, EntityType.THROWN_EXP_BOTTLE, toVector(blockFace).multiply(2));
-                        break;
-                    case POTION:
-                        //fireEntity(location, Potion.fromItemStack(event.getItem()).splash(), toVector(blockFace));
-                        break;
-                    case FIREWORK:
-                        //final Firework firework = (Firework)fireEntity(location, EntityType.FIREWORK, new Vector(0, 1, 0));
-                        break;
-                    case MINECART:
-                        if(Config.RAILS.contains(location.getBlock().getType())) {
-                            fireEntity(location, EntityType.MINECART, new Vector(0, 0, 0));
-                        }
-                        break;
-                    case BOAT:
-                        if(Config.WATER.contains(location.getBlock().getRelative(BlockFace.DOWN).getType())) {
-                            fireEntity(location, EntityType.BOAT, new Vector(0, 0, 0));
-                        }
-                        break;
-                    case MONSTER_EGG:
-                        fireEntity(location, EntityType.fromId(event.getItem().getData().getData()), new Vector(0, 0, 0));
-                        break;
-                }
-            } else {
-                location.getWorld().dropItemNaturally(location, event.getItem());
+            switch(event.getItem().getType()) {
+                case ARROW:
+                    event.getBlock().getWorld().spawnArrow(location, toVector(blockFace), 1.5f, 5);
+                    event.setCancelled(true);
+                    break;
+                case FIREBALL:
+                    fireEntity(location, EntityType.FIREBALL, toVector(blockFace).multiply(5));
+                    break;
+                case EGG:
+                    fireEntity(location, EntityType.EGG, toVector(blockFace).multiply(1.5));
+                    break;
+                case SNOW_BALL:
+                    fireEntity(location, EntityType.SNOWBALL, toVector(blockFace).multiply(5));
+                    break;
+                case EXP_BOTTLE:
+                    fireEntity(location, EntityType.THROWN_EXP_BOTTLE, toVector(blockFace).multiply(2));
+                    break;
+                case POTION:
+                    //fireEntity(location, Potion.fromItemStack(event.getItem()).splash(), toVector(blockFace));
+                    break;
+                case FIREWORK:
+                    final Firework firework = (Firework)fireEntity(location, EntityType.FIREWORK, new Vector(0, 0, 0));
+                    firework.setFireworkMeta((FireworkMeta)(event.getItem().getItemMeta()));
+                    break;
+                case MINECART:
+                    if(Config.RAILS.contains(location.getBlock().getType())) {
+                        fireEntity(location, EntityType.MINECART, new Vector(0, 0, 0));
+                    }
+                    break;
+                case BOAT:
+                    if(Config.WATER.contains(location.getBlock().getRelative(BlockFace.DOWN).getType())) {
+                        fireEntity(location, EntityType.BOAT, new Vector(0, 0, 0));
+                    }
+                    break;
+                case MONSTER_EGG:
+                    fireEntity(location, EntityType.fromId(event.getItem().getData().getData()), new Vector(0, 0, 0));
+                    break;
+                default:
+                    location.getWorld().dropItemNaturally(location, event.getItem());
             }
             event.setCancelled(true);
         }
