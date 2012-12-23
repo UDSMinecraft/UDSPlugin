@@ -167,6 +167,8 @@ pip-log.txt
 #############
 
 nbproject/
+build.xml
+manifest.mf
 
 #############
 ## Testing
