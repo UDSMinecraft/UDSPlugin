@@ -96,7 +96,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
 
     /**
      * Check before applying bonemeal effects.
-     * @param location Location of block clicked.
+     * @param block Block clicked.
      * @param player Player using bonemeal.
      * @return
      */
@@ -142,7 +142,6 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     /**
      * Check if wand was used.
      * @param player Player using wand.
-     * @param action Action type of event.
      * @param block Block clicked.
      * @return <code>true</code> if event needs to be cancelled.
      */
@@ -155,6 +154,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param block
+     */
     private void wand2(final SaveablePlayer player, final Block block) {
         final Session session = player.forceSession();
         session.setV2(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
@@ -166,34 +170,30 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
 
     /**
      * Check if player is using a compass.
-     * @param action Action type of event.
      * @param player Player using compass.
-     * @param block Block clicked.
-     * @param blockFace Face of block clicked.
      */
     private void compassTo(final SaveablePlayer player) {
         final Location location = player.getTargetBlock(null, Config.compassRange).getLocation();
-        location.setYaw(player.getLocation().getYaw());
-        location.setPitch(player.getLocation().getPitch());
         player.move(Warp.findSafePlace(location));
     }
 
+    /**
+     *
+     * @param player
+     */
     private void compassThru(final SaveablePlayer player) {
         final List<Block> los = player.getLastTwoTargetBlocks(null, 5);
         if(los.size() == 1) {
             return;
         }
         final Location location = los.get(1).getRelative(los.get(0).getFace(los.get(1))).getLocation();
-        location.setYaw(player.getLocation().getYaw());
-        location.setPitch(player.getLocation().getPitch());
         player.move(Warp.findSafePlace(location));
     }
 
     /**
      * Check if player is using paper.
-     * @param action Action type of event.
      * @param player Player using paper.
-     * @param block Block clicked.
+     * @param location Location of block clicked.
      */
     private void paperSimple(final SaveablePlayer player, final Location location) {
         if(regionsHere(location).isEmpty()) {
@@ -212,6 +212,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
+    /**
+     *
+     * @param player
+     * @param location
+     */
     private void paperComplex(final SaveablePlayer player, final Location location) {
         if(regionsHere(location).isEmpty()) {
             player.sendMessage(Color.MESSAGE + "No regions here.");
@@ -226,7 +231,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     /**
      * Check if player clicked a sign.
      * @param player Player using a sign.
-     * @param block Block clicked.
+     * @param sign Sign clicked.
      */
     private void sign(final SaveablePlayer player, final Sign sign) {
         final String cantDoThat = Color.ERROR + "You can't do that.";
@@ -308,6 +313,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
+    /**
+     * 
+     * @param player
+     * @param location
+     */
     private void minecart(final SaveablePlayer player, final Location location) {
         EntityTracker.tagMinecart(player, location);
     }
