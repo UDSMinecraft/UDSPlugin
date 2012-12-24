@@ -23,7 +23,7 @@ public enum Perm {
     CI(PlayerRank.MEMBER, true),
     CITY(PlayerRank.MEMBER, true),
     CLAN(PlayerRank.MEMBER, true),
-    COMPASS(PlayerRank.MOD, true),
+    COMPASS(PlayerRank.WARDEN, true),
     DAY(PlayerRank.WARDEN, true),
     DELWARP(PlayerRank.WARDEN, true),
     DEMOTE(PlayerRank.MOD, true),
