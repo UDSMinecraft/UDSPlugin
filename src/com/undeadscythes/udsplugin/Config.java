@@ -54,7 +54,7 @@ public final class Config {
     public static List<Material> whitelistVIP;
     public static List<Kit> kits;
     public static Map<RegionFlag, Boolean> globalFlags;
-    public static Map<String, Integer> mobRewards;
+    public static Map<EntityType, Integer> mobRewards;
 
     public final static List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
     public final static List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL));
@@ -125,14 +125,20 @@ public final class Config {
         blockWither = config.getBoolean("block.wither");
         blockEndermen = config.getBoolean("block.enderman");
         blockSilverfish = config.getBoolean("block.silverfish");
-        mobRewards = new HashMap<String, Integer>();
-        for(String reward : config.getStringList("mob-rewards")) {
-            mobRewards.put(reward.split(":")[0], Integer.parseInt(reward.split(":")[1]));
+        mobRewards = new HashMap<EntityType, Integer>();
+        for(EntityType entityType : EntityType.values()) {
+            if(entityType.isAlive()) {
+                String entityName = "mob-rewards." + entityType.getName();
+                if(entityName != null) {
+                    entityName = entityName.toLowerCase();
+                    mobRewards.put(entityType, config.getInt(entityName));
+                }
+            }
         }
         compassRange = config.getInt("range.compass");
         globalFlags = new HashMap<RegionFlag, Boolean>();
         for(RegionFlag flag : RegionFlag.values()) {
-            String flagname = "global-flags." + flag.toString().toLowerCase();
+            final String flagname = "global-flags." + flag.toString().toLowerCase();
             globalFlags.put(flag, config.getBoolean(flagname));
         }
         mainWorld = Bukkit.getWorld(config.getString("world-name"));
