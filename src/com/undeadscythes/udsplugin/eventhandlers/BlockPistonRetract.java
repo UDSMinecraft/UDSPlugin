@@ -14,33 +14,10 @@ public class BlockPistonRetract extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPistonRetractEvent event) {
         if(event.isSticky()) {
-            final Location pistonLocation = event.getBlock().getLocation();
-            final Location blockLocation = event.getRetractLocation();
-            final List<Region> blockRegions = regionsHere(blockLocation);
+            final List<Region> blockRegions = regionsHere(event.getRetractLocation());
             if(!blockRegions.isEmpty()) {
-                boolean mixedRegions = false;
-                boolean totallyEnclosed = false;
-                final List<Region> pistonRegions = regionsHere(pistonLocation);
-                if(pistonRegions.isEmpty()) {
-                    mixedRegions = true;
-                } else {
-                    for(Region blockRegion : blockRegions) {
-                        for(Region pistonRegion : pistonRegions) {
-                            if(blockRegion.equals(pistonRegion)) {
-                                totallyEnclosed = true;
-                            } else {
-                                mixedRegions = true;
-                            }
-                            if(mixedRegions && totallyEnclosed) {
-                                break;
-                            }
-                        }
-                        if(mixedRegions && totallyEnclosed) {
-                            break;
-                        }
-                    }
-                }
-                if(mixedRegions && !totallyEnclosed) {
+                final List<Region> pistonRegions = regionsHere(event.getBlock().getLocation());
+                if(pistonRegions.isEmpty() || crossesBoundary(pistonRegions, blockRegions)) {
                     switch(event.getDirection()) {
                         case DOWN:
                             event.getBlock().setTypeIdAndData(Material.PISTON_STICKY_BASE.getId(), (byte) 0, true);

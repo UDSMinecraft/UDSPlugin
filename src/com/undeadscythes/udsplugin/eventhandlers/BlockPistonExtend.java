@@ -2,7 +2,6 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
-import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
@@ -14,40 +13,17 @@ import org.bukkit.event.block.*;
 public class BlockPistonExtend extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPistonExtendEvent event) {
-        final List<Block> movingBlocks = event.getBlocks();
-        if(movingBlocks.isEmpty()) {
-            return;
+        final List<Region> pistonRegions = regionsHere(event.getBlock().getLocation());
+        final List<Block> movingBlocks = new ArrayList<Block>();
+        movingBlocks.addAll(event.getBlocks());
+        if(!movingBlocks.isEmpty()) {
+            movingBlocks.add(movingBlocks.get(movingBlocks.size() - 1).getRelative(event.getDirection()));
         }
-        final Location pistonLocation = event.getBlock().getLocation();
         for(Block movingBlock : movingBlocks) {
             final List<Region> movingBlockRegions = regionsHere(movingBlock.getLocation());
-            if(!movingBlockRegions.isEmpty()) {
-                boolean mixedRegions = false;
-                boolean totallyEnclosed = false;
-                for(Region movingBlockRegion : movingBlockRegions) {
-                    final List<Region> pistonRegions = regionsHere(pistonLocation);
-                    if(pistonRegions.isEmpty()) {
-                        mixedRegions = true;
-                    } else {
-                        for(Region pistonRegion : pistonRegions) {
-                            if(movingBlockRegion.equals(pistonRegion)) {
-                                totallyEnclosed = true;
-                            } else {
-                                mixedRegions = true;
-                            }
-                            if(totallyEnclosed && mixedRegions) {
-                                break;
-                            }
-                        }
-                    }
-                    if(totallyEnclosed && mixedRegions) {
-                        break;
-                    }
-                }
-                if(mixedRegions && !totallyEnclosed) {
-                    event.setCancelled(true);
-                    return;
-                }
+            if(!movingBlockRegions.isEmpty() && crossesBoundary(pistonRegions, movingBlockRegions)) {
+                event.setCancelled(true);
+                return;
             }
         }
     }

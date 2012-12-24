@@ -173,4 +173,27 @@ public class ListenerWrapper {
         }
         return false;
     }
+
+    /**
+     *
+     * @param regionsA
+     * @param regionsB
+     * @return
+     */
+    public boolean crossesBoundary(final List<Region> regionsA, final List<Region> regionsB) {
+        if(regionsA.isEmpty() && !regionsB.isEmpty()) {
+            return true;
+        }
+        if(!regionsA.isEmpty() && regionsB.isEmpty()) {
+            return true;
+        }
+        for(Region regionA : regionsA) {
+            for(Region regionB : regionsB) {
+                if(!regionA.equals(regionB)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
