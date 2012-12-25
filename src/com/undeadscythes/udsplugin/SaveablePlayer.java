@@ -1298,4 +1298,12 @@ public class SaveablePlayer implements Saveable {
             base.setHealth(health);
         }
     }
+
+    /**
+     * 
+     * @return
+     */
+    public Location getBedSpawnLocation() {
+        return base == null ? null : base.getBedSpawnLocation();
+    }
 }

@@ -1,7 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.Location;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
@@ -11,17 +10,15 @@ import org.bukkit.event.player.*;
  */
 public class PlayerRespawn extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final PlayerRespawnEvent event) {
+    public final void onEvent(final PlayerRespawnEvent event) {
         final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
-        Location location = null;
-        Region home;
-        if((home = UDSPlugin.getHomes().get(player.getName() + "home")) != null) {
-            location = home.getWarp();
-        }
-        if(location == null) {
-            event.setRespawnLocation(UDSPlugin.getData().getSpawn());
-        } else {
-            event.setRespawnLocation(Warp.findSafePlace(location));
+        if(player.getBedSpawnLocation() == null) {
+            final Region home = UDSPlugin.getHomes().get(player.getName() + "home");
+            if(home == null) {
+                event.setRespawnLocation(UDSPlugin.getData().getSpawn());
+            } else {
+                event.setRespawnLocation(Warp.findSafePlace(home.getWarp()));
+            }
         }
         if(player.isDuelling()) {
             player.endChallenge();
