@@ -56,33 +56,35 @@ block:
   enderman: true
   silverfish: true
 mob-rewards:
-- spiderjockey:10000
-- cavespider:110
-- spider:115
-- pigzombie:120
-- zombie:60
-- skeleton:80
-- silverfish:95
-- creeper:150
-- enderman:170
-- giant:10000
-- chicken:5
-- mushroomcow:50
-- cow:20
-- sheep:15
-- pig:0
-- ocelot:10
-- wolf:10
-- squid:10
-- villager:0
-- snowman:0
-- irongolem:0
-- magmacube:125
-- slime:180
-- ghast:200
-- enderdragon:10000
-- witch:500
-- wither:10000
+  spiderjockey: 10000
+  cave_spider: 110
+  spider: 115
+  pig_zombie: 120
+  zombie: 60
+  skeleton: 80
+  silverfish: 95
+  creeper: 150
+  enderman: 170
+  giant: 10000
+  chicken: 5
+  mushroom_cow: 50
+  cow: 20
+  sheep: 15
+  pig: 0
+  ocelot: 10
+  wolf: 10
+  squid: 10
+  villager: 0
+  snowman: 0
+  iron_golem: 0
+  magma_cube: 125
+  slime: 180
+  ghast: 200
+  ender_dragon: 10000
+  witch: 500
+  wither: 10000
+  bat: 0
+  player: 0
 global-flags:
   protection: false
   mobs: true
