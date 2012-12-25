@@ -173,8 +173,12 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player Player using compass.
      */
     private void compassTo(final SaveablePlayer player) {
-        final Location location = player.getTargetBlock(null, Config.compassRange).getLocation();
-        player.move(Warp.findSafePlace(location));
+        final Block block = player.getTargetBlock(Config.transparentBlocks, Config.compassRange);
+        if(block.getType().isSolid()) {
+            player.move(Warp.findSafePlace(block.getLocation()));
+        } else {
+            player.sendMessage(Color.ERROR + "No block in range.");
+        }
     }
 
     /**
@@ -182,12 +186,17 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player
      */
     private void compassThru(final SaveablePlayer player) {
-        final List<Block> los = player.getLastTwoTargetBlocks(null, 5);
+        final List<Block> los = player.getLastTwoTargetBlocks(Config.transparentBlocks, Config.compassRange);
         if(los.size() == 1) {
             return;
         }
-        final Location location = los.get(1).getRelative(los.get(0).getFace(los.get(1))).getLocation();
-        player.move(Warp.findSafePlace(location));
+        final Block block = los.get(1);
+        if(block.getType().isSolid()) {
+            final Location location = block.getRelative(los.get(0).getFace(block)).getLocation();
+            player.move(Warp.findSafePlace(location));
+        } else {
+            player.sendMessage(Color.ERROR + "No block in range.");
+        }
     }
 
     /**
@@ -314,7 +323,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     }
 
     /**
-     * 
+     *
      * @param player
      * @param location
      */

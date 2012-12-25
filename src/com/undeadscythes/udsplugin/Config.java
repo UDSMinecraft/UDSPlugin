@@ -55,6 +55,7 @@ public final class Config {
     public static List<Kit> kits;
     public static Map<RegionFlag, Boolean> globalFlags;
     public static Map<EntityType, Integer> mobRewards;
+    public static HashSet<Byte> transparentBlocks;
 
     public final static List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
     public final static List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL));
@@ -143,6 +144,12 @@ public final class Config {
         }
         mainWorld = Bukkit.getWorld(config.getString("world-name"));
         minecartTTL = config.getLong("minecart.life") * Timer.SECOND;
+        transparentBlocks = new HashSet<Byte>();
+        for(Material material : Material.values()) {
+            if(material.isBlock() && !material.isSolid()) {
+                transparentBlocks.add((byte)material.getId());
+            }
+        }
     }
 
     /**
