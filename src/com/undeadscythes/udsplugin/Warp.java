@@ -13,7 +13,7 @@ public class Warp implements Saveable {
     /**
      * File name of warp file.
      */
-    public final static String PATH = "warps.csv";
+    public static final String PATH = "warps.csv";
 
     private final String name;
     private final Location location;
@@ -41,16 +41,16 @@ public class Warp implements Saveable {
     public Warp(final String record) {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        location = new SaveableLocation(recordSplit[1]);
+        location = SaveableLocation.parseLocation(recordSplit[1]);
         rank = PlayerRank.getByName(recordSplit[2]);
         price = Integer.parseInt(recordSplit[3]);
     }
 
     @Override
-    public String getRecord() {
+    public final String getRecord() {
         final ArrayList<String> record = new ArrayList<String>();
         record.add(name);
-        record.add(location.toString());
+        record.add(SaveableLocation.getString(location));
         record.add(rank.toString());
         record.add(Integer.toString(price));
         return StringUtils.join(record, "\t");
