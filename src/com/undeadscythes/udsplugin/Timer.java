@@ -86,7 +86,7 @@ public class Timer implements Runnable {
     }
 
     private void slowTask() throws IOException {
-        if(UDSPlugin.getData().getLastEnderDeath() > 0 && UDSPlugin.getData().getLastEnderDeath() + Config.dragonRespawn < now) {
+        if(UDSPlugin.getData().getLastEnderDeath() + Config.dragonRespawn < now) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
                     UDSPlugin.getData().setLastEnderDeath(0);
