@@ -7,21 +7,23 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * When a piston extends.
+ * Event fired a piston extends.
+ * Checks that the piston involved in this event does not push a block across a
+ * region boundary into another region. The correct {@link RegionFlag} will
+ * allow a region to have its boundaries ignored in this particular check.
  * @author UndeadScythes
  */
 public class BlockPistonExtend extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final BlockPistonExtendEvent event) {
+    public final void onEvent(final BlockPistonExtendEvent event) {
         final List<Region> pistonRegions = regionsHere(event.getBlock().getLocation());
-        final List<Block> movingBlocks = new ArrayList<Block>();
-        movingBlocks.addAll(event.getBlocks());
-        if(!movingBlocks.isEmpty()) {
-            movingBlocks.add(movingBlocks.get(movingBlocks.size() - 1).getRelative(event.getDirection()));
+        final List<Block> blocks = new ArrayList<Block>(event.getBlocks());
+        if(!blocks.isEmpty()) {
+            blocks.add(blocks.get(blocks.size() - 1).getRelative(event.getDirection()));
         }
-        for(Block movingBlock : movingBlocks) {
-            final List<Region> movingBlockRegions = regionsHere(movingBlock.getLocation());
-            if(!movingBlockRegions.isEmpty() && crossesBoundary(pistonRegions, movingBlockRegions)) {
+        for(Block block : blocks) {
+            final List<Region> blockRegions = regionsHere(block.getLocation());
+            if(!blockRegions.isEmpty() && crossesBoundary(pistonRegions, blockRegions)) {
                 event.setCancelled(true);
                 return;
             }

@@ -46,11 +46,15 @@ public enum RegionFlag {
     /**
      * Dispensers have infinite items.
      */
-    DISPENSER(false);
+    DISPENSER(false),
+    /**
+     * Allows pistons to ignore this regions boundaries.
+     */
+    PISTON(false);
 
     private boolean defaulted;
 
-    RegionFlag(final boolean defaulted) {
+    private RegionFlag(final boolean defaulted) {
         this.defaulted = defaulted;
     }
 

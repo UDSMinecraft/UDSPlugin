@@ -175,22 +175,18 @@ public class ListenerWrapper {
     }
 
     /**
-     *
+     * Used for pistons.
      * @param regionsA
      * @param regionsB
      * @return
      */
-    public boolean crossesBoundary(final List<Region> regionsA, final List<Region> regionsB) {
-        if(regionsA.isEmpty() && !regionsB.isEmpty()) {
-            return true;
-        }
-        if(!regionsA.isEmpty() && regionsB.isEmpty()) {
-            return true;
-        }
+    public final boolean crossesBoundary(final List<Region> regionsA, final List<Region> regionsB) {
         for(Region regionA : regionsA) {
-            for(Region regionB : regionsB) {
-                if(!regionA.equals(regionB)) {
-                    return true;
+            if(!regionA.hasFlag(RegionFlag.PISTON)) {
+                for(Region regionB : regionsB) {
+                    if(!regionB.hasFlag(RegionFlag.PISTON) && !regionA.equals(regionB)) {
+                        return true;
+                    }
                 }
             }
         }

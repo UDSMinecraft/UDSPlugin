@@ -12,11 +12,13 @@ import org.bukkit.event.block.*;
  */
 public class BlockPistonRetract extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final BlockPistonRetractEvent event) {
+    public final void onEvent(final BlockPistonRetractEvent event) {
         if(event.isSticky()) {
             final List<Region> blockRegions = regionsHere(event.getRetractLocation());
+            Bukkit.broadcastMessage(blockRegions.size() + " block regions");
             if(!blockRegions.isEmpty()) {
                 final List<Region> pistonRegions = regionsHere(event.getBlock().getLocation());
+                Bukkit.broadcastMessage(pistonRegions.size() + " piston regions");
                 if(pistonRegions.isEmpty() || crossesBoundary(pistonRegions, blockRegions)) {
                     switch(event.getDirection()) {
                         case DOWN:
@@ -40,6 +42,7 @@ public class BlockPistonRetract extends ListenerWrapper implements Listener {
                     }
                     event.getBlock().getRelative(event.getDirection()).setTypeId(0);
                     event.setCancelled(true);
+                    Bukkit.broadcastMessage("retract cancelled");
                 }
             }
         }
