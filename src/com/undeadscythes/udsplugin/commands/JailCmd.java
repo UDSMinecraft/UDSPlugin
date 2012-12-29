@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
  * Jail a player.
  * @author UndeadScythes
  */
-public class JailCmd extends AbstractPlayerCommand {
+public class JailCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

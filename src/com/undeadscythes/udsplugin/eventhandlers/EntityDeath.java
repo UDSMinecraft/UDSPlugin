@@ -14,7 +14,7 @@ import org.bukkit.event.entity.*;
  */
 public class EntityDeath extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final EntityDeathEvent event) {
+    public final void onEvent(final EntityDeathEvent event) {
         final Entity victim = event.getEntity();
         final EntityDamageEvent damageEvent = victim.getLastDamageCause();
         if(damageEvent instanceof EntityDamageByEntityEvent) {
@@ -37,10 +37,10 @@ public class EntityDeath extends ListenerWrapper implements Listener {
     private void payReward(final SaveablePlayer player, final Entity victim) {
         if(player.getGameMode() == GameMode.SURVIVAL && !player.hasGodMode()) {
             final Random generator = new Random();
-            final int standard = (Config.mobRewards.get(victim.getType()) / 2) + 1;
+            final int standard = (UDSPlugin.getMobRewards().get(victim.getType()) / 2) + 1;
             final int reward = generator.nextInt(standard) + standard;
             player.credit(reward);
-            player.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? Config.currency : Config.currencies) + ".");
+            player.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
         }
     }
 
@@ -58,12 +58,12 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             }
         }
         if(!killers.isEmpty()) {
-            final int split = ((Config.mobRewards.get(EntityType.ENDER_DRAGON) / killers.size()) / 2) + 1;
+            final int split = ((UDSPlugin.getMobRewards().get(EntityType.ENDER_DRAGON) / killers.size()) / 2) + 1;
             final Random generator = new Random();
             for(SaveablePlayer endKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 endKiller.credit(reward);
-                endKiller.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? Config.currency : Config.currencies) + ".");
+                endKiller.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
             }
         }
     }
@@ -81,12 +81,12 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             }
         }
         if(!killers.isEmpty()) {
-            final int split = ((Config.mobRewards.get(EntityType.WITHER) / killers.size()) / 2) + 1;
+            final int split = ((UDSPlugin.getMobRewards().get(EntityType.WITHER) / killers.size()) / 2) + 1;
             final Random generator = new Random();
             for(SaveablePlayer witherKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 witherKiller.credit(reward);
-                witherKiller.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? Config.currency : Config.currencies) + ".");
+                witherKiller.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
             }
         }
     }

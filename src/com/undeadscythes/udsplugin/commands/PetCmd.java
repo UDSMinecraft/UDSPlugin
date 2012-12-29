@@ -8,9 +8,9 @@ import org.bukkit.entity.*;
  * Perform actions with pets.
  * @author UndeadScythes
  */
-public class PetCmd extends AbstractPlayerCommand {
+public class PetCmd extends CommandWrapper {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
         UUID pet;
         int price;
@@ -29,7 +29,7 @@ public class PetCmd extends AbstractPlayerCommand {
         } else if(numArgsHelp(3) && args[0].equals("sell") && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && getSelectedPet() != null && (price = parseInt(args[2])) != -1) {
             UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.PET, price, target));
             player.sendMessage(Message.REQUEST_SENT);
-            target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell their pet to you for " + price + " " + Config.currencies + ".");
+            target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell their pet to you for " + price + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
             target.sendMessage(Message.REQUEST_Y_N);
         }
     }

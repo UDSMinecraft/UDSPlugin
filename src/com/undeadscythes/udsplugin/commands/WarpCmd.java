@@ -8,7 +8,7 @@ import org.apache.commons.lang.*;
  * Use warp points.
  * @author UndeadScythes
  */
-public class WarpCmd extends AbstractPlayerCommand {
+public class WarpCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Warp warp;

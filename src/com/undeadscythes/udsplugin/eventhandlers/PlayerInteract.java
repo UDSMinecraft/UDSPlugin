@@ -76,7 +76,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
                 powertool(player);
                 event.setCancelled(true);
-            } else if(inHand == Material.MINECART && Config.RAILS.contains(block.getType())) {
+            } else if(inHand == Material.MINECART && UDSPlugin.getRails().contains(block.getType())) {
                 minecart(player, block.getLocation());
                 player.setItemInHand(new ItemStack(Material.AIR));
                 event.setCancelled(true);
@@ -173,7 +173,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player Player using compass.
      */
     private void compassTo(final SaveablePlayer player) {
-        final Block block = player.getTargetBlock(Config.transparentBlocks, Config.compassRange);
+        final Block block = player.getTargetBlock(UDSPlugin.getTransparentBlocks(), UDSPlugin.getConfigInt(ConfigRef.COMPASS_RANGE));
         if(block.getType().isSolid()) {
             player.move(Warp.findSafePlace(block.getLocation()));
         } else {
@@ -186,7 +186,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param player
      */
     private void compassThru(final SaveablePlayer player) {
-        final List<Block> los = player.getLastTwoTargetBlocks(Config.transparentBlocks, Config.compassRange);
+        final List<Block> los = player.getLastTwoTargetBlocks(UDSPlugin.getTransparentBlocks(), UDSPlugin.getConfigInt(ConfigRef.COMPASS_RANGE));
         if(los.size() == 1) {
             return;
         }

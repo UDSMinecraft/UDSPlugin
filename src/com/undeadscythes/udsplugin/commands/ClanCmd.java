@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
  * Various clan related commands.
  * @author UndeadScythes
  */
-public class ClanCmd extends AbstractPlayerCommand {
+public class ClanCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Clan clan;
@@ -82,8 +82,8 @@ public class ClanCmd extends AbstractPlayerCommand {
         } else if(numArgsHelp(2)) {
             int page;
             if(args[0].equals("new")) {
-                if(isClanless() && canAfford(Config.clanCost) && noCensor(args[1]) && notClan(args[1])) {
-                    player.debit(Config.clanCost);
+                if(isClanless() && canAfford(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST)) && noCensor(args[1]) && notClan(args[1])) {
+                    player.debit(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST));
                     clan = new Clan(args[1], player);
                     player.setClan(clan);
                     UDSPlugin.getClans().put(args[1], clan);
@@ -131,8 +131,8 @@ public class ClanCmd extends AbstractPlayerCommand {
                     player.sendMessage(Color.ITEM + "KDR: " + Color.TEXT + decimalFormat.format(clan.getRatio()));
                 }
             } else if(args[0].equals("rename")) {
-                if((clan = getClan()) != null && isLeader(clan) && noCensor(args[1]) && notClan(args[1]) && canAfford(Config.clanCost)) {
-                    player.debit(Config.clanCost);
+                if((clan = getClan()) != null && isLeader(clan) && noCensor(args[1]) && notClan(args[1]) && canAfford(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST))) {
+                    player.debit(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST));
                     UDSPlugin.getClans().remove(clan.getName());
                     if((base = UDSPlugin.getBases().remove(clan.getName() + "base")) != null) {
                         UDSPlugin.getRegions().remove(clan.getName() + "base");
@@ -157,12 +157,12 @@ public class ClanCmd extends AbstractPlayerCommand {
             } else if(args[0].equals("base")) {
                 if((clan = getClan()) != null && isLeader(clan)) {
                     if(args[1].equals("make")) {
-                        if(noBase(clan) && canAfford(Config.baseCost)) {
+                        if(noBase(clan) && canAfford(UDSPlugin.getConfigInt(ConfigRef.BASE_COST))) {
                             final Vector min = player.getLocation().add(-25, 0, -25).toVector().setY(20);
                             final Vector max = player.getLocation().add(25, 0, 25).toVector().setY(220);
                             base = new Region(clan.getName() + "base", min, max, player.getLocation(), null, "", RegionType.BASE);
                             if(noOverlaps(base)) {
-                                player.debit(Config.baseCost);
+                                player.debit(UDSPlugin.getConfigInt(ConfigRef.BASE_COST));
                                 UDSPlugin.getRegions().put(base.getName(), base);
                                 UDSPlugin.getBases().put(base.getName(), base);
                                 base.placeMoreMarkers();

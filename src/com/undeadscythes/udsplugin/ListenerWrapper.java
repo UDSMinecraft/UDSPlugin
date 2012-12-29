@@ -22,7 +22,7 @@ public class ListenerWrapper {
         if(item.contains(":")) {
             final String itemName = item.split(":")[0];
             Material material;
-            if(itemName.matches(Config.INT_REGEX)) {
+            if(itemName.matches(UDSPlugin.INT_REGEX)) {
                 material = Material.getMaterial(Integer.parseInt(itemName));
             } else {
                 material = Material.matchMaterial(itemName);
@@ -34,7 +34,7 @@ public class ListenerWrapper {
             }
         } else {
             Material material;
-            if(item.matches(Config.INT_REGEX)) {
+            if(item.matches(UDSPlugin.INT_REGEX)) {
                 material = Material.getMaterial(Integer.parseInt(item));
             } else {
                 material = Material.matchMaterial(item);
@@ -115,7 +115,7 @@ public class ListenerWrapper {
                 }
             }
         }
-        return inRegion ? false : Config.globalFlags.get(flag);
+        return inRegion ? false : UDSPlugin.getGlobalFlags().get(flag);
     }
 
     /**

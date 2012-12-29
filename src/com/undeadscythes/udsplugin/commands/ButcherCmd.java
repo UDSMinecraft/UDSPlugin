@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
  * Remove all monsters around the player.
  * @author UndeadScythes
  */
-public class ButcherCmd extends AbstractPlayerCommand {
+public class ButcherCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(maxArgsHelp(1)) {
@@ -17,7 +17,7 @@ public class ButcherCmd extends AbstractPlayerCommand {
             }
             int count = 0;
             for(LivingEntity entity : player.getWorld().getLivingEntities()) {
-                if(!(entity instanceof Player) && entity.getLocation().distanceSquared(player.getLocation()) < Config.butcherRange) {
+                if(!(entity instanceof Player) && entity.getLocation().distanceSquared(player.getLocation()) < UDSPlugin.getConfigIntSq(ConfigRef.BUTCHER_RANGE)) {
                     if((entity instanceof Wolf) && !all) {
                         if(((Wolf)entity).isAngry()) {
                             entity.remove();

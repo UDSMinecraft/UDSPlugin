@@ -1,8 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
@@ -24,12 +24,12 @@ public class PlayerJoin implements Listener {
             player = new SaveablePlayer(event.getPlayer());
             UDSPlugin.getPlayers().put(playerName, player);
             UDSPlugin.getOnlinePlayers().put(playerName, player);
-            if(player.getName().equals(Config.serverOwner)) {
+            if(player.getName().equals(UDSPlugin.getConfigString(ConfigRef.SERVER_OWNER))) {
                 player.setRank(PlayerRank.OWNER);
                 player.sendMessage(ChatColor.GOLD + "Welcome to your new server, I hope everything goes well.");
             } else {
                 Bukkit.broadcastMessage(Color.BROADCAST + "A new player, free gifts for everyone!");
-                final ItemStack gift = new ItemStack(Config.welcomeGift);
+                final ItemStack gift = new ItemStack(UDSPlugin.getConfigMaterial(ConfigRef.WELCOME_GIFT));
                 for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
                     onlinePlayer.giveAndDrop(gift);
                 }
@@ -39,11 +39,11 @@ public class PlayerJoin implements Listener {
         if(UDSPlugin.isLockedDown() && !player.hasLockdownPass()) {
             player.kickPlayer("The server is currently in lockdown please check back later.");
         } else {
-            player.sendMessage(Color.MESSAGE + Config.welcome);
+            player.sendMessage(Color.MESSAGE + UDSPlugin.getConfigString(ConfigRef.WELCOME_MSG));
             if(player.getRank().equals(PlayerRank.DEFAULT)) {
-                player.sendMessage(Color.MESSAGE + "Kill monsters or trade with players to earn " + Config.buildCost + " credits then type /acceptrules in chat.");
+                player.sendMessage(Color.MESSAGE + "Kill monsters or trade with players to earn " + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " credits then type /acceptrules in chat.");
             } else if(player.getRank().compareTo(PlayerRank.MOD) >= 0) {
-                player.sendMessage(Config.welcomeAdmin);
+                player.sendMessage(UDSPlugin.getConfigString(ConfigRef.WELCOME_ADMIN));
             }
             event.setJoinMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
         }

@@ -1,14 +1,15 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 
 /**
  * Place and check bounties on players.
  * @author UndeadScythes
  */
-public class BountyCmd extends AbstractPlayerCommand {
+public class BountyCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         int bounty;
@@ -52,7 +53,7 @@ public class BountyCmd extends AbstractPlayerCommand {
             int skipped = 1;
             for(SaveablePlayer bounty : bounties) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + "- " + bounty.getNick() + "'s reward: " + Color.TEXT + bounty.getBounty() + " " + Config.currencies);
+                    player.sendMessage(Color.ITEM + "- " + bounty.getNick() + "'s reward: " + Color.TEXT + bounty.getBounty() + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                     posted++;
                 } else {
                     skipped++;

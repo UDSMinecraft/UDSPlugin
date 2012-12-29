@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
  * Send an action.
  * @author UndeadScythes
  */
-public class MeCmd extends AbstractPlayerCommand {
+public class MeCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         final String action = StringUtils.join(args, " ");

@@ -7,7 +7,7 @@ import org.bukkit.enchantments.*;
  * Enchant an item.
  * @author UndeadScythes
  */
-public class EnchantCmd extends AbstractPlayerCommand {
+public class EnchantCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         int level;

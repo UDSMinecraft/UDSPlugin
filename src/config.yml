@@ -78,7 +78,7 @@ mob-rewards:
   snowman: 0
   iron_golem: 0
   magma_cube: 125
-  slime: 180
+  slime: 50
   ghast: 200
   ender_dragon: 10000
   witch: 500

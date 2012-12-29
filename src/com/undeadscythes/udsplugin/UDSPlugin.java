@@ -3,11 +3,16 @@ package com.undeadscythes.udsplugin;
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
 import java.io.*;
+import java.util.*;
 import java.util.logging.*;
+import org.apache.commons.lang.*;
 import org.bukkit.*;
+import org.bukkit.configuration.file.*;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 import org.bukkit.material.*;
 import org.bukkit.plugin.java.*;
+import org.bukkit.util.Vector;
 
 /**
  * The main plugin. The heart of UDSPlugin.
@@ -15,9 +20,20 @@ import org.bukkit.plugin.java.*;
  */
 public class UDSPlugin extends JavaPlugin {
     public static final int BUILD_LIMIT = 255;
-    public static final File BLOCKS_PATH = new File("plugins/UDSPlugin/blocks");
-
+    public static final String INT_REGEX = "[0-9][0-9]*";
+    private static final Vector HALF_BLOCK = new Vector(.5, .5, .5);
+    private static final File BLOCKS_PATH = new File("plugins/UDSPlugin/blocks");
     private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
+    private static final HashSet<Byte> TRANSPARENT_BLOCKS = new HashSet<Byte>();
+    private static final List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
+    private static final List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL));
+    private static final List<Material> VIP_WHITELIST = new ArrayList<Material>();
+    private static final List<EntityType> HOSTILE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.ENDER_DRAGON, EntityType.GHAST, EntityType.MAGMA_CUBE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.WITCH, EntityType.WITHER, EntityType.ZOMBIE));
+    private static final List<EntityType> PASSIVE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.SHEEP, EntityType.SQUID, EntityType.VILLAGER));
+    private static final List<EntityType> NEUTRAL_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.IRON_GOLEM, EntityType.PIG_ZOMBIE, EntityType.SNOWMAN, EntityType.WOLF));
+    private static final List<Kit> KITS = new ArrayList<Kit>();
+    private static final Map<EntityType, Integer> MOB_REWARDS = new HashMap<EntityType, Integer>();
+    private static final Map<RegionFlag, Boolean> GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
     private static final SaveableHashMap CLANS = new SaveableHashMap();
     private static final SaveableHashMap PLAYERS = new SaveableHashMap();
     private static final SaveableHashMap REGIONS = new SaveableHashMap();
@@ -34,27 +50,34 @@ public class UDSPlugin extends JavaPlugin {
     private static final MatchableHashMap<SaveablePlayer> ONLINE_PLAYERS = new MatchableHashMap<SaveablePlayer>();
     private static final MatchableHashMap<SaveablePlayer> VIPS = new MatchableHashMap<SaveablePlayer>();
 
+    private static UDSPlugin plugin;
     private static Timer timer;
     private static Data data;
     private static boolean serverLockedDown = false;
 
-
     /**
      * Used for testing in NetBeans. Woo! NetBeans!
-     * @param args
+     * @param args Blah.
      */
     public static void main(final String[] args) {}
 
     @Override
-    public void onEnable() {
+    public final void onEnable() {
+        UDSPlugin.plugin = this;
         if(DATA_PATH.mkdirs()) {
             getLogger().info("Created data directory tree.");
         }
         if(BLOCKS_PATH.mkdirs()) {
             getLogger().info("Created blocks directory tree.");
         }
-        Config.loadConfig(this);
-        Config.updateConfig();
+        saveDefaultConfig();
+        loadConfig();
+        UDSPlugin.TRANSPARENT_BLOCKS.clear();
+        for(Material material : Material.values()) {
+            if(material.isBlock() && !material.isSolid()) {
+                TRANSPARENT_BLOCKS.add((byte)material.getId());
+            }
+        }
         getLogger().info("Config loaded.");
         data = new Data(this);
         data.reloadData();
@@ -67,11 +90,11 @@ public class UDSPlugin extends JavaPlugin {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            timer = new Timer();
+            UDSPlugin.timer = new Timer();
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, timer, 100, 100);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, UDSPlugin.timer, 100, 100);
         getLogger().info("Timer started.");
         setCommandExecutors();
         getLogger().info("Commands registered.");
@@ -88,7 +111,7 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
+    public final void onDisable() {
         try {
             saveFiles();
             final String message = (CLANS.size() + REGIONS.size() + WARPS.size() + PLAYERS.size()) + " clans, regions, warps and players saved.";
@@ -98,6 +121,41 @@ public class UDSPlugin extends JavaPlugin {
         }
         final String message = getName() + " disabled.";
         getLogger().info(message);
+    }
+
+    public static final void reloadConf() {
+        plugin.reloadConfig();
+        plugin.loadConfig();
+    }
+
+    public final void loadConfig() {
+        final FileConfiguration config = getConfig();
+        UDSPlugin.VIP_WHITELIST.clear();
+        for(int typeId : config.getIntegerList(ConfigRef.VIP_WHITELIST.getReference())) {
+            UDSPlugin.VIP_WHITELIST.add(Material.getMaterial(typeId));
+        }
+        UDSPlugin.KITS.clear();
+        for(String kit : config.getStringList(ConfigRef.KITS.getReference())) {
+            final String[] kitSplit = kit.split(",");
+            final List<ItemStack> items = new ArrayList<ItemStack>();
+            for(Object item : ArrayUtils.subarray(kitSplit, 3, kitSplit.length -1)) {
+                items.add(new ItemStack(Material.getMaterial(Integer.parseInt((String)item))));
+            }
+            KITS.add(new Kit(kitSplit[0], Integer.parseInt(kitSplit[1]), items, PlayerRank.getByName(kitSplit[2])));
+        }
+        UDSPlugin.MOB_REWARDS.clear();
+        for(EntityType entityType : EntityType.values()) {
+            String entityName = ConfigRef.MOB_REWARDS.getReference() + "." + entityType.getName();
+            if(entityName != null) {
+                entityName = entityName.toLowerCase();
+                MOB_REWARDS.put(entityType, config.getInt(entityName));
+            }
+        }
+        UDSPlugin.GLOBAL_FLAGS.clear();
+        for(RegionFlag flag : RegionFlag.values()) {
+            final String flagname = ConfigRef.GLOBAL_FLAGS.getReference() + "." + flag.toString().toLowerCase();
+            GLOBAL_FLAGS.put(flag, config.getBoolean(flagname));
+        }
     }
 
     /**
@@ -394,7 +452,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the chat rooms map.
      * @return Chat rooms map.
      */
-    static public MatchableHashMap<ChatRoom> getChatRooms() {
+    public static MatchableHashMap<ChatRoom> getChatRooms() {
         return CHAT_ROOMS;
     }
 
@@ -402,7 +460,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the clans map.
      * @return Clans map.
      */
-    static public MatchableHashMap<Clan> getClans() {
+    public static MatchableHashMap<Clan> getClans() {
         return CLANS.toMatchableHashMap(Clan.class);
     }
 
@@ -410,7 +468,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the players map.
      * @return Players map.
      */
-    static public MatchableHashMap<SaveablePlayer> getPlayers() {
+    public static MatchableHashMap<SaveablePlayer> getPlayers() {
         return PLAYERS.toMatchableHashMap(SaveablePlayer.class);
     }
 
@@ -418,7 +476,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the regions map.
      * @return Regions map.
      */
-    static public MatchableHashMap<Region> getRegions() {
+    public static MatchableHashMap<Region> getRegions() {
         return REGIONS.toMatchableHashMap(Region.class);
     }
 
@@ -426,7 +484,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the requests map.
      * @return Requests map.
      */
-    static public MatchableHashMap<Request> getRequests() {
+    public static MatchableHashMap<Request> getRequests() {
         return REQUESTS;
     }
 
@@ -434,7 +492,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the sessions map.
      * @return Sessions map.
      */
-    static public MatchableHashMap<Session> getSessions() {
+    public static MatchableHashMap<Session> getSessions() {
         return SESSIONS;
     }
 
@@ -442,7 +500,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the warps map.
      * @return Warps map.
      */
-    static public MatchableHashMap<Warp> getWarps() {
+    public static MatchableHashMap<Warp> getWarps() {
         return WARPS.toMatchableHashMap(Warp.class);
     }
 
@@ -450,7 +508,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the quarries map.
      * @return Quarries map.
      */
-    static public MatchableHashMap<Region> getQuarries() {
+    public static MatchableHashMap<Region> getQuarries() {
         return QUARRIES;
     }
 
@@ -458,7 +516,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the homes map.
      * @return Homes map.
      */
-    static public MatchableHashMap<Region> getHomes() {
+    public static MatchableHashMap<Region> getHomes() {
         return HOMES;
     }
 
@@ -466,7 +524,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the shops map.
      * @return Shops map.
      */
-    static public MatchableHashMap<Region> getShops() {
+    public static MatchableHashMap<Region> getShops() {
         return SHOPS;
     }
 
@@ -474,7 +532,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the bases map.
      * @return Bases map.
      */
-    static public MatchableHashMap<Region> getBases() {
+    public static MatchableHashMap<Region> getBases() {
         return BASES;
     }
 
@@ -482,7 +540,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the cities map.
      * @return Cities map.
      */
-    static public MatchableHashMap<Region> getCities() {
+    public static MatchableHashMap<Region> getCities() {
         return CITIES;
     }
 
@@ -490,7 +548,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the cities map.
      * @return Cities map.
      */
-    static public MatchableHashMap<Region> getArenas() {
+    public static MatchableHashMap<Region> getArenas() {
         return ARENAS;
     }
 
@@ -498,7 +556,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the VIPs map.
      * @return VIPs map.
      */
-    static public MatchableHashMap<SaveablePlayer> getVIPS() {
+    public static MatchableHashMap<SaveablePlayer> getVIPS() {
         return VIPS;
     }
 
@@ -506,7 +564,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the online players map.
      * @return Online players map.
      */
-    static public MatchableHashMap<SaveablePlayer> getOnlinePlayers() {
+    public static MatchableHashMap<SaveablePlayer> getOnlinePlayers() {
         return ONLINE_PLAYERS;
     }
 
@@ -514,15 +572,91 @@ public class UDSPlugin extends JavaPlugin {
      *
      * @return
      */
-    static public Data getData() {
+    public static Data getData() {
         return data;
     }
 
-    static public void toggleLockdown() {
+    public static void toggleLockdown() {
         serverLockedDown ^= true;
     }
 
-    static public boolean isLockedDown() {
+    public static boolean isLockedDown() {
         return serverLockedDown;
+    }
+
+    public static boolean getConfigBool(final ConfigRef ref) {
+        return plugin.getConfig().getBoolean(ref.getReference());
+    }
+
+    public static byte getConfigByte(final ConfigRef ref) {
+        return (byte)plugin.getConfig().getInt(ref.getReference());
+    }
+
+    public static int getConfigInt(final ConfigRef ref) {
+        return plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier();
+    }
+
+    public static int getConfigIntSq(final ConfigRef ref) {
+        return (int)Math.pow(plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier(), 2);
+    }
+
+    public static long getConfigLong(final ConfigRef ref) {
+        return plugin.getConfig().getLong(ref.getReference()) * ref.getMultiplier();
+    }
+
+    public static String getConfigString(final ConfigRef ref) {
+        return plugin.getConfig().getString(ref.getReference());
+    }
+
+    public static List<String> getConfigStringList(final ConfigRef ref) {
+        return plugin.getConfig().getStringList(ref.getReference());
+    }
+
+    public static Material getConfigMaterial(final ConfigRef ref) {
+        return Material.getMaterial(plugin.getConfig().getString(ref.getReference()));
+    }
+
+    public static File getBlocksPath() {
+        return BLOCKS_PATH;
+    }
+
+    public static Vector getHalfBlock() {
+        return HALF_BLOCK;
+    }
+
+    public static Map<RegionFlag, Boolean> getGlobalFlags() {
+        return GLOBAL_FLAGS;
+    }
+
+    public static List<Material> getVipWhitelist() {
+        return VIP_WHITELIST;
+    }
+
+    public static Map<EntityType, Integer> getMobRewards() {
+        return MOB_REWARDS;
+    }
+
+    public static List<Kit> getKits() {
+        return KITS;
+    }
+
+    public static List<Material> getRails() {
+        return RAILS;
+    }
+
+    public static List<Material> getWater() {
+        return WATER;
+    }
+
+    public static List<EntityType> getHostileMobs() {
+        return HOSTILE_MOBS;
+    }
+
+    public static List<EntityType> getPassiveMobs() {
+        return PASSIVE_MOBS;
+    }
+
+    public static HashSet<Byte> getTransparentBlocks() {
+        return TRANSPARENT_BLOCKS;
     }
 }

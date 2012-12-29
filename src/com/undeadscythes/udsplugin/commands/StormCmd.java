@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Start a storm in the world.
  * @author UndeadScythes
  */
-public class StormCmd extends AbstractPlayerCommand {
+public class StormCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         int duration;

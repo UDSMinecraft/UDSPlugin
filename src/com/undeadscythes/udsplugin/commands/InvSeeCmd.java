@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Spy a players inventory.
  * @author UndeadScythes
  */
-public class InvSeeCmd extends AbstractPlayerCommand {
+public class InvSeeCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Lets a player 'sit' on stair blocks.
  * @author UndeadScythes
  */
-public class SitCmd extends AbstractPlayerCommand {
+public class SitCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         player.sendMessage(Color.ERROR + "Sorry, you can't sit on blocks at the moment.");

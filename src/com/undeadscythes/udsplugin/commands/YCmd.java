@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
  * Accept a request sent by another player.
  * @author UndeadScythes
  */
-public class YCmd extends AbstractPlayerCommand {
+public class YCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Request request;

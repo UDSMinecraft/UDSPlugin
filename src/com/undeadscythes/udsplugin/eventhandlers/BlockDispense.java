@@ -1,7 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
@@ -9,8 +8,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.material.Dispenser;
-import org.bukkit.potion.*;
-import org.bukkit.util.Vector;
+import org.bukkit.util.*;
 
 /**
  * A block dispenses an item.
@@ -48,12 +46,12 @@ public class BlockDispense extends ListenerWrapper implements Listener {
                     firework.setFireworkMeta((FireworkMeta)(event.getItem().getItemMeta()));
                     break;
                 case MINECART:
-                    if(Config.RAILS.contains(location.getBlock().getType())) {
+                    if(UDSPlugin.getRails().contains(location.getBlock().getType())) {
                         fireEntity(location, EntityType.MINECART, new Vector(0, 0, 0));
                     }
                     break;
                 case BOAT:
-                    if(Config.WATER.contains(location.getBlock().getRelative(BlockFace.DOWN).getType())) {
+                    if(UDSPlugin.getWater().contains(location.getBlock().getRelative(BlockFace.DOWN).getType())) {
                         fireEntity(location, EntityType.BOAT, new Vector(0, 0, 0));
                     }
                     break;

@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Delete a warp point.
  * @author UndeadScythes
  */
-public class DelWarpCmd extends AbstractPlayerCommand {
+public class DelWarpCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Warp warp;

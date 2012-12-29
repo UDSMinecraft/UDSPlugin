@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Pay bail to get out of prison early.
  * @author UndeadScythes
  */
-public class PayBailCmd extends AbstractPlayerCommand {
+public class PayBailCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(isJailed() && canAfford(player.getBail())) {

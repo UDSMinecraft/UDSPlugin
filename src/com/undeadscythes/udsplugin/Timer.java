@@ -51,7 +51,7 @@ public class Timer implements Runnable {
             dailyTask();
             UDSPlugin.getData().setLastDaily();
         }
-        if(lastSlow + Config.slowTime < now) {
+        if(lastSlow + UDSPlugin.getConfigLong(ConfigRef.SLOW_TIME) < now) {
             try {
                 slowTask();
             } catch (IOException ex) {
@@ -78,7 +78,7 @@ public class Timer implements Runnable {
         }
         Bukkit.broadcastMessage(Color.BROADCAST + "The quarries have been refilled.");
         for(SaveablePlayer vip : UDSPlugin.getVIPS().values()) {
-            vip.setVIPSpawns(Config.vipSpawns);
+            vip.setVIPSpawns(UDSPlugin.getConfigInt(ConfigRef.VIP_SPAWNS));
             if(vip.isOnline()) {
                 vip.sendMessage(Color.MESSAGE + "Your daily item spawns have been refilled.");
             }
@@ -86,7 +86,7 @@ public class Timer implements Runnable {
     }
 
     private void slowTask() throws IOException {
-        if(UDSPlugin.getData().getLastEnderDeath() + Config.dragonRespawn < now) {
+        if(UDSPlugin.getData().getLastEnderDeath() + UDSPlugin.getConfigLong(ConfigRef.DRAGON_RESPAWN) < now) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
                     UDSPlugin.getData().setLastEnderDeath(0);
@@ -100,7 +100,7 @@ public class Timer implements Runnable {
 
     private void fastTask() {
         for(SaveablePlayer player : UDSPlugin.getOnlinePlayers().values()) {
-            if(player.getRank().equals(PlayerRank.VIP) && player.getVIPTime() + Config.vipTime < now) {
+            if(player.getRank().equals(PlayerRank.VIP) && player.getVIPTime() + UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) < now) {
                 player.setVIPTime(0);
                 player.setRank(PlayerRank.MEMBER);
                 player.sendMessage(Color.MESSAGE + "Your time as a VIP has come to an end.");
@@ -113,15 +113,15 @@ public class Timer implements Runnable {
                 player.setFoodLevel(20);
             }
             final int distanceSq = Math.abs((int)Math.pow(player.getLocation().getBlockX(), 2) + (int)Math.pow(player.getLocation().getBlockZ(), 2));
-            if(distanceSq - Config.worldBorderSq > 100) {
-                final double ratio = Config.worldBorderSq / distanceSq;
+            if(distanceSq - UDSPlugin.getConfigIntSq(ConfigRef.WORLD_BORDER) > 100) {
+                final double ratio = UDSPlugin.getConfigIntSq(ConfigRef.WORLD_BORDER) / distanceSq;
                 player.move(Warp.findSafePlace(player.getLocation().clone().multiply(ratio)));
                 player.sendMessage(Color.MESSAGE + "You have reached the edge of the currently explorable world.");
             }
 
         }
         for(Request request : UDSPlugin.getRequests().values()) {
-            if(request.getTime() + Config.requestTTL < now) {
+            if(request.getTime() + UDSPlugin.getConfigLong(ConfigRef.REQUEST_TTL) < now) {
                 request.getSender().sendMessage(Color.MESSAGE + "Your request has timed out.");
                 UDSPlugin.getRequests().remove(request.getRecipient().getName());
             }

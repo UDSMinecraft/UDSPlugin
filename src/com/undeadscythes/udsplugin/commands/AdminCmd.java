@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Allows players to use /admin help.
  * @author UndeadScythes
  */
-public class AdminCmd extends AbstractPlayerCommand {
+public class AdminCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(args.length == 0) {

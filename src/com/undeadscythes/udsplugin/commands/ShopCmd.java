@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Shop related commands.
  * @author UndeadScythes
  */
-public class ShopCmd extends AbstractPlayerCommand {
+public class ShopCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Region shop;
@@ -29,7 +29,7 @@ public class ShopCmd extends AbstractPlayerCommand {
                     shop.clearMembers();
                     shop.changeOwner(null);
                     player.sendMessage(Color.MESSAGE + "Shop put back up for sale.");
-                    player.credit(Config.shopCost / 2);
+                    player.credit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) / 2);
                 }
             } else if(args[0].equals("set")) {
                 if((shop = getShop()) != null) {
@@ -60,8 +60,8 @@ public class ShopCmd extends AbstractPlayerCommand {
                     }
                 }
             } else if(args[0].equals("buy")) {
-                if((shop = getContainingShop()) != null && canAfford(Config.shopCost) && isEmptyShop(shop)) {
-                    player.debit(Config.shopCost);
+                if((shop = getContainingShop()) != null && canAfford(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST)) && isEmptyShop(shop)) {
+                    player.debit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST));
                     UDSPlugin.getRegions().replace(shop.getName(), player.getName() + "shop", shop);
                     UDSPlugin.getShops().replace(shop.getName(), player.getName() + "shop", shop);
                     shop.changeName(player.getName() + "shop");
@@ -107,7 +107,7 @@ public class ShopCmd extends AbstractPlayerCommand {
             if(args[0].equals("shop")) {
                 if((getShop()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
-                    target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their shop for " + price + " " + Config.currencies + ".");
+                    target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their shop for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                     UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.SHOP, price, target));
                 }

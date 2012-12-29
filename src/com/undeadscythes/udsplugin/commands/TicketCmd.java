@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Toggles the admin chat channel.
  * @author UndeadScythes
  */
-public class TicketCmd extends AbstractPlayerCommand {
+public class TicketCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         player.sendMessage(Color.MESSAGE + "Please post issues to:");

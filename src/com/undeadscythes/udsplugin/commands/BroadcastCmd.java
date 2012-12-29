@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
  * Broadcast a server wide message.
  * @author UndeadScythes
  */
-public class BroadcastCmd extends AbstractPlayerCommand {
+public class BroadcastCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(minArgsHelp(1)) {

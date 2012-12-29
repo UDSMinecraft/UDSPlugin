@@ -9,9 +9,9 @@ import org.bukkit.*;
  * Server related commands.
  * @author UndeadScythes
  */
-public class ServerCmd extends AbstractPlayerCommand {
+public class ServerCmd extends CommandWrapper {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(numArgsHelp(1)) {
             if(args[0].equals("stop")) {
                 for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
@@ -19,7 +19,7 @@ public class ServerCmd extends AbstractPlayerCommand {
                 }
                 Bukkit.shutdown();
             } else if(args[0].equals("reload")) {
-                Config.reload();
+                UDSPlugin.reloadConf();
                 player.sendMessage(Color.MESSAGE + "Configuration file reloaded.");
             } else {
                 subCmdHelp();

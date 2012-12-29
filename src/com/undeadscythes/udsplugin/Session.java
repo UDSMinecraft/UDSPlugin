@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin;
 
-import java.util.Stack;
-import org.bukkit.World;
+import java.util.*;
+import org.bukkit.*;
 import org.bukkit.util.Vector;
 
 /**
@@ -134,7 +134,7 @@ public class Session {
      */
     public final boolean save(final Cuboid blocks) {
         history.push(blocks);
-        if(history.size() > Config.undoCount) {
+        if(history.size() > UDSPlugin.getConfigInt(ConfigRef.UNDO_COUNT)) {
             history.remove(0);
             return true;
         }

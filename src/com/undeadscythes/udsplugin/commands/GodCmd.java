@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Toggle a players god mode.
  * @author UndeadScythes
  */
-public class GodCmd extends AbstractPlayerCommand {
+public class GodCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

@@ -12,7 +12,7 @@ import org.bukkit.util.*;
  * WorldEdit-like tools.
  * @author UndeadScythes
  */
-public class WECmd extends AbstractPlayerCommand {
+public class WECmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(args.length == 1) {
@@ -67,9 +67,9 @@ public class WECmd extends AbstractPlayerCommand {
             final Session session = getSession();
             if(hasTwoPoints(session)) {
                 final int volume = session.getVolume();
-                if(volume <= Config.editRange) {
+                if(volume <= UDSPlugin.getConfigInt(ConfigRef.EDIT_RANGE)) {
                     try {
-                        final BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.BLOCKS_PATH + File.separator + name + ".blocks"));
+                        final BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.getBlocksPath() + File.separator + name + ".blocks"));
                         final Vector min = Vector.getMinimum(session.getV1(), session.getV2());
                         final Vector max = Vector.getMaximum(session.getV1(), session.getV2());
                         final World world = player.getWorld();
@@ -96,7 +96,7 @@ public class WECmd extends AbstractPlayerCommand {
         if(hasPerm(Perm.WE_LOAD)) {
             final Session session = getSession();
             try {
-                final BufferedReader in = new BufferedReader(new FileReader(UDSPlugin.BLOCKS_PATH + File.separator + name + ".blocks"));
+                final BufferedReader in = new BufferedReader(new FileReader(UDSPlugin.getBlocksPath() + File.separator + name + ".blocks"));
                 final String[] firstLine = in.readLine().split("\t");
                 final Vector min = new SaveableVector(firstLine[0]);
                 final Vector max = new SaveableVector(firstLine[1]);
@@ -122,7 +122,7 @@ public class WECmd extends AbstractPlayerCommand {
 
     private void drain(final int range) {
         if(hasPerm(Perm.WE_DRAIN)) {
-            if(range <= Config.drainRange) {
+            if(range <= UDSPlugin.getConfigInt(ConfigRef.DRAIN_RANGE)) {
                 final Session session = getSession();
                 final Location location = player.getLocation();
                 final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
@@ -167,7 +167,7 @@ public class WECmd extends AbstractPlayerCommand {
                     final Vector v1 = session.getV1();
                     final Vector v2 = session.getV2();
                     final int volume = session.getVolume();
-                    if(volume <= Config.editRange) {
+                    if(volume <= UDSPlugin.getConfigInt(ConfigRef.EDIT_RANGE)) {
                         if(item.getType().isBlock()) {
                             final Vector min = Vector.getMinimum(v1, v2);
                             final Vector max = Vector.getMaximum(v1, v2);
@@ -209,7 +209,7 @@ public class WECmd extends AbstractPlayerCommand {
             if(hasTwoPoints(session)) {
                 final Vector v1 = session.getV1();
                 final Vector v2 = session.getV2();
-                if(session.getVolume() <= Config.editRange) {
+                if(session.getVolume() <= UDSPlugin.getConfigInt(ConfigRef.EDIT_RANGE)) {
                     if(args.length == 3) {
                         final ItemStack itemFrom = getItem(args[1]);
                         final ItemStack itemTo = getItem(args[2]);
@@ -244,12 +244,12 @@ public class WECmd extends AbstractPlayerCommand {
         if(hasPerm(Perm.WE_MOVE)) {
             final int distance = parseInt(args[2]);
             if(distance > -1) {
-                if(distance <= Config.moveRange) {
+                if(distance <= UDSPlugin.getConfigInt(ConfigRef.MOVE_RANGE)) {
                     final Session session = getSession();
                     if(hasTwoPoints(session)) {
                         final Vector v1 = session.getV1();
                         final Vector v2 = session.getV2();
-                        if(session.getVolume() <= Config.editRange) {
+                        if(session.getVolume() <= UDSPlugin.getConfigInt(ConfigRef.EDIT_RANGE)) {
                             Direction direction = getDirection(args[1]);
                             if(direction != null) {
                                 if(direction == Direction.UP || direction == Direction.EAST || direction == Direction.SOUTH) {
@@ -317,7 +317,7 @@ public class WECmd extends AbstractPlayerCommand {
     private void ext(final int range) {
         final Session session = getSession();
         if(hasPerm(Perm.WE_EXT)) {
-            if(range <= Config.drainRange) {
+            if(range <= UDSPlugin.getConfigInt(ConfigRef.DRAIN_RANGE)) {
                 final Location location = player.getLocation();
                 final Vector max = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
                 final Vector min = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));

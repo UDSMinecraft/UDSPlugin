@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Let's a player ignore other players in public chat.
  * @author UndeadScythes
  */
-public class IgnoreCmd extends AbstractPlayerCommand {
+public class IgnoreCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

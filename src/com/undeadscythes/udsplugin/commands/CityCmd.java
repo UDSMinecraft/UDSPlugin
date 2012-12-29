@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
  * City related commands.
  * @author UndeadScythes
  */
-public class CityCmd extends AbstractPlayerCommand {
+public class CityCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Region city;
@@ -27,12 +27,12 @@ public class CityCmd extends AbstractPlayerCommand {
         } else if(args.length == 2) {
             int page;
             if(args[0].equals("new")) {
-                if(canAfford(Config.cityCost) && noCensor(args[1]) && notRegion(args[1])) {
+                if(canAfford(UDSPlugin.getConfigInt(ConfigRef.CITY_COST)) && noCensor(args[1]) && notRegion(args[1])) {
                     final Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
                     final Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
                     city = new Region(args[1], min, max, player.getLocation(), player, "", RegionType.CITY);
                     if(noOverlaps(city)) {
-                        player.debit(Config.cityCost);
+                        player.debit(UDSPlugin.getConfigInt(ConfigRef.CITY_COST));
                         UDSPlugin.getRegions().put(args[1], city);
                         UDSPlugin.getCities().put(args[1], city);
                         city.placeMoreMarkers();

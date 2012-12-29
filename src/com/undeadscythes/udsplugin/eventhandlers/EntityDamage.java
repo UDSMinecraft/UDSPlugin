@@ -18,7 +18,7 @@ public class EntityDamage extends ListenerWrapper implements Listener {
             if(player.hasGodMode() || (event.getCause().equals(DamageCause.DROWNING) && player.hasScuba())) {
                 event.setCancelled(true);
             }
-        } else if(Config.PASSIVE_MOBS.contains(event.getEntity().getType()) && !hasFlag(event.getEntity().getLocation(), RegionFlag.PVE)) {
+        } else if(UDSPlugin.getPassiveMobs().contains(event.getEntity().getType()) && !hasFlag(event.getEntity().getLocation(), RegionFlag.PVE)) {
             event.setCancelled(true);
         }
     }

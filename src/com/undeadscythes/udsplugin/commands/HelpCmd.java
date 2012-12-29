@@ -7,7 +7,7 @@ import java.util.*;
  * Get help on certain commands.
  * @author UndeadScythes
  */
-public class HelpCmd extends AbstractPlayerCommand {
+public class HelpCmd extends CommandWrapper {
     private enum Usage {
         HELP(Perm.HELP, "/help [page or command]", "Show these help pages.", false, false),
         TICKET(Perm.TICKET, "/ticket", "Get the link to post suggestions and bugs to.", false, false),
@@ -238,23 +238,23 @@ public class HelpCmd extends AbstractPlayerCommand {
         public String getDescription() {
             switch(this) {
                 case ACCEPTRULES:
-                    return description + " (" + Color.ITEM + Config.buildCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " credits" + Color.TEXT + ")";
                 case CITY_NEW:
-                    return description + " (" + Color.ITEM + Config.cityCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.CITY_COST) + " credits" + Color.TEXT + ")";
                 case MAP:
-                    return description + " (" + Color.ITEM + Config.mapCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.MAP_COST) + " credits" + Color.TEXT + ")";
                 case HOME_SET:
-                    return description + " (" + Color.ITEM + Config.homeCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.HOME_COST) + " credits" + Color.TEXT + ")";
                 case SHOP_BUY:
-                    return description + " (" + Color.ITEM + Config.shopCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) + " credits" + Color.TEXT + ")";
                 case VIP:
-                    return description + " (" + Color.ITEM + Config.vipCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.VIP_COST) + " credits" + Color.TEXT + ")";
                 case CLAN_NEW:
-                    return description + " (" + Color.ITEM + Config.clanCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.CLAN_COST) + " credits" + Color.TEXT + ")";
                 case CLAN_BASE_SET:
-                    return description + " (" + Color.ITEM + Config.baseCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.BASE_COST) + " credits" + Color.TEXT + ")";
                 case HOME_EXPAND:
-                    return description + " (" + Color.ITEM + Config.expandCost + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.EXPAND_COST) + " credits" + Color.TEXT + ")";
                 default:
                     return description;
             }

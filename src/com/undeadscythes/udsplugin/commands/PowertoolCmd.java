@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Set up a powertool.
  * @author UndeadScythes
  */
-public class PowertoolCmd extends AbstractPlayerCommand {
+public class PowertoolCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(args.length >= 1 && notAirHand()) {

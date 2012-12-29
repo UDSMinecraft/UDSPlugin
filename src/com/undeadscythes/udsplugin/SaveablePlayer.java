@@ -417,7 +417,7 @@ public class SaveablePlayer implements Saveable {
      * @return English reading string.
      */
     public String getVIPTimeString() {
-        return timeToString(Config.vipTime - System.currentTimeMillis() - getVIPTime());
+        return timeToString(UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) - System.currentTimeMillis() - getVIPTime());
     }
 
     /**
@@ -536,7 +536,7 @@ public class SaveablePlayer implements Saveable {
             this.bail = bail;
             base.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
             if(bail != 0) {
-                base.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + Config.currencies + ".");
+                base.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
             }
         }
     }
@@ -1300,7 +1300,7 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Location getBedSpawnLocation() {

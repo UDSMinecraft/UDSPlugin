@@ -37,7 +37,7 @@ public final class EntityTracker {
     public static void checkMinecarts() {
         for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
             final OwnedMinecart minecart = i.next();
-            if(minecart.isEmpty() && minecart.age(100) > Config.minecartTTL / Timer.TICKS) {
+            if(minecart.isEmpty() && minecart.age(100) > UDSPlugin.getConfigLong(ConfigRef.MINECART_TTL) / Timer.TICKS) {
                 minecart.remove();
                 i.remove();
             }

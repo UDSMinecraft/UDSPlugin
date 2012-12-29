@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Toggles the private chat channel.
  * @author UndeadScythes
  */
-public class PCmd extends AbstractPlayerCommand {
+public class PCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(inChatRoom()) {

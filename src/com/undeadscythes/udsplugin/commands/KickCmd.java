@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
  * Kick a player from the server.
  * @author UndeadScythes
  */
-public class KickCmd extends AbstractPlayerCommand {
+public class KickCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

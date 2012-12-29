@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Set up a private chat room.
  * @author UndeadScythes
  */
-public class PrivateCmd extends AbstractPlayerCommand {
+public class PrivateCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(numArgsHelp(1)) {

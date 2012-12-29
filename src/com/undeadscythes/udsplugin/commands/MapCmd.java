@@ -8,12 +8,12 @@ import org.bukkit.inventory.*;
  * Give a player a spawn map.
  * @author UndeadScythes
  */
-public class MapCmd extends AbstractPlayerCommand {
+public class MapCmd extends CommandWrapper {
     @Override
     @SuppressWarnings("deprecation")
-    public void playerExecute() {
-        if(canAfford(Config.mapCost)) {
-            player.giveAndDrop(new ItemStack(Material.MAP, 1, (short)0, Config.mapData));
+    public final void playerExecute() {
+        if(canAfford(UDSPlugin.getConfigInt(ConfigRef.MAP_COST))) {
+            player.giveAndDrop(new ItemStack(Material.MAP, 1, (short)0, UDSPlugin.getConfigByte(ConfigRef.MAP_COST)));
         }
     }
 }

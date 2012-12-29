@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
  * Ban a player from the server.
  * @author UndeadScythes
  */
-public class BanCmd extends AbstractPlayerCommand {
+public class BanCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

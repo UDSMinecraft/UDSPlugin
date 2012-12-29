@@ -7,7 +7,7 @@ import org.bukkit.Location;
  * Set the spawn point of the current world.
  * @author UndeadScythes
  */
-public class SetSpawnCmd extends AbstractPlayerCommand {
+public class SetSpawnCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         final Location location = player.getLocation();

@@ -12,7 +12,7 @@ import org.bukkit.inventory.*;
  * Methods allow various checks to be made and messages to be sent to the players on errors.
  * @author UndeadScythes
  */
-public abstract class AbstractPlayerCommand implements CommandExecutor {
+public abstract class CommandWrapper implements CommandExecutor {
     protected SaveablePlayer player;
     private String commandName;
     protected String[] args;
@@ -161,7 +161,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      */
     protected void subCmdHelp() {
         if(args[0].equalsIgnoreCase("help")) {
-            if(args.length == 2 && args[1].matches(Config.INT_REGEX)) {
+            if(args.length == 2 && args[1].matches(UDSPlugin.INT_REGEX)) {
                 sendHelp(Integer.parseInt(args[1]));
             } else {
                 sendHelp(1);
@@ -909,7 +909,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return <code>true</code> if the player is not pinned, <code>false</code> otherwise.
      */
     protected boolean notPinned() {
-        if(player.getLastDamageCaused() + Config.pvpTime < System.currentTimeMillis()) {
+        if(player.getLastDamageCaused() + UDSPlugin.getConfigLong(ConfigRef.PVP_TIME) < System.currentTimeMillis()) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You can't do that at this time.");
@@ -992,7 +992,7 @@ public abstract class AbstractPlayerCommand implements CommandExecutor {
      * @return The number if it was one, -1 otherwise.
      */
     protected int parseInt(final String number) {
-        if(number.matches(Config.INT_REGEX)) {
+        if(number.matches(UDSPlugin.INT_REGEX)) {
             return Integer.parseInt(number);
         } else {
             player.sendMessage(Color.ERROR + "The number you entered was invalid.");

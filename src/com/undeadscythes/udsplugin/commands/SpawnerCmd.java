@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.AbstractPlayerCommand;
+import com.undeadscythes.udsplugin.CommandWrapper;
 import com.undeadscythes.udsplugin.Color;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,7 +11,7 @@ import org.bukkit.entity.EntityType;
  * Change the mob type of a spawner.
  * @author UndeadScythes
  */
-public class SpawnerCmd extends AbstractPlayerCommand {
+public class SpawnerCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(numArgsHelp(1)) {

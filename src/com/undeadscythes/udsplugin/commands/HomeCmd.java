@@ -7,7 +7,7 @@ import org.bukkit.util.*;
  * Home region related commands.
  * @author UndeadScythes
  */
-public class HomeCmd extends AbstractPlayerCommand {
+public class HomeCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Region home;
@@ -19,12 +19,12 @@ public class HomeCmd extends AbstractPlayerCommand {
             }
         } else if(args.length == 1) {
             if(args[0].equals("make")) {
-                if(canAfford(Config.homeCost) && noHome()) {
+                if(canAfford(UDSPlugin.getConfigInt(ConfigRef.HOME_COST)) && noHome()) {
                     final Vector min = player.getLocation().add(-10, 28, -10).toVector();
                     final Vector max = player.getLocation().add(10, 12, 10).toVector();
                     home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", RegionType.HOME);
                     if(noOverlaps(home)) {
-                        player.debit(Config.homeCost);
+                        player.debit(UDSPlugin.getConfigInt(ConfigRef.HOME_COST));
                         UDSPlugin.getRegions().put(home.getName(), home);
                         UDSPlugin.getHomes().put(home.getName(), home);
                         home.placeCornerMarkers();
@@ -84,10 +84,10 @@ public class HomeCmd extends AbstractPlayerCommand {
         } else if(args.length == 2) {
             Direction direction;
             if(args[0].equals("expand")) {
-                if((home = getHome()) != null && canAfford(Config.expandCost) && (direction = getCardinalDirection(args[1])) != null) {
+                if((home = getHome()) != null && canAfford(UDSPlugin.getConfigInt(ConfigRef.EXPAND_COST)) && (direction = getCardinalDirection(args[1])) != null) {
                     home.expand(direction, 1);
                     if(noOverlaps(home)) {
-                        player.debit(Config.expandCost);
+                        player.debit(UDSPlugin.getConfigInt(ConfigRef.EXPAND_COST));
                         player.sendMessage(Color.MESSAGE + "Your home has been expanded.");
                     } else {
                         home.expand(direction, -1);
@@ -122,7 +122,7 @@ public class HomeCmd extends AbstractPlayerCommand {
             if(args[0].equals("sell")) {
                 if((getHome()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
-                    target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their house for " + price + " " + Config.currencies + ".");
+                    target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their house for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                     UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.HOME, price, target));
                 }
