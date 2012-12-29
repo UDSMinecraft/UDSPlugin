@@ -90,7 +90,7 @@ public class ClanCmd extends CommandWrapper {
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " just created " + args[1] + ".");
                 }
             } else if(args[0].equals("invite")) {
-                if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && (clan = getClan()) != null && isLeader(clan) && notSelf(target)) {
+                if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && canRequest(target) && (clan = getClan()) != null && isLeader(clan) && notSelf(target)) {
                     UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.CLAN, clan.getName(), target));
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendMessage(Color.MESSAGE + player.getNick() + " has invited you to join " + clan.getName() + ".");

@@ -11,13 +11,13 @@ import org.bukkit.event.entity.*;
  */
 public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final EntityDamageByEntityEvent event) {
+    public final void onEvent(final EntityDamageByEntityEvent event) {
         final Entity attacker = getAbsoluteEntity(event.getDamager());
         final Entity defender = event.getEntity();
         if(attacker instanceof Player && defender instanceof Player) {
             event.setCancelled(pvp(UDSPlugin.getOnlinePlayers().get(((Player)attacker).getName()), UDSPlugin.getOnlinePlayers().get(((Player)defender).getName())));
         } else {
-            event.setCancelled(godMode(defender) || pve(defender));
+            event.setCancelled(isAfk(defender) || godMode(defender) || pve(defender));
         }
     }
 
@@ -29,8 +29,12 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
             attacker.sendMessage(Color.MESSAGE + "You need to be in a clan to PvP.");
             return true;
         } else {
-            return defender.hasGodMode() || attacker.getClan().equals(defender.getClan()) || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
+            return defender.hasGodMode() || defender.isAfk() || attacker.getClan().equals(defender.getClan()) || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
         }
+    }
+
+    private boolean isAfk(final Entity defender) {
+        return defender instanceof Player && UDSPlugin.getOnlinePlayers().get(((Player)defender).getName()).isAfk();
     }
 
     private boolean godMode(final Entity defender) {

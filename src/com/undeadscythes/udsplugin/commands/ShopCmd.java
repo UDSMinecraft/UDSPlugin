@@ -104,8 +104,8 @@ public class ShopCmd extends CommandWrapper {
                 subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
-            if(args[0].equals("shop")) {
-                if((getShop()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && (price = parseInt(args[2])) != -1) {
+            if(args[0].equals("sell")) {
+                if((getShop()) != null && (target = getMatchingPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their shop for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

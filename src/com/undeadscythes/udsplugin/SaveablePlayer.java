@@ -19,38 +19,39 @@ public class SaveablePlayer implements Saveable {
      */
     public final static String PATH = "players.csv";
 
-    private String name;
-    private Player base;
-    private String nick;
+    private String name; // Non-transient.
+    private Player base; // Non-transient.
+    private String nick; // Non-transient.
 
-    private long timeLogged = 0;
-    private Location back = null;
     private boolean godMode = false;
     private boolean lockdownPass = false;
-    private long lastDamageCaused = 0;
-    private SaveablePlayer challenger = null;
+    private boolean afk = false;
     private int wager = 0;
-    private long prizeClaim = 0;
-    private Location checkPoint = null;
-    private ChatRoom chatRoom = null; // Is this field never modified?
-    private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
-    private ChatChannel channel = ChatChannel.PUBLIC;
-    private final LinkedList<Long> lastChats = new LinkedList<Long>();
-    private ItemStack[] inventoryCopy = null;
-    private ItemStack[] armorCopy = null;
-    private UUID selectedPet = null;
-    private SaveablePlayer whisperer = null;
     private int powertoolID = 0;
-    private String powertoolCmd = "";
-    private Clan clan = null;
     private int bounty = 0;
     private int money = 0;
-    private PlayerRank rank = PlayerRank.DEFAULT;
-    private long vipTime = 0;
     private int vipSpawns = 0;
+    private int bail = 0;
+    private long vipTime = 0;
     private long jailTime = 0;
     private long jailSentence = 0;
-    private int bail = 0;
+    private long timeLogged = 0;
+    private long lastDamageCaused = 0;
+    private long prizeClaim = 0;
+    private String powertoolCmd = "";
+    private Location back = null;
+    private Location checkPoint = null;
+    private SaveablePlayer challenger = null;
+    private SaveablePlayer whisperer = null;
+    private ChatRoom chatRoom = null; // Is this field never modified?
+    private ChatChannel channel = ChatChannel.PUBLIC;
+    private UUID selectedPet = null;
+    private Clan clan = null;
+    private PlayerRank rank = PlayerRank.DEFAULT;
+    private ItemStack[] inventoryCopy = null;
+    private ItemStack[] armorCopy = null;
+    private final LinkedList<Long> lastChats = new LinkedList<Long>();
+    private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
 
     /**
      * Initialise a brand new player extension.
@@ -951,6 +952,23 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
+     * Check if the player is marked as AFK.
+     * @return Player is AFK.
+     */
+    public boolean isAfk() {
+        return afk;
+    }
+
+    /**
+     * Toggle whether this player is marked as AFK.
+     * @return Whether this player is now marked as AFK.
+     */
+    public boolean toggleAfk() {
+        afk ^= true;
+        return afk;
+    }
+
+    /**
      * Teleport a player but reserve pitch and yaw of player.
      * @param location Location to teleport to.
      */
@@ -1305,5 +1323,16 @@ public class SaveablePlayer implements Saveable {
      */
     public Location getBedSpawnLocation() {
         return base == null ? null : base.getBedSpawnLocation();
+    }
+
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    public List<Entity> getNearbyEntities(final double x, final double y, final double z) {
+        return base == null ? null : base.getNearbyEntities(x, y, z);
     }
 }

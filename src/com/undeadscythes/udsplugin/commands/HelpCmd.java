@@ -57,6 +57,7 @@ public class HelpCmd extends CommandWrapper {
         VIP_SPAWNS(Perm.VIP, "/vip", "Check the number of daily spawns you have left.", false, true),
         VIP_ITEMS(Perm.VIP, "/vip spawns", "Check which items are whitelisted.", false, true),
         VIP_WE(Perm.WE_VIP, "/we help", "Check which WE commands you can use.", false, true),
+        AFK(Perm.AFK, "/afk", "Set yourself as afk.", false, false),
         BACK(Perm.BACK, "/back", "Return to your position before teleporting.", false, false),
         BOUNTY(Perm.BOUNTY, "/bounty <player> <amount>", "Place a bounty on a player.", false, false),
         BOUNTY_LIST(Perm.BOUNTY, "/bounty", "Check the bounties list.", false, false),
@@ -270,7 +271,7 @@ public class HelpCmd extends CommandWrapper {
     }
 
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(maxArgsHelp(2)) {
             if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
                 sendHelpFiles();

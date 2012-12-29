@@ -94,6 +94,21 @@ public abstract class CommandWrapper implements CommandExecutor {
     }
 
     /**
+     * Check if the player is near monsters.
+     * @return
+     */
+    protected boolean notNearMobs() {
+        List<Entity> entities = player.getNearbyEntities(10, 3, 10);
+        for(Entity entity : entities) {
+            if(UDSPlugin.getHostileMobs().contains(entity.getType())) {
+                player.sendMessage(Color.ERROR + "You cannot do that now, there are monsters nearby.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Get the players shop.
      * @return The shop region or <code>null</code> if the player does not own a shop.
      */
@@ -181,12 +196,26 @@ public abstract class CommandWrapper implements CommandExecutor {
     }
 
     /**
+     * Check if the target player is marked as AFK.
+     * @param target Target player.
+     * @return Is target player marked as AFK.
+     */
+    protected boolean notAfk(final SaveablePlayer target) {
+        if(target.isAfk()) {
+            player.sendMessage(Color.MESSAGE + "That player is currently AFK.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Check that the player can send a request.
      * @param target The requestee.
      * @return <code>true</code> if the player can send a request, <code>false</code> otherwise.
      */
     protected boolean canRequest(final SaveablePlayer target) {
-        return noRequests(target) && notIgnored(target);
+        return noRequests(target) && notIgnored(target) && notAfk(target);
     }
 
     /**

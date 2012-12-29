@@ -8,6 +8,7 @@ public enum Perm {
     A(PlayerRank.MOD, true),
     ACCEPTRULES(PlayerRank.DEFAULT, false),
     ADMIN(PlayerRank.ADMIN, true),
+    AFK(PlayerRank.DEFAULT, true),
     BACK(PlayerRank.MEMBER, true),
     BACK_ON_DEATH(PlayerRank.VIP, true),
     BAN(PlayerRank.MOD, true),

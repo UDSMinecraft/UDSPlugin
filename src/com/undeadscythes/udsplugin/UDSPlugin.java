@@ -252,6 +252,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("a").setExecutor(new ACmd());
         getCommand("acceptrules").setExecutor(new AcceptRulesCmd());
         getCommand("admin").setExecutor(new AdminCmd());
+        getCommand("afk").setExecutor(new AfkCmd());
         getCommand("back").setExecutor(new BackCmd());
         getCommand("ban").setExecutor(new BanCmd());
         getCommand("bounty").setExecutor(new BountyCmd());
@@ -364,6 +365,7 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteract(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractEntity(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
+        getServer().getPluginManager().registerEvents(new PlayerMove(), this);
         getServer().getPluginManager().registerEvents(new PlayerPortal(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuit(), this);
         getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
