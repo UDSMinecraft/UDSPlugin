@@ -1,6 +1,12 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import org.bukkit.*;
+import org.bukkit.block.*;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.material.*;
+import org.bukkit.util.*;
 
 /**
  * Lets a player 'sit' on stair blocks.
@@ -8,50 +14,54 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SitCmd extends CommandWrapper {
     @Override
-    public void playerExecute() {
-        player.sendMessage(Color.ERROR + "Sorry, you can't sit on blocks at the moment.");
-//        if(!player.isInsideVehicle()) {
-//            final Block target = player.getTargetBlock(null, 3);
-//            final boolean a = target.getTypeId() == 53;
-//            final boolean b = target.getTypeId() == 67;
-//            final boolean c = target.getTypeId() == 108;
-//            final boolean d = target.getTypeId() == 109;
-//            final boolean e = target.getTypeId() == 114;
-//            final boolean f = target.getTypeId() == 128;
-//            final boolean g = target.getRelative(BlockFace.DOWN).getTypeId() != 0;
-//            if((a || b || c || d || e || f) && g) {
-//                final Item seat = player.getWorld().dropItemNaturally(target.getLocation(), new ItemStack(Material.SNOW_BALL));
-//                seat.setPickupDelay(2147483647);
-//                seat.teleport(target.getLocation().add(0.5, 0.2, 0.5));
-//                seat.setVelocity(new Vector(0, 0, 0));
-//                final Stairs chair = (Stairs)target.getState().getData();
-//                Location view = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
+    public final void playerExecute() {
+        if(!player.isInsideVehicle()) {
+            final Block target = player.getTargetBlock(null, 3);
+            if((isStairs(target)) && target.getRelative(BlockFace.DOWN).getTypeId() != 0) {
+                //final Item seat = player.getWorld().dropItemNaturally(target.getLocation(), new ItemStack(Material.SNOW_BALL));
+                //seat.setPickupDelay(2147483647);
+                //seat.teleport(target.getLocation().add(0.5, 0.2, 0.5));
+                //seat.setVelocity();
+                final Arrow seat = player.getWorld().spawnArrow(target.getLocation().add(0.5, 0, 0.5), new Vector(), 0, 0);
+                seat.setBounce(false);
+                seat.setShooter(null);
+                final Stairs chair = (Stairs)target.getState().getData();
+                Location view = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
+                if(chair.getDescendingDirection() == BlockFace.NORTH) {
+                    view.setYaw(180);
+                } else if(chair.getDescendingDirection() == BlockFace.EAST) {
+                    view.setYaw(270);
+                } else if(chair.getDescendingDirection() == BlockFace.SOUTH) {
+                    view.setYaw(0);
+                } else {
+                    view.setYaw(90);
+                }
+                player.teleport(view);
+                seat.setPassenger(player.getBase());
+            }
+        } else {
+            final Entity seat = player.getVehicle();
+//            final Block block = player.getWorld().getBlockAt(player.getLocation());
+            seat.eject();
+//            if(isStairs(block)) {
+//                final Stairs chair = (Stairs)block.getState().getData();
 //                if(chair.getDescendingDirection() == BlockFace.NORTH) {
-//                    view.setYaw(180);
+//                    player.teleport(player.getLocation().add(-1, 0, 0));
 //                } else if(chair.getDescendingDirection() == BlockFace.EAST) {
-//                    view.setYaw(270);
+//                    player.teleport(player.getLocation().add(0, 0, -1));
 //                } else if(chair.getDescendingDirection() == BlockFace.SOUTH) {
-//                    view.setYaw(0);
+//                    player.teleport(player.getLocation().add(1, 0, 0));
 //                } else {
-//                    view.setYaw(90);
+//                    player.teleport(player.getLocation().add(0, 0, 1));
 //                }
-//                player.teleport(view);
-//                seat.setPassenger(player);
-//            }
-//        } else {
-//            final Entity seat = player.getVehicle();
-//            seat.eject();
-//            seat.remove();
-//            final Stairs chair = (Stairs)player.getWorld().getBlockAt(player.getLocation()).getState().getData();
-//            if(chair.getDescendingDirection() == BlockFace.NORTH) {
-//                player.teleport(player.getLocation().add(-1, 0, 0));
-//            } else if(chair.getDescendingDirection() == BlockFace.EAST) {
-//                player.teleport(player.getLocation().add(0, 0, -1));
-//            } else if(chair.getDescendingDirection() == BlockFace.SOUTH) {
-//                player.teleport(player.getLocation().add(1, 0, 0));
 //            } else {
-//                player.teleport(player.getLocation().add(0, 0, 1));
+                player.move(seat.getLocation());
 //            }
-//        }
+            seat.remove();
+        }
+    }
+
+    private boolean isStairs(final Block block) {
+        return block.getTypeId() == 53 || block.getTypeId() == 67 || block.getTypeId() == 108 || block.getTypeId() == 109 || block.getTypeId() == 114 || block.getTypeId() == 128;
     }
 }

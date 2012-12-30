@@ -1326,7 +1326,7 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
-     * 
+     *
      * @param x
      * @param y
      * @param z
@@ -1334,5 +1334,21 @@ public class SaveablePlayer implements Saveable {
      */
     public List<Entity> getNearbyEntities(final double x, final double y, final double z) {
         return base == null ? null : base.getNearbyEntities(x, y, z);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isInsideVehicle() {
+        return base == null ? false : base.isInsideVehicle();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Entity getVehicle() {
+        return base == null ? null : base.getVehicle();
     }
 }
