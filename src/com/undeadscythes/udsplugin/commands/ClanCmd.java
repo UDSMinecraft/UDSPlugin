@@ -113,7 +113,7 @@ public class ClanCmd extends CommandWrapper {
                     for(SaveablePlayer member : clan.getMembers()) {
                         members = members.concat(member.getNick() + ", ");
                     }
-                    player.sendMessage(Color.MESSAGE + clan.getName() + "'s leader is " + clan.getLeader() + ".");
+                    player.sendMessage(Color.MESSAGE + clan.getName() + "'s leader is " + clan.getLeader().getNick() + ".");
                     player.sendMessage(Color.MESSAGE + clan.getName() + "'s members are:");
                     player.sendMessage(Color.TEXT + members.substring(0, members.length() - 2));
                 }
