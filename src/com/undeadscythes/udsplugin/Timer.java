@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin;
 
 import java.io.*;
+import java.util.*;
 import java.util.logging.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -89,7 +90,6 @@ public class Timer implements Runnable {
         if(UDSPlugin.getData().getLastEnderDeath() + UDSPlugin.getConfigLong(ConfigRef.DRAGON_RESPAWN) < now) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
-                    UDSPlugin.getData().setLastEnderDeath(0);
                     world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);
                     Bukkit.broadcastMessage(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End.");
                 }
@@ -120,10 +120,11 @@ public class Timer implements Runnable {
             }
 
         }
-        for(Request request : UDSPlugin.getRequests().values()) {
+        for(final Iterator<Map.Entry<String, Request>> i = UDSPlugin.getRequests().entrySet().iterator(); i.hasNext();) {
+            final Request request = i.next().getValue();
             if(request.getTime() + UDSPlugin.getConfigLong(ConfigRef.REQUEST_TTL) < now) {
                 request.getSender().sendMessage(Color.MESSAGE + "Your request has timed out.");
-                UDSPlugin.getRequests().remove(request.getRecipient().getName());
+                i.remove();
             }
         }
         EntityTracker.checkMinecarts();
