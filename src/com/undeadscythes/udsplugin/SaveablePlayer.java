@@ -165,8 +165,14 @@ public class SaveablePlayer implements Saveable {
      * Check if this player is wearing scuba gear.
      * @return <code>true</code> if the player is wearing scuba gear, <code>false</code> otherwise.
      */
-    public boolean hasScuba() {
-        return base == null ? false : base.getInventory().getHelmet().getType().equals(Material.GLASS);
+    public final boolean hasScuba() {
+        if(base != null) {
+            ItemStack helmet = base.getInventory().getHelmet();
+            if(helmet != null && helmet.getType().equals(Material.GLASS)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
