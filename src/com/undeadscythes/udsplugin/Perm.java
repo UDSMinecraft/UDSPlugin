@@ -26,6 +26,7 @@ public enum Perm {
     CLAN(PlayerRank.MEMBER, true),
     COMPASS(PlayerRank.WARDEN, true),
     DAY(PlayerRank.WARDEN, true),
+    DEBUG(PlayerRank.ADMIN, true),
     DELWARP(PlayerRank.WARDEN, true),
     DEMOTE(PlayerRank.MOD, true),
     ENCHANT(PlayerRank.MOD, true),

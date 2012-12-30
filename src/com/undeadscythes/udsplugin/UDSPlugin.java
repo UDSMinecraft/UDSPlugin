@@ -123,7 +123,7 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info(message);
     }
 
-    public static final void reloadConf() {
+    public static void reloadConf() {
         plugin.reloadConfig();
         plugin.loadConfig();
     }
@@ -266,6 +266,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("city").setExecutor(new CityCmd());
         getCommand("clan").setExecutor(new ClanCmd());
         getCommand("day").setExecutor(new DayCmd());
+        getCommand("debug").setExecutor(new DebugCmd());
         getCommand("delwarp").setExecutor(new DelWarpCmd());
         getCommand("demote").setExecutor(new DemoteCmd());
         getCommand("enchant").setExecutor(new EnchantCmd());
@@ -348,6 +349,7 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);
         getServer().getPluginManager().registerEvents(new EntityBlockForm(), this);
         getServer().getPluginManager().registerEvents(new EntityChangeBlock(), this);
+        getServer().getPluginManager().registerEvents(new EntityCreatePortal(), this);
         getServer().getPluginManager().registerEvents(new EntityDamage(), this);
         getServer().getPluginManager().registerEvents(new EntityDamageByEntity(), this);
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);

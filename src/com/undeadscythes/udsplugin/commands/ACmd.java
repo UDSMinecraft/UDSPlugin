@@ -9,7 +9,7 @@ import org.apache.commons.lang.*;
  */
 public class ACmd extends CommandWrapper {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(args.length == 0) {
             if(player.toggleChannel(ChatChannel.ADMIN)) {
                 player.sendMessage(Color.MESSAGE + "You are now talking in admin chat.");
