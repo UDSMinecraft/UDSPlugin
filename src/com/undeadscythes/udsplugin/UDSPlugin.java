@@ -617,7 +617,7 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     public static Material getConfigMaterial(final ConfigRef ref) {
-        return Material.getMaterial(plugin.getConfig().getString(ref.getReference()));
+        return Material.getMaterial(plugin.getConfig().getString(ref.getReference()).toUpperCase());
     }
 
     public static File getBlocksPath() {
