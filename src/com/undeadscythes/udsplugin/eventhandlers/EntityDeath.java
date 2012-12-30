@@ -53,8 +53,12 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
         final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>();
         for(Player endPlayer : players) {
+            endPlayer.sendMessage(Color.MESSAGE + "You can use commands such as /spawn to return to the overworld.");
             if(endPlayer.getLocation().distance(location) < 100) {
-                killers.add(UDSPlugin.getPlayers().get((endPlayer).getName()));
+                SaveablePlayer endKiller = UDSPlugin.getPlayers().get((endPlayer).getName());
+                if(endKiller.getGameMode().equals(GameMode.SURVIVAL) && !endKiller.hasGodMode()) {
+                    killers.add(endKiller);
+                }
             }
         }
         if(!killers.isEmpty()) {
@@ -77,7 +81,10 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>();
         for(Player witherPlayer : players) {
             if(witherPlayer.getLocation().distance(location) < 100) {
-                killers.add(UDSPlugin.getPlayers().get((witherPlayer).getName()));
+                SaveablePlayer witherKiller = UDSPlugin.getPlayers().get((witherPlayer).getName());
+                if(witherKiller.getGameMode().equals(GameMode.SURVIVAL) && !witherKiller.hasGodMode()) {
+                    killers.add(witherKiller);
+                }
             }
         }
         if(!killers.isEmpty()) {
