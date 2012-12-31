@@ -222,7 +222,7 @@ public class UDSPlugin extends JavaPlugin {
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Warp.PATH));
             while((nextLine = file.readLine()) != null) {
-                WARPS.put(nextLine.split("\t", 1)[0], new Warp(nextLine));
+                WARPS.put(nextLine.split("\t")[0], new Warp(nextLine));
             }
             file.close();
             message = WARPS.size() + " warps loaded.";

@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
  */
 public class PlayerInteract extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final PlayerInteractEvent event) {
+    public final void onEvent(final PlayerInteractEvent event) {
         final Action action = event.getAction();
         final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         final Material inHand = player.getItemInHand().getType();
