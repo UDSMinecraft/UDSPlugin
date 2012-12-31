@@ -8,12 +8,14 @@ import com.undeadscythes.udsplugin.*;
  */
 public class RegionCmd extends CommandWrapper {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(args.length == 1) {
             if(args[0].equals("vert")) {
                 vert();
             } else if(args[0].equals("list")) {
                 list(RegionType.NORMAL);
+            } else if(args[0].equals("type")) {
+                showTypes();
             } else if(args[0].equals("flag")) {
                 flagList();
             } else {
@@ -56,6 +58,8 @@ public class RegionCmd extends CommandWrapper {
                 if(type != null) {
                     set(type);
                 }
+            } else if(args[0].equals("type")) {
+                changeType();
             } else {
                 subCmdHelp();
             }
@@ -68,6 +72,26 @@ public class RegionCmd extends CommandWrapper {
                 subCmdHelp();
             }
         }
+    }
+
+    private void changeType() {
+        final Region region;
+        final RegionType type;
+        if((region = getRegion(args[1])) != null && ((type = getRegionType(args[2]))) != null) {
+            UDSPlugin.getRegions(region.getType()).remove(region.getName());
+            region.setType(type);
+            UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
+            player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set to type " + type.toString() + ".");
+        }
+    }
+
+    private void showTypes() {
+        player.sendMessage(Color.MESSAGE + "Available region types:");
+        String types = "";
+        for(RegionType type : RegionType.values()) {
+            types = types.concat(type.toString() + ", ");
+        }
+        player.sendMessage(Color.TEXT + types.substring(0, types.length() - 2));
     }
 
     private void contract() {
@@ -100,7 +124,7 @@ public class RegionCmd extends CommandWrapper {
 
     private void list(final RegionType type) {
         String list = "";
-        for(Region test : UDSPlugin.getRegions().values()) {
+        for(Region test : UDSPlugin.getRegions(RegionType.NORMAL).values()) {
             if(test.getType().equals(type)) {
                 list = list.concat(test.getName() + ", ");
             }
@@ -133,7 +157,7 @@ public class RegionCmd extends CommandWrapper {
     private void del() {
         final Region region = getRegion(args[1]);
         if(region != null) {
-            UDSPlugin.getRegions().remove(region.getName());
+            UDSPlugin.getRegions(RegionType.NORMAL).remove(region.getName());
             player.sendMessage(Color.MESSAGE + "Region deleted.");
         }
     }
@@ -174,19 +198,9 @@ public class RegionCmd extends CommandWrapper {
         final Session session = getSession();
         if(session != null && hasTwoPoints(session) && notRegion(args[1]) && noCensor(args[1])) {
             final Region region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), null, "", type);
-            UDSPlugin.getRegions().put(region.getName(), region);
-            if(region.getType().equals(RegionType.ARENA)) {
-                UDSPlugin.getArenas().put(region.getName(), region);
-            } else if(region.getType().equals(RegionType.BASE)) {
-                UDSPlugin.getBases().put(region.getName(), region);
-            } else if(region.getType().equals(RegionType.CITY)) {
-                UDSPlugin.getCities().put(region.getName(), region);
-            } else if(region.getType().equals(RegionType.HOME)) {
-                UDSPlugin.getHomes().put(region.getName(), region);
-            } else if(region.getType().equals(RegionType.QUARRY)) {
-                UDSPlugin.getQuarries().put(region.getName(), region);
-            } else if(region.getType().equals(RegionType.SHOP)) {
-                UDSPlugin.getShops().put(region.getName(), region);
+            UDSPlugin.getRegions(RegionType.NORMAL).put(region.getName(), region);
+            if(!region.getType().equals(RegionType.NORMAL)) {
+                UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
             }
             player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set.");
         }
@@ -223,21 +237,11 @@ public class RegionCmd extends CommandWrapper {
         final Region region = getRegion(args[1]);
         if(region != null && noCensor(args[1]) && notRegion(args[2])) {
             final String oldName = region.getName();
-            UDSPlugin.getRegions().remove(oldName);
+            UDSPlugin.getRegions(RegionType.NORMAL).remove(oldName);
             region.changeName(args[2]);
-            UDSPlugin.getRegions().put(region.getName(), region);
-            if(region.getType().equals(RegionType.ARENA)) {
-                UDSPlugin.getArenas().replace(oldName, region.getName(), region);
-            } else if(region.getType().equals(RegionType.BASE)) {
-                UDSPlugin.getBases().replace(oldName, region.getName(), region);
-            } else if(region.getType().equals(RegionType.CITY)) {
-                UDSPlugin.getCities().replace(oldName, region.getName(), region);
-            } else if(region.getType().equals(RegionType.HOME)) {
-                UDSPlugin.getHomes().replace(oldName, region.getName(), region);
-            } else if(region.getType().equals(RegionType.QUARRY)) {
-                UDSPlugin.getQuarries().replace(oldName, region.getName(), region);
-            } else if(region.getType().equals(RegionType.SHOP)) {
-                UDSPlugin.getShops().replace(oldName, region.getName(), region);
+            UDSPlugin.getRegions(RegionType.NORMAL).put(region.getName(), region);
+            if(!region.getType().equals(RegionType.NORMAL)) {
+                UDSPlugin.getRegions(region.getType()).replace(oldName, region.getName(), region);
             }
             player.sendMessage(Color.MESSAGE + "Region " + oldName + " renamed to " + region.getName());
         }

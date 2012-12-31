@@ -143,6 +143,14 @@ public class Region implements Saveable {
     }
 
     /**
+     * 
+     * @param type
+     */
+    public void setType(final RegionType type) {
+        this.type = type;
+    }
+
+    /**
      * Change the name of the region.
      * @param newName New region name.
      */
@@ -481,5 +489,14 @@ public class Region implements Saveable {
             return !flags.remove(flag);
         }
         return true;
+    }
+
+    /**
+     *
+     * @param location
+     * @return
+     */
+    public boolean contains(final Location location) {
+        return location.toVector().isInAABB(v1, v2);
     }
 }
