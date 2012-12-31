@@ -477,14 +477,6 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     /**
-     * Grab and cast the regions map.
-     * @return Regions map.
-     */
-    public static MatchableHashMap<Region> getRegions() {
-        return REGIONS.toMatchableHashMap(Region.class);
-    }
-
-    /**
      * Grab the requests map.
      * @return Requests map.
      */
@@ -509,51 +501,27 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     /**
-     * Grab the quarries map.
-     * @return Quarries map.
+     * Grab the regions list of the corresponding type.
+     * @param type Region type.
+     * @return The corresponding list.
      */
-    public static MatchableHashMap<Region> getQuarries() {
-        return QUARRIES;
-    }
-
-    /**
-     * Grab the homes map.
-     * @return Homes map.
-     */
-    public static MatchableHashMap<Region> getHomes() {
-        return HOMES;
-    }
-
-    /**
-     * Grab the shops map.
-     * @return Shops map.
-     */
-    public static MatchableHashMap<Region> getShops() {
-        return SHOPS;
-    }
-
-    /**
-     * Grab the bases map.
-     * @return Bases map.
-     */
-    public static MatchableHashMap<Region> getBases() {
-        return BASES;
-    }
-
-    /**
-     * Grab the cities map.
-     * @return Cities map.
-     */
-    public static MatchableHashMap<Region> getCities() {
-        return CITIES;
-    }
-
-    /**
-     * Grab the cities map.
-     * @return Cities map.
-     */
-    public static MatchableHashMap<Region> getArenas() {
-        return ARENAS;
+    public static MatchableHashMap<Region> getRegions(final RegionType type) {
+        switch(type) {
+            case QUARRY:
+                return QUARRIES;
+            case SHOP:
+                return SHOPS;
+            case BASE:
+                return BASES;
+            case HOME:
+                return HOMES;
+            case ARENA:
+                return ARENAS;
+            case CITY:
+                return CITIES;
+            default:
+                return REGIONS.toMatchableHashMap(Region.class);
+        }
     }
 
     /**

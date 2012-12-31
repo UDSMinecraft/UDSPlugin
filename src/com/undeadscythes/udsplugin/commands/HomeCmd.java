@@ -25,16 +25,16 @@ public class HomeCmd extends CommandWrapper {
                     home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", RegionType.HOME);
                     if(noOverlaps(home)) {
                         player.debit(UDSPlugin.getConfigInt(ConfigRef.HOME_COST));
-                        UDSPlugin.getRegions().put(home.getName(), home);
-                        UDSPlugin.getHomes().put(home.getName(), home);
+                        UDSPlugin.getRegions(RegionType.NORMAL).put(home.getName(), home);
+                        UDSPlugin.getRegions(RegionType.HOME).put(home.getName(), home);
                         home.placeCornerMarkers();
                         player.sendMessage(Color.MESSAGE + "Home area protected.");
                     }
                 }
             } else if(args[0].equals("clear")) {
                 if((home = getHome()) != null) {
-                    UDSPlugin.getRegions().remove(home.getName());
-                    UDSPlugin.getHomes().remove(home.getName());
+                    UDSPlugin.getRegions(RegionType.NORMAL).remove(home.getName());
+                    UDSPlugin.getRegions(RegionType.HOME).remove(home.getName());
                     player.sendMessage(Color.MESSAGE + "Home protection removed.");
                 }
             } else if(args[0].equals("set")) {
@@ -44,7 +44,7 @@ public class HomeCmd extends CommandWrapper {
                 }
             } else if(args[0].equals("roomies")) {
                 String message = "";
-                for(Region otherHome : UDSPlugin.getHomes().values()) {
+                for(Region otherHome : UDSPlugin.getRegions(RegionType.HOME).values()) {
                     if(otherHome.hasMember(player)) {
                         message = message.concat(otherHome.getOwner().getNick() + ", ");
                     }
@@ -53,7 +53,7 @@ public class HomeCmd extends CommandWrapper {
                         player.sendMessage(Color.TEXT + message.substring(0, message.length() - 2));
                     }
                     message = "";
-                    if((home = UDSPlugin.getHomes().get(player.getName() + "home")) != null) {
+                    if((home = UDSPlugin.getRegions(RegionType.HOME).get(player.getName() + "home")) != null) {
                         for(SaveablePlayer member : home.getMembers()) {
                             message = message.concat(member.getNick() + ", ");
                         }

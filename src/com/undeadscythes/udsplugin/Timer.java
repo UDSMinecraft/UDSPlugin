@@ -65,7 +65,7 @@ public class Timer implements Runnable {
     }
 
     private void dailyTask() {
-        for(Region quarry : UDSPlugin.getQuarries().values()) {
+        for(Region quarry : UDSPlugin.getRegions(RegionType.QUARRY).values()) {
             final Material material = Material.getMaterial(quarry.getData().toUpperCase());
             final int dX = quarry.getV2().getBlockX() - quarry.getV1().getBlockX();
             final int dY = quarry.getV2().getBlockY() - quarry.getV1().getBlockY();

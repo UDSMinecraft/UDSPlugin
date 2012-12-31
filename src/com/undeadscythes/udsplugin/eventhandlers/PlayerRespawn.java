@@ -13,7 +13,7 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
     public final void onEvent(final PlayerRespawnEvent event) {
         final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         if(player.getBedSpawnLocation() == null) {
-            final Region home = UDSPlugin.getHomes().get(player.getName() + "home");
+            final Region home = UDSPlugin.getRegions(RegionType.HOME).get(player.getName() + "home");
             if(home == null) {
                 event.setRespawnLocation(UDSPlugin.getData().getSpawn());
             } else {
@@ -23,10 +23,12 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
         if(player.isDuelling()) {
             player.endChallenge();
             player.sendMessage(Color.MESSAGE + "The duel is over.");
-            player.loadItems();
         }
         if(player.hasPermission(Perm.BACK_ON_DEATH)) {
             player.sendMessage(Color.MESSAGE + "Use /back to return to where you died.");
+        }
+        if(player.hasLoadItems()) {
+            player.loadItems();
         }
     }
 }

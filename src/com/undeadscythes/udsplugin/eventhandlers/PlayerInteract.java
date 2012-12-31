@@ -301,7 +301,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[SPLEEF]")) {
             if(player.hasPermission(Perm.SPLEEF)) {
-                final Region region = UDSPlugin.getRegions().get(sign.getLine(1));
+                final Region region = UDSPlugin.getRegions(RegionType.ARENA).get(sign.getLine(1));
                 if(region == null) {
                     player.sendMessage(Color.ERROR + "No region exists to refresh.");
                 } else {

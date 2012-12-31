@@ -24,8 +24,8 @@ public class ShopCmd extends CommandWrapper {
                 }
             } else if(args[0].equals("clear")) {
                 if((shop = getShop()) != null) {
-                    UDSPlugin.getRegions().replace(shop.getName(), nextShopName(), shop);
-                    UDSPlugin.getShops().replace(shop.getName(), nextShopName(), shop);
+                    UDSPlugin.getRegions(RegionType.NORMAL).replace(shop.getName(), nextShopName(), shop);
+                    UDSPlugin.getRegions(RegionType.SHOP).replace(shop.getName(), nextShopName(), shop);
                     shop.clearMembers();
                     shop.changeOwner(null);
                     player.sendMessage(Color.MESSAGE + "Shop put back up for sale.");
@@ -38,7 +38,7 @@ public class ShopCmd extends CommandWrapper {
                 }
             } else if(args[0].equals("workers")) {
                 String message = "";
-                for(Region otherShop : UDSPlugin.getShops().values()) {
+                for(Region otherShop : UDSPlugin.getRegions(RegionType.SHOP).values()) {
                     if(otherShop.hasMember(player)) {
                         message = message.concat(otherShop.getOwner().getNick() + ", ");
                     }
@@ -47,7 +47,7 @@ public class ShopCmd extends CommandWrapper {
                         player.sendMessage(Color.TEXT + message.substring(0, message.length() - 2));
                     }
                     message = "";
-                    if((shop = UDSPlugin.getShops().get(player.getName() + "shop")) != null) {
+                    if((shop = UDSPlugin.getRegions(RegionType.SHOP).get(player.getName() + "shop")) != null) {
                         for(SaveablePlayer member : shop.getMembers()) {
                             message = message.concat(member.getNick() + ", ");
                         }
@@ -62,8 +62,8 @@ public class ShopCmd extends CommandWrapper {
             } else if(args[0].equals("buy")) {
                 if((shop = getContainingShop()) != null && canAfford(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST)) && isEmptyShop(shop)) {
                     player.debit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST));
-                    UDSPlugin.getRegions().replace(shop.getName(), player.getName() + "shop", shop);
-                    UDSPlugin.getShops().replace(shop.getName(), player.getName() + "shop", shop);
+                    UDSPlugin.getRegions(RegionType.NORMAL).replace(shop.getName(), player.getName() + "shop", shop);
+                    UDSPlugin.getRegions(RegionType.SHOP).replace(shop.getName(), player.getName() + "shop", shop);
                     shop.changeName(player.getName() + "shop");
                     player.sendMessage(Color.MESSAGE + "Shop bought.");
                 }
@@ -119,7 +119,7 @@ public class ShopCmd extends CommandWrapper {
 
     private String nextShopName() {
         int high = 0;
-        for(Region shop : UDSPlugin.getShops().values()) {
+        for(Region shop : UDSPlugin.getRegions(RegionType.SHOP).values()) {
             if(shop.getName().startsWith("shop") && Integer.parseInt(shop.getName().replace("shop", "")) > high) {
                 high = Integer.parseInt(shop.getName().replace("shop", ""));
             }

@@ -33,8 +33,8 @@ public class CityCmd extends CommandWrapper {
                     city = new Region(args[1], min, max, player.getLocation(), player, "", RegionType.CITY);
                     if(noOverlaps(city)) {
                         player.debit(UDSPlugin.getConfigInt(ConfigRef.CITY_COST));
-                        UDSPlugin.getRegions().put(args[1], city);
-                        UDSPlugin.getCities().put(args[1], city);
+                        UDSPlugin.getRegions(RegionType.NORMAL).put(args[1], city);
+                        UDSPlugin.getRegions(RegionType.CITY).put(args[1], city);
                         city.placeMoreMarkers();
                         city.placeTowers();
                         player.sendMessage(Color.MESSAGE + "City founded.");
@@ -59,8 +59,8 @@ public class CityCmd extends CommandWrapper {
                 }
             } else if(args[0].equals("clear")) {
                 if((city = getMunicipality(args[1])) != null) {
-                    UDSPlugin.getRegions().remove(city.getName());
-                    UDSPlugin.getCities().remove(city.getName());
+                    UDSPlugin.getRegions(RegionType.NORMAL).remove(city.getName());
+                    UDSPlugin.getRegions(RegionType.CITY).remove(city.getName());
                     Bukkit.broadcastMessage(Color.BROADCAST + city.getName() + " has been abandoned.");
                 }
             } else {
@@ -106,7 +106,7 @@ public class CityCmd extends CommandWrapper {
      * @param player Player to send page to.
      */
     private void sendPage(final int page, final SaveablePlayer player) {
-        final List<Region> cities = UDSPlugin.getCities().getSortedValues(new SortByPop());
+        final List<Region> cities = UDSPlugin.getRegions(RegionType.CITY).getSortedValues(new SortByPop());
         final int pages = (cities.size() + 8) / 9;
         if(pages == 0) {
             player.sendMessage(Color.MESSAGE + "There are no cities yet.");

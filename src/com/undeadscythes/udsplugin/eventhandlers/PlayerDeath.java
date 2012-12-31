@@ -20,6 +20,14 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         if(victim.hasPermission(Perm.BACK_ON_DEATH)) {
             udsVictim.setBackPoint(victim.getLocation());
         }
+        for(Region arena : UDSPlugin.getRegions(RegionType.ARENA).values()) {
+            if(arena.contains(victim.getLocation())) {
+                event.getDrops().clear();
+                event.setDroppedExp(0);
+                event.setKeepLevel(true);
+                saveInventory(victim);
+            }
+        }
         if(victim.getKiller() != null) {
             final SaveablePlayer killer = UDSPlugin.getOnlinePlayers().get(victim.getKiller().getName());
             if(killer != null) {
@@ -39,10 +47,16 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         }
     }
 
+    private void saveInventory(final SaveablePlayer victim) {
+        victim.saveItems();
+        victim.setLoadItems(true);
+    }
+
     private void challengeWin(final SaveablePlayer killer, final SaveablePlayer victim) {
         final SaveablePlayer udsKiller = UDSPlugin.getOnlinePlayers().get(killer.getName());
         final SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victim.getName());
         udsVictim.saveItems();
+        udsVictim.setLoadItems(true);
         udsKiller.credit(2 * udsVictim.getWager());
         udsKiller.endChallenge();
         killer.sendMessage(Color.MESSAGE + "You won the challenge.");

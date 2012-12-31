@@ -17,7 +17,7 @@ public class BlockBreak implements Listener {
     private static final List<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
 
     @EventHandler
-    public void onEvent(final BlockBreakEvent event) {
+    public final void onEvent(final BlockBreakEvent event) {
         final SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
         if(player.isJailed()) {
             event.setCancelled(true);
@@ -32,8 +32,8 @@ public class BlockBreak implements Listener {
             event.setExpToDrop(UDSPlugin.getConfigInt(ConfigRef.SPAWNER_EXP));
         } else if(event.getBlock().getType().equals(Material.SNOW_BLOCK)) {
             final ItemStack item = new ItemStack(player.getItemInHand());
-            for(Region arena : UDSPlugin.getArenas().values()) {
-                if(arena.getData().equals("spleef")) {
+            for(Region arena : UDSPlugin.getRegions(RegionType.ARENA).values()) {
+                if(arena.contains(event.getBlock().getLocation())) {
                     event.setCancelled(true);
                     event.getBlock().setType(Material.AIR);
                     player.setItemInHand(item);

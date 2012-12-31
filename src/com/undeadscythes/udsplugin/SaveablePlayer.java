@@ -26,6 +26,7 @@ public class SaveablePlayer implements Saveable {
     private boolean godMode = false;
     private boolean lockdownPass = false;
     private boolean afk = false;
+    private boolean loadItems = false;
     private int wager = 0;
     private int powertoolID = 0;
     private int bounty = 0;
@@ -293,7 +294,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public boolean isInShop(final Location location) {
-        for(Region region : UDSPlugin.getShops().values()) {
+        for(Region region : UDSPlugin.getRegions(RegionType.SHOP).values()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 return true;
             }
@@ -556,13 +557,13 @@ public class SaveablePlayer implements Saveable {
     public Region getCurrentRegion(final RegionType type) {
         if(base != null) {
             if(type == RegionType.CITY) {
-                for(Region region : UDSPlugin.getCities().values()) {
+                for(Region region : UDSPlugin.getRegions(RegionType.CITY).values()) {
                     if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                         return region;
                     }
                 }
             } else if(type == RegionType.SHOP) {
-                for(Region region : UDSPlugin.getShops().values()) {
+                for(Region region : UDSPlugin.getRegions(RegionType.CITY).values()) {
                     if(base.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                         return region;
                     }
@@ -651,7 +652,7 @@ public class SaveablePlayer implements Saveable {
      */
     public boolean canBuildHere(final Location location) {
         boolean contained = false;
-        for(Region region : UDSPlugin.getRegions().values()) {
+        for(Region region : UDSPlugin.getRegions(RegionType.NORMAL).values()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 if(((region.getRank() != null && rank.compareTo(region.getRank()) >= 0)) || region.isOwner(this) || region.hasMember(this)) {
                     return true;
@@ -803,6 +804,22 @@ public class SaveablePlayer implements Saveable {
      */
     public boolean hasLockdownPass() {
         return lockdownPass;
+    }
+
+    /**
+     *
+     * @param loadItems
+     */
+    public void setLoadItems(final boolean loadItems) {
+        this.loadItems = loadItems;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean hasLoadItems() {
+        return loadItems;
     }
 
     /**

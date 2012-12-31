@@ -23,7 +23,7 @@ public class YCmd extends CommandWrapper {
                     break;
                 case HOME:
                     if(canAfford(price = Integer.parseInt(request.getData())) && noHome()) {
-                        final Region home = UDSPlugin.getHomes().get(sender.getName() + "home");
+                        final Region home = UDSPlugin.getRegions(RegionType.HOME).get(sender.getName() + "home");
                         home.clearMembers();
                         home.changeOwner(player);
                         player.debit(price);
@@ -56,7 +56,7 @@ public class YCmd extends CommandWrapper {
                     break;
                 case SHOP:
                     if(canAfford(price = Integer.parseInt(request.getData())) && noShop()) {
-                        final Region shop = UDSPlugin.getShops().get(sender.getName() + "shop");
+                        final Region shop = UDSPlugin.getRegions(RegionType.SHOP).get(sender.getName() + "shop");
                         shop.clearMembers();
                         shop.changeOwner(player);
                         player.debit(price);
@@ -74,7 +74,7 @@ public class YCmd extends CommandWrapper {
         clan.addMember(player);
         player.setClan(clan);
         clan.sendMessage(player.getNick() + " has joined the clan.");
-        final Region base = UDSPlugin.getBases().get(clan.getName() + "base");
+        final Region base = UDSPlugin.getRegions(RegionType.BASE).get(clan.getName() + "base");
         if(base != null) {
             base.addMember(player);
         }
