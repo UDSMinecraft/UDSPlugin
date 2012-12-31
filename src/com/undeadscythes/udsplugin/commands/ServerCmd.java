@@ -21,6 +21,9 @@ public class ServerCmd extends CommandWrapper {
             } else if(args[0].equals("reload")) {
                 UDSPlugin.reloadConf();
                 player.sendMessage(Color.MESSAGE + "Configuration file reloaded.");
+            } else if(args[0].equals("info")) {
+                player.sendMessage(Color.MESSAGE + "Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");
+                player.sendMessage(Color.MESSAGE + "There have been " + UDSPlugin.getPlayers().size() + " unique visitors.");
             } else {
                 subCmdHelp();
             }

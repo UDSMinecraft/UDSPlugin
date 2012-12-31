@@ -663,4 +663,8 @@ public class UDSPlugin extends JavaPlugin {
     public static HashSet<Byte> getTransparentBlocks() {
         return TRANSPARENT_BLOCKS;
     }
+
+    public static String getVersion() {
+        return plugin.getDescription().getVersion();
+    }
 }
