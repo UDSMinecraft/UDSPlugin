@@ -262,6 +262,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("call").setExecutor(new CallCmd());
         getCommand("challenge").setExecutor(new ChallengeCmd());
         getCommand("check").setExecutor(new CheckCmd());
+        getCommand("chunk").setExecutor(new ChunkCmd());
         getCommand("ci").setExecutor(new CiCmd());
         getCommand("city").setExecutor(new CityCmd());
         getCommand("clan").setExecutor(new ClanCmd());

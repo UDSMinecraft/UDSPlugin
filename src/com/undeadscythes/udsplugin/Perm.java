@@ -21,6 +21,7 @@ public enum Perm {
     CHALLENGE(PlayerRank.MEMBER, true),
     CHAT_HELP(PlayerRank.DEFAULT, true),
     CHECK(PlayerRank.DEFAULT, true),
+    CHUNK(PlayerRank.ADMIN, true),
     CI(PlayerRank.MEMBER, true),
     CITY(PlayerRank.MEMBER, true),
     CLAN(PlayerRank.MEMBER, true),
