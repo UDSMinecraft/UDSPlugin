@@ -2,9 +2,12 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
+import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
+import org.bukkit.util.Vector;
 
 /**
  * Event fired a piston extends.
@@ -28,5 +31,22 @@ public class BlockPistonExtend extends ListenerWrapper implements Listener {
                 return;
             }
         }
+        if(!event.isSticky() && event.getDirection().equals(BlockFace.UP) && event.getLength() == 1) {
+            switch(event.getBlocks().get(0).getType()) {
+                case SAND:
+                    boost(event.getBlocks().get(0), Material.SAND);
+                    break;
+                case GRAVEL:
+                    boost(event.getBlocks().get(0), Material.GRAVEL);
+                    break;
+                default:
+            }
+        }
+    }
+
+    private void boost(final Block block, final Material material) {
+        block.setType(Material.AIR);
+        final FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0.5, 1.5, 0.5), material, (byte)0);
+        fallingBlock.setVelocity(new Vector(0, 1, 0));
     }
 }
