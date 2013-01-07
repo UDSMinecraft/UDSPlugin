@@ -14,7 +14,7 @@ public class RegionCmd extends CommandWrapper {
             if(subCmd.equals("vert")) {
                 vert();
             } else if(subCmd.equals("list")) {
-                list(RegionType.NORMAL);
+                list(RegionType.GENERIC);
             } else if(subCmd.equals("type")) {
                 showTypes();
             } else if(subCmd.equals("flag")) {
@@ -39,7 +39,7 @@ public class RegionCmd extends CommandWrapper {
             } else if(subCmd.equals("select")) {
                 select();
             } else if(subCmd.equals("set")) {
-                set(RegionType.NORMAL);
+                set(RegionType.GENERIC);
             } else {
                 subCmdHelp();
             }
@@ -79,7 +79,9 @@ public class RegionCmd extends CommandWrapper {
         final Region region;
         final RegionType type;
         if((region = getRegion(args[1])) != null && ((type = getRegionType(args[2]))) != null) {
-            UDSPlugin.getRegions(region.getType()).remove(region.getName());
+            if(!region.getType().equals(RegionType.GENERIC)) {
+                UDSPlugin.getRegions(region.getType()).remove(region.getName());
+            }
             region.setType(type);
             UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
             player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set to type " + type.toString() + ".");
@@ -125,7 +127,7 @@ public class RegionCmd extends CommandWrapper {
 
     private void list(final RegionType type) {
         String list = "";
-        for(Region test : UDSPlugin.getRegions(RegionType.NORMAL).values()) {
+        for(Region test : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
             if(test.getType().equals(type)) {
                 list = list.concat(test.getName() + ", ");
             }
@@ -158,7 +160,7 @@ public class RegionCmd extends CommandWrapper {
     private void del() {
         final Region region = getRegion(args[1]);
         if(region != null) {
-            UDSPlugin.getRegions(RegionType.NORMAL).remove(region.getName());
+            UDSPlugin.getRegions(RegionType.GENERIC).remove(region.getName());
             player.sendMessage(Color.MESSAGE + "Region deleted.");
         }
     }
@@ -199,8 +201,8 @@ public class RegionCmd extends CommandWrapper {
         final Session session = getSession();
         if(session != null && hasTwoPoints(session) && notRegion(args[1]) && noCensor(args[1])) {
             final Region region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), null, "", type);
-            UDSPlugin.getRegions(RegionType.NORMAL).put(region.getName(), region);
-            if(!region.getType().equals(RegionType.NORMAL)) {
+            UDSPlugin.getRegions(RegionType.GENERIC).put(region.getName(), region);
+            if(!region.getType().equals(RegionType.GENERIC)) {
                 UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
             }
             player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set.");
@@ -238,10 +240,10 @@ public class RegionCmd extends CommandWrapper {
         final Region region = getRegion(args[1]);
         if(region != null && noCensor(args[1]) && notRegion(args[2])) {
             final String oldName = region.getName();
-            UDSPlugin.getRegions(RegionType.NORMAL).remove(oldName);
+            UDSPlugin.getRegions(RegionType.GENERIC).remove(oldName);
             region.changeName(args[2]);
-            UDSPlugin.getRegions(RegionType.NORMAL).put(region.getName(), region);
-            if(!region.getType().equals(RegionType.NORMAL)) {
+            UDSPlugin.getRegions(RegionType.GENERIC).put(region.getName(), region);
+            if(!region.getType().equals(RegionType.GENERIC)) {
                 UDSPlugin.getRegions(region.getType()).replace(oldName, region.getName(), region);
             }
             player.sendMessage(Color.MESSAGE + "Region " + oldName + " renamed to " + region.getName());

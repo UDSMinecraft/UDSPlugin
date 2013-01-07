@@ -25,7 +25,7 @@ public class ShopCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("clear")) {
                 if((shop = getShop()) != null) {
-                    UDSPlugin.getRegions(RegionType.NORMAL).replace(shop.getName(), nextShopName(), shop);
+                    UDSPlugin.getRegions(RegionType.GENERIC).replace(shop.getName(), nextShopName(), shop);
                     UDSPlugin.getRegions(RegionType.SHOP).replace(shop.getName(), nextShopName(), shop);
                     shop.clearMembers();
                     shop.changeOwner(null);
@@ -63,7 +63,7 @@ public class ShopCmd extends CommandWrapper {
             } else if(subCmd.equals("buy")) {
                 if((shop = getContainingShop()) != null && canAfford(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST)) && isEmptyShop(shop)) {
                     player.debit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST));
-                    UDSPlugin.getRegions(RegionType.NORMAL).replace(shop.getName(), player.getName() + "shop", shop);
+                    UDSPlugin.getRegions(RegionType.GENERIC).replace(shop.getName(), player.getName() + "shop", shop);
                     UDSPlugin.getRegions(RegionType.SHOP).replace(shop.getName(), player.getName() + "shop", shop);
                     shop.changeName(player.getName() + "shop");
                     player.sendMessage(Color.MESSAGE + "Shop bought.");

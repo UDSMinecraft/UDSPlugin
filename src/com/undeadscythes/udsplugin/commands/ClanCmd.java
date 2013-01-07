@@ -32,7 +32,7 @@ public class ClanCmd extends CommandWrapper {
                     } else {
                         UDSPlugin.getClans().remove(clan.getName());
                         UDSPlugin.getRegions(RegionType.BASE).remove(clan.getName() + "base");
-                        UDSPlugin.getRegions(RegionType.NORMAL).remove(clan.getName() + "base");
+                        UDSPlugin.getRegions(RegionType.GENERIC).remove(clan.getName() + "base");
                         Bukkit.broadcastMessage(Color.BROADCAST + clan.getName() + " no longer exists as all members have left.");
                     }
                     player.setClan(null);
@@ -136,9 +136,9 @@ public class ClanCmd extends CommandWrapper {
                     player.debit(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST));
                     UDSPlugin.getClans().remove(clan.getName());
                     if((base = UDSPlugin.getRegions(RegionType.BASE).remove(clan.getName() + "base")) != null) {
-                        UDSPlugin.getRegions(RegionType.NORMAL).remove(clan.getName() + "base");
+                        UDSPlugin.getRegions(RegionType.GENERIC).remove(clan.getName() + "base");
                         base.rename(args[1] + "base");
-                        UDSPlugin.getRegions(RegionType.NORMAL).put(args[1] + "base", base);
+                        UDSPlugin.getRegions(RegionType.GENERIC).put(args[1] + "base", base);
                         UDSPlugin.getRegions(RegionType.BASE).put(args[1] + "base", base);
                     }
                     clan.rename(args[1]);
@@ -164,7 +164,7 @@ public class ClanCmd extends CommandWrapper {
                             base = new Region(clan.getName() + "base", min, max, player.getLocation(), null, "", RegionType.BASE);
                             if(noOverlaps(base)) {
                                 player.debit(UDSPlugin.getConfigInt(ConfigRef.BASE_COST));
-                                UDSPlugin.getRegions(RegionType.NORMAL).put(base.getName(), base);
+                                UDSPlugin.getRegions(RegionType.GENERIC).put(base.getName(), base);
                                 UDSPlugin.getRegions(RegionType.BASE).put(base.getName(), base);
                                 base.placeMoreMarkers();
                                 base.placeTowers();
@@ -176,7 +176,7 @@ public class ClanCmd extends CommandWrapper {
                         }
                     } else if(args[1].equals("clear")) {
                         if((base = getBase(clan)) != null) {
-                            UDSPlugin.getRegions(RegionType.NORMAL).remove(base.getName());
+                            UDSPlugin.getRegions(RegionType.GENERIC).remove(base.getName());
                             UDSPlugin.getRegions(RegionType.BASE).remove(base.getName());
                             clan.sendMessage("Your clan base has been removed.");
                         }

@@ -34,7 +34,7 @@ public class CityCmd extends CommandWrapper {
                     city = new Region(args[1], min, max, player.getLocation(), player, "", RegionType.CITY);
                     if(noOverlaps(city)) {
                         player.debit(UDSPlugin.getConfigInt(ConfigRef.CITY_COST));
-                        UDSPlugin.getRegions(RegionType.NORMAL).put(args[1], city);
+                        UDSPlugin.getRegions(RegionType.GENERIC).put(args[1], city);
                         UDSPlugin.getRegions(RegionType.CITY).put(args[1], city);
                         city.placeMoreMarkers();
                         city.placeTowers();
@@ -60,7 +60,7 @@ public class CityCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("clear")) {
                 if((city = getMunicipality(args[1])) != null) {
-                    UDSPlugin.getRegions(RegionType.NORMAL).remove(city.getName());
+                    UDSPlugin.getRegions(RegionType.GENERIC).remove(city.getName());
                     UDSPlugin.getRegions(RegionType.CITY).remove(city.getName());
                     Bukkit.broadcastMessage(Color.BROADCAST + city.getName() + " has been abandoned.");
                 }

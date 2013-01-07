@@ -315,7 +315,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The region or <code>null</code> if no region exists by this name.
      */
     protected Region getRegion(final String regionName) {
-        final Region region = UDSPlugin.getRegions(RegionType.NORMAL).get(regionName);
+        final Region region = UDSPlugin.getRegions(RegionType.GENERIC).get(regionName);
         if(region == null) {
             player.sendMessage(Color.ERROR + "No region exists by that name.");
         }
@@ -817,7 +817,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if no region already exists with the given name, <code>false</code> otherwise.
      */
     protected boolean notRegion(final String name) {
-        if(UDSPlugin.getRegions(RegionType.NORMAL).containsKey(name)) {
+        if(UDSPlugin.getRegions(RegionType.GENERIC).containsKey(name)) {
             player.sendMessage(Color.ERROR + "A protected area already exists with that name.");
             return false;
         } else {
@@ -883,7 +883,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if there are no overlaps with other regions, <code>false</code> otherwise.
      */
     protected boolean noOverlaps(final Region region) {
-        for(Region test : UDSPlugin.getRegions(RegionType.NORMAL).values()) {
+        for(Region test : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
             if(test.hasOverlap(region)) {
                 player.sendMessage(Color.ERROR + "You cannot do that here, you are too close to another protected area.");
                 return false;

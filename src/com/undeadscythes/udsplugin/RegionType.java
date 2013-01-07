@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * @author UndeadScythes
  */
 public enum RegionType {
-    NORMAL,
+    GENERIC,
     SHOP,
     BASE,
     QUARRY,
@@ -21,6 +21,9 @@ public enum RegionType {
         * @return The region type or <code>null</code> if there was no match.
         */
     public static RegionType getByName(final String string) {
+        if(string.equalsIgnoreCase("normal")) {     //
+            return GENERIC;                         // Update hack fix
+        }                                           //
         for(RegionType type : values()) {
             if(type.name().equals(string.toUpperCase())) {
                 return type;

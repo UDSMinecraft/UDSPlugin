@@ -107,7 +107,7 @@ public class ListenerWrapper {
      */
     public boolean hasFlag(final Location location, final RegionFlag flag) {
         boolean inRegion = false;
-        for(Region region : UDSPlugin.getRegions(RegionType.NORMAL).values()) {
+        for(Region region : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
             if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 inRegion = true;
                 if(region.hasFlag(flag)) {
@@ -127,7 +127,7 @@ public class ListenerWrapper {
         final List<Region> regions = new ArrayList<Region>();
         final Vector vector = location.toVector();
         final World world = location.getWorld();
-        for(Region region : UDSPlugin.getRegions(RegionType.NORMAL).values()) {
+        for(Region region : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
             if(world.equals(region.getWorld()) && vector.isInAABB(region.getV1(), region.getV2())) {
                 regions.add(region);
             }

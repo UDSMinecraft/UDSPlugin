@@ -26,7 +26,7 @@ public class HomeCmd extends CommandWrapper {
                     home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", RegionType.HOME);
                     if(noOverlaps(home)) {
                         player.debit(UDSPlugin.getConfigInt(ConfigRef.HOME_COST));
-                        UDSPlugin.getRegions(RegionType.NORMAL).put(home.getName(), home);
+                        UDSPlugin.getRegions(RegionType.GENERIC).put(home.getName(), home);
                         UDSPlugin.getRegions(RegionType.HOME).put(home.getName(), home);
                         home.placeCornerMarkers();
                         player.sendMessage(Color.MESSAGE + "Home area protected.");
@@ -34,7 +34,7 @@ public class HomeCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("clear")) {
                 if((home = getHome()) != null) {
-                    UDSPlugin.getRegions(RegionType.NORMAL).remove(home.getName());
+                    UDSPlugin.getRegions(RegionType.GENERIC).remove(home.getName());
                     UDSPlugin.getRegions(RegionType.HOME).remove(home.getName());
                     player.sendMessage(Color.MESSAGE + "Home protection removed.");
                 }
