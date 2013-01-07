@@ -84,6 +84,8 @@ public class UDSPlugin extends JavaPlugin {
         data.saveDefaultData();
         data.saveData();
         getLogger().info("Data loaded.");
+        loadWorlds();
+        getLogger().info("Worlds loaded.");
         try {
             loadFiles();
         } catch (IOException ex) {
@@ -155,6 +157,12 @@ public class UDSPlugin extends JavaPlugin {
         for(RegionFlag flag : RegionFlag.values()) {
             final String flagname = ConfigRef.GLOBAL_FLAGS.getReference() + "." + flag.toString().toLowerCase();
             GLOBAL_FLAGS.put(flag, config.getBoolean(flagname));
+        }
+    }
+
+    public void loadWorlds() {
+        for(String world : data.getWorlds()) {
+            Bukkit.createWorld(new WorldCreator(world));
         }
     }
 
@@ -303,7 +311,6 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("rules").setExecutor(new RulesCmd());
         getCommand("scuba").setExecutor(new ScubaCmd());
         getCommand("server").setExecutor(new ServerCmd());
-        getCommand("setspawn").setExecutor(new SetSpawnCmd());
         getCommand("setwarp").setExecutor(new SetWarpCmd());
         getCommand("shop").setExecutor(new ShopCmd());
         getCommand("signs").setExecutor(new SignsCmd());
@@ -327,6 +334,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("where").setExecutor(new WhereCmd());
         getCommand("who").setExecutor(new WhoCmd());
         getCommand("whois").setExecutor(new WhoIsCmd());
+        getCommand("world").setExecutor(new WorldCmd());
         getCommand("xp").setExecutor(new XPCmd());
         getCommand("y").setExecutor(new YCmd());
     }

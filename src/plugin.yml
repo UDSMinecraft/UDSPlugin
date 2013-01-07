@@ -93,6 +93,7 @@ commands:
   who:
     aliases: list
   whois:
+  world:
   xp:
     aliases: exp
   y:

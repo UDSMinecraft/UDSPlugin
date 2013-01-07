@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin;
 
 import java.io.*;
+import java.util.*;
 import java.util.logging.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.*;
@@ -17,6 +18,7 @@ public class Data {
     private Location spawn;
     private long enderDeath;
     private long lastDaily;
+    private List<String> worlds;
 
     public Data(final UDSPlugin plugin) {
         this.plugin = plugin;
@@ -32,6 +34,7 @@ public class Data {
         spawn = new Location(Bukkit.getWorld(dataConfig.getString("spawn.world")), dataConfig.getDouble("spawn.x"), dataConfig.getDouble("spawn.y"), dataConfig.getDouble("spawn.z"), (float)dataConfig.getDouble("spawn.yaw"), (float)dataConfig.getDouble("spawn.pitch"));
         enderDeath = dataConfig.getLong("ender-death");
         lastDaily = dataConfig.getLong("last-daily");
+        worlds = dataConfig.getStringList("worlds");
     }
 
     public FileConfiguration getData() {
@@ -88,5 +91,14 @@ public class Data {
 
     public long getLastDaily() {
         return lastDaily;
+    }
+
+    public List<String> getWorlds() {
+        return worlds;
+    }
+
+    public void newWorld(final String world) {
+        worlds.add(world);
+        dataConfig.set("worlds", worlds);
     }
 }

@@ -15,7 +15,6 @@ public class HelpCmd extends CommandWrapper {
         ADMIN(Perm.ADMIN, "/admin help", "Show more admin commands.", true, false),
         ADMIN_LOCKDOWN(Perm.LOCKDOWN, "/lockdown", "Toggle the server's lockdown mode.", false, true),
         ADMIN_LOCKDOWN_PASS(Perm.LOCKDOWN, "/lockdown <player>", "Issue a lockdown pass.", false, true),
-        ADMIN_SETSPAWN(Perm.SETSPAWN, "/setspawn", "Set the world spawn point.", false, true),
         MOD(Perm.MOD, "/mod help", "Show more mod commands.", true, false),
         MOD_A(Perm.A, "/a", "Switch to the admin chat channel.", false, true),
         MOD_A_MSG(Perm.A, "/a <message>", "Send a message in the admin chat channel.", false, true),
@@ -156,6 +155,7 @@ public class HelpCmd extends CommandWrapper {
         SCUBA(Perm.SCUBA, "/scuba", "Use scuba gear to dive underwater.", false, false),
         SERVER(Perm.SERVER, "/server help", "Show more server commands.", true, false),
         SERVER_RELOAD(Perm.SERVER, "/server reload", "Reload changes from the config.yml file.", false, true),
+        SERVER_SETSPAWN(Perm.SETSPAWN, "/server setspawn", "Set the main server spawn point.", false, true),
         SERVER_STOP(Perm.SERVER, "/server stop", "Stop the server.", false, true),
         SHOP(Perm.SHOP, "/shop help", "Show more shop commands.", true, false),
         SHOP_HELP(Perm.SHOP, "/shop help [page]", "Show these shop help pages.", false, true),
@@ -190,7 +190,12 @@ public class HelpCmd extends CommandWrapper {
         WE_REGEN(Perm.WE_REGEN, "/we regen", "Regenerate a chunk from seed.", false, true),
         WHERE(Perm.WHERE, "/where", "Get details on your surroundings.", false, false),
         WHO(Perm.WHO, "/who", "Get a list of online players.", false, false),
-        WHOIS(Perm.WHOIS, "/whois <player>", "Find out what a players MC name is.", false, false);
+        WHOIS(Perm.WHOIS, "/whois <player>", "Find out what a players MC name is.", false, false),
+        WORLD(Perm.WORLD, "/world help", "Show more world commands.", true, false),
+        WORLD_CREATE(Perm.WORLD, "/world create <name>", "Create a new world.", false, true),
+        WORLD_LIST(Perm.WORLD, "/world list", "List the available worlds.", false, true),
+        WORLD_SETSPAWN(Perm.WORLD, "/world setspawn", "Set the spawn of the current world.", false, true),
+        WORLD_TP(Perm.WORLD, "/world tp <world>", "Teleport to a world.", false, true);
 
         private Perm perm;
         private String usage;

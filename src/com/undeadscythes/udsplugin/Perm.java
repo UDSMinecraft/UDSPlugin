@@ -122,6 +122,7 @@ public enum Perm {
     WHERE(PlayerRank.DEFAULT, true),
     WHO(PlayerRank.DEFAULT, true),
     WHOIS(PlayerRank.DEFAULT, true),
+    WORLD(PlayerRank.ADMIN, true),
     XP(PlayerRank.MOD, true),
     Y(PlayerRank.DEFAULT, true);
 
