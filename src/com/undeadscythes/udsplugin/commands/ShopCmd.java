@@ -13,7 +13,6 @@ public class ShopCmd extends CommandWrapper {
         Region shop;
         SaveablePlayer target;
         int price;
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 0) {
             if((shop = getShop()) != null && notJailed() && notPinned()) {
                 player.teleport(shop.getWarp());
@@ -70,15 +69,24 @@ public class ShopCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("sign")) {
                 player.sendMessage(Color.MESSAGE + "Correct shop sign format:");
-                player.sendMessage(Color.ITEM + "Line 1 - " + Color.TEXT + "Leave this line blank.\n");
-                player.sendMessage(Color.ITEM + "Line 2 - " + Color.TEXT + "shop\n");
-                player.sendMessage(Color.ITEM + "Line 3 - " + Color.TEXT + "<item>\n");
-                player.sendMessage(Color.ITEM + "Line 4 - " + Color.TEXT + "<buy price>:<sell price>");
-                player.sendMessage(Color.TEXT + "The buy price is how much people pay to buy from the shop.");
-                player.sendMessage(Color.TEXT + "The sell price is how much people pay to sell to the shop.");
+                player.sendMessage(Color.ITEM + "Line 1 - " + Color.TEXT + "The word '[shop]' with square brackets.");
+                player.sendMessage(Color.ITEM + "Line 2 - " + Color.TEXT + "The price of one item.");
+                player.sendMessage(Color.ITEM + "Lines 3 & 4 - " + Color.TEXT + "Anything else you want to write.");
+                player.sendMessage(Color.ITEM + "Example:");
+                player.sendMessage(Color.TEXT + "[shop]");
+                player.sendMessage(Color.TEXT + "50");
+                player.sendMessage(Color.TEXT + "Lovely home");
+                player.sendMessage(Color.TEXT + "cooked treats!");
             } else if(subCmd.equals("item")) {
                 final ItemStack item = player.getItemInHand();
                 player.sendMessage(Color.MESSAGE + item.getType().name() + " - " + Color.TEXT + item.getTypeId() + ":" + item.getData().getData());
+            } else if("changes".equals(subCmd)) {
+                player.sendMessage(Color.MESSAGE + "Changes to the shop system:");
+                player.sendMessage(Color.TEXT + "Shops no longer buy items, to sell items buy your own shop.");
+                player.sendMessage(Color.TEXT + "You will pay for the items you take when you close the chest.");
+                player.sendMessage(Color.TEXT + "The chest doesn't know which items are yours so don't put your items in unless you want to pay to get them back.");
+                player.sendMessage(Color.TEXT + "Shops are not item specific, pay one price for whatever items are in a chest.");
+                player.sendMessage(Color.TEXT + "Check out /shop sign to see how to format new shop signs.");
             } else if(subCmd.equals("help")) {
                 sendHelp(1);
             } else if((target = getMatchingPlayer(args[0])) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {

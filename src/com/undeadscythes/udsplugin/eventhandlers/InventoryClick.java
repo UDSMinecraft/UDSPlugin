@@ -1,124 +1,54 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import java.util.*;
-import org.bukkit.Material;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
+import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 
 /**
- * When a player clicks in an inventory window.
+ * Fired when a player clicks in an inventory window.
+ * If the player is in 'shopping mode' then we edit their shopping list
+ * accordingly.
  * @author UndeadScythes
  */
 public class InventoryClick extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final InventoryClickEvent event) {
-        if(event.getInventory().getHolder() instanceof Chest) {
-            final Chest chest = (Chest) event.getInventory().getHolder();
-            if(chest.getBlock().getRelative(BlockFace.UP).getType() == Material.WALL_SIGN) {
-                final Sign sign = (Sign) chest.getBlock().getRelative(BlockFace.UP).getState();
-                if(isShopSign(sign.getLines())) {
-                    final String shopOwner = sign.getLine(0).replace(Color.SIGN.toString(), "");
-                    boolean serverShop = false;
-                    if("Server".equals(shopOwner)) {
-                        serverShop = true;
-                    }
-                    if(event.getWhoClicked().getName().equalsIgnoreCase(shopOwner)) {
-                        return;
-                    }
-                    if(event.getCursor().getTypeId() == 0) {
-                        final SaveablePlayer customer = UDSPlugin.getOnlinePlayers().get(((Player)event.getWhoClicked()).getName());
-                        final ItemStack tradingItem = event.getCurrentItem().clone();
-                        final ItemStack shopItem = findItem(sign.getLine(2));
-                        if(tradingItem.getType() == shopItem.getType() && tradingItem.getData().getData() == shopItem.getData().getData()) {
-                            tradingItem.setAmount(1);
-                            final int rawSlot = event.getRawSlot();
-                            int tradeValue;
-                            boolean shopIsSelling;
-                            SaveablePlayer owner = null;
-                            if(!serverShop) {
-                                owner = UDSPlugin.getPlayers().get(shopOwner);
-                            }
-                            final InventoryView inventoryView = event.getView();
-                            final Inventory shop = inventoryView.getTopInventory();
-                            final Inventory pack = inventoryView.getBottomInventory();
-                            if(event.isShiftClick()) {
-                                tradingItem.setAmount(event.getCurrentItem().getAmount());
-                            } else if(event.isRightClick()) {
-                                tradingItem.setAmount(event.getCurrentItem().getAmount() / 2);
-                            }
-                            final int buyPrice = Integer.parseInt(sign.getLine(3).split(":")[0].replace("B ", ""));
-                            final int sellPrice = Integer.parseInt(sign.getLine(3).split(":")[1].replace(" S", ""));
-                            if(rawSlot < 27) {
-                                tradeValue = buyPrice * tradingItem.getAmount();
-                                shopIsSelling = true;
-                            } else {
-                                tradeValue = sellPrice * tradingItem.getAmount();
-                                shopIsSelling = false;
-                            }
-                            if(shopIsSelling) {
-                                if(tradeValue == 0) {
-                                    customer.sendMessage(Color.ERROR + "This shop does not sell that item.");if(customer.canAfford(tradeValue)) {
-                                        final HashMap<Integer, ItemStack> overflow = pack.addItem(tradingItem.clone());
-                                        int overflowAmount = 0;
-                                        if(!overflow.isEmpty()) {
-                                            overflowAmount = overflow.get(0).getAmount();
-                                        }
-                                        customer.debit(tradeValue - overflowAmount * buyPrice);
-                                        if(!serverShop) {
-                                            owner.credit(tradeValue - overflowAmount * buyPrice);
-                                        }
-                                        tradingItem.setAmount(event.getCurrentItem().getAmount() - tradingItem.getAmount() + overflowAmount);
-                                        shop.setItem(rawSlot, tradingItem);
-                                    } else {
-                                        customer.sendMessage(Color.ERROR + "You do not have enough money to buy that.");
-                                    }
-                                } else {
-                                    if(customer.canAfford(tradeValue)) {
-                                        final HashMap<Integer, ItemStack> overflow = pack.addItem(tradingItem.clone());
-                                        int overflowAmount = 0;
-                                        if(!overflow.isEmpty()) {
-                                            overflowAmount = overflow.get(0).getAmount();
-                                        }
-                                        customer.debit(tradeValue - overflowAmount * buyPrice);
-                                        if(!serverShop) {
-                                            owner.credit(tradeValue - overflowAmount * buyPrice);
-                                        }
-                                        tradingItem.setAmount(event.getCurrentItem().getAmount() - tradingItem.getAmount() + overflowAmount);
-                                        shop.setItem(rawSlot, tradingItem);
-                                    } else {
-                                        customer.sendMessage(Color.ERROR + "You do not have enough money to buy that.");
-                                    }
-                                }
-                            } else {
-                                if(tradeValue == 0) {
-                                    customer.sendMessage(Color.ERROR + "This shop does not buy that item.");
-                                } else {
-                                    if(serverShop || owner.canAfford(tradeValue)) {
-                                        final HashMap<Integer, ItemStack> overflow = shop.addItem(tradingItem.clone());
-                                        int overflowAmount = 0;
-                                        if(!overflow.isEmpty() && !serverShop) {
-                                            overflowAmount = overflow.get(0).getAmount();
-                                        }
-                                        customer.credit(tradeValue - overflowAmount * sellPrice);
-                                        if(!serverShop) {
-                                            owner.debit(tradeValue - overflowAmount * sellPrice);
-                                        }
-                                        tradingItem.setAmount(event.getCurrentItem().getAmount() - tradingItem.getAmount() + overflowAmount);
-                                        pack.setItem(event.getSlot(), tradingItem);
-                                    } else {
-                                        customer.sendMessage(Color.ERROR + "This shop does not have enough money to buy that.");
-                                    }
-                                }
-                            }
-                        } else {
-                            customer.sendMessage(Color.ERROR + "This shop does not trade that item.");
-                        }
-                        event.setCancelled(true);
-                    }
+    public final void onEvent(final InventoryClickEvent event) {
+        final SaveablePlayer shopper = UDSPlugin.getOnlinePlayers().get(event.getWhoClicked().getName());
+        if(shopper.isShopping()) {
+            final ItemStack item = event.getCursor();
+            if(event.isShiftClick()) {
+                event.setResult(Event.Result.DENY);
+            } else if(shopper.isBuying() && event.getSlot() == -999) {
+                event.setResult(Event.Result.DENY);
+                event.getInventory().addItem(item);
+                event.setCursor(new ItemStack(Material.AIR));
+            } else if(event.getSlot() != -999 && !event.getCurrentItem().getType().equals(Material.AIR)) {
+                event.setResult(Event.Result.DENY);
+            } else if(item.getType().equals(Material.AIR)) {
+                if(event.getRawSlot() == event.getSlot()) {
+                    shopper.setBuying(true);
+                } else {
+                    shopper.setBuying(false);
+                }
+            } else if(shopper.isBuying() && event.getRawSlot() != event.getSlot()) {
+                final Inventory cart = shopper.getShoppingList();
+                if(event.isLeftClick()) {
+                    cart.addItem(item);
+                } else if(event.isRightClick()) {
+                    final ItemStack oneItem = item.clone();
+                    oneItem.setAmount(1);
+                    cart.addItem(oneItem);
+                }
+            } else if(!shopper.isBuying() && event.getRawSlot() == event.getSlot()) {
+                final Inventory cart = shopper.getShoppingList();
+                if(event.isLeftClick()) {
+                    cart.removeItem(item);
+                } else if(event.isRightClick()) {
+                    final ItemStack oneItem = item.clone();
+                    oneItem.setAmount(1);
+                    cart.removeItem(oneItem);
                 }
             }
         }

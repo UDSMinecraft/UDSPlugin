@@ -2,11 +2,11 @@ package com.undeadscythes.udsplugin;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 
 /**
@@ -27,6 +27,8 @@ public class SaveablePlayer implements Saveable {
     private boolean lockdownPass = false;
     private boolean afk = false;
     private boolean loadItems = false;
+    private boolean isShopping = false;
+    private boolean isBuying = false;
     private int wager = 0;
     private int powertoolID = 0;
     private int bounty = 0;
@@ -51,6 +53,7 @@ public class SaveablePlayer implements Saveable {
     private PlayerRank rank = PlayerRank.DEFAULT;
     private ItemStack[] inventoryCopy = null;
     private ItemStack[] armorCopy = null;
+    private final Inventory shoppingList = Bukkit.createInventory(base, 36);
     private final LinkedList<Long> lastChats = new LinkedList<Long>();
     private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
 
@@ -147,6 +150,22 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
+     * Check if this player currently shopping.
+     * @return
+     */
+    public final boolean isShopping() {
+        return isShopping;
+    }
+
+    /**
+     * Set if this player is currently shopping.
+     * @param isShopping
+     */
+    public final void setShopping(final boolean isShopping) {
+        this.isShopping = isShopping;
+    }
+
+    /**
      * Set the player that this player is whispering with.
      * @param player Player whispering.
      */
@@ -160,6 +179,22 @@ public class SaveablePlayer implements Saveable {
      */
     public int getWager() {
         return wager;
+    }
+
+    /**
+     * Check if this player is buying an item.
+     * @return
+     */
+    public final boolean isBuying() {
+        return isBuying;
+    }
+
+    /**
+     * Set if this player is buying an item.
+     * @param isBuying
+     */
+    public final void setBuying(final boolean isBuying) {
+        this.isBuying = isBuying;
     }
 
     /**
@@ -255,6 +290,14 @@ public class SaveablePlayer implements Saveable {
      */
     public void setPowertoolID(final int ID) {
         powertoolID = ID;
+    }
+
+    /**
+     * Get this players current shopping list.
+     * @return
+     */
+    public Inventory getShoppingList() {
+        return shoppingList;
     }
 
     /**

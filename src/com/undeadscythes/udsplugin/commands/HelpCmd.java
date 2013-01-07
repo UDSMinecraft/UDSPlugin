@@ -163,6 +163,7 @@ public class HelpCmd extends CommandWrapper {
         SHOP_TP_OTHER(Perm.SHOP, "/shop <player>", "Teleport to another players shop.", false, true),
         SHOP_BUY(Perm.SHOP, "/shop buy", "Buy the shop plot you are standing in.", false, true),
         SHOP_CLEAR(Perm.SHOP, "/shop clear", "Put your shop back up for sale.", false, true),
+        SHOP_CHANGES(Perm.SHOP, "/shop changes", "Check out the lates changes to shops.", false, true),
         SHOP_HIRE(Perm.SHOP, "/shop hire <player>", "Hire a player to work in your shop.", false, true),
         SHOP_FIRE(Perm.SHOP, "/shop fire <player>", "Fire one of your workers.", false, true),
         SHOP_ITEM(Perm.SHOP, "/shop item", "Check the in game name for an item.", false, true),
@@ -195,6 +196,7 @@ public class HelpCmd extends CommandWrapper {
         WORLD_CREATE(Perm.WORLD, "/world create <name>", "Create a new world.", false, true),
         WORLD_LIST(Perm.WORLD, "/world list", "List the available worlds.", false, true),
         WORLD_SETSPAWN(Perm.WORLD, "/world setspawn", "Set the spawn of the current world.", false, true),
+        WORLD_SOFTDEL(Perm.WORLD, "/world softdel <world>", "Unload a world for offline deletion.", false, true),
         WORLD_TP(Perm.WORLD, "/world tp <world>", "Teleport to a world.", false, true);
 
         private Perm perm;

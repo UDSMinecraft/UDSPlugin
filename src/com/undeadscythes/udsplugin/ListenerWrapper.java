@@ -73,18 +73,21 @@ public class ListenerWrapper {
      * @return
      */
     public static boolean isShopSign(final String[] lines) {
-        final String shopLine = lines[1];
-        final String ownerLine = lines[0];
-        final String priceLine = lines[3];
-        return (shopLine.equalsIgnoreCase(Color.SIGN + "shop")
-                || shopLine.equalsIgnoreCase("shop"))
-            && ((UDSPlugin.getPlayers().get(ownerLine.replace(Color.SIGN.toString(), "")) != null
-                || "".equals(ownerLine)
-                || (Color.SIGN + "server").equalsIgnoreCase(ownerLine)))
-            && findItem(lines[2]) != null
-            && priceLine.contains(":")
-            && priceLine.split(":")[0].replace("B ", "").matches("[0-9][0-9]*")
-            && priceLine.split(":")[1].replace(" S", "").matches("[0-9][0-9]*");
+        if(lines[0].equals(Color.SIGN + "[SHOP]")) {
+            return true;
+        }
+        final String shopLine = lines[1];                                                           //
+        final String ownerLine = lines[0];                                                          //
+        final String priceLine = lines[3];                                                          //
+        return (shopLine.equalsIgnoreCase(Color.SIGN + "shop")                                      //
+                || shopLine.equalsIgnoreCase("shop"))                                               //
+            && ((UDSPlugin.getPlayers().get(ownerLine.replace(Color.SIGN.toString(), "")) != null   // Update hack fix
+                || "".equals(ownerLine)                                                             //
+                || (Color.SIGN + "server").equalsIgnoreCase(ownerLine)))                            //
+            && findItem(lines[2]) != null                                                           //
+            && priceLine.contains(":")                                                              //
+            && priceLine.split(":")[0].replace("B ", "").matches("[0-9][0-9]*")                     //
+            && priceLine.split(":")[1].replace(" S", "").matches("[0-9][0-9]*");                    //
     }
 
     /**
