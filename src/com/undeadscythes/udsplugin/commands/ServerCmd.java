@@ -25,6 +25,11 @@ public class ServerCmd extends CommandWrapper {
             } else if(subCmd.equals("info")) {
                 player.sendMessage(Color.MESSAGE + "Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");
                 player.sendMessage(Color.MESSAGE + "There have been " + UDSPlugin.getPlayers().size() + " unique visitors.");
+            } else if(subCmd.equals("setspawn")) {
+                final Location location = player.getLocation();
+                player.getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                UDSPlugin.getData().setSpawn(location);
+                player.sendMessage(Color.MESSAGE + "Spawn location moved.");
             } else {
                 subCmdHelp();
             }
