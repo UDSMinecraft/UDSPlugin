@@ -11,6 +11,7 @@ import org.bukkit.*;
 public class VIPCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
+        final String subCmd = args[0].toLowerCase();
         if(args.length == 0) {
             if(player.getRank().equals(PlayerRank.VIP)) {
                 player.sendMessage(Color.MESSAGE + "You have " + player.getVIPTimeString()+ " left in VIP.");
@@ -21,7 +22,7 @@ public class VIPCmd extends CommandWrapper {
                 player.sendMessage(Color.MESSAGE + "Welcome to the elite, enjoy your VIP status.");
             }
         } else if(maxArgsHelp(2)) {
-            if(args[0].equals("spawns")) {
+            if(subCmd.equals("spawns")) {
                 int page;
                 if(args.length == 2 && (page = parseInt(args[1])) != -1) {
                     sendPage(page, player);

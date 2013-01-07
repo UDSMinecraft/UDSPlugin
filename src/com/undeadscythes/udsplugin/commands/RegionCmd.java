@@ -9,64 +9,65 @@ import com.undeadscythes.udsplugin.*;
 public class RegionCmd extends CommandWrapper {
     @Override
     public final void playerExecute() {
+        final String subCmd = args[0].toLowerCase();
         if(args.length == 1) {
-            if(args[0].equals("vert")) {
+            if(subCmd.equals("vert")) {
                 vert();
-            } else if(args[0].equals("list")) {
+            } else if(subCmd.equals("list")) {
                 list(RegionType.NORMAL);
-            } else if(args[0].equals("type")) {
+            } else if(subCmd.equals("type")) {
                 showTypes();
-            } else if(args[0].equals("flag")) {
+            } else if(subCmd.equals("flag")) {
                 flagList();
             } else {
                 subCmdHelp();
             }
         } else if(args.length == 2) {
-            if(args[0].equals("del")) {
+            if(subCmd.equals("del")) {
                 del();
-            } else if(args[0].equals("list")) {
+            } else if(subCmd.equals("list")) {
                 final RegionType type = getRegionType(args[1]);
                 if(type != null) {
                     list(type);
                 }
-            } else if(args[0].equals("tp")) {
+            } else if(subCmd.equals("tp")) {
                 tp();
-            } else if(args[0].equals("info")) {
+            } else if(subCmd.equals("info")) {
                 info();
-            } else if(args[0].equals("reset")) {
+            } else if(subCmd.equals("reset")) {
                 reset();
-            } else if(args[0].equals("select")) {
+            } else if(subCmd.equals("select")) {
                 select();
-            } else if(args[0].equals("set")) {
+            } else if(subCmd.equals("set")) {
                 set(RegionType.NORMAL);
             } else {
                 subCmdHelp();
             }
         } else if(args.length == 3) {
-            if(args[0].equals("addmember")) {
+            if(subCmd.equals("addmember")) {
                 addMember();
-            } else if(args[0].equals("delmember")) {
+            } else if(subCmd.equals("delmember")) {
                 delMember();
-            } else if(args[0].equals("owner")) {
+            } else if(subCmd.equals("owner")) {
                 owner();
-            } else if(args[0].equals("flag")) {
+            } else if(subCmd.equals("flag")) {
                 flag();
-            } else if(args[0].equals("rename")) {
+            } else if(subCmd.equals("rename")) {
                 rename();
-            } else if(args[0].equals("set")) {
+            } else if(subCmd.equals("set")) {
                 final RegionType type = getRegionType(args[2]);
                 if(type != null) {
                     set(type);
                 }
-            } else if(args[0].equals("type")) {
+            } else if(subCmd.equals("type")) {
                 changeType();
             } else {
                 subCmdHelp();
             }
         } else if(numArgsHelp(4)) {
-            if(args[0].equals("expand")) {
+            if(subCmd.equals("expand")) {
                 expand();
-            } else if(args[0].equals("contract")) {
+            } else if(subCmd.equals("contract")) {
                 contract();
             } else {
                 subCmdHelp();

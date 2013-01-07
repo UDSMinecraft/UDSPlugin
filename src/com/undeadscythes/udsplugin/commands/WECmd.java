@@ -15,46 +15,47 @@ import org.bukkit.util.*;
 public class WECmd extends CommandWrapper {
     @Override
     public void playerExecute() {
+        final String subCmd = args[0].toLowerCase();
         if(args.length == 1) {
-            if(args[0].equals("undo")) {
+            if(subCmd.equals("undo")) {
                 undo();
-            } else if(args[0].equals("copy")) {
+            } else if(subCmd.equals("copy")) {
                 copy();
-            } else if(args[0].equals("paste")) {
+            } else if(subCmd.equals("paste")) {
                 paste();
-            } else if(args[0].equals("regen")) {
+            } else if(subCmd.equals("regen")) {
                 regen();
-            } else if(args[0].equals("ext")) {
+            } else if(subCmd.equals("ext")) {
                 ext(10);
-            } else if(args[0].equals("drain")) {
+            } else if(subCmd.equals("drain")) {
                 drain(10);
             } else {
                 subCmdHelp();
             }
         } else if(args.length == 2) {
-            if(args[0].equals("set")) {
+            if(subCmd.equals("set")) {
                 set();
-            } else if(args[0].equals("ext")) {
+            } else if(subCmd.equals("ext")) {
                 final int range = parseInt(args[1]);
                 if(range > -1) {
                     ext(range);
                 }
-            } else if(args[0].equals("drain")) {
+            } else if(subCmd.equals("drain")) {
                 final int range = parseInt(args[1]);
                 if(range > -1) {
                     drain(range);
                 }
-            } else if(args[0].equals("save")) {
-                save(args[1]);
-            } else if(args[0].equals("load")) {
+            } else if(subCmd.equals("save")) {
+                save(subCmd);
+            } else if(subCmd.equals("load")) {
                 load(args[1]);
             } else {
                 subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
-            if(args[0].equals("replace")) {
+            if(subCmd.equals("replace")) {
                 replace();
-            } else if(args[0].equals("move")) {
+            } else if(subCmd.equals("move")) {
                 move();
             } else {
                 subCmdHelp();

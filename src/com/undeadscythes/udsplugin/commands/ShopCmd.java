@@ -13,16 +13,17 @@ public class ShopCmd extends CommandWrapper {
         Region shop;
         SaveablePlayer target;
         int price;
+        final String subCmd = args[0].toLowerCase();
         if(args.length == 0) {
             if((shop = getShop()) != null && notJailed() && notPinned()) {
                 player.teleport(shop.getWarp());
             }
         } else if(args.length == 1) {
-            if(args[0].equals("make")) {
+            if(subCmd.equals("make")) {
                 if(hasPerm(Perm.SHOP_ADMIN)) {
                     player.performCommand("region set " + nextShopName() + " shop");
                 }
-            } else if(args[0].equals("clear")) {
+            } else if(subCmd.equals("clear")) {
                 if((shop = getShop()) != null) {
                     UDSPlugin.getRegions(RegionType.NORMAL).replace(shop.getName(), nextShopName(), shop);
                     UDSPlugin.getRegions(RegionType.SHOP).replace(shop.getName(), nextShopName(), shop);
@@ -31,12 +32,12 @@ public class ShopCmd extends CommandWrapper {
                     player.sendMessage(Color.MESSAGE + "Shop put back up for sale.");
                     player.credit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) / 2);
                 }
-            } else if(args[0].equals("set")) {
+            } else if(subCmd.equals("set")) {
                 if((shop = getShop()) != null) {
                     shop.setWarp(player.getLocation());
                     player.sendMessage(Color.MESSAGE + "Shop warp point set.");
                 }
-            } else if(args[0].equals("workers")) {
+            } else if(subCmd.equals("workers")) {
                 String message = "";
                 for(Region otherShop : UDSPlugin.getRegions(RegionType.SHOP).values()) {
                     if(otherShop.hasMember(player)) {
@@ -59,7 +60,7 @@ public class ShopCmd extends CommandWrapper {
                         player.sendMessage(Color.MESSAGE + "You have no workers.");
                     }
                 }
-            } else if(args[0].equals("buy")) {
+            } else if(subCmd.equals("buy")) {
                 if((shop = getContainingShop()) != null && canAfford(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST)) && isEmptyShop(shop)) {
                     player.debit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST));
                     UDSPlugin.getRegions(RegionType.NORMAL).replace(shop.getName(), player.getName() + "shop", shop);
@@ -67,7 +68,7 @@ public class ShopCmd extends CommandWrapper {
                     shop.changeName(player.getName() + "shop");
                     player.sendMessage(Color.MESSAGE + "Shop bought.");
                 }
-            } else if(args[0].equals("sign")) {
+            } else if(subCmd.equals("sign")) {
                 player.sendMessage(Color.MESSAGE + "Correct shop sign format:");
                 player.sendMessage(Color.ITEM + "Line 1 - " + Color.TEXT + "Leave this line blank.\n");
                 player.sendMessage(Color.ITEM + "Line 2 - " + Color.TEXT + "shop\n");
@@ -75,16 +76,16 @@ public class ShopCmd extends CommandWrapper {
                 player.sendMessage(Color.ITEM + "Line 4 - " + Color.TEXT + "<buy price>:<sell price>");
                 player.sendMessage(Color.TEXT + "The buy price is how much people pay to buy from the shop.");
                 player.sendMessage(Color.TEXT + "The sell price is how much people pay to sell to the shop.");
-            } else if(args[0].equals("item")) {
+            } else if(subCmd.equals("item")) {
                 final ItemStack item = player.getItemInHand();
                 player.sendMessage(Color.MESSAGE + item.getType().name() + " - " + Color.TEXT + item.getTypeId() + ":" + item.getData().getData());
-            } else if(args[0].equals("help")) {
+            } else if(subCmd.equals("help")) {
                 sendHelp(1);
             } else if((target = getMatchingPlayer(args[0])) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {
                 player.teleport(shop.getWarp());
             }
         } else if(args.length == 2) {
-            if(args[0].equals("hire")) {
+            if(subCmd.equals("hire")) {
                 if((target = getMatchingPlayer(args[1])) != null && (shop = getShop()) != null) {
                     shop.addMember(target);
                     player.sendMessage(Color.MESSAGE + target.getNick() + " has been added as your worker.");
@@ -92,7 +93,7 @@ public class ShopCmd extends CommandWrapper {
                         target.sendMessage(Color.MESSAGE + "You have been added as " + player.getNick() + "'s worker.");
                     }
                 }
-            } else if(args[0].equals("fire")) {
+            } else if(subCmd.equals("fire")) {
                 if((target = getMatchingPlayer(args[1])) != null && (shop = getShop()) != null && isWorker(target, shop)) {
                     shop.delMember(target);
                     player.sendMessage(Color.MESSAGE + target.getNick() + " is no longer your worker.");
@@ -104,7 +105,7 @@ public class ShopCmd extends CommandWrapper {
                 subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
-            if(args[0].equals("sell")) {
+            if(subCmd.equals("sell")) {
                 if((getShop()) != null && (target = getMatchingPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendMessage(Color.MESSAGE + player.getNick() + " wants to sell you their shop for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
