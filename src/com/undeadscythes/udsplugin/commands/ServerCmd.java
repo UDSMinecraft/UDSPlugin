@@ -12,7 +12,6 @@ import org.bukkit.*;
 public class ServerCmd extends CommandWrapper {
     @Override
     public final void playerExecute() {
-        final String subCmd = args[0].toLowerCase();
         if(numArgsHelp(1)) {
             if(subCmd.equals("stop")) {
                 for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {

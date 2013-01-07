@@ -9,7 +9,6 @@ import com.undeadscythes.udsplugin.*;
 public class RegionCmd extends CommandWrapper {
     @Override
     public final void playerExecute() {
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 1) {
             if(subCmd.equals("vert")) {
                 vert();

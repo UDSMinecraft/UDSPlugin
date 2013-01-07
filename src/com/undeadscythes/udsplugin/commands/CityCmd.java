@@ -13,7 +13,6 @@ public class CityCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         Region city;
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 1) {
             if(subCmd.equals("set")) {
                 if((city = getCurrentRegion()).getType() == RegionType.CITY && getMunicipality(city.getName()) != null) {

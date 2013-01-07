@@ -9,9 +9,8 @@ import java.util.*;
  */
 public class MoneyCmd extends CommandWrapper {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 0) {
             player.sendMessage(Color.MESSAGE + "You have " + player.getMoney() + " credits.");
         } else if(args.length == 1) {

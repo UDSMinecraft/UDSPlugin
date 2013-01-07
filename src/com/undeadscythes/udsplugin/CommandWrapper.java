@@ -16,6 +16,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected SaveablePlayer player;
     private String commandName;
     protected String[] args;
+    protected String subCmd;
 
     /**
      * Checks player permission then passes arguments to executor.
@@ -32,6 +33,9 @@ public abstract class CommandWrapper implements CommandExecutor {
             player = UDSPlugin.getOnlinePlayers().get(sender.getName());
             if(hasPerm(Perm.valueOf(commandName.toUpperCase()))) {
                 this.args = args.clone();
+                if(args.length > 0) {
+                    subCmd = args[0].toLowerCase();
+                }
                 playerExecute();
             }
             return true;

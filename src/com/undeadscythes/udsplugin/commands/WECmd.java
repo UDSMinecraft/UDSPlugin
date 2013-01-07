@@ -15,7 +15,6 @@ import org.bukkit.util.*;
 public class WECmd extends CommandWrapper {
     @Override
     public void playerExecute() {
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 1) {
             if(subCmd.equals("undo")) {
                 undo();

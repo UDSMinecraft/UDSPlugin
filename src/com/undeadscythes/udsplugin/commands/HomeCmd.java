@@ -13,7 +13,6 @@ public class HomeCmd extends CommandWrapper {
         Region home;
         SaveablePlayer target;
         int price;
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 0) {
             if((home = getHome()) != null && notJailed() && notPinned()) {
                 player.teleport(home.getWarp());

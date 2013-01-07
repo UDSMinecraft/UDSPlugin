@@ -11,7 +11,6 @@ import org.bukkit.*;
 public class VIPCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 0) {
             if(player.getRank().equals(PlayerRank.VIP)) {
                 player.sendMessage(Color.MESSAGE + "You have " + player.getVIPTimeString()+ " left in VIP.");

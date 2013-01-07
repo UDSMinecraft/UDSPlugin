@@ -16,7 +16,6 @@ public class ClanCmd extends CommandWrapper {
         Clan clan;
         Region base;
         SaveablePlayer target;
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 1) {
             if(subCmd.equals("base")) {
                 if((clan = getClan()) != null && (base = getBase(clan)) != null && notJailed() && notPinned()) {
