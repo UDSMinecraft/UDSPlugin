@@ -366,6 +366,7 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityInteract(), this);
         getServer().getPluginManager().registerEvents(new EntityPortalEnter(), this);
         getServer().getPluginManager().registerEvents(new InventoryClick(), this);
+        getServer().getPluginManager().registerEvents(new InventoryClose(), this);
         getServer().getPluginManager().registerEvents(new InventoryOpen(), this);
         getServer().getPluginManager().registerEvents(new ItemDespawn(), this);
         getServer().getPluginManager().registerEvents(new HangingBreak(), this);

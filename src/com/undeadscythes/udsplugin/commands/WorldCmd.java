@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
 /**
@@ -11,9 +11,8 @@ import org.bukkit.*;
 public class WorldCmd extends CommandWrapper {
     @Override
     public final void playerExecute() {
-        final String subCmd = args[0].toLowerCase();
         if(args.length == 1) {
-            if(subCmd.equals("list")) {
+            if("list".equals(subCmd)) {
                 player.sendMessage(Color.MESSAGE + "Available worlds:");
                 String worldList = "";
                 for(World world : Bukkit.getWorlds()) {
@@ -45,6 +44,12 @@ public class WorldCmd extends CommandWrapper {
                     UDSPlugin.getData().newWorld(args[1]);
                     player.sendMessage(Color.MESSAGE + "World created.");
                 }
+            } else if(subCmd.equals("softdel")) {
+                World world = getWorld(args[1]);
+                if(noCensor(args[1]) && world != null) {
+                    UDSPlugin.getData().getWorlds().remove(args[1]);
+                    player.sendMessage(Color.MESSAGE + "Soft delete successful.");
+                }
             } else {
                 subCmdHelp();
             }
@@ -58,5 +63,13 @@ public class WorldCmd extends CommandWrapper {
         } else {
             return true;
         }
+    }
+
+    private World getWorld(final String name) {
+        final World world = Bukkit.getWorld(name);
+        if(world == null) {
+            player.sendMessage(Color.ERROR + "That world does not exist.");
+        }
+        return world;
     }
 }
