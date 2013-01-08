@@ -17,8 +17,8 @@ public class Region implements Saveable {
     public static final String PATH = "regions.csv";
 
     private String name;
-    private Vector v1;
-    private Vector v2;
+    private Vector min;
+    private Vector max;
     private Location warp;
     private SaveablePlayer owner;
     private Set<SaveablePlayer> members = new HashSet<SaveablePlayer>();
@@ -39,8 +39,8 @@ public class Region implements Saveable {
      */
     public Region(final String name, final Vector v1, final Vector v2, final Location warp, final SaveablePlayer owner, final String data, final RegionType type) {
         this.name = name;
-        this.v1 = Vector.getMinimum(v1, v2);
-        this.v2 = Vector.getMaximum(v1, v2);
+        this.min = Vector.getMinimum(v1, v2);
+        this.max = Vector.getMaximum(v1, v2);
         this.warp = warp;
         this.owner = owner;
         this.data = data;
@@ -61,8 +61,8 @@ public class Region implements Saveable {
     public Region(final String record) throws IOException {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        v1 = getBlockPos(recordSplit[1]);
-        v2 = getBlockPos(recordSplit[2]);
+        min = getBlockPos(recordSplit[1]);
+        max = getBlockPos(recordSplit[2]);
         warp = SaveableLocation.parseLocation(recordSplit[3]);
         owner = UDSPlugin.getPlayers().get(recordSplit[4]);
         members = new HashSet<SaveablePlayer>();
@@ -97,8 +97,8 @@ public class Region implements Saveable {
     public String getRecord() {
         final ArrayList<String> record = new ArrayList<String>();
         record.add(name);
-        record.add(v1.toString());
-        record.add(v2.toString());
+        record.add(min.toString());
+        record.add(max.toString());
         record.add(SaveableLocation.getString(warp));
         record.add(owner == null ? "" : owner.getName());
         final ArrayList<String> memberList = new ArrayList<String>();
@@ -143,7 +143,7 @@ public class Region implements Saveable {
     }
 
     /**
-     * 
+     *
      * @param type
      */
     public void setType(final RegionType type) {
@@ -213,7 +213,7 @@ public class Region implements Saveable {
      * @return
      */
     public int getVolume() {
-        return (v2.getBlockX() - v1.getBlockX() + 1) * (v2.getBlockY() - v1.getBlockY() + 1) * (v2.getBlockZ() - v1.getBlockZ() + 1);
+        return (max.getBlockX() - min.getBlockX() + 1) * (max.getBlockY() - min.getBlockY() + 1) * (max.getBlockZ() - min.getBlockZ() + 1);
     }
 
     /**
@@ -223,17 +223,17 @@ public class Region implements Saveable {
      */
     public void expand(final Direction direction, final int distance) {
         if(direction.equals(Direction.NORTH)) {
-            v1.add(new Vector(0, 0, -distance));
+            min.add(new Vector(0, 0, -distance));
         } else if(direction.equals(Direction.SOUTH)) {
-            v2.add(new Vector(0, 0, distance));
+            max.add(new Vector(0, 0, distance));
         } else if(direction.equals(Direction.EAST)) {
-            v2.add(new Vector(distance, 0, 0));
+            max.add(new Vector(distance, 0, 0));
         } else if(direction.equals(Direction.WEST)) {
-            v1.add(new Vector(-distance, 0, 0));
+            min.add(new Vector(-distance, 0, 0));
         } else if(direction.equals(Direction.UP)) {
-            v2.add(new Vector(0, distance, 0));
+            max.add(new Vector(0, distance, 0));
         } else if(direction.equals(Direction.DOWN)) {
-            v1.add(new Vector(0, -distance, 0));
+            min.add(new Vector(0, -distance, 0));
         }
     }
 
@@ -244,17 +244,17 @@ public class Region implements Saveable {
      */
     public void contract(final Direction direction, final int distance) {
         if(direction.equals(Direction.NORTH)) {
-            v2.add(new Vector(0, 0, -distance));
+            max.add(new Vector(0, 0, -distance));
         } else if(direction.equals(Direction.SOUTH)) {
-            v1.add(new Vector(0, 0, distance));
+            min.add(new Vector(0, 0, distance));
         } else if(direction.equals(Direction.EAST)) {
-            v1.add(new Vector(distance, 0, 0));
+            min.add(new Vector(distance, 0, 0));
         } else if(direction.equals(Direction.WEST)) {
-            v2.add(new Vector(-distance, 0, 0));
+            max.add(new Vector(-distance, 0, 0));
         } else if(direction.equals(Direction.UP)) {
-            v1.add(new Vector(0, distance, 0));
+            min.add(new Vector(0, distance, 0));
         } else if(direction.equals(Direction.DOWN)) {
-            v2.add(new Vector(0, -distance, 0));
+            max.add(new Vector(0, -distance, 0));
         }
     }
 
@@ -288,8 +288,8 @@ public class Region implements Saveable {
      * @param v2 New v2.
      */
     public void changeV(final Vector v1, final Vector v2) {
-        this.v1 = v1;
-        this.v2 = v2;
+        this.min = v1;
+        this.max = v2;
     }
 
     /**
@@ -297,10 +297,10 @@ public class Region implements Saveable {
      */
     public void placeCornerMarkers() {
         final EditableWorld world = new EditableWorld(getWorld());
-        world.buildTower(v1.getBlockX(), v1.getBlockZ(), 1, Material.FENCE, Material.TORCH);
-        world.buildTower(v2.getBlockX(), v1.getBlockZ(), 1, Material.FENCE, Material.TORCH);
-        world.buildTower(v1.getBlockX(), v2.getBlockZ(), 1, Material.FENCE, Material.TORCH);
-        world.buildTower(v2.getBlockX(), v2.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(min.getBlockX(), min.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(max.getBlockX(), min.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(min.getBlockX(), max.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(max.getBlockX(), max.getBlockZ(), 1, Material.FENCE, Material.TORCH);
     }
 
     /**
@@ -308,10 +308,10 @@ public class Region implements Saveable {
      */
     public void placeMoreMarkers() {
         final EditableWorld world = new EditableWorld(getWorld());
-        world.buildLine(v1.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
-        world.buildLine(v2.getBlockX(), (v1.getBlockZ() + v2.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
-        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v1.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
-        world.buildLine((v1.getBlockX() + v2.getBlockX()) / 2 - 3, v2.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
+        world.buildLine(min.getBlockX(), (min.getBlockZ() + max.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine(max.getBlockX(), (min.getBlockZ() + max.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine((min.getBlockX() + max.getBlockX()) / 2 - 3, min.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
+        world.buildLine((min.getBlockX() + max.getBlockX()) / 2 - 3, max.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
     }
 
     /**
@@ -319,10 +319,10 @@ public class Region implements Saveable {
      */
     public void placeTowers() {
         final EditableWorld world = new EditableWorld(getWorld());
-        world.buildTower(v1.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
-        world.buildTower(v1.getBlockX(), v2.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
-        world.buildTower(v2.getBlockX(), v1.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
-        world.buildTower(v2.getBlockX(), v2.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(min.getBlockX(), min.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(min.getBlockX(), max.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(max.getBlockX(), min.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(max.getBlockX(), max.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
     }
 
     /**
@@ -339,7 +339,7 @@ public class Region implements Saveable {
      * @return <code>true</code> if this region overlaps with the other, <code>false</code> otherwise.
      */
     public boolean hasOverlap(final Region region) {
-        return !(v1.getX() > region.getV2().getX() || v2.getX() < region.getV1().getX() || v1.getZ() > region.getV2().getZ() || v2.getZ() < region.getV1().getZ() || v1.getY() > region.getV2().getY() || v2.getY() < region.getV1().getY());
+        return !(min.getX() > region.getV2().getX() || max.getX() < region.getV1().getX() || min.getZ() > region.getV2().getZ() || max.getZ() < region.getV1().getZ() || min.getY() > region.getV2().getY() || max.getY() < region.getV1().getY());
     }
 
     /**
@@ -383,7 +383,7 @@ public class Region implements Saveable {
      * @return <code>true</code> if the location is contained within the region, <code>false</code> otherwise.
      */
     private boolean contains(final World world, final double x, final double y, final double z) {
-        return warp.getWorld().equals(world) && x > v1.getX() && x < v2.getX() + 1 && z > v1.getZ() && z < v2.getZ() + 1 && y > v1.getY() && y < v2.getY() + 1;
+        return warp.getWorld().equals(world) && x > min.getX() && x < max.getX() + 1 && z > min.getZ() && z < max.getZ() + 1 && y > min.getY() && y < max.getY() + 1;
     }
 
     /**
@@ -434,7 +434,7 @@ public class Region implements Saveable {
      * @return Vector 1.
      */
     public Vector getV1() {
-        return v1;
+        return min;
     }
 
     /**
@@ -442,7 +442,7 @@ public class Region implements Saveable {
      * @return Vector 2.
      */
     public Vector getV2() {
-        return v2;
+        return max;
     }
 
     /**
@@ -497,6 +497,6 @@ public class Region implements Saveable {
      * @return
      */
     public boolean contains(final Location location) {
-        return location.toVector().isInAABB(v1, v2);
+        return location.toVector().isInAABB(min, max);
     }
 }
