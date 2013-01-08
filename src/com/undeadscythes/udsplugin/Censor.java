@@ -42,7 +42,10 @@ public final class Censor {
     }
 
     /**
-     * This let's me hide the nasty words in the code. Interesting fact: "FU" maps to "SH". It took me a few minutes trying to figure out why the first two letters weren't being mapped... but they were!
+     * This lets me hide the nasty words in the code.
+     * Interesting fact: "FU" maps to "SH". It took me a few minutes trying to
+     * figure out why the first two letters weren't being mapped...
+     * but they were!
      * @return Bad words in plaintext.
      */
     private static String[] rotWords() {
