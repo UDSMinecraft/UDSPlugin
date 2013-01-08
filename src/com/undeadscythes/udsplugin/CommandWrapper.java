@@ -27,7 +27,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if the commands has been handled fully, <code>false</code> otherwise.
      */
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
+    public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if(sender instanceof Player) {
             commandName = command.getName();
             player = UDSPlugin.getOnlinePlayers().get(sender.getName());
@@ -39,9 +39,8 @@ public abstract class CommandWrapper implements CommandExecutor {
                 playerExecute();
             }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -1179,8 +1178,6 @@ public abstract class CommandWrapper implements CommandExecutor {
 
     /**
      * Used when a player on the server executes a command.
-     * @param player Player who ran the command.
-     * @param args Arguments of the command.
      */
     public abstract void playerExecute();
 }
