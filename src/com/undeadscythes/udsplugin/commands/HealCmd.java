@@ -16,9 +16,9 @@ public class HealCmd extends CommandWrapper {
             player.setFoodLevel(20);
             player.sendMessage(message);
         } else if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
-            target.setHealth(player.getMaxHealth());
-            target.sendMessage(message);
+            target.setHealth(target.getMaxHealth());
             target.setFoodLevel(20);
+            target.sendMessage(message);
             if(!player.equals(target)) {
                 player.sendMessage(Color.MESSAGE + target.getNick() + " has been healed.");
             }
