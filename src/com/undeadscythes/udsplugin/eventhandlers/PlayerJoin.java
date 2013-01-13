@@ -3,6 +3,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
@@ -45,7 +46,23 @@ public class PlayerJoin implements Listener {
             } else if(player.getRank().compareTo(PlayerRank.MOD) >= 0) {
                 player.sendMessage(UDSPlugin.getConfigString(ConfigRef.WELCOME_ADMIN));
             }
-            event.setJoinMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
+            if(player.isHidden()) {
+                for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if(!UDSPlugin.getOnlinePlayers().get(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
+                        player.hideFrom(onlinePlayer, true);
+                    } else {
+                        onlinePlayer.sendMessage(Color.WHISPER + player.getNick() + " has joined.");
+                    }
+
+                }
+            } else {
+                event.setJoinMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
+            }
+            if(!player.hasPermission(Perm.VANISH)) {
+                for(SaveablePlayer hiddenPlayer : UDSPlugin.getHiddenPlayers().values()) {
+                    hiddenPlayer.hideFrom(event.getPlayer(), true);
+                }
+            }
         }
     }
 }

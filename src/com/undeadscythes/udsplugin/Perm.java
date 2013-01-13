@@ -101,6 +101,7 @@ public enum Perm {
     TP(PlayerRank.MOD),
     UNBAN(PlayerRank.MOD),
     UNJAIL(PlayerRank.WARDEN),
+    VANISH(PlayerRank.MOD),
     VIP(PlayerRank.MEMBER),
     VIP_BUY(PlayerRank.MEMBER, false),
     VIP_HELP(PlayerRank.VIP),

@@ -14,7 +14,13 @@ public class PlayerQuit implements Listener {
         final String playerName = event.getPlayer().getName();
         final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(playerName);
         player.addTime(System.currentTimeMillis() - player.getLastPlayed());
-        event.setQuitMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
+        if(player.isHidden()) {
+            for(SaveablePlayer hiddenPlayer : UDSPlugin.getHiddenPlayers().values()) {
+                hiddenPlayer.sendMessage(Color.WHISPER + player.getNick() + " has left.");
+            }
+        } else {
+            event.setQuitMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
+        }
         UDSPlugin.getOnlinePlayers().remove(playerName);
         player.nullBase();
     }

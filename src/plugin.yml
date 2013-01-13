@@ -84,6 +84,7 @@ commands:
   tp:
   unban:
   unjail:
+  vanish:
   vip:
   warden:
   warp:

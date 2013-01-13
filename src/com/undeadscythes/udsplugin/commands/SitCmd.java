@@ -37,7 +37,8 @@ public class SitCmd extends CommandWrapper {
                     view.setYaw(90);
                 }
                 player.teleport(view);
-                seat.setPassenger(player.getBase());
+                player.setVehicle(seat);
+
             }
         } else {
             final Entity seat = player.getVehicle();

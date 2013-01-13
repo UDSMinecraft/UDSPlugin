@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import java.io.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -28,6 +27,7 @@ public class SaveablePlayer implements Saveable {
     private boolean mustLoadItems = false;
     private boolean isShopping = false;
     private boolean isBuying = false;
+    private boolean isHidden = false;
     private int wager = 0;
     private int powertoolId = 0;
     private int bounty = 0;
@@ -173,6 +173,23 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
+     * Toggle this players visibility.
+     * @return If this player is now visible.
+     */
+    public boolean toggleHidden() {
+        isHidden ^= true;
+        return isHidden;
+    }
+
+    /**
+     * Check if this player is hidden.
+     * @return
+     */
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    /**
      * Get this players duel wager.
      * @return Duel wager.
      */
@@ -263,6 +280,14 @@ public class SaveablePlayer implements Saveable {
     }
 
     /**
+     * 
+     * @param vehicle
+     */
+    public final void setVehicle(final Entity vehicle) {
+        vehicle.setPassenger(player);
+    }
+
+    /**
      *
      * @return
      */
@@ -311,7 +336,7 @@ public class SaveablePlayer implements Saveable {
      *
      * @return
      */
-    public final Player getBase() {
+    private final Player getBase() {
         return player;
     }
 
@@ -676,6 +701,19 @@ public class SaveablePlayer implements Saveable {
      */
     public final void setChallenger(final SaveablePlayer challenger) {
         this.challenger = challenger;
+    }
+
+    /**
+     * Hide a player from this player.
+     * @param player Player this player have hidden.
+     * @param hide
+     */
+    public final void hideFrom(final Player player, final boolean hide) {
+        if(hide) {
+            player.hidePlayer(this.player);
+        } else {
+            player.showPlayer(this.player);
+        }
     }
 
     /**

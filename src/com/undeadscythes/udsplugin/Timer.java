@@ -79,7 +79,7 @@ public class Timer implements Runnable {
             }
         }
         Bukkit.broadcastMessage(Color.BROADCAST + "The quarries have been refilled.");
-        for(SaveablePlayer vip : UDSPlugin.getVIPS().values()) {
+        for(SaveablePlayer vip : UDSPlugin.getVips().values()) {
             vip.setVIPSpawns(UDSPlugin.getConfigInt(ConfigRef.VIP_SPAWNS));
             if(vip.isOnline()) {
                 vip.sendMessage(Color.MESSAGE + "Your daily item spawns have been refilled.");

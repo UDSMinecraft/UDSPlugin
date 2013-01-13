@@ -47,6 +47,7 @@ public class UDSPlugin extends JavaPlugin {
     private static final MatchableHashMap<Region> HOMES = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> QUARRIES = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> SHOPS = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new MatchableHashMap<SaveablePlayer>();
     private static final MatchableHashMap<SaveablePlayer> ONLINE_PLAYERS = new MatchableHashMap<SaveablePlayer>();
     private static final MatchableHashMap<SaveablePlayer> VIPS = new MatchableHashMap<SaveablePlayer>();
 
@@ -327,6 +328,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("tgm").setExecutor(new TGMCmd());
         getCommand("unban").setExecutor(new UnBanCmd());
         getCommand("unjail").setExecutor(new UnJailCmd());
+        getCommand("vanish").setExecutor(new VanishCmd());
         getCommand("vip").setExecutor(new VIPCmd());
         getCommand("we").setExecutor(new WECmd());
         getCommand("warden").setExecutor(new WardenCmd());
@@ -378,6 +380,7 @@ public class UDSPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractEntity(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getServer().getPluginManager().registerEvents(new PlayerMove(), this);
+        getServer().getPluginManager().registerEvents(new PlayerPickupItem(), this);
         getServer().getPluginManager().registerEvents(new PlayerPortal(), this);
         getServer().getPluginManager().registerEvents(new PlayerQuit(), this);
         getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
@@ -538,8 +541,16 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the VIPs map.
      * @return VIPs map.
      */
-    public static MatchableHashMap<SaveablePlayer> getVIPS() {
+    public static MatchableHashMap<SaveablePlayer> getVips() {
         return VIPS;
+    }
+
+    /**
+     * Grab the hidden players map.
+     * @return Hidden players map.
+     */
+    public static MatchableHashMap<SaveablePlayer> getHiddenPlayers() {
+        return HIDDEN_PLAYERS;
     }
 
     /**
