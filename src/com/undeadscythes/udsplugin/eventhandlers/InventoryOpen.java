@@ -21,7 +21,7 @@ import org.bukkit.material.*;
  * @author UndeadScythes
  */
 public class InventoryOpen extends ListenerWrapper implements Listener {
-    private transient SaveablePlayer player;
+    private SaveablePlayer player;
 
     @EventHandler
     public final void onEvent(final InventoryOpenEvent event) {

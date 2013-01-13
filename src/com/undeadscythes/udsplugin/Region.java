@@ -122,7 +122,7 @@ public class Region implements Saveable {
 
     @Override
     public String toString() {
-        Bukkit.getLogger().info("Implicit Region.toString()."); // Implicit .toString()
+        Bukkit.getLogger().info("Implicit Region.toString(). (" + Thread.currentThread().getStackTrace() + ")"); // Implicit .toString()
         return name;
     }
 

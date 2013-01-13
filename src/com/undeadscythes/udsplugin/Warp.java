@@ -74,7 +74,7 @@ public class Warp implements Saveable {
 
     @Override
     public String toString() {
-        Bukkit.getLogger().info("Implicit Warp.toString()."); // Implicit .toString()
+        Bukkit.getLogger().info("Implicit Warp.toString(). (" + Thread.currentThread().getStackTrace() + ")"); // Implicit .toString()
         return name;
     }
 

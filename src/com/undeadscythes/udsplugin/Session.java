@@ -9,11 +9,11 @@ import org.bukkit.util.Vector;
  * @author UndeadScythes
  */
 public class Session {
-    private transient World world = null;
-    private transient Vector v1 = null;
-    private transient Vector v2 = null;
-    private transient Cuboid clipboard = null;
-    private final transient Stack<Cuboid> history = new Stack<Cuboid>();
+    private World world = null;
+    private Vector v1 = null;
+    private Vector v2 = null;
+    private Cuboid clipboard = null;
+    private final Stack<Cuboid> history = new Stack<Cuboid>();
 
     /**
      * Get selection point 1.

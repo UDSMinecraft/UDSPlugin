@@ -126,7 +126,7 @@ public class Clan implements Saveable {
 
     @Override
     public String toString() {
-        Bukkit.getLogger().info("Implicit Clan.toString()."); // Implicit .toString()
+        Bukkit.getLogger().info("Implicit Clan.toString(). (" + Thread.currentThread().getStackTrace() + ")"); // Implicit .toString()
         return name;
     }
 

@@ -18,46 +18,46 @@ public class SaveablePlayer implements Saveable {
      */
     public static final String PATH = "players.csv";
 
-    private String name; // Non-transient.
-    private Player player; // Non-transient.
-    private String nick; // Non-transient.
+    private String name;
+    private Player player;
+    private String nick;
 
-    private transient boolean hasGodMode = false;
-    private transient boolean hasLockdownPass = false;
-    private transient boolean isAfk = false;
-    private transient boolean mustLoadItems = false;
-    private transient boolean isShopping = false;
-    private transient boolean isBuying = false;
-    private transient int wager = 0;
-    private transient int powertoolId = 0;
-    private transient int bounty = 0;
-    private transient int money = 0;
-    private transient int vipSpawns = 0;
-    private transient int bail = 0;
-    private transient long vipTime = 0;
-    private transient long timeJailed = 0;
-    private transient long jailSentence = 0;
-    private transient long timeLogged = 0;
-    private transient long timeAttacked = 0;
-    private transient long timePrizeClaimed = 0;
-    private transient String powertoolCmd = "";
-    private transient Location backPoint = null;
-    private transient Location checkPoint = null;
-    private transient SaveablePlayer challenger = null;
-    private transient SaveablePlayer whisperer = null;
-    private transient ChatRoom chatRoom = null; // Is this field never modified?
-    private transient ChatChannel chatChannel = ChatChannel.PUBLIC;
-    private transient UUID selectedPet = null;
-    private transient Clan clan = null;
-    private transient PlayerRank rank = PlayerRank.DEFAULT;
-    private transient ItemStack[] inventoryCopy = null;
-    private transient ItemStack[] armorCopy = null;
-    private final transient Inventory shoppingCart = Bukkit.createInventory(null, 36);
-    private final transient LinkedList<Long> lastChatTimes = new LinkedList<Long>();
-    private final transient Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
+    private boolean hasGodMode = false;
+    private boolean hasLockdownPass = false;
+    private boolean isAfk = false;
+    private boolean mustLoadItems = false;
+    private boolean isShopping = false;
+    private boolean isBuying = false;
+    private int wager = 0;
+    private int powertoolId = 0;
+    private int bounty = 0;
+    private int money = 0;
+    private int vipSpawns = 0;
+    private int bail = 0;
+    private long vipTime = 0;
+    private long timeJailed = 0;
+    private long jailSentence = 0;
+    private long timeLogged = 0;
+    private long timeAttacked = 0;
+    private long timePrizeClaimed = 0;
+    private String powertoolCmd = "";
+    private Location backPoint = null;
+    private Location checkPoint = null;
+    private SaveablePlayer challenger = null;
+    private SaveablePlayer whisperer = null;
+    private ChatRoom chatRoom = null; // Is this field never modified?
+    private ChatChannel chatChannel = ChatChannel.PUBLIC;
+    private UUID selectedPet = null;
+    private Clan clan = null;
+    private PlayerRank rank = PlayerRank.DEFAULT;
+    private ItemStack[] inventoryCopy = null;
+    private ItemStack[] armorCopy = null;
+    private final Inventory shoppingCart = Bukkit.createInventory(null, 36);
+    private final LinkedList<Long> lastChatTimes = new LinkedList<Long>();
+    private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
 
     /**
-     * 
+     *
      * @param player
      */
     public SaveablePlayer(final Player player) {
