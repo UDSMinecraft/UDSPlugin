@@ -72,6 +72,8 @@ public class UDSPlugin extends JavaPlugin {
             getLogger().info("Created blocks directory tree.");
         }
         saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
         loadConfig();
         UDSPlugin.TRANSPARENT_BLOCKS.clear();
         for(Material material : Material.values()) {
@@ -575,6 +577,10 @@ public class UDSPlugin extends JavaPlugin {
 
     public static boolean isLockedDown() {
         return serverLockedDown;
+    }
+
+    public static double getConfigDouble(final ConfigRef ref) {
+        return plugin.getConfig().getDouble(ref.getReference());
     }
 
     public static boolean getConfigBool(final ConfigRef ref) {
