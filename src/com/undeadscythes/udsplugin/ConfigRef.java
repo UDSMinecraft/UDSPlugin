@@ -47,6 +47,7 @@ public enum ConfigRef {
     VIP_WHITELIST("item-whitelist"),
     KITS("kits"),
     MOB_REWARDS("mob-rewards"),
+    PISTON_POWER("piston-power"),
     GLOBAL_FLAGS("global-flags");
 
     private String reference;
