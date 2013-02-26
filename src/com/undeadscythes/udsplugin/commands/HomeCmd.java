@@ -37,6 +37,10 @@ public class HomeCmd extends CommandWrapper {
                     UDSPlugin.getRegions(RegionType.HOME).remove(home.getName());
                     player.sendMessage(Color.MESSAGE + "Home protection removed.");
                 }
+            } else if(subCmd.equals("power")) {
+                if((home = getHome()) != null) {
+                    player.sendMessage(Color.MESSAGE + "Your home " + (home.toggleFlag(RegionFlag.POWER) ? "now" : "no longer") + " has power.");
+                }
             } else if(subCmd.equals("set")) {
                 if((home = getHome()) != null) {
                     home.setWarp(player.getLocation());

@@ -113,5 +113,6 @@ global-flags:
   pvp: true
   dispenser: false
   piston: true
+  power: true
 # The power of pistons
 piston-power: 10

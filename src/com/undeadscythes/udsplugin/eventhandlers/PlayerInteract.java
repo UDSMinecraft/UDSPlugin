@@ -7,7 +7,6 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
-import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.util.Vector;
@@ -19,70 +18,77 @@ import org.bukkit.util.Vector;
 public class PlayerInteract extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final PlayerInteractEvent event) {
-        final Action action = event.getAction();
         final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
         final Material inHand = player.getItemInHand().getType();
         final Block block = event.getClickedBlock();
-        if(action == Action.LEFT_CLICK_AIR) {
-            if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
-                compassTo(player);
-                event.setCancelled(true);
-            }
-        } else if(action == Action.LEFT_CLICK_BLOCK) {
-            if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
-                compassTo(player);
-                event.setCancelled(true);
-            } else if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
-                wand1(player, block);
-                event.setCancelled(true);
-            } else if((block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) && !player.isSneaking()) {
-                sign(player, (Sign)block.getState());
-            } else {
+        switch(event.getAction()) {
+            case LEFT_CLICK_AIR:
+                if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
+                    compassTo(player);
+                    event.setCancelled(true);
+                }
+                break;
+            case LEFT_CLICK_BLOCK:
+                if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
+                    compassTo(player);
+                    event.setCancelled(true);
+                } else if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
+                    wand1(player, block);
+                    event.setCancelled(true);
+                } else if((block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) && !player.isSneaking()) {
+                    sign(player, (Sign)block.getState());
+                } else {
+                    event.setCancelled(lockCheck(block, player));
+                }
+                break;
+            case RIGHT_CLICK_AIR:
+                if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
+                    paperComplex(player, player.getLocation());
+                    event.setCancelled(true);
+                } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
+                    paperSimple(player, block.getLocation());
+                    event.setCancelled(true);
+                } else if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
+                    compassThru(player);
+                    event.setCancelled(true);
+                } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
+                    powertool(player);
+                    event.setCancelled(true);
+                }
+                break;
+            case RIGHT_CLICK_BLOCK:
+                if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
+                    wand2(player, block);
+                    event.setCancelled(true);
+                } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
+                    paperComplex(player, block.getLocation());
+                    event.setCancelled(true);
+                } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
+                    paperSimple(player, block.getLocation());
+                    event.setCancelled(true);
+                } else if(inHand == Material.COMPASS) {
+                    compassThru(player);
+                    event.setCancelled(true);
+                } else if(inHand == Material.MONSTER_EGG && block.getType() == Material.MOB_SPAWNER) {
+                    setMobSpawner(block, player);
+                    event.setCancelled(true);
+                } else if(block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
+                    sign(player, (Sign)block.getState());
+                    event.setCancelled(true);
+                } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
+                    powertool(player);
+                    event.setCancelled(true);
+                } else if(inHand == Material.MINECART && UDSPlugin.getRails().contains(block.getType())) {
+                    minecart(player, block.getLocation());
+                    player.setItemInHand(new ItemStack(Material.AIR));
+                    event.setCancelled(true);
+                } else {
+                    event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player));
+                }
+                break;
+            case PHYSICAL:
                 event.setCancelled(lockCheck(block, player));
-            }
-        } else if(action == Action.RIGHT_CLICK_AIR) {
-            if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
-                paperComplex(player, player.getLocation());
-                event.setCancelled(true);
-            } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
-                paperSimple(player, block.getLocation());
-                event.setCancelled(true);
-            } else if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
-                compassThru(player);
-                event.setCancelled(true);
-            } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
-                powertool(player);
-                event.setCancelled(true);
-            }
-        } else if(action == Action.RIGHT_CLICK_BLOCK) {
-            if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
-                wand2(player, block);
-                event.setCancelled(true);
-            } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
-                paperComplex(player, block.getLocation());
-                event.setCancelled(true);
-            } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
-                paperSimple(player, block.getLocation());
-                event.setCancelled(true);
-            } else if(inHand == Material.COMPASS) {
-                compassThru(player);
-                event.setCancelled(true);
-            } else if(inHand == Material.MONSTER_EGG && block.getType() == Material.MOB_SPAWNER) {
-                setMobSpawner(block, player);
-                event.setCancelled(true);
-            } else if(block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
-                sign(player, (Sign)block.getState());
-                event.setCancelled(true);
-            } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
-                powertool(player);
-                event.setCancelled(true);
-            } else if(inHand == Material.MINECART && UDSPlugin.getRails().contains(block.getType())) {
-                minecart(player, block.getLocation());
-                player.setItemInHand(new ItemStack(Material.AIR));
-                event.setCancelled(true);
-            } else {
-                event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player));
-            }
+                break;
         }
     }
 
@@ -112,7 +118,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      */
     private boolean lockCheck(final Block block, final SaveablePlayer player) {
         final Material material = block.getType();
-        if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.STONE_BUTTON || material == Material.LEVER || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
+        if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
             final Location location = block.getLocation();
             if(!player.canBuildHere(location) && hasFlag(location, RegionFlag.LOCK)) {
                 if(player.hasPermission(Perm.BYPASS)) {
@@ -121,6 +127,17 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                     player.sendMessage(Color.ERROR + "You can't do that here.");
                     return true;
                 }
+            }
+        } else if(material == Material.STONE_BUTTON || material == Material.LEVER) {
+            final Location location = block.getLocation();
+            if(!player.canBuildHere(location) && !hasFlag(location, RegionFlag.POWER)) {
+                player.sendMessage(Color.ERROR + "You can't do that here.");
+                return true;
+            }
+        } else if(material == Material.WOOD_PLATE || material == Material.STONE_PLATE || material == Material.TRIPWIRE) {
+            final Location location = block.getLocation();
+            if(!player.canBuildHere(location) && !hasFlag(location, RegionFlag.POWER)) {
+                return true;
             }
         }
         return false;

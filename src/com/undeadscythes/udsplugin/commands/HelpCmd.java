@@ -114,6 +114,7 @@ public class HelpCmd extends CommandWrapper {
         HOME_EXPAND(Perm.HOME, "/home expand <direction>", "Expand your home.", false, true),
         HOME_LOCK(Perm.HOME, "/home lock", "Lock your house.", false, true),
         HOME_UNLOCK(Perm.HOME, "/home unlock", "Unlock your house.", false, true),
+        HOME_POWER(Perm.HOME, "/home power", "Toggle whether players can use redstone.", false, true),
         HOME_MAKE(Perm.HOME, "/home make", "Set a new home protection.", false, true),
         HOME_CLEAR(Perm.HOME, "/home clear", "Clear your home protection.", false, true),
         HOME_ROOMIES(Perm.HOME, "/home roomies", "Check your current room mates.", false, true),

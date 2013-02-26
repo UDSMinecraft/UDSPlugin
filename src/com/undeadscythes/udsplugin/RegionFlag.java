@@ -24,6 +24,10 @@ public enum RegionFlag {
      */
     LOCK(true),
     /**
+     * Enables redstone 'switches'.
+     */
+    POWER(true),
+    /**
      * Allows vines to grow.
      */
     VINES(true),
