@@ -593,7 +593,9 @@ public class SaveablePlayer implements Saveable {
     public final void release() {
         timeJailed = 0;
         jailSentence = 0;
-        quietTeleport(UDSPlugin.getWarps().get("jailout"));
+        if(!quietTeleport(UDSPlugin.getWarps().get("jailout")) && !quietTeleport(UDSPlugin.getData().getSpawn())) {
+            player.teleport(player.getWorld().getSpawnLocation());
+        }
     }
 
     /**
