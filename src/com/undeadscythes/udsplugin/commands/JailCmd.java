@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
  * @author UndeadScythes
  */
 public class JailCmd extends CommandWrapper {
+    private static int cellNo = 0;
+    
     @Override
     public void playerExecute() {
         SaveablePlayer target;
@@ -23,7 +25,7 @@ public class JailCmd extends CommandWrapper {
                 }
                 if(sentence > -1 && bail > -1) {
                     target.sendMessage(Color.MESSAGE + "You have been jailed for breaking the rules.");
-                    target.jail(sentence, bail);
+                    cellNo = target.jail(sentence, bail, cellNo);
                     Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been jailed for breaking the rules.");
                 }
             }
