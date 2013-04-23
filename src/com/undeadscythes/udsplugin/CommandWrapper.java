@@ -633,7 +633,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(target.isJailed()) {
             return true;
         } else {
-            target.sendMessage(Color.ERROR + target.getNick() + " is not in jail.");
+            player.sendMessage(Color.ERROR + target.getNick() + " is not in jail.");
             return false;
         }
     }
