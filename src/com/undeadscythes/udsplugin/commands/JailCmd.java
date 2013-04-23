@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
  * @author UndeadScythes
  */
 public class JailCmd extends CommandWrapper {
-    private static int cellNo = 0;
+    private static int nextCell = 0;
     
     @Override
     public void playerExecute() {
@@ -25,9 +25,27 @@ public class JailCmd extends CommandWrapper {
                 }
                 if(sentence > -1 && bail > -1) {
                     target.sendMessage(Color.MESSAGE + "You have been jailed for breaking the rules.");
-                    cellNo = target.jail(sentence, bail, cellNo);
+                    jail(target, sentence, bail);
                     Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been jailed for breaking the rules.");
                 }
+            }
+        }
+    }
+    
+    public static void jail(final SaveablePlayer player, final long sentence, final int bail) {
+        if(player != null) {
+            player.getWorld().strikeLightningEffect(player.getLocation());
+            if(player.quietTeleport(UDSPlugin.getWarps().get("jailin" + nextCell))) {
+                nextCell++;
+            } else if(player.quietTeleport(UDSPlugin.getWarps().get("jailin0"))) {
+                nextCell = 1;
+            } else {
+                player.quietTeleport(UDSPlugin.getWarps().get("jailin"));
+            }
+            player.jail(sentence, bail);
+            player.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
+            if(bail != 0) {
+                player.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
             }
         }
     }

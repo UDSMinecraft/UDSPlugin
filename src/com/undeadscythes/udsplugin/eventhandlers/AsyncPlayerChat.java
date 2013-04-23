@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.commands.JailCmd;
 import java.io.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.*;
@@ -20,7 +21,7 @@ public class AsyncPlayerChat implements Listener {
         if(!player.newChat()) {
             player.sendMessage(Color.ERROR + "You have been jailed for spamming chat.");
             Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " gets jail time for spamming chat.");
-            player.jail(5, 1000);
+            JailCmd.jail(player, 5, 1000);
         } else if(player.getChannel() == ChatChannel.PUBLIC) {
             String message = event.getMessage();
             if(Censor.noCensor(message)) {
@@ -34,7 +35,7 @@ public class AsyncPlayerChat implements Listener {
                 } else {
                     player.sendMessage(Color.ERROR + "You have no money to put in the swear jar.");
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " gets jail time for using bad language.");
-                    player.jail(1, 1);
+                    JailCmd.jail(player, 1, 1);
                 }
             }
             for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {

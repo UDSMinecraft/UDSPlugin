@@ -604,17 +604,9 @@ public class SaveablePlayer implements Saveable {
      * @param bail Bail to set.
      */
     public final void jail(final long sentence, final int bail) {
-        if(player != null) {
-            player.getWorld().strikeLightningEffect(player.getLocation());
-            quietTeleport(UDSPlugin.getWarps().get("jailin"));
-            timeJailed = System.currentTimeMillis();
-            jailSentence = sentence * Timer.MINUTE;
-            this.bail = bail;
-            player.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
-            if(bail != 0) {
-                player.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
-            }
-        }
+        timeJailed = System.currentTimeMillis();
+        jailSentence = sentence * Timer.MINUTE;
+        this.bail = bail;
     }
 
     /**
