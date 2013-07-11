@@ -104,7 +104,8 @@ public class SaveablePlayer implements Saveable {
 
     @Override
     public final String toString() {
-        Bukkit.getLogger().info("Implicit Player.toString(). (" + Thread.currentThread().getStackTrace() + ")"); // Implicit .toString()
+        final String message = "Implicit Player.toString(). (" + Thread.currentThread().getStackTrace() + ")";
+        Bukkit.getLogger().info(message); // Implicit .toString()
         return name;
     }
 
@@ -336,7 +337,7 @@ public class SaveablePlayer implements Saveable {
      *
      * @return
      */
-    private final Player getBase() {
+    private Player getBase() {
         return player;
     }
 
@@ -500,7 +501,7 @@ public class SaveablePlayer implements Saveable {
      * @param time
      * @return
      */
-    private final String timeToString(final long time) {
+    private String timeToString(final long time) {
         long timeRemaining = time;
         String timeString = "";
         if(timeRemaining >= Timer.DAY) {
@@ -1399,7 +1400,7 @@ public class SaveablePlayer implements Saveable {
      *
      * @return
      */
-    public final int getMaxHealth() {
+    public final double getMaxHealth() {
         return player == null ? 0 : player.getMaxHealth();
     }
 
