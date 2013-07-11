@@ -1408,7 +1408,7 @@ public class SaveablePlayer implements Saveable {
      *
      * @param health
      */
-    public final void setHealth(final int health) {
+    public final void setHealth(final double health) {
         if(player != null) {
             player.setHealth(health);
         }
