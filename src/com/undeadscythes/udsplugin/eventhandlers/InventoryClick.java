@@ -13,6 +13,7 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class InventoryClick extends ListenerWrapper implements Listener {
+    @SuppressWarnings("deprecation")
     @EventHandler
     public final void onEvent(final InventoryClickEvent event) {
         final SaveablePlayer shopper = UDSPlugin.getOnlinePlayers().get(event.getWhoClicked().getName());
