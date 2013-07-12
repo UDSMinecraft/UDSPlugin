@@ -114,5 +114,9 @@ global-flags:
   dispenser: false
   piston: true
   power: true
-# The power of pistons
+# The power of pistons.
 piston-power: 10
+# GMail email address to send tickets to.
+gmail:
+  email: email@gmail.com
+  password: password

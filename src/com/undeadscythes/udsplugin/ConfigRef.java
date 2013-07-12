@@ -48,7 +48,9 @@ public enum ConfigRef {
     KITS("kits"),
     MOB_REWARDS("mob-rewards"),
     PISTON_POWER("piston-power"),
-    GLOBAL_FLAGS("global-flags");
+    GLOBAL_FLAGS("global-flags"),
+    GMAIL_ADDRESS("gmail.email"),
+    GMAIL_PASSWORD("gmail.password");
 
     private String reference;
     private long multiplier;
