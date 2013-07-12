@@ -1,7 +1,14 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
-import java.util.*;
+import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.CommandWrapper;
+import com.undeadscythes.udsplugin.ConfigRef;
+import com.undeadscythes.udsplugin.Message;
+import com.undeadscythes.udsplugin.Perm;
+import com.undeadscythes.udsplugin.SaveablePlayer;
+import com.undeadscythes.udsplugin.UDSPlugin;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Get help on certain commands.
@@ -10,7 +17,7 @@ import java.util.*;
 public class HelpCmd extends CommandWrapper {
     private enum Usage {
         HELP(Perm.HELP, "/help [page or command]", "Show these help pages.", false, false),
-        TICKET(Perm.TICKET, "/ticket", "Get the link to post suggestions and bugs to.", false, false),
+        TICKET(Perm.TICKET, "/ticket <message>", "Submit a suggestion or a bug report.", false, false),
         ACCEPTRULES(Perm.ACCEPTRULES, "/acceptrules", "Accept the rules and get build rights.", false, false),
         ADMIN(Perm.ADMIN, "/admin help", "Show more admin commands.", true, false),
         ADMIN_LOCKDOWN(Perm.LOCKDOWN, "/lockdown", "Toggle the server's lockdown mode.", false, true),
@@ -106,6 +113,8 @@ public class HelpCmd extends CommandWrapper {
         GIFT(Perm.GIFT, "/gift <player> [message]", "Send a player a gift.", false, false),
         HOME(Perm.HOME, "/home help", "Show more home commands.", true, false),
         HOME_HELP(Perm.HOME, "/home help [page]", "Show these home help pages.", false, true),
+        HOME_MAKE(Perm.HOME, "/home make", "Set a new home protection.", false, true),
+        HOME_CLEAR(Perm.HOME, "/home clear", "Clear your home protection.", false, true),
         HOME_TP(Perm.HOME, "/home", "Teleport to your home.", false, true),
         HOME_TP_OTHER(Perm.HOME, "/home <player>", "Teleport to a room mates home.", false, true),
         HOME_ADD(Perm.HOME, "/home add <player>", "Add a player as a room mate.", false, true),
@@ -115,10 +124,8 @@ public class HelpCmd extends CommandWrapper {
         HOME_LOCK(Perm.HOME, "/home lock", "Lock your house.", false, true),
         HOME_UNLOCK(Perm.HOME, "/home unlock", "Unlock your house.", false, true),
         HOME_POWER(Perm.HOME, "/home power", "Toggle whether players can use redstone.", false, true),
-        HOME_MAKE(Perm.HOME, "/home make", "Set a new home protection.", false, true),
-        HOME_CLEAR(Perm.HOME, "/home clear", "Clear your home protection.", false, true),
         HOME_ROOMIES(Perm.HOME, "/home roomies", "Check your current room mates.", false, true),
-        HOME_SELL(Perm.HOME, "/home sell <player> <price>", "Sell your home to another player.", false, true),
+        HOME_SELL(Perm.HOME, "/home sell <player> <price>", "Sell your home to a player.", false, true),
         HOME_SET(Perm.HOME, "/home set", "Set your home warp point.", false, true),
         KIT(Perm.KIT, "/kit <name>", "Purchase a kit.", false, false),
         KIT_LIST(Perm.KIT, "/kit", "Check the available kits.", false, false),
