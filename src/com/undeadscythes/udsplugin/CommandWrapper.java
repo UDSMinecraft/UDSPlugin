@@ -887,7 +887,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean noOverlaps(final Region region) {
         for(Region test : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
-            if(test.hasOverlap(region)) {
+            if(test != region && test.hasOverlap(region)) {
                 player.sendMessage(Color.ERROR + "You cannot do that here, you are too close to another protected area.");
                 return false;
             }
