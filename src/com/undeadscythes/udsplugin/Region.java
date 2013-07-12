@@ -39,8 +39,8 @@ public class Region implements Saveable {
      */
     public Region(final String name, final Vector v1, final Vector v2, final Location warp, final SaveablePlayer owner, final String data, final RegionType type) {
         this.name = name;
-        this.min = Vector.getMinimum(v1, v2);
-        this.max = Vector.getMaximum(v1, v2);
+        this.min = floor(Vector.getMinimum(v1, v2));
+        this.max = floor(Vector.getMaximum(v1, v2));
         this.warp = warp;
         this.owner = owner;
         this.data = data;
@@ -80,6 +80,10 @@ public class Region implements Saveable {
         rank = PlayerRank.getByName(recordSplit[9]);
     }
 
+    private Vector floor(final Vector v) {
+        return new Vector(v.getBlockX(), v.getBlockY(), v.getBlockZ());
+    }
+    
     /**
      * Helper function to build a new block position from a string.
      * @param string String containing coded block position.

@@ -263,7 +263,7 @@ public class HelpCmd extends CommandWrapper {
                     return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.CITY_COST) + " credits" + Color.TEXT + ")";
                 case MAP:
                     return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.MAP_COST) + " credits" + Color.TEXT + ")";
-                case HOME_SET:
+                case HOME_MAKE:
                     return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.HOME_COST) + " credits" + Color.TEXT + ")";
                 case SHOP_BUY:
                     return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) + " credits" + Color.TEXT + ")";

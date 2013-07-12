@@ -20,8 +20,8 @@ public class HomeCmd extends CommandWrapper {
         } else if(args.length == 1) {
             if(subCmd.equals("make")) {
                 if(canAfford(UDSPlugin.getConfigInt(ConfigRef.HOME_COST)) && noHome()) {
-                    final Vector min = player.getLocation().add(-10, 28, -10).toVector();
-                    final Vector max = player.getLocation().add(10, 12, 10).toVector();
+                    final Vector min = player.getLocation().add(-10, -12, -10).toVector();
+                    final Vector max = player.getLocation().add(10, 28, 10).toVector();
                     home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", RegionType.HOME);
                     if(noOverlaps(home)) {
                         player.debit(UDSPlugin.getConfigInt(ConfigRef.HOME_COST));

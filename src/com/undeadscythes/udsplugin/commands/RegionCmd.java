@@ -131,10 +131,11 @@ public class RegionCmd extends CommandWrapper {
                 list = list.concat(test.getName() + ", ");
             }
         }
+        final String regionType = type.name().replaceFirst("[a-z]", type.name().substring(0, 1).toUpperCase());
         if(list.isEmpty()) {
-            player.sendMessage(Color.MESSAGE + "There are no " + type.name().toLowerCase() + " regions.");
+            player.sendMessage(Color.MESSAGE + "There are no " + regionType + " regions.");
         } else {
-            player.sendMessage(Color.MESSAGE + type.name().toLowerCase() + " Regions:");
+            player.sendMessage(Color.MESSAGE + regionType + " Regions:");
             player.sendMessage(Color.TEXT + list.substring(0, list.length() - 2));
         }
     }

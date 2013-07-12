@@ -244,10 +244,10 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param location
      */
     private void paperComplex(final SaveablePlayer player, final Location location) {
-        if(regionsHere(location).isEmpty()) {
+        final List<Region> testRegions = regionsHere(location);
+        if(testRegions.isEmpty()) {
             player.sendMessage(Color.MESSAGE + "No regions here.");
         } else {
-            final List<Region> testRegions = regionsHere(location);
             for(Region region : testRegions) {
                 region.sendInfo(player);
             }
