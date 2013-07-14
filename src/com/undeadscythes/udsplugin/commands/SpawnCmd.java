@@ -10,7 +10,7 @@ public class SpawnCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(notPinned() && notJailed()) {
-            player.teleport(UDSPlugin.getData().getSpawn());
+            player.teleport(player.getLocation().getWorld().getSpawnLocation());
         }
     }
 }
