@@ -120,3 +120,6 @@ piston-power: 10
 gmail:
   email: email@gmail.com
   password: password
+# Worlds that should share an inventory.
+inventory-shares:
+  - world,world_nether,world_the_end

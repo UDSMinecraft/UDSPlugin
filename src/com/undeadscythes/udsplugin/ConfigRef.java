@@ -49,6 +49,7 @@ public enum ConfigRef {
     MOB_REWARDS("mob-rewards"),
     PISTON_POWER("piston-power"),
     GLOBAL_FLAGS("global-flags"),
+    SHARES("inventory-shares"),
     GMAIL_ADDRESS("gmail.email"),
     GMAIL_PASSWORD("gmail.password");
 
