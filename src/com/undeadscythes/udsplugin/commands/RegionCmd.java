@@ -161,6 +161,9 @@ public class RegionCmd extends CommandWrapper {
         final Region region = getRegion(args[1]);
         if(region != null) {
             UDSPlugin.getRegions(RegionType.GENERIC).remove(region.getName());
+            if(!region.getType().equals(RegionType.GENERIC)) {
+                UDSPlugin.getRegions(region.getType()).remove(region.getName());
+            }
             player.sendMessage(Color.MESSAGE + "Region deleted.");
         }
     }

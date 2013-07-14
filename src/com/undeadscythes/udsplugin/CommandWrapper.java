@@ -324,6 +324,14 @@ public abstract class CommandWrapper implements CommandExecutor {
         }
         return region;
     }
+    
+    protected Portal getPortal(final String portalName) {
+        final Portal portal = UDSPlugin.getPortals().get(portalName);
+        if(portal == null) {
+            player.sendMessage(Color.ERROR + "No portal exists by that name.");
+        }
+        return portal;
+    }
 
     /**
      * Get a region flag by name.
@@ -1173,6 +1181,31 @@ public abstract class CommandWrapper implements CommandExecutor {
         } else {
             player.sendMessage(Color.ERROR + "You do not have permission to do that.");
             return false;
+        }
+    }
+    
+    protected boolean inLine(final Session session) {
+        if(hasTwoPoints(session)) {
+            final int x = session.getV1().getBlockX() - session.getV2().getBlockX();
+            final int y = session.getV1().getBlockY() - session.getV2().getBlockY();
+            final int z = session.getV1().getBlockZ() - session.getV2().getBlockZ();
+            if(x != 0 && y != 0 && z != 0) {
+                player.sendMessage(Color.ERROR + "The edit points must form a square, not a cube.");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+    
+    protected boolean notPortal(final String name) {
+        if(UDSPlugin.getPortals().containsKey(name)) {
+            player.sendMessage(Color.ERROR + "A portal already exists with that name.");
+            return false;
+        } else {
+            return true;
         }
     }
 

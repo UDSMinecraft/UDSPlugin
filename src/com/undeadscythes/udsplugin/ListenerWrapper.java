@@ -194,4 +194,13 @@ public class ListenerWrapper {
         }
         return false;
     }
+    
+    public final Portal findPortal(final Location location) {
+        for(Portal portal : UDSPlugin.getPortals().values()) {
+            if(location.toVector().isInAABB(portal.getV1().clone().add(new Vector(-1.5, -1.5, -1.5)), portal.getV2().clone().add(new Vector(1.5, 1.5, 1.5)))) {
+                return portal;
+            }
+        }
+        return null;
+    }
 }

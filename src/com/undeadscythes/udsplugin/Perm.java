@@ -65,6 +65,8 @@ public enum Perm {
     PAPER_SIMPLE(PlayerRank.DEFAULT),
     PAYBAIL(PlayerRank.DEFAULT),
     PET(PlayerRank.MEMBER),
+    PORTAL(PlayerRank.ADMIN),
+    PORTAL_USE(PlayerRank.DEFAULT),
     POWERTOOL(PlayerRank.MOD),
     PRIVATE(PlayerRank.DEFAULT),
     PRIZE(PlayerRank.DEFAULT),

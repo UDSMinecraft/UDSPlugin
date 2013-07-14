@@ -80,7 +80,7 @@ public class Region implements Saveable {
         rank = PlayerRank.getByName(recordSplit[9]);
     }
 
-    private Vector floor(final Vector v) {
+    public static Vector floor(final Vector v) {
         return new Vector(v.getBlockX(), v.getBlockY(), v.getBlockZ());
     }
     
@@ -89,7 +89,7 @@ public class Region implements Saveable {
      * @param string String containing coded block position.
      * @return The corresponding new block position.
      */
-    private Vector getBlockPos(final String string) {
+    public static Vector getBlockPos(final String string) {
         final String[] split = string.replace("(", "").replace(")", "").split(",");
         final double x = Double.parseDouble(split[0]);
         final double y = Double.parseDouble(split[1]);

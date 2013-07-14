@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 import org.bukkit.material.*;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.*;
 import org.bukkit.util.Vector;
 
@@ -38,6 +39,7 @@ public class UDSPlugin extends JavaPlugin {
     private static final SaveableHashMap PLAYERS = new SaveableHashMap();
     private static final SaveableHashMap REGIONS = new SaveableHashMap();
     private static final SaveableHashMap WARPS = new SaveableHashMap();
+    private static final SaveableHashMap PORTALS = new SaveableHashMap();
     private static final MatchableHashMap<ChatRoom> CHAT_ROOMS = new MatchableHashMap<ChatRoom>();
     private static final MatchableHashMap<Request> REQUESTS = new MatchableHashMap<Request>();
     private static final MatchableHashMap<Session> SESSIONS = new MatchableHashMap<Session>();
@@ -119,7 +121,7 @@ public class UDSPlugin extends JavaPlugin {
     public final void onDisable() {
         try {
             saveFiles();
-            final String message = (CLANS.size() + REGIONS.size() + WARPS.size() + PLAYERS.size()) + " clans, regions, warps and players saved.";
+            final String message = (CLANS.size() + REGIONS.size() + WARPS.size() + PLAYERS.size() + PORTALS.size()) + " clans, regions, warps, portals and players saved.";
             getLogger().info(message);
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
@@ -179,6 +181,7 @@ public class UDSPlugin extends JavaPlugin {
         REGIONS.save(DATA_PATH + File.separator + Region.PATH);
         WARPS.save(DATA_PATH + File.separator + Warp.PATH);
         PLAYERS.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
+        PORTALS.save(DATA_PATH + File.separator + Portal.PATH);
     }
 
     /**
@@ -254,6 +257,17 @@ public class UDSPlugin extends JavaPlugin {
         } catch (FileNotFoundException ex) {
             getLogger().info("No clan file exists yet.");
         }
+        try {
+            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Portal.PATH));
+            while((nextLine = file.readLine()) != null) {
+                PORTALS.put(nextLine.split("\t")[0], new Portal(nextLine));
+            }
+            file.close();
+            message = PORTALS.size() + " portals loaded.";
+            getLogger().info(message);
+        } catch (FileNotFoundException ex) {
+            getLogger().info("No portal file exists yet.");
+        }
     }
 
     /**
@@ -305,6 +319,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("p").setExecutor(new PCmd());
         getCommand("paybail").setExecutor(new PayBailCmd());
         getCommand("pet").setExecutor(new PetCmd());
+        getCommand("portal").setExecutor(new PortalCmd());
         getCommand("powertool").setExecutor(new PowertoolCmd());
         getCommand("private").setExecutor(new PrivateCmd());
         getCommand("promote").setExecutor(new PromoteCmd());
@@ -344,55 +359,57 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     private void registerEvents() {
-        getServer().getPluginManager().registerEvents(new AsyncPlayerChat(), this);
-        getServer().getPluginManager().registerEvents(new BlockBreak(), this);
-        getServer().getPluginManager().registerEvents(new BlockBurn(), this);
-        getServer().getPluginManager().registerEvents(new BlockDispense(), this);
-        getServer().getPluginManager().registerEvents(new BlockFade(), this);
-        getServer().getPluginManager().registerEvents(new BlockForm(), this);
-        getServer().getPluginManager().registerEvents(new BlockFromTo(), this);
-        getServer().getPluginManager().registerEvents(new BlockGrow(), this);
-        getServer().getPluginManager().registerEvents(new BlockIgnite(), this);
-        getServer().getPluginManager().registerEvents(new BlockPhysics(), this);
-        getServer().getPluginManager().registerEvents(new BlockPistonExtend(), this);
-        getServer().getPluginManager().registerEvents(new BlockPistonRetract(), this);
-        getServer().getPluginManager().registerEvents(new BlockPlace(), this);
-        getServer().getPluginManager().registerEvents(new BlockRedstone(), this);
-        getServer().getPluginManager().registerEvents(new BlockSpread(), this);
-        getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);
-        getServer().getPluginManager().registerEvents(new EntityBlockForm(), this);
-        getServer().getPluginManager().registerEvents(new EntityChangeBlock(), this);
-        getServer().getPluginManager().registerEvents(new EntityCreatePortal(), this);
-        getServer().getPluginManager().registerEvents(new EntityDamage(), this);
-        getServer().getPluginManager().registerEvents(new EntityDamageByEntity(), this);
-        getServer().getPluginManager().registerEvents(new EntityDeath(), this);
-        getServer().getPluginManager().registerEvents(new EntityExplode(), this);
-        getServer().getPluginManager().registerEvents(new EntityInteract(), this);
-        getServer().getPluginManager().registerEvents(new EntityPortalEnter(), this);
-        getServer().getPluginManager().registerEvents(new InventoryClick(), this);
-        getServer().getPluginManager().registerEvents(new InventoryClose(), this);
-        getServer().getPluginManager().registerEvents(new InventoryOpen(), this);
-        getServer().getPluginManager().registerEvents(new ItemDespawn(), this);
-        getServer().getPluginManager().registerEvents(new HangingBreak(), this);
-        getServer().getPluginManager().registerEvents(new HangingPlace(), this);
-        getServer().getPluginManager().registerEvents(new PlayerBucketEmpty(), this);
-        getServer().getPluginManager().registerEvents(new PlayerBucketFill(), this);
-        getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteract(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractEntity(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
-        getServer().getPluginManager().registerEvents(new PlayerLogin(), this);
-        getServer().getPluginManager().registerEvents(new PlayerMove(), this);
-        getServer().getPluginManager().registerEvents(new PlayerPickupItem(), this);
-        getServer().getPluginManager().registerEvents(new PlayerPortal(), this);
-        getServer().getPluginManager().registerEvents(new PlayerQuit(), this);
-        getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
-        getServer().getPluginManager().registerEvents(new PlayerShearEntity(), this);
-        getServer().getPluginManager().registerEvents(new SignChange(), this);
-        getServer().getPluginManager().registerEvents(new VehicleEntityCollision(), this);
-        getServer().getPluginManager().registerEvents(new VehicleCreate(), this);
-        getServer().getPluginManager().registerEvents(new VehicleDestroy(), this);
-        getServer().getPluginManager().registerEvents(new VehicleExit(), this);
+        final PluginManager manager = getServer().getPluginManager();
+        manager.registerEvents(new AsyncPlayerChat(), this);
+        manager.registerEvents(new BlockBreak(), this);
+        manager.registerEvents(new BlockBurn(), this);
+        manager.registerEvents(new BlockDispense(), this);
+        manager.registerEvents(new BlockFade(), this);
+        manager.registerEvents(new BlockForm(), this);
+        manager.registerEvents(new BlockFromTo(), this);
+        manager.registerEvents(new BlockGrow(), this);
+        manager.registerEvents(new BlockIgnite(), this);
+        manager.registerEvents(new BlockPhysics(), this);
+        manager.registerEvents(new BlockPistonExtend(), this);
+        manager.registerEvents(new BlockPistonRetract(), this);
+        manager.registerEvents(new BlockPlace(), this);
+        manager.registerEvents(new BlockRedstone(), this);
+        manager.registerEvents(new BlockSpread(), this);
+        manager.registerEvents(new CreatureSpawn(), this);
+        manager.registerEvents(new EntityBlockForm(), this);
+        manager.registerEvents(new EntityChangeBlock(), this);
+        manager.registerEvents(new EntityCreatePortal(), this);
+        manager.registerEvents(new EntityDamage(), this);
+        manager.registerEvents(new EntityDamageByEntity(), this);
+        manager.registerEvents(new EntityDeath(), this);
+        manager.registerEvents(new EntityExplode(), this);
+        manager.registerEvents(new EntityInteract(), this);
+        manager.registerEvents(new EntityPortalEnter(), this);
+        manager.registerEvents(new InventoryClick(), this);
+        manager.registerEvents(new InventoryClose(), this);
+        manager.registerEvents(new InventoryOpen(), this);
+        manager.registerEvents(new ItemDespawn(), this);
+        manager.registerEvents(new HangingBreak(), this);
+        manager.registerEvents(new HangingPlace(), this);
+        manager.registerEvents(new PlayerBucketEmpty(), this);
+        manager.registerEvents(new PlayerBucketFill(), this);
+        manager.registerEvents(new PlayerDeath(), this);
+        manager.registerEvents(new PlayerInteract(), this);
+        manager.registerEvents(new PlayerInteractEntity(), this);
+        manager.registerEvents(new PlayerJoin(), this);
+        manager.registerEvents(new PlayerLogin(), this);
+        manager.registerEvents(new PlayerMove(), this);
+        manager.registerEvents(new PlayerPickupItem(), this);
+        manager.registerEvents(new PlayerPortal(), this);
+        manager.registerEvents(new PlayerQuit(), this);
+        manager.registerEvents(new PlayerRespawn(), this);
+        manager.registerEvents(new PlayerShearEntity(), this);
+        manager.registerEvents(new PlayerTeleport(), this);
+        manager.registerEvents(new SignChange(), this);
+        manager.registerEvents(new VehicleEntityCollision(), this);
+        manager.registerEvents(new VehicleCreate(), this);
+        manager.registerEvents(new VehicleDestroy(), this);
+        manager.registerEvents(new VehicleExit(), this);
     }
 
     private final static String ROW = "AAA";
@@ -563,7 +580,11 @@ public class UDSPlugin extends JavaPlugin {
     public static MatchableHashMap<SaveablePlayer> getOnlinePlayers() {
         return ONLINE_PLAYERS;
     }
-
+    
+    public static MatchableHashMap<Portal> getPortals() {
+        return PORTALS.toMatchableHashMap(Portal.class);
+    }
+    
     /**
      *
      * @return

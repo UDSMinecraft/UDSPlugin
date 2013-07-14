@@ -140,4 +140,8 @@ public class Session {
         }
         return false;
     }
+    
+    public final World getWorld() {
+        return world;
+    }
 }

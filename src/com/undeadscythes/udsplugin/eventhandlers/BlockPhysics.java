@@ -1,6 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
@@ -11,7 +13,11 @@ import org.bukkit.event.block.*;
 public class BlockPhysics extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPhysicsEvent event) {
-        if(isInQuarry(event.getBlock().getLocation())) {
+        final Block block = event.getBlock();
+        if(isInQuarry(block.getLocation())) {
+            event.setCancelled(true);
+        }
+        if(block.getType().equals(Material.PORTAL) && findPortal(block.getLocation()) != null) {
             event.setCancelled(true);
         }
     }
