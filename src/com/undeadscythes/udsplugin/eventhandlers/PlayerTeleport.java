@@ -63,14 +63,16 @@ public class PlayerTeleport extends ListenerWrapper implements Listener {
         final File file = new File(PATH + File.separator + world.getName() + ".yml");
         if(file.exists()) {
             final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            player.getInventory().setContents((ItemStack[])((ArrayList)config.get(player.getName())).toArray(new ItemStack[0]));
-            player.getInventory().setArmorContents((ItemStack[])((ArrayList)config.get(player.getName() + "-armor")).toArray(new ItemStack[0]));
-        } else {
-            player.getInventory().clear();
-            player.getInventory().setBoots(new ItemStack(Material.AIR));
-            player.getInventory().setChestplate(new ItemStack(Material.AIR));
-            player.getInventory().setHelmet(new ItemStack(Material.AIR));
-            player.getInventory().setLeggings(new ItemStack(Material.AIR));
+            if(config.contains(player.getName()) && config.contains(player.getName() + "-armor")) {
+                player.getInventory().setContents((ItemStack[])((ArrayList)config.get(player.getName())).toArray(new ItemStack[0]));
+                player.getInventory().setArmorContents((ItemStack[])((ArrayList)config.get(player.getName() + "-armor")).toArray(new ItemStack[0]));
+            } else {
+                player.getInventory().clear();
+                player.getInventory().setBoots(new ItemStack(Material.AIR));
+                player.getInventory().setChestplate(new ItemStack(Material.AIR));
+                player.getInventory().setHelmet(new ItemStack(Material.AIR));
+                player.getInventory().setLeggings(new ItemStack(Material.AIR));
+            }
         }
     }
 }
