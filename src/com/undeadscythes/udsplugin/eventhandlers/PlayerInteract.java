@@ -82,6 +82,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                     minecart(player, block.getLocation());
                     player.setItemInHand(new ItemStack(Material.AIR));
                     event.setCancelled(true);
+                } else if(block.getType().equals(Material.ENDER_CHEST) && UDSPlugin.getWorldMode(block.getWorld()).equals(GameMode.CREATIVE)) {
+                    event.setCancelled(true);
                 } else {
                     event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player));
                 }
