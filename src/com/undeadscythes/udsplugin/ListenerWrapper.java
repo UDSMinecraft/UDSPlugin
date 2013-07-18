@@ -118,7 +118,7 @@ public class ListenerWrapper {
                 }
             }
         }
-        return inRegion ? false : UDSPlugin.getGlobalFlags().get(flag);
+        return inRegion ? false : UDSPlugin.checkWorldFlag(location.getWorld(), flag);
     }
 
     /**

@@ -257,6 +257,7 @@ public class HelpCmd extends CommandWrapper {
         WORLD(Perm.WORLD, "/world help", "Show more world commands.", true, false),
         WORLD_CREATE(Perm.WORLD, "/world create <name>", "Create a new world.", false, true),
         WORLD_DELETE(Perm.WORLD, "/world delete <world>", "Remove a world from disk.", false, true),
+        WORLD_FLAG(Perm.WORLD, "/world flag <world> <flag>", "Toggle a world flag.", false, true),
         WORLD_FORGET(Perm.WORLD, "/world forget <world>", "Unload a world from memory.", false, true),
         WORLD_LIST(Perm.WORLD, "/world list", "List the available worlds.", false, true),
         WORLD_SETSPAWN(Perm.WORLD, "/world setspawn", "Set the spawn of the current world.", false, true),

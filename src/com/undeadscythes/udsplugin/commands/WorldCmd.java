@@ -78,6 +78,20 @@ public class WorldCmd extends CommandWrapper {
             } else {
                 subCmdHelp();
             }
+        } else if(numArgsHelp(3)) {
+            if("flag".equals(subCmd)) {
+                flag();
+            } else {
+                subCmdHelp();
+            }
+        }
+    }
+    
+    private void flag() {
+        final World world = getWorld(args[1]);
+        final RegionFlag flag = getFlag(args[2]);
+        if(world != null && flag != null) {
+            player.sendMessage(Color.MESSAGE + world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }
     }
 

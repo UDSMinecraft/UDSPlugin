@@ -57,6 +57,7 @@ public class UDSPlugin extends JavaPlugin {
     private static Timer timer;
     private static Data data;
     private static boolean serverLockedDown = false;
+    private static final CustomConfig worldFlags = new CustomConfig(DATA_PATH + "/worlds.yml");
 
     /**
      * Used for testing in NetBeans. Woo! NetBeans!
@@ -91,6 +92,8 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info("Data loaded.");
         loadWorlds();
         getLogger().info("Worlds loaded.");
+        worldFlags.load();
+        getLogger().info("Flags loaded.");
         try {
             loadFiles();
         } catch (IOException ex) {
@@ -177,6 +180,7 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static void saveFiles() throws IOException {
         data.saveData();
+        worldFlags.save();
         CLANS.save(DATA_PATH + File.separator + Clan.PATH);
         REGIONS.save(DATA_PATH + File.separator + Region.PATH);
         WARPS.save(DATA_PATH + File.separator + Warp.PATH);
@@ -269,6 +273,7 @@ public class UDSPlugin extends JavaPlugin {
                 portal.linkPortal();
             }
             message = "Portals linked.";
+            getLogger().info(message);
         } catch (FileNotFoundException ex) {
             getLogger().info("No portal file exists yet.");
         }
@@ -687,5 +692,22 @@ public class UDSPlugin extends JavaPlugin {
 
     public static String getVersion() {
         return plugin.getDescription().getVersion();
+    }
+    
+    public static boolean checkWorldFlag(final World world, final RegionFlag flag) {
+        FileConfiguration flags = worldFlags.get();
+        final String path = world.getName() + "." + flag.name();
+        if(flags.contains(path)) {
+            return flags.getBoolean(path);
+        }
+        final boolean def = GLOBAL_FLAGS.get(flag);
+        flags.set(path, def);
+        return def;
+    }
+    
+    public static boolean toggleWorldFlag(final World world, final RegionFlag flag) {
+        final boolean after = !checkWorldFlag(world, flag);
+        worldFlags.get().set(world.getName() + "." + flag.name(), after);
+        return after;
     }
 }
