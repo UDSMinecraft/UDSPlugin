@@ -15,7 +15,8 @@ public class PlayerPortal extends ListenerWrapper implements Listener {
         final Player player = event.getPlayer();
         final Portal portal = findPortal(player.getLocation());
         if(portal != null) {
-            player.teleport(portal.getWarp().getLocation());
+            portal.warp(player);
+            event.setCancelled(true);
         }
     }
 }

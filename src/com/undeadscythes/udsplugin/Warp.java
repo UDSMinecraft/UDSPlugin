@@ -97,10 +97,10 @@ public class Warp implements Saveable {
     // Should these methods be moved to SaveableLocation? Probably
 
     /**
-        * Find a safe place to teleport to near this location.
-        * @param location Location to teleport to.
-        * @return A safe place.
-        */
+     * Find a safe place to teleport to near this location.
+     * @param location Location to teleport to.
+     * @return A safe place.
+     */
     public static Location findSafePlace(final Location location) {
         final Location testUp = location;
         final Location testDown = location.clone().subtract(0, 1, 0);
@@ -111,7 +111,19 @@ public class Warp implements Saveable {
                 return testDown;
             } else {
                 testUp.add(0, 1, 0);
-                testDown.add(0, 1, 0);
+                testDown.subtract(0, 1, 0);
+            }
+        }
+        return location.getWorld().getSpawnLocation();
+    }
+    
+    public static Location findFloor(final Location location) {
+        final Location test = location.clone().subtract(0, 1, 0);
+        while(test.getBlockY() > 0) {
+            if(test.getBlock().getRelative(BlockFace.DOWN).getType().isSolid()) {
+                return test;
+            } else {
+                test.subtract(0, 1, 0);
             }
         }
         return location.getWorld().getSpawnLocation();

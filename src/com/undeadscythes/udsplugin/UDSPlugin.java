@@ -265,6 +265,10 @@ public class UDSPlugin extends JavaPlugin {
             file.close();
             message = PORTALS.size() + " portals loaded.";
             getLogger().info(message);
+            for(Portal portal : getPortals().values()) {
+                portal.linkPortal();
+            }
+            message = "Portals linked.";
         } catch (FileNotFoundException ex) {
             getLogger().info("No portal file exists yet.");
         }
@@ -384,7 +388,7 @@ public class UDSPlugin extends JavaPlugin {
         manager.registerEvents(new EntityDeath(), this);
         manager.registerEvents(new EntityExplode(), this);
         manager.registerEvents(new EntityInteract(), this);
-        manager.registerEvents(new EntityPortalEnter(), this);
+        manager.registerEvents(new EntityPortal(), this);
         manager.registerEvents(new InventoryClick(), this);
         manager.registerEvents(new InventoryClose(), this);
         manager.registerEvents(new InventoryOpen(), this);

@@ -34,6 +34,8 @@ public class PortalCmd extends CommandWrapper {
         } else if(args.length == 3) {
             if(subCmd.equals("dest")) {
                 dest();
+            } else if(subCmd.equals("p2p")) {
+                p2p();
             } else if(subCmd.equals("set")) {
                 final Warp warp = getWarp(args[2]);
                 if(warp != null) {
@@ -48,7 +50,7 @@ public class PortalCmd extends CommandWrapper {
     private void list() {
         String list = "";
         for(Portal test : UDSPlugin.getPortals().values()) {
-            list = list.concat(test.getName() + (test.getWarp() == null ? ", " : ("(" + test.getWarp().getName() + "), ")));
+            list = list.concat(test.getName() + (test.getWarpName() == null ? ", " : ("(" + test.getWarpName() + "), ")));
         }
         if(list.isEmpty()) {
             player.sendMessage(Color.MESSAGE + "There are no portals.");
@@ -104,6 +106,15 @@ public class PortalCmd extends CommandWrapper {
         if(portal != null && target != null) {
             portal.setWarp(target);
             player.sendMessage(Color.MESSAGE + portal.getName() + " now warps to " + target.getName() + ".");
+        }
+    }
+    
+    private void p2p() {
+        final Portal portal = getPortal(args[1]);
+        final Portal target = getPortal(args[2]);
+        if(portal != null && target != null) {
+            portal.setPortal(target);
+            player.sendMessage(Color.MESSAGE + portal.getName() + " now portals to " + target.getName() + ".");
         }
     }
 }
