@@ -710,4 +710,16 @@ public class UDSPlugin extends JavaPlugin {
         worldFlags.get().set(world.getName() + "." + flag.name(), after);
         return after;
     }
+    
+    public static void changeWorldMode(final World world, final GameMode mode) {
+        worldFlags.get().set(world.getName() + ".mode", mode.toString());
+    }
+    
+    public static GameMode getWorldMode(final World world) {
+        final String path = world.getName() + ".mode";
+        if(worldFlags.get().contains(path)) {
+            return GameMode.getByValue(worldFlags.get().getInt(path));
+        }
+        return null;
+    }
 }

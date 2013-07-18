@@ -27,6 +27,6 @@ public class StatsCmd extends CommandWrapper {
             player.sendMessage(Color.TEXT + "Current level: " + target.getLevel());
         }
         player.sendMessage(Color.TEXT + "Time logged: " + target.getTimeLogged());
-        player.sendMessage(Color.TEXT + "Last seen: " + (target.isOnline() ? "online now" : target.getLastSeen()));
+        player.sendMessage(Color.TEXT + "Last seen: " + (target.isOnline() && !target.isHidden() ? "online now in world " + target.getWorld().getName() : target.getLastSeen()));
     }
 }

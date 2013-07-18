@@ -13,7 +13,7 @@ public class WhereCmd extends CommandWrapper {
         final Location playerLocation = player.getLocation();
         final Location spawnLocation = player.getWorld().getSpawnLocation();
         final int distance = (int)playerLocation.distance(spawnLocation);
-        String message = "You are " + distance + " blocks from spawn,";
+        String message = "You are " + distance + " blocks from spawn in world " + playerLocation.getWorld().getName() + ",";
         if(player.getLocation().getBlockY() < 64) {
             message = message.concat(" " + (64 - player.getLocation().getBlockY()) + " blocks below sea level");
         } else if(player.getLocation().getBlockY() > 64) {
