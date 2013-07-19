@@ -17,10 +17,12 @@ public class PlayerInteractEntity extends ListenerWrapper implements Listener {
             final Tameable pet = (Tameable)entity;
             if(pet.isTamed()) {
                 final String ownerName = pet.getOwner().getName();
-                if(ownerName.equals(event.getPlayer().getName()) && event.getPlayer().isSneaking()) {
-                    UDSPlugin.getPlayers().get(event.getPlayer().getName()).selectPet(entity.getUniqueId());
-                    event.getPlayer().sendMessage(Color.MESSAGE + "Pet selected.");
-                    event.setCancelled(true);
+                if(ownerName.equals(event.getPlayer().getName())) {
+                    if(event.getPlayer().isSneaking()) {
+                        UDSPlugin.getPlayers().get(event.getPlayer().getName()).selectPet(entity.getUniqueId());
+                        event.getPlayer().sendMessage(Color.MESSAGE + "Pet selected.");
+                        event.setCancelled(true);
+                    }
                 } else {
                     event.getPlayer().sendMessage(Color.MESSAGE + "This animal belongs to " + UDSPlugin.getPlayers().get(ownerName).getNick());
                     event.setCancelled(true);
