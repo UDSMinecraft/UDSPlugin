@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.ConfigRef;
 import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.PlayerRank;
 import com.undeadscythes.udsplugin.UDSPlugin;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,7 +48,7 @@ public class PlayerTeleport extends ListenerWrapper implements Listener {
                 }
             }
             GameMode mode = UDSPlugin.getWorldMode(to);
-            if(mode != null) {
+            if(mode != null && UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName()).getRank().compareTo(PlayerRank.MOD) < 0) {
                 event.getPlayer().setGameMode(mode);
             }
         }
