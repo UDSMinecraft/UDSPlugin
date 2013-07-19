@@ -37,7 +37,7 @@ public class TicketCmd extends CommandWrapper {
                 MimeMessage message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(username));
-                message.setSubject("UDS Test");
+                message.setSubject("New UDS Minecraft Ticket - " + player.getName());
                 message.setText(StringUtils.join(args, " "));
                 Transport transport = session.getTransport("smtp");
                 transport.connect("smtp.gmail.com", username, password);
