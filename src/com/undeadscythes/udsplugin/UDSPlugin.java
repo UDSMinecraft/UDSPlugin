@@ -720,6 +720,7 @@ public class UDSPlugin extends JavaPlugin {
         if(worldFlags.get().contains(path)) {
             return GameMode.getByValue(worldFlags.get().getInt(path));
         }
-        return null;
+        changeWorldMode(world, GameMode.SURVIVAL);
+        return GameMode.SURVIVAL;
     }
 }
