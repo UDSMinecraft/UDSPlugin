@@ -3,8 +3,6 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 
@@ -30,6 +28,8 @@ public class WorldCmd extends CommandWrapper {
                 } else {
                     player.sendMessage(Color.ERROR + "Could not set spawn location.");
                 }
+            } else if("info".equals(subCmd)) {
+                info(player.getWorld());
             } else {
                 subCmdHelp();
             }
@@ -78,52 +78,60 @@ public class WorldCmd extends CommandWrapper {
                     }
                 }
             } else if("info".equals(subCmd)) {
-                info();
+                final World world = getWorld(args[1]);
+                if(world != null) {
+                    info(world);
+                }
+            } else if("flag".equals(subCmd)) {
+                flag(player.getWorld());
+            } else if("mode".equals(subCmd)) {
+                mode(player.getWorld());
             } else {
                 subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
             if("flag".equals(subCmd)) {
-                flag();
+                final World world = getWorld(args[1]);
+                if(world != null) {
+                    flag(world);
+                }
             } else if("mode".equals(subCmd)) {
-                mode();
+                final World world = getWorld(args[1]);
+                if(world != null) {
+                    mode(world);
+                }
             } else {
                 subCmdHelp();
             }
         }
     }
     
-    private void info() {
-        final World world = getWorld(args[1]);
-        if(world != null) {
-            player.sendMessage(Color.MESSAGE + "World " + world.getName() + " info:");
-            player.sendMessage(Color.TEXT + "Game mode: " + UDSPlugin.getWorldMode(world).toString().toLowerCase());
-            String flagString = "";
-            for(RegionFlag test : RegionFlag.values()) {
-                if(UDSPlugin.checkWorldFlag(world, test)) {
-                    flagString = flagString.concat(test.toString() + ", ");
-                }
+    private void info(final World world) {
+        player.sendMessage(Color.MESSAGE + "World " + world.getName() + " info:");
+        player.sendMessage(Color.TEXT + "Game mode: " + UDSPlugin.getWorldMode(world).toString().toLowerCase());
+        String flagString = "";
+        for(RegionFlag test : RegionFlag.values()) {
+            if(UDSPlugin.checkWorldFlag(world, test)) {
+                flagString = flagString.concat(test.toString() + ", ");
             }
-            if("".equals(flagString)) {
-                player.sendMessage(Color.TEXT + "No flags.");
-            } else {
-                player.sendMessage(Color.TEXT + "Flags: " + flagString.substring(0, flagString.length() - 2));
-            }
+        }
+        if("".equals(flagString)) {
+            player.sendMessage(Color.TEXT + "No flags.");
+        } else {
+            player.sendMessage(Color.TEXT + "Flags: " + flagString.substring(0, flagString.length() - 2));
         }
     }
     
-    private void flag() {
-        final World world = getWorld(args[1]);
+    private void flag(final World world) {
         final RegionFlag flag = getFlag(args[2]);
-        if(world != null && flag != null) {
+        if(flag != null) {
             player.sendMessage(Color.MESSAGE + world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }
     }
     
-    private void mode() {
-        final World world = getWorld(args[1]);
+    private void mode(final World world) {
         final GameMode mode = getMode(args[2]);
-        if(world != null && mode != null) {
+        if(mode != null) {
             UDSPlugin.changeWorldMode(world, mode);
             player.sendMessage(Color.MESSAGE + world.getName() + " game mode now set to " + mode.toString() + ".");
         }
