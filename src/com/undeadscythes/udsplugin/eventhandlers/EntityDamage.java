@@ -18,7 +18,7 @@ public class EntityDamage extends ListenerWrapper implements Listener {
             if(player.hasGodMode() || player.isAfk() || (event.getCause().equals(DamageCause.DROWNING) && player.hasScuba())) {
                 event.setCancelled(true);
             }
-            if(((Damageable)player).getHealth() < event.getDamage()) {
+            if(((Damageable)event.getEntity()).getHealth() < event.getDamage()) {
                 for(Region arena : UDSPlugin.getRegions(RegionType.ARENA).values()) {
                     if(arena.contains(player.getLocation())) {
                         event.setCancelled(true);
