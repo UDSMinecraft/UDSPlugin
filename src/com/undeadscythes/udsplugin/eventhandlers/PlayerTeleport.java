@@ -33,7 +33,7 @@ public class PlayerTeleport extends ListenerWrapper implements Listener {
     public void onEvent(final PlayerTeleportEvent event) {
         final World from = event.getFrom().getWorld();
         final World to = event.getTo().getWorld();
-        if(!from.equals(to)) {
+        if(!from.equals(to) && UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName()).getRank().compareTo(PlayerRank.MOD) < 0) {
             for(String string : UDSPlugin.getConfigStringList(ConfigRef.SHARES)) {
                 List<String> shares = Arrays.asList(string.split(","));
                 if(!shares.contains(from.getName()) || !shares.contains(to.getName())) {
