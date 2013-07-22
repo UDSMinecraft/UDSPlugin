@@ -419,6 +419,7 @@ public class UDSPlugin extends JavaPlugin {
         manager.registerEvents(new VehicleCreate(), this);
         manager.registerEvents(new VehicleDestroy(), this);
         manager.registerEvents(new VehicleExit(), this);
+        manager.registerEvents(new WeatherChange(), this);
     }
 
     private final static String ROW = "AAA";

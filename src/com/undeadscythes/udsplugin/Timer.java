@@ -107,6 +107,9 @@ public class Timer implements Runnable {
                     }
                     Bukkit.broadcastMessage(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End.");
                 }
+                if(!UDSPlugin.checkWorldFlag(world, RegionFlag.TIME)) {
+                    world.setTime(world.getTime() - (now - lastSlow));
+                }
             }
         }
         UDSPlugin.saveFiles();
@@ -141,7 +144,6 @@ public class Timer implements Runnable {
                 player.move(Warp.findSafePlace(player.getLocation().clone().multiply(ratio)));
                 player.sendMessage(Color.MESSAGE + "You have reached the edge of the currently explorable world.");
             }
-
         }
         for(final Iterator<Map.Entry<String, Request>> i = UDSPlugin.getRequests().entrySet().iterator(); i.hasNext();) {
             final Request request = i.next().getValue();

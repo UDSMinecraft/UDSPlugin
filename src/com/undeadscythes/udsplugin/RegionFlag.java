@@ -54,7 +54,15 @@ public enum RegionFlag {
     /**
      * Allows pistons to ignore this regions boundaries.
      */
-    PISTON(false);
+    PISTON(false),
+    /**
+     * 
+     */
+    WEATHER(true),
+    /**
+     * 
+     */
+    TIME(true);
 
     private boolean defaulted;
 
