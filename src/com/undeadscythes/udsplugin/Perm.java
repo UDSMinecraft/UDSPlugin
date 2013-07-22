@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin;
 
+import org.bukkit.*;
+
 /**
  * Permissions to use within UDSPlugin.
  * @author UndeadScythes
@@ -141,8 +143,7 @@ public enum Perm {
     }
 
     private Perm(final PlayerRank rank) {
-        this.rank = rank;
-        this.hereditary = true;
+        this(rank, true);
     }
 
     /**
