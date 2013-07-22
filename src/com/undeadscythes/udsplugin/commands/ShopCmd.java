@@ -133,6 +133,6 @@ public class ShopCmd extends CommandWrapper {
                 high = Integer.parseInt(shop.getName().replace("shop", ""));
             }
         }
-        return "shop" + high + 1;
+        return "shop" + (high + 1);
     }
 }
