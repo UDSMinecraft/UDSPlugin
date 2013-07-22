@@ -25,8 +25,9 @@ public enum Perm {
     CHECK(PlayerRank.DEFAULT),
     CHUNK(PlayerRank.ADMIN),
     CI(PlayerRank.MEMBER),
-    CITY(PlayerRank.MEMBER),
+    CITY(PlayerRank.MEMBER, GameMode.SURVIVAL),
     CLAN(PlayerRank.MEMBER),
+    CLAN_BASE_BUILD(PlayerRank.MEMBER, GameMode.SURVIVAL),
     COMPASS(PlayerRank.WARDEN),
     DAY(PlayerRank.WARDEN),
     DEBUG(PlayerRank.ADMIN),
@@ -39,6 +40,7 @@ public enum Perm {
     HEAL(PlayerRank.WARDEN),
     HELP(PlayerRank.DEFAULT),
     HOME(PlayerRank.MEMBER),
+    HOME_MAKE(PlayerRank.MEMBER, GameMode.SURVIVAL),
     HOME_OTHER(PlayerRank.MOD),
     I(PlayerRank.VIP),
     IGNORE(PlayerRank.DEFAULT),
@@ -47,9 +49,9 @@ public enum Perm {
     I_ADMIN(PlayerRank.MOD),
     JAIL(PlayerRank.WARDEN),
     KICK(PlayerRank.MOD),
-    KIT(PlayerRank.DEFAULT),
+    KIT(PlayerRank.DEFAULT, GameMode.SURVIVAL),
     LOCKDOWN(PlayerRank.ADMIN),
-    MAP(PlayerRank.DEFAULT),
+    MAP(PlayerRank.DEFAULT, GameMode.SURVIVAL),
     ME(PlayerRank.DEFAULT),
     MINECART(PlayerRank.DEFAULT),
     MOD(PlayerRank.MOD),
@@ -77,14 +79,14 @@ public enum Perm {
     RAIN(PlayerRank.WARDEN),
     REGION(PlayerRank.MOD),
     RULES(PlayerRank.DEFAULT),
-    SCUBA(PlayerRank.DEFAULT),
+    SCUBA(PlayerRank.DEFAULT, GameMode.SURVIVAL),
     SERVER(PlayerRank.ADMIN),
     SETSPAWN(PlayerRank.ADMIN),
     SETWARP(PlayerRank.WARDEN),
-    SHOP(PlayerRank.MEMBER),
-    SHOP_ADMIN(PlayerRank.ADMIN),
-    SHOP_SERVER(PlayerRank.MOD),
-    SHOP_SIGN(PlayerRank.MEMBER),
+    SHOP(PlayerRank.MEMBER, GameMode.SURVIVAL),
+    SHOP_ADMIN(PlayerRank.ADMIN, GameMode.SURVIVAL),
+    SHOP_SERVER(PlayerRank.MOD, GameMode.SURVIVAL),
+    SHOP_SIGN(PlayerRank.MEMBER, GameMode.SURVIVAL),
     SIGNS(PlayerRank.MOD),
     SIGN_CHECKPOINT(PlayerRank.MOD),
     SIGN_ITEM(PlayerRank.ADMIN),
@@ -134,16 +136,26 @@ public enum Perm {
     XP(PlayerRank.MOD),
     Y(PlayerRank.DEFAULT);
 
-    private PlayerRank rank;
+    public PlayerRank rank;
     private boolean hereditary;
+    private GameMode mode;
 
-    private Perm(final PlayerRank rank, final boolean hereditary) {
+    private Perm(final PlayerRank rank, final boolean isHereditary, final GameMode mode) {
         this.rank = rank;
-        this.hereditary = hereditary;
+        this.hereditary = isHereditary;
+        this.mode = mode;
     }
 
     private Perm(final PlayerRank rank) {
-        this(rank, true);
+        this(rank, true, null);
+    }
+    
+    private Perm(final PlayerRank rank, final boolean hereditary) {
+        this(rank, hereditary, null);
+    }
+    
+    private Perm(final PlayerRank rank, final GameMode mode) {
+        this(rank, true, mode);
     }
 
     /**
@@ -160,5 +172,9 @@ public enum Perm {
      */
     public boolean isHereditary() {
         return hereditary;
+    }
+    
+    public GameMode getMode() {
+        return mode;
     }
 }

@@ -25,10 +25,10 @@ public class AsyncPlayerChat implements Listener {
         } else if(player.getChannel() == ChatChannel.PUBLIC) {
             String message = event.getMessage();
             if(Censor.noCensor(message)) {
-                message = (player.getRank().getColor() + player.getNick() + ": " + Color.TEXT).concat(message);
+                message = (player.getRankColor() + player.getNick() + ": " + Color.TEXT).concat(message);
             } else {
                 player.sendMessage(Color.ERROR + "Please do not use bad language.");
-                message = player.getRank().getColor() + player.getNick() + ": " + Color.TEXT + Censor.fix(message);
+                message = player.getRankColor() + player.getNick() + ": " + Color.TEXT + Censor.fix(message);
                 if(player.canAfford(1)) {
                     player.debit(1);
                     Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " put 1 " + UDSPlugin.getConfigString(ConfigRef.CURRENCY) + " in the swear jar.");
@@ -46,7 +46,7 @@ public class AsyncPlayerChat implements Listener {
         } else if(player.getChannel() == ChatChannel.ADMIN) {
             final String message = PlayerRank.ADMIN.getColor() + "[ADMIN] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
-                if(target.getRank().compareTo(PlayerRank.MOD) >= 0) {
+                if(target.hasRank(PlayerRank.MOD)) {
                     target.sendMessage(message);
                 }
             }

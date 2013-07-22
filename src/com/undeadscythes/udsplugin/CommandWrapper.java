@@ -704,7 +704,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if the player has the required rank, <code>false</code> otherwise.
      */
     protected boolean hasRank(final PlayerRank rank) {
-        if(player.getRank().compareTo(rank) >= 0) {
+        if(player.hasRank(rank)) {
             return true;
         } else {
             player.sendMessage(Color.ERROR + "You don't have the rank required to do that.");
@@ -1177,11 +1177,15 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean hasPerm(final Perm perm) {
         if(player.hasPermission(perm) || player.isOp()) {
-            return true;
+            if(perm.getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(perm.getMode())) {
+                return true;
+            } else {
+                player.sendMessage(Color.ERROR + "You can't you that command in this world.");
+            }
         } else {
             player.sendMessage(Color.ERROR + "You do not have permission to do that.");
-            return false;
         }
+        return false;
     }
     
     protected boolean inLine(final Session session) {

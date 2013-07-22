@@ -12,7 +12,7 @@ public class DemoteCmd extends CommandWrapper {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
             PlayerRank rank;
-            if(player.getRank().compareTo(target.getRank()) >= 0 && (rank = target.demote()) != null) {
+            if(player.sameRank(target) && (rank = target.demote()) != null) {
                 player.sendMessage(Color.MESSAGE + target.getNick() + " has been demoted to " + rank.toString() + ".");
                 target.sendMessage(Color.MESSAGE + "You have been demoted to " + rank.toString() + ".");
             } else {

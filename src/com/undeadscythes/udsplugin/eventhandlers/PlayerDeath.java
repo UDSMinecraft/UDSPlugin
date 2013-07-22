@@ -48,7 +48,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
             clanKill(udsKiller, udsVictim);
         }
         final Random rng = new Random();
-        if(rng.nextDouble() < UDSPlugin.getConfigDouble(ConfigRef.SKULL) || udsVictim.getRank().compareTo(PlayerRank.MOD) >= 0) {
+        if(rng.nextDouble() < UDSPlugin.getConfigDouble(ConfigRef.SKULL) || udsVictim.hasRank(PlayerRank.MOD)) {
             final ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
             final SkullMeta meta = (SkullMeta)skull.getItemMeta();
             meta.setOwner(udsVictim.getName());

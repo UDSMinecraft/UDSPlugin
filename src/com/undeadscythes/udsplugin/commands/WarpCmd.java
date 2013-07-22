@@ -15,7 +15,7 @@ public class WarpCmd extends CommandWrapper {
         if(args.length == 0) {
             final Set<String> warps = new TreeSet<String>();
             for(Warp test : UDSPlugin.getWarps().values()) {
-                if(player.getRank().compareTo(test.getRank()) >= 0) {
+                if(player.hasRank(test.getRank())) {
                     warps.add(test.getName() + (test.getPrice() > 0 ? " (" + test.getPrice() + ")" : ""));
                 }
             }

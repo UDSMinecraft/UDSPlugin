@@ -20,7 +20,7 @@ public class StatsCmd extends CommandWrapper {
     private void sendStats(final SaveablePlayer target) {
         player.sendMessage(Color.MESSAGE + target.getNick() + "'s stats:");
         player.sendMessage(Color.TEXT + "Minecraft name: " + target.getName());
-        player.sendMessage(Color.TEXT + "Rank: " + target.getRank().getColor() + target.getRank().toString());
+        player.sendMessage(Color.TEXT + "Rank: " + target.getRankColor() + target.getRankName());
         player.sendMessage(Color.TEXT + "Clan: " + (target.isInClan() ? target.getClan().getName() : "not in clan"));
         player.sendMessage(Color.TEXT + "Current bounty: " + target.getBounty());
         if(target.isOnline()) {

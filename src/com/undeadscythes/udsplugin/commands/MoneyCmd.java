@@ -29,13 +29,13 @@ public class MoneyCmd extends CommandWrapper {
                 int printed = 0;
                 player.sendMessage(Color.MESSAGE + "Top 5 Richest Players:");
                 for(SaveablePlayer ranker : players) {
-                    if(printed < 5 && ranker.getRank().compareTo(PlayerRank.MOD) < 0) {
-                        player.sendMessage(Color.TEXT.toString() + (printed + 1) + ": " + ranker.getRank().getColor() + ranker.getNick() + ", " + Color.TEXT + ranker.getMoney() + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
+                    if(printed < 5 && !ranker.hasRank(PlayerRank.MOD)) {
+                        player.sendMessage(Color.TEXT.toString() + (printed + 1) + ": " + ranker.getRankColor() + ranker.getNick() + ", " + Color.TEXT + ranker.getMoney() + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                         printed++;
                     }
                 }
                 final int rank = players.indexOf(player);
-                if(rank > 5 && player.getRank().compareTo(PlayerRank.MOD) < 0) {
+                if(rank > 5 && !player.hasRank(PlayerRank.MOD)) {
                     player.sendMessage(Color.MESSAGE + "Your rank is " + rank + ".");
                 }
             } else if(subCmd.equals("help")) {

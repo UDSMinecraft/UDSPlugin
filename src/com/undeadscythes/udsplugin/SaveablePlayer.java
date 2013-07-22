@@ -817,12 +817,20 @@ public class SaveablePlayer implements Saveable {
         return backPoint;
     }
 
-    /**
-     * Get a player current rank.
-     * @return Player rank.
-     */
-    public final PlayerRank getRank() {
-        return rank;
+//    /**
+//     * Get a player current rank.
+//     * @return Player rank.
+//     */
+//    public final PlayerRank getRank() {
+//        return rank;
+//    }
+    
+    public final boolean hasRank(final PlayerRank rank) {
+        return this.rank.compareTo(rank) >= 0;
+    }
+    
+    public final boolean isRank(final PlayerRank rank) {
+        return this.rank.compareTo(rank) == 0;
     }
 
     /**
@@ -1447,5 +1455,25 @@ public class SaveablePlayer implements Saveable {
      */
     public final Entity getVehicle() {
         return player == null ? null : player.getVehicle();
+    }
+    
+    public final ChatColor getRankColor() {
+        return rank.getColor();
+    }
+    
+    public final boolean outRanks(final SaveablePlayer player) {
+        return !player.hasRank(rank);
+    }
+    
+    public final String getRankName() {
+        return rank.name();
+    }
+    
+    public final boolean sameRank(final SaveablePlayer player) {
+        return player.isRank(rank);
+    }
+    
+    public final PlayerRank getRank() {
+        return rank;
     }
 }

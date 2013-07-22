@@ -41,9 +41,9 @@ public class PlayerJoin implements Listener {
             player.kickPlayer("The server is currently in lockdown please check back later.");
         } else {
             player.sendMessage(Color.MESSAGE + UDSPlugin.getConfigString(ConfigRef.WELCOME_MSG));
-            if(player.getRank().equals(PlayerRank.DEFAULT)) {
+            if(player.isRank(PlayerRank.DEFAULT)) {
                 player.sendMessage(Color.MESSAGE + "Kill monsters or trade with players to earn " + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " credits then type /acceptrules in chat.");
-            } else if(player.getRank().compareTo(PlayerRank.MOD) >= 0) {
+            } else if(player.hasRank(PlayerRank.MOD)) {
                 player.sendMessage(UDSPlugin.getConfigString(ConfigRef.WELCOME_ADMIN));
             }
             if(player.isHidden()) {
