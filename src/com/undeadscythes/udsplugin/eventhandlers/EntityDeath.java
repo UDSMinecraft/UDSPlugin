@@ -7,40 +7,53 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 /**
- * When an entity dies.
+ * Fired when an entity dies.
  * @author UndeadScythes
  */
 public class EntityDeath extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final EntityDeathEvent event) {
         final Entity victim = event.getEntity();
-        final EntityDamageEvent damageEvent = victim.getLastDamageCause();
-        if(damageEvent instanceof EntityDamageByEntityEvent) {
-            final Entity killer = getAbsoluteEntity(((EntityDamageByEntityEvent)damageEvent).getDamager());
-            if(victim instanceof EnderDragon) {
-                enderKill(killer, event.getEntity().getLocation());
-            } else if(victim instanceof Wither) {
-                witherKill(killer, event.getEntity().getLocation());
-            } else if(killer instanceof Player) {
-                payReward(UDSPlugin.getPlayers().get(((Player)killer).getName()), victim);
-            } else if(killer instanceof Tameable) {
-                final Tameable pet = (Tameable)killer;
-                if(pet.isTamed()) {
-                    payReward(UDSPlugin.getPlayers().get(((Player)pet.getOwner()).getName()), victim);
-                }
+        final EntityDamageEvent cause = victim.getLastDamageCause();
+        if(!(cause instanceof EntityDamageByEntityEvent)) return;
+        final Entity killer = getAbsoluteEntity(((EntityDamageByEntityEvent)cause).getDamager());
+        if(victim instanceof EnderDragon) {
+            enderKill(killer, event.getEntity().getLocation());
+        } else if(victim instanceof Wither) {
+            witherKill(killer, event.getEntity().getLocation());
+        } else if(killer instanceof Player) {
+            payReward(UDSPlugin.getOnlinePlayer(((Player)killer).getName()), victim);
+        } else if(killer instanceof Tameable) {
+            final Tameable pet = (Tameable)killer;
+            if(pet.isTamed()) {
+                payReward(UDSPlugin.getOnlinePlayer(((Player)pet.getOwner()).getName()), victim);
             }
         }
     }
 
     private void payReward(final SaveablePlayer player, final Entity victim) {
-        if(player.getGameMode() == GameMode.SURVIVAL && !player.hasGodMode()) {
-            final Random generator = new Random();
-            final int standard = (UDSPlugin.getMobRewards().get(victim.getType()) / 2) + 1;
-            final int reward = generator.nextInt(standard) + standard;
-            player.credit(reward);
-            player.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
+        if(player.getGameMode() == GameMode.CREATIVE || player.hasGodMode()) return;
+        final Random rng = new Random();
+        final int base = (UDSPlugin.getMobReward(victim.getType()) / 2) + 1;
+        final int reward = rng.nextInt(base) + base;
+        player.credit(reward);
+        player.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
+        if(rng.nextDouble() < UDSPlugin.getConfigDouble(ConfigRef.SKULL)) {
+            ItemStack skull;
+            if(victim.getType().equals(EntityType.ZOMBIE)) {
+                skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.ZOMBIE.ordinal());
+            } else if(victim.getType().equals(EntityType.ZOMBIE)) {
+                skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.SKELETON.ordinal());
+            } else if(victim.getType().equals(EntityType.ZOMBIE)) {
+                skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.CREEPER.ordinal());
+            } else {
+                return;
+            }
+            player.getWorld().dropItemNaturally(victim.getLocation(), skull);
         }
     }
 

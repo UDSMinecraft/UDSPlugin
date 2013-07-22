@@ -51,6 +51,7 @@ public enum ConfigRef {
     GLOBAL_FLAGS("global-flags"),
     SHARES("inventory-shares"),
     GMAIL_ADDRESS("gmail.email"),
+    SKULL("head-drop-chance"),
     GMAIL_PASSWORD("gmail.password");
 
     private String reference;

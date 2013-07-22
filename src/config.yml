@@ -123,3 +123,5 @@ gmail:
 # Worlds that should share an inventory.
 inventory-shares:
   - world,world_nether,world_the_end
+# Chance for a mob head to drop on death.
+head-drop-chance: 0.01

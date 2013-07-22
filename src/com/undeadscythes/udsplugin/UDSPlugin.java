@@ -723,4 +723,12 @@ public class UDSPlugin extends JavaPlugin {
         changeWorldMode(world, GameMode.SURVIVAL);
         return GameMode.SURVIVAL;
     }
+    
+    public static SaveablePlayer getOnlinePlayer(final String name) {
+        return ONLINE_PLAYERS.get(name);
+    }
+    
+    public static int getMobReward(final EntityType mob) {
+        return MOB_REWARDS.get(mob);
+    }
 }
