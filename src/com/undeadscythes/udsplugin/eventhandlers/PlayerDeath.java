@@ -1,10 +1,13 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.Color;
+import java.util.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.*;
 
 /**
  * When a player dies.
@@ -20,55 +23,12 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         if(victim.hasPermission(Perm.BACK_ON_DEATH)) {
             udsVictim.setBackPoint(victim.getLocation());
         }
-        for(Region arena : UDSPlugin.getRegions(RegionType.ARENA).values()) {
-            if(arena.contains(victim.getLocation())) {
-                event.getDrops().clear();
-                event.setDroppedExp(0);
-                event.setKeepLevel(true);
-                saveInventory(victim);
-            }
-        }
         if(victim.getKiller() != null) {
             final SaveablePlayer killer = UDSPlugin.getOnlinePlayers().get(victim.getKiller().getName());
             if(killer != null) {
-                if(udsVictim.isDuelling()) {
-                    if(udsVictim.getChallenger().equals(killer)) {
-                        event.getDrops().clear();
-                        event.setDroppedExp(0);
-                        event.setKeepLevel(true);
-                        challengeWin(killer, victim);
-                    } else {
-                        challengeDraw(victim);
-                    }
-                } else {
-                    pvp(killer, victim);
-                }
+                pvp(killer, victim);
             }
         }
-    }
-
-    private void saveInventory(final SaveablePlayer victim) {
-        victim.saveItems();
-        victim.setLoadItems(true);
-    }
-
-    private void challengeWin(final SaveablePlayer killer, final SaveablePlayer victim) {
-        final SaveablePlayer udsKiller = UDSPlugin.getOnlinePlayers().get(killer.getName());
-        final SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victim.getName());
-        udsVictim.saveItems();
-        udsVictim.setLoadItems(true);
-        udsKiller.credit(2 * udsVictim.getWager());
-        udsKiller.endChallenge();
-        killer.sendMessage(Color.MESSAGE + "You won the challenge.");
-    }
-
-    private void challengeDraw(final SaveablePlayer victim) {
-        final SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victim.getName());
-        final SaveablePlayer challenger = udsVictim.getChallenger();
-        challenger.credit(udsVictim.getWager());
-        udsVictim.credit(udsVictim.getWager());
-        challenger.endChallenge();
-        challenger.sendMessage(Color.MESSAGE + "The challenge was a draw.");
     }
 
     private void clanKill(final SaveablePlayer killer, final SaveablePlayer victim) {
@@ -86,6 +46,15 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         }
         if(udsKiller.isInClan() && udsVictim.isInClan()) {
             clanKill(udsKiller, udsVictim);
+        }
+        final Random rng = new Random();
+        if(rng.nextDouble() < UDSPlugin.getConfigDouble(ConfigRef.SKULL) || udsVictim.getRank().compareTo(PlayerRank.MOD) >= 0) {
+            final ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
+            final SkullMeta meta = (SkullMeta)skull.getItemMeta();
+            meta.setOwner(udsVictim.getName());
+            meta.setDisplayName(udsVictim.getName() + "'s head");
+            skull.setItemMeta(meta);
+            udsKiller.getWorld().dropItemNaturally(udsVictim.getLocation(), skull);
         }
     }
 

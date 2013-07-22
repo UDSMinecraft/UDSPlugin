@@ -20,10 +20,6 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
                 event.setRespawnLocation(Warp.findSafePlace(home.getWarp()));
             }
         }
-        if(player.isDuelling()) {
-            player.endChallenge();
-            player.sendMessage(Color.MESSAGE + "The duel is over.");
-        }
         if(player.hasPermission(Perm.BACK_ON_DEATH)) {
             player.sendMessage(Color.MESSAGE + "Use /back to return to where you died.");
         }
