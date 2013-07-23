@@ -120,7 +120,7 @@ public class UDSPlugin extends JavaPlugin {
     @Override
     public final void onDisable() {
         try {
-            getLogger().info(saveFiles() + " clans, regions, warps, portals and players saved.");
+            getLogger().info(saveFiles() + " server objects saved.");
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
