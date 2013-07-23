@@ -729,7 +729,7 @@ public class SaveablePlayer implements Saveable {
                 contained = true;
             }
         }
-        return !contained;
+        return contained ? false : UDSPlugin.checkWorldFlag(location.getWorld(), RegionFlag.BUILD);
     }
 
     /**

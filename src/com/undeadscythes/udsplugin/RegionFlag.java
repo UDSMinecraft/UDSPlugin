@@ -62,7 +62,15 @@ public enum RegionFlag {
     /**
      * 
      */
-    TIME(true);
+    TIME(true),
+    /**
+     * 
+     */
+    LAMP(false),
+    /**
+     * 
+     */
+    BUILD(true);
 
     private boolean defaulted;
 
