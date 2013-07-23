@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -64,11 +65,11 @@ public class Region implements Saveable {
         min = getBlockPos(recordSplit[1]);
         max = getBlockPos(recordSplit[2]);
         warp = SaveableLocation.parseLocation(recordSplit[3]);
-        owner = UDSPlugin.getPlayers().get(recordSplit[4]);
+        owner = PlayerUtils.getPlayer(recordSplit[4]);
         members = new HashSet<SaveablePlayer>();
         if(!recordSplit[5].equals("")) {
             for(String member : recordSplit[5].split(",")) {
-                members.add(UDSPlugin.getPlayers().get(member));
+                members.add(PlayerUtils.getPlayer(member));
             }
         }
         data = recordSplit[6];

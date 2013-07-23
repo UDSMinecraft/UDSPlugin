@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -18,7 +19,7 @@ public class BlockBreak implements Listener {
 
     @EventHandler
     public final void onEvent(final BlockBreakEvent event) {
-        final SaveablePlayer player = UDSPlugin.getPlayers().get(event.getPlayer().getName());
+        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(player.isJailed()) {
             event.setCancelled(true);
         } else if(!player.canBuildHere(event.getBlock().getLocation())) {

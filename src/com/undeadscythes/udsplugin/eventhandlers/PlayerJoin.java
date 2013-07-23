@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -17,21 +18,21 @@ public class PlayerJoin implements Listener {
     public void onEvent(final PlayerJoinEvent event) {
         final String playerName = event.getPlayer().getName();
         SaveablePlayer player;
-        if(UDSPlugin.getPlayers().containsKey(playerName)) {
-            player = UDSPlugin.getPlayers().get(playerName);
+        if(PlayerUtils.existingPlayer(playerName)) {
+            player = PlayerUtils.getPlayer(playerName);
             player.wrapPlayer(event.getPlayer());
-            UDSPlugin.getOnlinePlayers().put(playerName, player);
+            PlayerUtils.addOnlinePlayer(player);
         } else {
             player = new SaveablePlayer(event.getPlayer());
-            UDSPlugin.getPlayers().put(playerName, player);
-            UDSPlugin.getOnlinePlayers().put(playerName, player);
+            PlayerUtils.addPlayer(player);
+            PlayerUtils.addOnlinePlayer(player);
             if(player.getName().equals(UDSPlugin.getConfigString(ConfigRef.SERVER_OWNER))) {
                 player.setRank(PlayerRank.OWNER);
                 player.sendMessage(ChatColor.GOLD + "Welcome to your new server, I hope everything goes well.");
             } else {
                 Bukkit.broadcastMessage(Color.BROADCAST + "A new player, free gifts for everyone!");
                 final ItemStack gift = new ItemStack(UDSPlugin.getConfigMaterial(ConfigRef.WELCOME_GIFT));
-                for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
+                for(SaveablePlayer onlinePlayer : PlayerUtils.getOnlinePlayers()) {
                     onlinePlayer.giveAndDrop(gift);
                 }
             }
@@ -48,7 +49,7 @@ public class PlayerJoin implements Listener {
             }
             if(player.isHidden()) {
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if(!UDSPlugin.getOnlinePlayers().get(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
+                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, true);
                     } else {
                         onlinePlayer.sendMessage(Color.WHISPER + player.getNick() + " has joined.");
@@ -59,7 +60,7 @@ public class PlayerJoin implements Listener {
                 event.setJoinMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
             }
             if(!player.hasPermission(Perm.VANISH)) {
-                for(SaveablePlayer hiddenPlayer : UDSPlugin.getHiddenPlayers().values()) {
+                for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
                     hiddenPlayer.hideFrom(event.getPlayer(), true);
                 }
             }

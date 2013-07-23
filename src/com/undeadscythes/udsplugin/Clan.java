@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -39,12 +40,12 @@ public class Clan implements Saveable {
     public Clan(final String record) {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        leader = UDSPlugin.getPlayers().get(recordSplit[1]);
+        leader = PlayerUtils.getPlayer(recordSplit[1]);
         kills = Integer.parseInt(recordSplit[2]);
         deaths = Integer.parseInt(recordSplit[3]);
         members = new HashSet<SaveablePlayer>();
         for(String member : recordSplit[4].split(",")) {
-            members.add(UDSPlugin.getPlayers().get(member));
+            members.add(PlayerUtils.getPlayer(member));
         }
     }
 

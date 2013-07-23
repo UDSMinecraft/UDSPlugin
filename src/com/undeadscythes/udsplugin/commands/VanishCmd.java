@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 
@@ -14,9 +15,9 @@ public class VanishCmd extends CommandWrapper {
     public final void playerExecute() {
         if(args.length == 0) {
             if(player.toggleHidden()) {
-                UDSPlugin.getHiddenPlayers().put(player.getName(), player);
+                PlayerUtils.addHiddenPlayer(player);
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if(!UDSPlugin.getOnlinePlayers().get(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
+                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, true);
                         onlinePlayer.sendMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
                     } else {
@@ -24,9 +25,9 @@ public class VanishCmd extends CommandWrapper {
                     }
                 }
             } else {
-                UDSPlugin.getHiddenPlayers().remove(player.getName());
+                PlayerUtils.removeHiddenPlayer(player.getName());
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if(!UDSPlugin.getOnlinePlayers().get(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
+                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, false);
                         onlinePlayer.sendMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
                     } else {
@@ -37,7 +38,7 @@ public class VanishCmd extends CommandWrapper {
         } else if(numArgsHelp(1)) {
             if("list".equals(subCmd)) {
                 player.sendMessage(Color.MESSAGE + "Vanished players:");
-                for(SaveablePlayer hiddenPlayer : UDSPlugin.getHiddenPlayers().values()) {
+                for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
                     player.sendMessage(Color.TEXT + hiddenPlayer.getNick());
                 }
             } else {

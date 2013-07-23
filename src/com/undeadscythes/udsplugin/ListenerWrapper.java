@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -81,7 +82,7 @@ public class ListenerWrapper {
         final String priceLine = lines[3];                                                          //
         return (shopLine.equalsIgnoreCase(Color.SIGN + "shop")                                      //
                 || shopLine.equalsIgnoreCase("shop"))                                               //
-            && ((UDSPlugin.getPlayers().get(ownerLine.replace(Color.SIGN.toString(), "")) != null   // Update hack fix
+            && ((PlayerUtils.getPlayer(ownerLine.replace(Color.SIGN.toString(), "")) != null   // Update hack fix
                 || "".equals(ownerLine)                                                             //
                 || (Color.SIGN + "server").equalsIgnoreCase(ownerLine)))                            //
             && findItem(lines[2]) != null                                                           //

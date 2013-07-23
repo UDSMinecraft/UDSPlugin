@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 
@@ -17,7 +18,7 @@ public class WhoCmd extends CommandWrapper {
             lists.put(rank, "");
         }
         int onlinePlayers = 0;
-        for(SaveablePlayer onlinePlayer : UDSPlugin.getOnlinePlayers().values()) {
+        for(SaveablePlayer onlinePlayer : PlayerUtils.getOnlinePlayers()) {
             if(!onlinePlayer.isHidden()) {
                 final String current = lists.get(onlinePlayer.getRank());
                 lists.put(onlinePlayer.getRank(), current + (player.getGameMode() == GameMode.CREATIVE ? "[C]" : (player.hasGodMode() ? "[G]" : "")) + onlinePlayer.getNick() + " ");

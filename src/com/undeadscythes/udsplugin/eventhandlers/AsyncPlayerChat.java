@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.commands.JailCmd;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.*;
@@ -15,7 +16,7 @@ public class AsyncPlayerChat implements Listener {
     @EventHandler
     public void onEvent(final AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
-        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         final String logMessage = player.getNick() + ": " + event.getMessage();
         Bukkit.getLogger().info(logMessage);
         if(!player.newChat()) {
@@ -38,14 +39,14 @@ public class AsyncPlayerChat implements Listener {
                     JailCmd.jail(player, 1, 1);
                 }
             }
-            for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
+            for(SaveablePlayer target : PlayerUtils.getOnlinePlayers()) {
                 if(!target.isIgnoringPlayer(player)) {
                     target.sendMessage(message);
                 }
             }
         } else if(player.getChannel() == ChatChannel.ADMIN) {
             final String message = PlayerRank.ADMIN.getColor() + "[ADMIN] " + player.getNick() + ": " + event.getMessage();
-            for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
+            for(SaveablePlayer target : PlayerUtils.getOnlinePlayers()) {
                 if(target.hasRank(PlayerRank.MOD)) {
                     target.sendMessage(message);
                 }

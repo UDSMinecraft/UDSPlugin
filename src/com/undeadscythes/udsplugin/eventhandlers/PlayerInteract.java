@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -18,7 +19,7 @@ import org.bukkit.util.Vector;
 public class PlayerInteract extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final PlayerInteractEvent event) {
-        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         final Material inHand = player.getItemInHand().getType();
         final Block block = event.getClickedBlock();
         switch(event.getAction()) {

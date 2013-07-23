@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
@@ -11,17 +12,17 @@ import org.bukkit.event.player.*;
 public class PlayerQuit implements Listener {
     @EventHandler
     public void onEvent(final PlayerQuitEvent event) {
-        final String playerName = event.getPlayer().getName();
-        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(playerName);
+        final String name = event.getPlayer().getName();
+        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(name);
         player.addTime(System.currentTimeMillis() - player.getLastPlayed());
         if(player.isHidden()) {
-            for(SaveablePlayer hiddenPlayer : UDSPlugin.getHiddenPlayers().values()) {
+            for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
                 hiddenPlayer.sendMessage(Color.WHISPER + player.getNick() + " has left.");
             }
         } else {
             event.setQuitMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
         }
-        UDSPlugin.getOnlinePlayers().remove(playerName);
+        PlayerUtils.removeOnlinePlayer(name);
         player.nullBase();
     }
 }

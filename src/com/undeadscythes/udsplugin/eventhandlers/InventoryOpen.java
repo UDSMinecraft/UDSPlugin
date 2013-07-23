@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.block.Chest;
 import org.bukkit.block.*;
@@ -10,7 +11,6 @@ import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
-import org.bukkit.material.*;
 
 /**
  * Fired when a player opens an inventory window.
@@ -26,7 +26,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final InventoryOpenEvent event) {
         final InventoryHolder holder = event.getInventory().getHolder();
-        player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(holder instanceof DoubleChest) {
             if(isShop(((DoubleChest)holder).getLeftSide()) || isShop(((DoubleChest)holder).getRightSide())) {
                 startShopping();

@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 
@@ -36,7 +37,7 @@ public class BountyCmd extends CommandWrapper {
      */
     private void sendPage(final int page, final SaveablePlayer player) {
         final List<SaveablePlayer> bounties = new ArrayList<SaveablePlayer>();
-        final List<SaveablePlayer> sortedPlayers = UDSPlugin.getPlayers().getSortedValues(new SortByBounty());
+        final List<SaveablePlayer> sortedPlayers = PlayerUtils.getSortedPlayers(new SortByBounty());
         for(SaveablePlayer test : sortedPlayers) {
             if(test.getBounty() > 0) {
                 bounties.add(test);

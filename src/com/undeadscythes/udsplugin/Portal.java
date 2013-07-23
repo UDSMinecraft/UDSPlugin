@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.ArrayList;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -104,7 +105,7 @@ public class Portal implements Saveable {
             if(portal != null) {
                 final Vector half = portal.getV2().clone().subtract(portal.getV1()).multiply(0.5);
                 final Location mid = portal.getV1().clone().add(half).add(new Vector(0.5, 0, 0.5)).toLocation(portal.getWorld());
-                UDSPlugin.getOnlinePlayers().get(player.getName()).move(Warp.findFloor(mid));
+                PlayerUtils.getOnlinePlayer(player.getName()).move(Warp.findFloor(mid));
             }
         } else {
             player.teleport(warp.getLocation());

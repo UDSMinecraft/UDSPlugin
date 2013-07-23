@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 
 /**
@@ -25,7 +26,7 @@ public class MoneyCmd extends CommandWrapper {
                 player.sendMessage(Color.ITEM + "Clan base cost: " + Color.TEXT + UDSPlugin.getConfigInt(ConfigRef.BASE_COST) + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                 player.sendMessage(Color.ITEM + "City cost: " + Color.TEXT + UDSPlugin.getConfigInt(ConfigRef.CITY_COST) + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
             } else if(subCmd.equals("rank")) {
-                final List<SaveablePlayer> players = UDSPlugin.getPlayers().getSortedValues(new SortByMoney());
+                final List<SaveablePlayer> players = PlayerUtils.getSortedPlayers(new SortByMoney());
                 int printed = 0;
                 player.sendMessage(Color.MESSAGE + "Top 5 Richest Players:");
                 for(SaveablePlayer ranker : players) {

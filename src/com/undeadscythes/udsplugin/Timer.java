@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -79,7 +80,7 @@ public class Timer implements Runnable {
             }
         }
         Bukkit.broadcastMessage(Color.BROADCAST + "The quarries have been refilled.");
-        for(SaveablePlayer vip : UDSPlugin.getVips().values()) {
+        for(SaveablePlayer vip : PlayerUtils.getVips()) {
             vip.setVIPSpawns(UDSPlugin.getConfigInt(ConfigRef.VIP_SPAWNS));
             if(vip.isOnline()) {
                 vip.sendMessage(Color.MESSAGE + "Your daily item spawns have been refilled.");
@@ -125,7 +126,7 @@ public class Timer implements Runnable {
     }
 
     private void fastTask() {
-        for(SaveablePlayer player : UDSPlugin.getOnlinePlayers().values()) {
+        for(SaveablePlayer player : PlayerUtils.getOnlinePlayers()) {
             if(player.isRank(PlayerRank.VIP) && player.getVIPTime() + UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) < now) {
                 player.setVIPTime(0);
                 player.setRank(PlayerRank.MEMBER);

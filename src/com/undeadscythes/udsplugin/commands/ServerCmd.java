@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
 
@@ -14,7 +15,7 @@ public class ServerCmd extends CommandWrapper {
     public final void playerExecute() {
         if(numArgsHelp(1)) {
             if(subCmd.equals("stop")) {
-                for(SaveablePlayer target : UDSPlugin.getOnlinePlayers().values()) {
+                for(SaveablePlayer target : PlayerUtils.getOnlinePlayers()) {
                     target.kickPlayer("Server is shutting down.");
                 }
                 Bukkit.shutdown();
@@ -23,7 +24,7 @@ public class ServerCmd extends CommandWrapper {
                 player.sendMessage(Color.MESSAGE + "Configuration file reloaded.");
             } else if(subCmd.equals("info")) {
                 player.sendMessage(Color.MESSAGE + "Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");
-                player.sendMessage(Color.MESSAGE + "There have been " + UDSPlugin.getPlayers().size() + " unique visitors.");
+                player.sendMessage(Color.MESSAGE + "There have been " + PlayerUtils.numPlayers() + " unique visitors.");
             } else if(subCmd.equals("setspawn")) {
                 final Location location = player.getLocation();
                 player.getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -30,7 +31,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     public final boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
         if(sender instanceof Player) {
             commandName = command.getName();
-            player = UDSPlugin.getOnlinePlayers().get(sender.getName());
+            player = PlayerUtils.getOnlinePlayer(sender.getName());
             if(hasPerm(Perm.valueOf(commandName.toUpperCase()))) {
                 this.args = args.clone();
                 if(args.length > 0) {
@@ -1061,38 +1062,38 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected SaveablePlayer getMatchingPlayer(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
+        SaveablePlayer target = PlayerUtils.getOnlinePlayer(lowPartial);
         if(target != null) {
             return target;
         } else {
-            for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+            for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
                 if(test.getNick().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
             }
-            target = UDSPlugin.getOnlinePlayers().matchKey(lowPartial);
+            target = PlayerUtils.matchOnlinePlayer(lowPartial);
             if(target != null) {
                 return target;
             } else {
-                for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+                for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
                     if(test.getNick().toLowerCase().contains(lowPartial)) {
                         return test;
                     }
                 }
-                target = UDSPlugin.getPlayers().get(lowPartial);
+                target = PlayerUtils.getPlayer(lowPartial);
                 if(target != null) {
                     return target;
                 } else {
-                    for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
+                    for(SaveablePlayer test : PlayerUtils.getPlayers()) {
                         if(test.getNick().equalsIgnoreCase(lowPartial)) {
                             return test;
                         }
                     }
-                    target = UDSPlugin.getPlayers().matchKey(lowPartial);
+                    target = PlayerUtils.matchPlayer(lowPartial);
                     if(target != null) {
                         return target;
                     } else {
-                        for(SaveablePlayer test : UDSPlugin.getPlayers().values()) {
+                        for(SaveablePlayer test : PlayerUtils.getPlayers()) {
                             if(test.getNick().toLowerCase().contains(lowPartial)) {
                                 return test;
                             }
@@ -1112,20 +1113,20 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected SaveablePlayer getMatchingOnlinePlayer(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        SaveablePlayer target = UDSPlugin.getOnlinePlayers().get(lowPartial);
+        SaveablePlayer target = PlayerUtils.getOnlinePlayer(lowPartial);
         if(target!= null) {
             return target;
         } else {
-            for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+            for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
                 if(test.getNick().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
             }
-            target = UDSPlugin.getOnlinePlayers().matchKey(lowPartial);
+            target = PlayerUtils.matchOnlinePlayer(lowPartial);
             if(target != null) {
                 return target;
             } else {
-                for(SaveablePlayer test : UDSPlugin.getOnlinePlayers().values()) {
+                for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
                     if(test.getNick().contains(lowPartial)) {
                         return test;
                     }

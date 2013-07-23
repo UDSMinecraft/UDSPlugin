@@ -12,11 +12,6 @@ import org.bukkit.inventory.*;
  * @author UndeadScythes
  */
 public class SaveablePlayer implements Saveable {
-    /**
-     * File name of player file.
-     */
-    public static final String PATH = "players.csv";
-
     private String name;
     private Player player;
     private String nick;

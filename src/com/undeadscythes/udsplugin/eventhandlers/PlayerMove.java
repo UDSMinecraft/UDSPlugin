@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
@@ -14,7 +15,7 @@ import org.bukkit.event.player.*;
 public class PlayerMove extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final PlayerMoveEvent event) {
-        final SaveablePlayer player = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(player.isAfk()) {
             player.toggleAfk();
             Bukkit.broadcastMessage(Color.TEXT + "*" + player.getNick() + " is no longer afk.");

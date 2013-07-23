@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.inventory.*;
@@ -16,7 +17,7 @@ public class InventoryClick extends ListenerWrapper implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler
     public final void onEvent(final InventoryClickEvent event) {
-        final SaveablePlayer shopper = UDSPlugin.getOnlinePlayers().get(event.getWhoClicked().getName());
+        final SaveablePlayer shopper = PlayerUtils.getOnlinePlayer(event.getWhoClicked().getName());
         if(shopper.isShopping()) {
             final ItemStack item = event.getCursor();
             if(event.isShiftClick()) {

@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
@@ -15,7 +16,7 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
         final Entity attacker = getAbsoluteEntity(event.getDamager());
         final Entity defender = event.getEntity();
         if(attacker instanceof Player && defender instanceof Player) {
-            event.setCancelled(pvp(UDSPlugin.getOnlinePlayers().get(((Player)attacker).getName()), UDSPlugin.getOnlinePlayers().get(((Player)defender).getName())));
+            event.setCancelled(pvp(PlayerUtils.getOnlinePlayer(((Player)attacker).getName()), PlayerUtils.getOnlinePlayer(((Player)defender).getName())));
         } else {
             event.setCancelled(isAfk(defender) || godMode(defender) || pve(defender));
         }
@@ -34,11 +35,11 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     }
 
     private boolean isAfk(final Entity defender) {
-        return defender instanceof Player && UDSPlugin.getOnlinePlayers().get(((Player)defender).getName()).isAfk();
+        return defender instanceof Player && PlayerUtils.getOnlinePlayer(((Player)defender).getName()).isAfk();
     }
 
     private boolean godMode(final Entity defender) {
-        return defender instanceof Player && UDSPlugin.getOnlinePlayers().get(((Player)defender).getName()).hasGodMode();
+        return defender instanceof Player && PlayerUtils.getOnlinePlayer(((Player)defender).getName()).hasGodMode();
     }
 
     private boolean pve(final Entity defender) {

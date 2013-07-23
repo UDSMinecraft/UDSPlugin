@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
@@ -15,7 +16,7 @@ import org.bukkit.inventory.*;
 public class InventoryClose extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final InventoryCloseEvent event) {
-        final SaveablePlayer shopper = UDSPlugin.getOnlinePlayers().get(event.getPlayer().getName());
+        final SaveablePlayer shopper = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(shopper.isShopping()) {
             final ItemStack handItem = event.getView().getCursor();
             if(!handItem.getType().equals(Material.AIR)) {

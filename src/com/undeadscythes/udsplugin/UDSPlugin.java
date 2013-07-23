@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin;
 
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
@@ -36,7 +37,6 @@ public class UDSPlugin extends JavaPlugin {
     private static final Map<EntityType, Integer> MOB_REWARDS = new HashMap<EntityType, Integer>();
     private static final Map<RegionFlag, Boolean> GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
     private static final SaveableHashMap CLANS = new SaveableHashMap();
-    private static final SaveableHashMap PLAYERS = new SaveableHashMap();
     private static final SaveableHashMap REGIONS = new SaveableHashMap();
     private static final SaveableHashMap WARPS = new SaveableHashMap();
     private static final SaveableHashMap PORTALS = new SaveableHashMap();
@@ -49,9 +49,6 @@ public class UDSPlugin extends JavaPlugin {
     private static final MatchableHashMap<Region> HOMES = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> QUARRIES = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> SHOPS = new MatchableHashMap<Region>();
-    private static final MatchableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new MatchableHashMap<SaveablePlayer>();
-    private static final MatchableHashMap<SaveablePlayer> ONLINE_PLAYERS = new MatchableHashMap<SaveablePlayer>();
-    private static final MatchableHashMap<SaveablePlayer> VIPS = new MatchableHashMap<SaveablePlayer>();
 
     private static UDSPlugin plugin;
     private static Timer timer;
@@ -123,9 +120,7 @@ public class UDSPlugin extends JavaPlugin {
     @Override
     public final void onDisable() {
         try {
-            saveFiles();
-            final String message = (CLANS.size() + REGIONS.size() + WARPS.size() + PLAYERS.size() + PORTALS.size()) + " clans, regions, warps, portals and players saved.";
-            getLogger().info(message);
+            getLogger().info(saveFiles() + " clans, regions, warps, portals and players saved.");
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -178,14 +173,14 @@ public class UDSPlugin extends JavaPlugin {
      * Saves all the listed objects to file.
      * @throws IOException When a file can't be opened.
      */
-    public static void saveFiles() throws IOException {
+    public static int saveFiles() throws IOException {
         data.saveData();
         worldFlags.save();
         CLANS.save(DATA_PATH + File.separator + Clan.PATH);
         REGIONS.save(DATA_PATH + File.separator + Region.PATH);
         WARPS.save(DATA_PATH + File.separator + Warp.PATH);
-        PLAYERS.save(DATA_PATH + File.separator + SaveablePlayer.PATH);
         PORTALS.save(DATA_PATH + File.separator + Portal.PATH);
+        return CLANS.size() + REGIONS.size() + WARPS.size() + PORTALS.size() + PlayerUtils.savePlayers(DATA_PATH);
     }
 
     /**
@@ -197,21 +192,8 @@ public class UDSPlugin extends JavaPlugin {
         BufferedReader file;
         String nextLine;
         String message;
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + SaveablePlayer.PATH));
-            while((nextLine = file.readLine()) != null) {
-                final SaveablePlayer player = new SaveablePlayer(nextLine);
-                PLAYERS.put(nextLine.split("\t")[0], player);
-                if(player.getVIPTime() > 0) {
-                    VIPS.put(player.getName(), player);
-                }
-            }
-            file.close();
-            message = PLAYERS.size() + " players loaded.";
-            getLogger().info(message);
-        } catch (FileNotFoundException ex) {
-            getLogger().info("No player file exists yet.");
-        }
+        final int count = PlayerUtils.loadPlayers(DATA_PATH);
+        if(count > 0) getLogger().info("Loaded " + count + " players.");
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Region.PATH));
             while((nextLine = file.readLine()) != null) {
@@ -512,14 +494,6 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     /**
-     * Grab and cast the players map.
-     * @return Players map.
-     */
-    public static MatchableHashMap<SaveablePlayer> getPlayers() {
-        return PLAYERS.toMatchableHashMap(SaveablePlayer.class);
-    }
-
-    /**
      * Grab the requests map.
      * @return Requests map.
      */
@@ -567,30 +541,6 @@ public class UDSPlugin extends JavaPlugin {
         }
     }
 
-    /**
-     * Grab the VIPs map.
-     * @return VIPs map.
-     */
-    public static MatchableHashMap<SaveablePlayer> getVips() {
-        return VIPS;
-    }
-
-    /**
-     * Grab the hidden players map.
-     * @return Hidden players map.
-     */
-    public static MatchableHashMap<SaveablePlayer> getHiddenPlayers() {
-        return HIDDEN_PLAYERS;
-    }
-
-    /**
-     * Grab the online players map.
-     * @return Online players map.
-     */
-    public static MatchableHashMap<SaveablePlayer> getOnlinePlayers() {
-        return ONLINE_PLAYERS;
-    }
-    
     public static MatchableHashMap<Portal> getPortals() {
         return PORTALS.toMatchableHashMap(Portal.class);
     }
@@ -723,10 +673,6 @@ public class UDSPlugin extends JavaPlugin {
         }
         changeWorldMode(world, GameMode.SURVIVAL);
         return GameMode.SURVIVAL;
-    }
-    
-    public static SaveablePlayer getOnlinePlayer(final String name) {
-        return ONLINE_PLAYERS.get(name);
     }
     
     public static int getMobReward(final EntityType mob) {

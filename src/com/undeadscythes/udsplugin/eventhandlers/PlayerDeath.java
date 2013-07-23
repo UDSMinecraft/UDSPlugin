@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
@@ -16,15 +17,15 @@ import org.bukkit.inventory.meta.*;
 public class PlayerDeath extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final PlayerDeathEvent event) {
-        final SaveablePlayer victim = UDSPlugin.getOnlinePlayers().get(event.getEntity().getName());
+        final SaveablePlayer victim = PlayerUtils.getOnlinePlayer(event.getEntity().getName());
         final String victimName = victim.getName();
-        final SaveablePlayer udsVictim = UDSPlugin.getOnlinePlayers().get(victimName);
+        final SaveablePlayer udsVictim = PlayerUtils.getOnlinePlayer(victimName);
         event.setDeathMessage(event.getDeathMessage().replace(victimName, udsVictim.getNick()));
         if(victim.hasPermission(Perm.BACK_ON_DEATH)) {
             udsVictim.setBackPoint(victim.getLocation());
         }
         if(victim.getKiller() != null) {
-            final SaveablePlayer killer = UDSPlugin.getOnlinePlayers().get(victim.getKiller().getName());
+            final SaveablePlayer killer = PlayerUtils.getOnlinePlayer(victim.getKiller().getName());
             if(killer != null) {
                 pvp(killer, victim);
             }
@@ -32,8 +33,8 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
     }
 
     private void clanKill(final SaveablePlayer killer, final SaveablePlayer victim) {
-        final Clan victimClan = UDSPlugin.getPlayers().get(victim.getName()).getClan();
-        final Clan killerClan = UDSPlugin.getPlayers().get(killer.getName()).getClan();
+        final Clan victimClan = PlayerUtils.getPlayer(victim.getName()).getClan();
+        final Clan killerClan = PlayerUtils.getPlayer(killer.getName()).getClan();
         if(!killerClan.getName().equals(victimClan.getName())) {
             killerClan.newKill();
         }
