@@ -619,7 +619,7 @@ public class SaveablePlayer implements Saveable {
                     }
                 }
             } else if(type == RegionType.SHOP) {
-                for(Region region : UDSPlugin.getRegions(RegionType.CITY).values()) {
+                for(Region region : UDSPlugin.getRegions(RegionType.SHOP).values()) {
                     if(player.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                         return region;
                     }
