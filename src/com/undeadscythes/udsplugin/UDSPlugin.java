@@ -692,8 +692,8 @@ public class UDSPlugin extends JavaPlugin {
     }
     
     public static void renamePlot(final Region plot, final String name) {
-        REGIONS.remove(name);
-        PLOTS.remove(name);
+        REGIONS.remove(plot.getName());
+        PLOTS.remove(plot.getName());
         plot.rename(name);
         REGIONS.put(name, plot);
         PLOTS.put(name, plot);
