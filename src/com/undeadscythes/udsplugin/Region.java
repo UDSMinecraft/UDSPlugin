@@ -465,6 +465,10 @@ public class Region implements Saveable {
     public String getData() {
         return data;
     }
+    
+    public void setData(final String data) {
+        this.data = data;
+    }
 
     /**
      * Check if a region has a certain flag set.

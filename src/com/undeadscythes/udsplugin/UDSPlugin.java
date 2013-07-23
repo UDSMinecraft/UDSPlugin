@@ -49,6 +49,7 @@ public class UDSPlugin extends JavaPlugin {
     private static final MatchableHashMap<Region> HOMES = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> QUARRIES = new MatchableHashMap<Region>();
     private static final MatchableHashMap<Region> SHOPS = new MatchableHashMap<Region>();
+    private static final MatchableHashMap<Region> PLOTS = new MatchableHashMap<Region>();
 
     private static UDSPlugin plugin;
     private static Timer timer;
@@ -211,6 +212,8 @@ public class UDSPlugin extends JavaPlugin {
                     CITIES.put(region.getName(), region);
                 } else if(region.getType().equals(RegionType.ARENA)) {
                     ARENAS.put(region.getName(), region);
+                } else if(region.getType().equals(RegionType.PLOT)) {
+                    PLOTS.put(region.getName(), region);
                 }
             }
             file.close();
@@ -310,6 +313,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("p").setExecutor(new PCmd());
         getCommand("paybail").setExecutor(new PayBailCmd());
         getCommand("pet").setExecutor(new PetCmd());
+        getCommand("plot").setExecutor(new PlotCmd());
         getCommand("portal").setExecutor(new PortalCmd());
         getCommand("powertool").setExecutor(new PowertoolCmd());
         getCommand("private").setExecutor(new PrivateCmd());
@@ -677,5 +681,26 @@ public class UDSPlugin extends JavaPlugin {
     
     public static int getMobReward(final EntityType mob) {
         return MOB_REWARDS.get(mob);
+    }
+    
+    public static Collection<Region> getPlots() {
+        return PLOTS.values();
+    }
+    
+    public static Region getPlot(final String name) {
+        return PLOTS.get(name);
+    }
+    
+    public static void renamePlot(final Region plot, final String name) {
+        REGIONS.remove(name);
+        PLOTS.remove(name);
+        plot.rename(name);
+        REGIONS.put(name, plot);
+        PLOTS.put(name, plot);
+    }
+    
+    public static void addPlot(final Region plot) {
+        REGIONS.put(plot.getName(), plot);
+        PLOTS.put(plot.getName(), plot);
     }
 }

@@ -13,7 +13,8 @@ public enum RegionType {
     QUARRY,
     HOME,
     ARENA,
-    CITY;
+    CITY,
+    PLOT;
 
     /**
         * Get a region type by name.
