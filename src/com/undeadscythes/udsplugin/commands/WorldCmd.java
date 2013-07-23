@@ -83,7 +83,7 @@ public class WorldCmd extends CommandWrapper {
                     info(world);
                 }
             } else if("flag".equals(subCmd)) {
-                flag(player.getWorld());
+                flag(player.getWorld(), args[1]);
             } else if("mode".equals(subCmd)) {
                 mode(player.getWorld(), args[1]);
             } else {
@@ -93,7 +93,7 @@ public class WorldCmd extends CommandWrapper {
             if("flag".equals(subCmd)) {
                 final World world = getWorld(args[1]);
                 if(world != null) {
-                    flag(world);
+                    flag(world, args[2]);
                 }
             } else if("mode".equals(subCmd)) {
                 final World world = getWorld(args[1]);
@@ -122,8 +122,8 @@ public class WorldCmd extends CommandWrapper {
         }
     }
     
-    private void flag(final World world) {
-        final RegionFlag flag = getFlag(args[2]);
+    private void flag(final World world, final String flagName) {
+        final RegionFlag flag = getFlag(flagName);
         if(flag != null) {
             player.sendMessage(Color.MESSAGE + world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }
