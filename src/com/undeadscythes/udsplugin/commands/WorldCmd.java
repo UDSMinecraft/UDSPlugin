@@ -85,7 +85,7 @@ public class WorldCmd extends CommandWrapper {
             } else if("flag".equals(subCmd)) {
                 flag(player.getWorld());
             } else if("mode".equals(subCmd)) {
-                mode(player.getWorld());
+                mode(player.getWorld(), args[1]);
             } else {
                 subCmdHelp();
             }
@@ -98,7 +98,7 @@ public class WorldCmd extends CommandWrapper {
             } else if("mode".equals(subCmd)) {
                 final World world = getWorld(args[1]);
                 if(world != null) {
-                    mode(world);
+                    mode(world, args[2]);
                 }
             } else {
                 subCmdHelp();
@@ -129,8 +129,8 @@ public class WorldCmd extends CommandWrapper {
         }
     }
     
-    private void mode(final World world) {
-        final GameMode mode = getMode(args[2]);
+    private void mode(final World world, final String modeName) {
+        final GameMode mode = getMode(modeName);
         if(mode != null) {
             UDSPlugin.changeWorldMode(world, mode);
             player.sendMessage(Color.MESSAGE + world.getName() + " game mode now set to " + mode.toString() + ".");
