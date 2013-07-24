@@ -35,7 +35,7 @@ public class MinuteTimer implements Runnable {
     public void run() {
         for(final World world : Bukkit.getWorlds()) {
             final Time time = Time.getTime(world.getTime());
-            if(worldTimes.get(world).equals(time) && worldTimes.containsKey(world)) {
+            if(worldTimes.containsKey(world) && worldTimes.get(world).equals(time)) {
                 continue;
             }
             for(final Region region : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
