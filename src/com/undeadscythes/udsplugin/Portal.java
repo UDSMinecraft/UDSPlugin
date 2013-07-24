@@ -26,6 +26,7 @@ public class Portal implements Saveable {
     private String portalLink = "";
     private final World world;
     private final Vector min, max;
+    private Direction exit;
 
     public Portal(final String name, final Warp warp, final World world, final Vector v1, final Vector v2) {
         this.name = name;
@@ -37,12 +38,17 @@ public class Portal implements Saveable {
     
     public Portal(final String record) {
         final String[] recordSplit = record.split("\t");
-        name = recordSplit[0];
-        warp = UDSPlugin.getWarps().get(recordSplit[1]);
-        portalLink = recordSplit[2];
-        world = Bukkit.getWorld(recordSplit[3]);
-        min = Region.getBlockPos(recordSplit[4]);
-        max = Region.getBlockPos(recordSplit[5]);
+        switch (recordSplit.length) {
+            case 7:
+                exit = Direction.getByName(recordSplit[6]);
+            default:
+                name = recordSplit[0];
+                warp = UDSPlugin.getWarps().get(recordSplit[1]);
+                portalLink = recordSplit[2];
+                world = Bukkit.getWorld(recordSplit[3]);
+                min = Region.getBlockPos(recordSplit[4]);
+                max = Region.getBlockPos(recordSplit[5]);
+        }
     }
 
     @Override
@@ -54,6 +60,7 @@ public class Portal implements Saveable {
         record.add(world.getName());
         record.add(min.toString());
         record.add(max.toString());
+        record.add(exit == null ? "null" : exit.toString());
         return StringUtils.join(record, "\t");
     }
     
@@ -105,7 +112,9 @@ public class Portal implements Saveable {
             if(portal != null) {
                 final Vector half = portal.getV2().clone().subtract(portal.getV1()).multiply(0.5);
                 final Location mid = portal.getV1().clone().add(half).add(new Vector(0.5, 0, 0.5)).toLocation(portal.getWorld());
-                PlayerUtils.getOnlinePlayer(player.getName()).move(Warp.findFloor(mid));
+                final Location to = Warp.findFloor(mid);
+                to.setYaw(portal.getYaw());
+                PlayerUtils.getOnlinePlayer(player.getName()).teleport(to);
             }
         } else {
             player.teleport(warp.getLocation());
@@ -142,5 +151,13 @@ public class Portal implements Saveable {
         if(!portalLink.equals("")) {
             setPortal(UDSPlugin.getPortals().get(portalLink));
         }
+    }
+    
+    public final float getYaw() {
+        return exit == null ? 0 : exit.getYaw();
+    }
+    
+    public final void setExit(final Direction exit) {
+        this.exit = exit;
     }
 }

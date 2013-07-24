@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.CommandWrapper;
 import com.undeadscythes.udsplugin.Portal;
@@ -36,6 +37,8 @@ public class PortalCmd extends CommandWrapper {
                 dest();
             } else if(subCmd.equals("p2p")) {
                 p2p();
+            } else if(subCmd.equals("exit")) {
+                exit();
             } else if(subCmd.equals("set")) {
                 final Warp warp = getWarp(args[2]);
                 if(warp != null) {
@@ -57,6 +60,15 @@ public class PortalCmd extends CommandWrapper {
         } else {
             player.sendMessage(Color.MESSAGE + "Portals(Warp):");
             player.sendMessage(Color.TEXT + list.substring(0, list.length() - 2));
+        }
+    }
+    
+    private void exit() {
+        final Portal portal = getPortal(args[1]);
+        Direction dir;
+        if(portal != null && (dir = getCardinalDirection(args[2])) != null) {
+            portal.setExit(dir);
+            player.sendMessage(Color.MESSAGE + "Portal now points " + dir.toString() + ".");
         }
     }
     

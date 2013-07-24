@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.CommandWrapper;
 import com.undeadscythes.udsplugin.ConfigRef;
@@ -191,6 +192,7 @@ public class HelpCmd extends CommandWrapper {
         PLOT_TP(Perm.PLOT, "/plot tp <plot>", "Teleport to a plot.", PLOT),
         PORTAL(Perm.PORTAL, "/portal help", "Show more portal commands.", true),
         PORTAL_DEST(Perm.PORTAL, "/portal dest <name> <warp>", "Change a portal warp.", PORTAL),
+        PORTAL_EXIT(Perm.PORTAL, "/portal exit <name> <direction>", "Set portal exit direction.", PORTAL),
         PORTAL_LIST(Perm.PORTAL, "/portal list", "List all portals.", PORTAL),
         PORTAL_P2P(Perm.PORTAL, "/portal p2p <from> <to>", "Link two portals.", PORTAL),
         PORTAL_SET(Perm.PORTAL, "/portal set <name> [warp]", "Set a new portal.", PORTAL),
@@ -383,7 +385,7 @@ public class HelpCmd extends CommandWrapper {
     private void sendHelpFiles() {
         final Set<Usage> usages = new TreeSet<Usage>();
         for(Usage usage : Usage.values()) {
-            if(player.hasPermission(usage.getPerm()) && !usage.isExtension()) {
+            if(player.hasPermission(usage.getPerm()) && !usage.isExtension() && UDSPlugin.getWorldMode(player.getWorld()).equals(usage.getPerm().getMode())) {
                 usages.add(usage);
             }
         }
