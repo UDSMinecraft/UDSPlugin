@@ -1,5 +1,16 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.timers;
 
+import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.ConfigRef;
+import com.undeadscythes.udsplugin.EntityTracker;
+import com.undeadscythes.udsplugin.PlayerRank;
+import com.undeadscythes.udsplugin.Region;
+import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.RegionType;
+import com.undeadscythes.udsplugin.Request;
+import com.undeadscythes.udsplugin.SaveablePlayer;
+import com.undeadscythes.udsplugin.UDSPlugin;
+import com.undeadscythes.udsplugin.Warp;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
@@ -42,7 +53,7 @@ public class Timer implements Runnable {
      * @param plugin The UDSPlugin.
      * @param interval The interval between passes.
      */
-    public Timer() throws IOException {}
+    public Timer() {}
 
     /**
      * The function that will be used on each schedule.

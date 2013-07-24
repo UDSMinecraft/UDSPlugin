@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.timers.Timer;
 import com.undeadscythes.udsplugin.*;
 
 /**

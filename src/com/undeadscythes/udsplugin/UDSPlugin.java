@@ -2,6 +2,8 @@ package com.undeadscythes.udsplugin;
 
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
+import com.undeadscythes.udsplugin.timers.*;
+import com.undeadscythes.udsplugin.timers.Timer;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
@@ -52,7 +54,8 @@ public class UDSPlugin extends JavaPlugin {
     private static final MatchableHashMap<Region> PLOTS = new MatchableHashMap<Region>();
 
     private static UDSPlugin plugin;
-    private static Timer timer;
+    private static Timer timer = new Timer();
+    private static MinuteTimer minuteTimer = new MinuteTimer();
     private static Data data;
     private static boolean serverLockedDown = false;
     private static final CustomConfig worldFlags = new CustomConfig(DATA_PATH + "/worlds.yml");
@@ -97,13 +100,9 @@ public class UDSPlugin extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            UDSPlugin.timer = new Timer();
-        } catch (IOException ex) {
-            Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, UDSPlugin.timer, 100, 100);
-        getLogger().info("Timer started.");
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, timer, 100, 100);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, minuteTimer, 200, 1200);
+        getLogger().info("Timers started.");
         setCommandExecutors();
         getLogger().info("Commands registered.");
         registerEvents();

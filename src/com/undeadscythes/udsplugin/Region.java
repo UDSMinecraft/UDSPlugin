@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
+import org.bukkit.block.*;
 import org.bukkit.util.Vector;
 
 /**
@@ -507,5 +508,18 @@ public class Region implements Saveable {
      */
     public boolean contains(final Location location) {
         return location.toVector().isInAABB(min, max);
+    }
+    
+    public void replace(final Material from, final Material to) {
+        final World world = warp.getWorld();
+        for(int x = min.getBlockX(); x < max.getBlockX(); x++) {
+            for(int y = min.getBlockY(); y < max.getBlockY(); y++) {
+                for(int z = min.getBlockZ(); z < max.getBlockZ(); z++) {
+                    final Block block = world.getBlockAt(x, y, z);
+                    if(!block.getType().equals(from)) continue;
+                    block.setType(to);
+                }
+            }
+        }
     }
 }

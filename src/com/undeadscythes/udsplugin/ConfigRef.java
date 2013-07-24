@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.timers.Timer;
+
 /**
  * A reference that points to a particular value of the configuration YAML and
  * any multiplier required to bring it into the correct numerical range.
