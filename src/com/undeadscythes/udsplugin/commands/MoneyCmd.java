@@ -17,7 +17,7 @@ public class MoneyCmd extends CommandWrapper {
         } else if(args.length == 1) {
             if(subCmd.equals("prices")) {
                 player.sendMessage(Color.MESSAGE + "--- Server Prices ---");
-                player.sendMessage(Color.ITEM + "Build rights: " + Color.TEXT + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
+                player.sendMessage(Color.ITEM + "Membership: " + Color.TEXT + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                 player.sendMessage(Color.ITEM + "Map of spawn: " + Color.TEXT + UDSPlugin.getConfigInt(ConfigRef.MAP_COST) + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                 player.sendMessage(Color.ITEM + "Home protection: " + Color.TEXT + UDSPlugin.getConfigInt(ConfigRef.HOME_COST) + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                 player.sendMessage(Color.ITEM + "City shop: " + Color.TEXT + UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
