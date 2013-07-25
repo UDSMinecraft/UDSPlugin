@@ -114,7 +114,8 @@ public class Portal implements Saveable {
                 final Location mid = portal.getV1().clone().add(half).add(new Vector(0.5, 0, 0.5)).toLocation(portal.getWorld());
                 final Location to = Warp.findFloor(mid);
                 to.setYaw(portal.getYaw());
-                PlayerUtils.getOnlinePlayer(player.getName()).teleport(to);
+                player.teleport(to);
+                player.setFlying(false);
             }
         } else {
             player.teleport(warp.getLocation());
