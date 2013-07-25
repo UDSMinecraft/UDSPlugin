@@ -71,6 +71,7 @@ public enum Perm {
     PET(PlayerRank.MEMBER),
     PLOT(PlayerRank.MEMBER, GameMode.CREATIVE),
     PLOT_MANY(PlayerRank.ADMIN, GameMode.CREATIVE),
+    PLOT_REMOVE(PlayerRank.ADMIN, GameMode.CREATIVE),
     PORTAL(PlayerRank.ADMIN),
     PORTAL_USE(PlayerRank.NEWBIE),
     POWERTOOL(PlayerRank.MOD),

@@ -21,6 +21,11 @@ public class PlotCmd extends CommandWrapper {
                 claim();
             } else if(subCmd.equals("like")) {
                 like();
+            } else if(subCmd.equals("remove")) {
+                Region plot;
+                if((plot = getPlot()) != null) {
+                    remove(plot.getName());
+                }
             } else {
                 subCmdHelp();
             }
@@ -32,13 +37,15 @@ public class PlotCmd extends CommandWrapper {
                 if((plot = getPlot()) != null) {
                     name(plot.getName(), args[1]);
                 }
+            } else if(subCmd.equals("remove")) {
+                remove(args[1]);
             } else {
                 subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
             if(subCmd.equals("name")) {
                 name(args[1], args[2]);
-            } else {
+            } else{
                 subCmdHelp();
             }
         }
@@ -65,6 +72,19 @@ public class PlotCmd extends CommandWrapper {
             player.sendMessage(Color.MESSAGE + "Region claimed.");
         } else {
             player.sendMessage(Color.ERROR + "This plot has already been claimed.");
+        }
+    }
+    
+    private void remove(final String plotName) {
+        Region plot;
+        if(player.hasPermission(Perm.PLOT_REMOVE)) {
+            plot = plotExists(plotName);
+        } else {
+            plot = ownsPlot(plotName);
+        }
+        if(plot != null) {
+            UDSPlugin.getPlots().remove(plot);
+            player.sendMessage(Color.MESSAGE + plot.getName() + " removed.");
         }
     }
     
