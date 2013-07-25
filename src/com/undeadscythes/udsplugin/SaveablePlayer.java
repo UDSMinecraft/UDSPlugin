@@ -45,7 +45,7 @@ public class SaveablePlayer implements Saveable {
     private ChatChannel chatChannel = ChatChannel.PUBLIC;
     private UUID selectedPet = null;
     private Clan clan = null;
-    private PlayerRank rank = PlayerRank.DEFAULT;
+    private PlayerRank rank = PlayerRank.NEWBIE;
     private ItemStack[] inventoryCopy = null;
     private ItemStack[] armorCopy = null;
     private final Inventory shoppingCart = Bukkit.createInventory(null, 36);

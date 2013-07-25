@@ -19,7 +19,7 @@ public class HelpCmd extends CommandWrapper {
     private enum Usage {
         HELP(Perm.HELP, "/help [page or command]", "Show these help pages."),
         TICKET(Perm.TICKET, "/ticket <message>", "Submit a suggestion or a bug report."),
-        ACCEPTRULES(Perm.ACCEPTRULES, "/acceptrules", "Accept the rules and get build rights."),
+        ACCEPTRULES(Perm.ACCEPTRULES, "/acceptrules", "Accept the rules and get membership."),
         ADMIN(Perm.ADMIN, "/admin help", "Show more admin/mod/warden commands.", true),
         ADMIN_LOCKDOWN(Perm.LOCKDOWN, "/lockdown", "Toggle the server's lockdown mode.", ADMIN),
         ADMIN_LOCKDOWN_PASS(Perm.LOCKDOWN, "/lockdown <player>", "Issue a lockdown pass.", ADMIN),

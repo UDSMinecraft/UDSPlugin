@@ -14,7 +14,7 @@ public class SetWarpCmd extends CommandWrapper {
         final String message = Color.MESSAGE + "Warp point set.";
         if(args.length == 1) {
             if(notWarp(args[0]) && noCensor(args[0])) {
-                UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), PlayerRank.DEFAULT, 0));
+                UDSPlugin.getWarps().put(args[0], new Warp(args[0], player.getLocation(), PlayerRank.NEWBIE, 0));
                 player.sendMessage(message);
             }
         } else if(args.length == 2) {

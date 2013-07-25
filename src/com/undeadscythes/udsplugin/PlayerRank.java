@@ -8,7 +8,7 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public enum PlayerRank {
-    DEFAULT(ChatColor.WHITE, 0),
+    NEWBIE(ChatColor.WHITE, 0),
     MEMBER(ChatColor.GREEN, 1),
     VIP(ChatColor.DARK_PURPLE, 1),
     WARDEN(ChatColor.AQUA, 2),
