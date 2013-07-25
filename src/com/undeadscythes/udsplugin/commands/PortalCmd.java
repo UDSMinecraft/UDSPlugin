@@ -2,14 +2,8 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Color;
-import com.undeadscythes.udsplugin.CommandWrapper;
-import com.undeadscythes.udsplugin.Portal;
-import com.undeadscythes.udsplugin.Session;
-import com.undeadscythes.udsplugin.UDSPlugin;
-import com.undeadscythes.udsplugin.Warp;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.util.Vector;
+import org.bukkit.*;
+import org.bukkit.util.*;
 
 /**
  * Command to create and manage portals.
@@ -37,6 +31,8 @@ public class PortalCmd extends CommandWrapper {
                 dest();
             } else if(subCmd.equals("p2p")) {
                 p2p();
+            } else if(subCmd.equals("remove")) {
+                remove();
             } else if(subCmd.equals("exit")) {
                 exit();
             } else if(subCmd.equals("set")) {
