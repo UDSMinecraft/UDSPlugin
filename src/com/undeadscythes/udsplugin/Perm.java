@@ -35,7 +35,7 @@ public enum Perm {
     DEMOTE(PlayerRank.MOD),
     ENCHANT(PlayerRank.MOD),
     FACE(PlayerRank.NEWBIE),
-    GIFT(PlayerRank.MEMBER),
+    GIFT(PlayerRank.MEMBER, GameMode.SURVIVAL),
     GOD(PlayerRank.MOD),
     HEAL(PlayerRank.WARDEN),
     HELP(PlayerRank.NEWBIE),

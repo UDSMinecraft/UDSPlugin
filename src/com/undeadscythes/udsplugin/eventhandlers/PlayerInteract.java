@@ -55,6 +55,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
                     powertool(player);
                     event.setCancelled(true);
+                } else {
+                    event.setCancelled(expCheck(player));
                 }
                 break;
             case RIGHT_CLICK_BLOCK:
@@ -83,10 +85,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                     minecart(player, block.getLocation());
                     player.setItemInHand(new ItemStack(Material.AIR));
                     event.setCancelled(true);
-                } else if(block.getType().equals(Material.ENDER_CHEST) && UDSPlugin.getWorldMode(block.getWorld()).equals(GameMode.CREATIVE)) {
-                    event.setCancelled(true);
                 } else {
-                    event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player));
+                    event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player) || expCheck(player));
                 }
                 break;
             case PHYSICAL:
@@ -101,6 +101,10 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      */
     private void powertool(final SaveablePlayer player) {
         player.performCommand(player.getPowertool());
+    }
+    
+    private boolean expCheck(final SaveablePlayer player) {
+        return UDSPlugin.getWorldMode(player.getWorld()).equals(GameMode.CREATIVE);
     }
 
     /**
