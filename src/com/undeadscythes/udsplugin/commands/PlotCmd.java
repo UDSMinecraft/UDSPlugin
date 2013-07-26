@@ -84,6 +84,7 @@ public class PlotCmd extends CommandWrapper {
         }
         if(plot != null) {
             UDSPlugin.getPlots().remove(plot);
+            UDSPlugin.getRegions(RegionType.GENERIC).remove(plot.getName());
             player.sendMessage(Color.MESSAGE + plot.getName() + " removed.");
         }
     }
