@@ -104,7 +104,12 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     }
     
     private boolean expCheck(final SaveablePlayer player) {
-        return UDSPlugin.getWorldMode(player.getWorld()).equals(GameMode.CREATIVE);
+        if(UDSPlugin.getWorldMode(player.getWorld()).equals(GameMode.CREATIVE)) {
+            if(player.getItemInHand().getType().equals(Material.EXP_BOTTLE) || player.getItemInHand().getType().equals(Material.ENDER_CHEST)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
