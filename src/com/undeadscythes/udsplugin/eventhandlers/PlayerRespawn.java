@@ -16,7 +16,7 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
         if(player.getBedSpawnLocation() == null) {
             final Region home = UDSPlugin.getRegions(RegionType.HOME).get(player.getName() + "home");
             if(home == null) {
-                event.setRespawnLocation(UDSPlugin.getData().getSpawn());
+                event.setRespawnLocation(player.getWorld().getSpawnLocation());
             } else {
                 event.setRespawnLocation(Warp.findSafePlace(home.getWarp()));
             }
