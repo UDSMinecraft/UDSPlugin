@@ -35,12 +35,12 @@ public class JailCmd extends CommandWrapper {
     public static void jail(final SaveablePlayer player, final long sentence, final int bail) {
         if(player != null) {
             player.getWorld().strikeLightningEffect(player.getLocation());
-            if(player.quietTeleport(UDSPlugin.getWarps().get("jailin" + nextCell))) {
+            if(player.quietTeleport(UDSPlugin.getWarps().get("jail" + nextCell))) {
                 nextCell++;
-            } else if(player.quietTeleport(UDSPlugin.getWarps().get("jailin0"))) {
+            } else if(player.quietTeleport(UDSPlugin.getWarps().get("jail0"))) {
                 nextCell = 1;
             } else {
-                player.quietTeleport(UDSPlugin.getWarps().get("jailin"));
+                player.quietTeleport(UDSPlugin.getWarps().get("jail"));
             }
             player.jail(sentence, bail);
             player.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
