@@ -385,7 +385,7 @@ public class HelpCmd extends CommandWrapper {
     private void sendHelpFiles() {
         final Set<Usage> usages = new TreeSet<Usage>();
         for(Usage usage : Usage.values()) {
-            if(player.hasPermission(usage.getPerm()) && !usage.isExtension() && UDSPlugin.getWorldMode(player.getWorld()).equals(usage.getPerm().getMode())) {
+            if(player.hasPermission(usage.getPerm()) && !usage.isExtension() && (usage.getPerm().getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(usage.getPerm().getMode()))) {
                 usages.add(usage);
             }
         }
