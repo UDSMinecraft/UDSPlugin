@@ -1181,7 +1181,7 @@ public abstract class CommandWrapper implements CommandExecutor {
             if(perm.getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(perm.getMode())) {
                 return true;
             } else {
-                player.sendMessage(Color.ERROR + "You can't you that command in this world.");
+                player.sendMessage(Color.ERROR + "You can't use that command in this world.");
             }
         } else {
             player.sendMessage(Color.ERROR + "You do not have permission to do that.");
