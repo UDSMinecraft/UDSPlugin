@@ -2,7 +2,7 @@ package com.undeadscythes.udsplugin;
 
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
-import com.undeadscythes.udsplugin.timers.AutoSave;
+import com.undeadscythes.udsplugin.timers.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
@@ -15,6 +15,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.material.*;
 import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.*;
+import org.bukkit.scheduler.*;
 import org.bukkit.util.Vector;
 
 /**
@@ -53,7 +54,13 @@ public class UDSPlugin extends JavaPlugin {
     private static final MatchableHashMap<Region> PLOTS = new MatchableHashMap<Region>();
 
     private static UDSPlugin plugin;
-    private static AutoSave timer = new AutoSave();
+    private static AutoSave autoSave = new AutoSave();
+    private static DragonRespawn dragonRespawn = new DragonRespawn();
+    private static MinecartChecks minecartChecks = new MinecartChecks();
+    private static PlayerChecks playerChecks = new PlayerChecks();
+    private static QuarryRefill quarryRefill = new QuarryRefill();
+    private static RequestTimeOut requestTimeOut = new RequestTimeOut();
+    private static VipSpawns vipSpawns = new VipSpawns();
     private static Data data;
     private static boolean serverLockedDown = false;
     private static final CustomConfig worldFlags = new CustomConfig(DATA_PATH + "/worlds.yml");
@@ -98,7 +105,14 @@ public class UDSPlugin extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, timer, 100, 100);
+        final BukkitScheduler sched = Bukkit.getScheduler();
+        sched.scheduleSyncRepeatingTask(this, autoSave, 18000, 18000);
+        sched.scheduleSyncRepeatingTask(this, dragonRespawn, 6000, 36000);
+        sched.scheduleSyncRepeatingTask(this, minecartChecks, 400, 400);
+        sched.scheduleSyncRepeatingTask(this, playerChecks, 100, 100);
+        sched.scheduleSyncRepeatingTask(this, quarryRefill, 1656000, 1656000);
+        sched.scheduleSyncRepeatingTask(this, requestTimeOut, 200, 200);
+        sched.scheduleSyncRepeatingTask(this, vipSpawns, 1656000, 1656000);
         getLogger().info("Timers started.");
         setCommandExecutors();
         getLogger().info("Commands registered.");
