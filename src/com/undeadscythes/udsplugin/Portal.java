@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
 
 /**
  * A nether portal that goes elsewhere.
- * @author Dave
+ * @author UndeadScythes
  */
 public class Portal implements Saveable {
     /**

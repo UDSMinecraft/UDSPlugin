@@ -13,7 +13,7 @@ import org.bukkit.inventory.*;
 
 /**
  * Triggered when a player teleports.
- * @author Dave
+ * @author UndeadScythes
  */
 public class PlayerTeleport extends ListenerWrapper implements Listener {
     private static String PATH = "plugins/UDSPlugin/inventories";

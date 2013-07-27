@@ -6,7 +6,7 @@ import org.bukkit.event.player.*;
 
 /**
  *
- * @author Dave
+ * @author UndeadScythes
  */
 public class PlayerLogin implements Listener {
     @EventHandler

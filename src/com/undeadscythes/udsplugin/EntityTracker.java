@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.timers.Timer;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -38,7 +38,7 @@ public final class EntityTracker {
     public static void checkMinecarts() {
         for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
             final OwnedMinecart minecart = i.next();
-            if(minecart.isEmpty() && minecart.age(100) > UDSPlugin.getConfigLong(ConfigRef.MINECART_TTL) / Timer.TICKS) {
+            if(minecart.isEmpty() && minecart.age(100) > UDSPlugin.getConfigLong(ConfigRef.MINECART_TTL) / TimeUtils.TICKS) {
                 minecart.remove();
                 i.remove();
             }

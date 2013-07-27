@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.timers.*;
+import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * A reference that points to a particular value of the configuration YAML and
@@ -32,12 +32,12 @@ public enum ConfigRef {
     VIP_SPAWNS("vip.spawns"),
     WORLD_BORDER("range.world"),
     SPAWNER_EXP("exp.spawner"),
-    REQUEST_TTL("request-timeout", Timer.SECOND),
-    MINECART_TTL("minecart.life", Timer.SECOND),
-    PVP_TIME("pvp-time", Timer.SECOND),
-    SLOW_TIME("auto-save", Timer.MINUTE),
-    DRAGON_RESPAWN("respawn-dragon", Timer.MINUTE),
-    VIP_TIME("vip.time", Timer.DAY),
+    REQUEST_TTL("request-timeout", TimeUtils.SECOND),
+    MINECART_TTL("minecart.life", TimeUtils.SECOND),
+    PVP_TIME("pvp-time", TimeUtils.SECOND),
+    SLOW_TIME("auto-save", TimeUtils.MINUTE),
+    DRAGON_RESPAWN("respawn-dragon", TimeUtils.MINUTE),
+    VIP_TIME("vip.time", TimeUtils.DAY),
     CURRENCIES("currency.plural"),
     WELCOME_MSG("welcome.message"),
     WELCOME_ADMIN("welcome.admin"),

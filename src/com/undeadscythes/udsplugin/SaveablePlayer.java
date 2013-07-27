@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.timers.Timer;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -289,7 +289,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public final boolean hasClaimedPrize() {
-        return (timePrizeClaimed + Timer.DAY > System.currentTimeMillis());
+        return (timePrizeClaimed + TimeUtils.DAY > System.currentTimeMillis());
     }
 
     /**
@@ -464,7 +464,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public final String getTimeLogged() {
-        return timeToString(timeLogged);
+        return TimeUtils.timeToString(timeLogged);
     }
 
     /**
@@ -477,10 +477,10 @@ public class SaveablePlayer implements Saveable {
             if(offlinePlayer == null) {
                 return "Unknown";
             } else {
-                return timeToString(System.currentTimeMillis() - Bukkit.getOfflinePlayer(name).getLastPlayed());
+                return TimeUtils.timeToString(System.currentTimeMillis() - Bukkit.getOfflinePlayer(name).getLastPlayed());
             }
         } else {
-            return timeToString(System.currentTimeMillis() - player.getLastPlayed());
+            return TimeUtils.timeToString(System.currentTimeMillis() - player.getLastPlayed());
         }
     }
 
@@ -489,38 +489,7 @@ public class SaveablePlayer implements Saveable {
      * @return English reading string.
      */
     public final String getVIPTimeString() {
-        return timeToString(UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) - System.currentTimeMillis() - getVIPTime());
-    }
-
-    /**
-     *
-     * @param time
-     * @return
-     */
-    private String timeToString(final long time) {
-        long timeRemaining = time;
-        String timeString = "";
-        if(timeRemaining >= Timer.DAY) {
-            final int days = (int)(timeRemaining / Timer.DAY);
-            timeString = timeString.concat(days + (days == 1 ? " day " : " days "));
-            timeRemaining -= days * Timer.DAY;
-        }
-        if(timeRemaining >= Timer.HOUR) {
-            final int hours = (int)(timeRemaining / Timer.HOUR);
-            timeString = timeString.concat(hours + (hours == 1 ? " hour " : " hours "));
-            timeRemaining -= hours * Timer.HOUR;
-        }
-        if(timeRemaining >= Timer.MINUTE) {
-            final int minutes = (int)(timeRemaining / Timer.MINUTE);
-            timeString = timeString.concat(minutes + (minutes == 1 ? " minute " : " minutes "));
-            timeRemaining -= minutes * Timer.MINUTE;
-        }
-        if(timeRemaining >= Timer.SECOND) {
-            final int seconds = (int)(timeRemaining / Timer.SECOND);
-            timeString = timeString.concat(seconds + (seconds == 1 ? " second " : " seconds "));
-            timeRemaining -= seconds * Timer.SECOND;
-        }
-        return timeString;
+        return TimeUtils.timeToString(UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) - System.currentTimeMillis() - getVIPTime());
     }
 
     /**
@@ -602,7 +571,7 @@ public class SaveablePlayer implements Saveable {
      */
     public final void jail(final long sentence, final int bail) {
         timeJailed = System.currentTimeMillis();
-        jailSentence = sentence * Timer.MINUTE;
+        jailSentence = sentence * TimeUtils.MINUTE;
         this.bail = bail;
     }
 

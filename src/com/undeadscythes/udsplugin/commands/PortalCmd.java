@@ -6,7 +6,7 @@ import org.bukkit.util.*;
 
 /**
  * Command to create and manage portals.
- * @author Dave
+ * @author UndeadScythes
  */
 public class PortalCmd extends CommandWrapper {
     @Override

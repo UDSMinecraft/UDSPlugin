@@ -2,7 +2,7 @@ package com.undeadscythes.udsplugin;
 
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
-import com.undeadscythes.udsplugin.timers.Timer;
+import com.undeadscythes.udsplugin.timers.AutoSave;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
@@ -53,7 +53,7 @@ public class UDSPlugin extends JavaPlugin {
     private static final MatchableHashMap<Region> PLOTS = new MatchableHashMap<Region>();
 
     private static UDSPlugin plugin;
-    private static Timer timer = new Timer();
+    private static AutoSave timer = new AutoSave();
     private static Data data;
     private static boolean serverLockedDown = false;
     private static final CustomConfig worldFlags = new CustomConfig(DATA_PATH + "/worlds.yml");

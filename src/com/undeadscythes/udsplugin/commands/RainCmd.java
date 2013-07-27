@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.timers.*;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Make it rainy in the current world.
@@ -17,7 +17,7 @@ public class RainCmd extends CommandWrapper {
             player.sendNormal("5 minute storm on the way.");
         } else if(numArgsHelp(1) && (duration = parseInt(args[0])) != -1) {
             player.getWorld().setStorm(true);
-            player.getWorld().setWeatherDuration((int)(duration * Timer.MINUTE / Timer.TICKS));
+            player.getWorld().setWeatherDuration((int)(duration * TimeUtils.MINUTE / TimeUtils.TICKS));
             player.sendNormal(duration + " minute storm on the way.");
         }
     }

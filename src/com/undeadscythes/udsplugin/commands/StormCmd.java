@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.timers.*;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Start a storm in the world.
@@ -20,8 +20,8 @@ public class StormCmd extends CommandWrapper {
         } else if(numArgsHelp(1) && (duration = parseInt(args[0])) != -1) {
             player.getWorld().setStorm(true);
             player.getWorld().setThundering(true);
-            player.getWorld().setWeatherDuration((int)(duration * Timer.MINUTE / Timer.TICKS));
-            player.getWorld().setThunderDuration((int)(duration * Timer.MINUTE / Timer.TICKS));
+            player.getWorld().setWeatherDuration((int)(duration * TimeUtils.MINUTE / TimeUtils.TICKS));
+            player.getWorld().setThunderDuration((int)(duration * TimeUtils.MINUTE / TimeUtils.TICKS));
             player.sendNormal(duration + " minutes thunder storm on the way.");
         }
     }
