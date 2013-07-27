@@ -114,7 +114,7 @@ public class Warp implements Saveable {
                 testDown.subtract(0, 1, 0);
             }
         }
-        return location.getWorld().getSpawnLocation();
+        return null;
     }
     
     public static Location findFloor(final Location location) {

@@ -1082,7 +1082,7 @@ public class SaveablePlayer implements Saveable {
             final Location destination = location;
             destination.setPitch(player.getLocation().getPitch());
             destination.setYaw(player.getLocation().getYaw());
-            player.teleport(destination);
+            quietTeleport(destination);
         }
     }
 
