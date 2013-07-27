@@ -9,9 +9,9 @@ import com.undeadscythes.udsplugin.*;
 public class RulesCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
-        player.sendMessage(Color.MESSAGE + "--- Server Rules ---");
+        player.sendNormal("--- Server Rules ---");
         for(String rules : UDSPlugin.getConfigStringList(ConfigRef.SERVER_RULES)) {
-            player.sendMessage(Color.TEXT + "- " + rules);
+            player.sendText("- " + rules);
         }
     }
 }

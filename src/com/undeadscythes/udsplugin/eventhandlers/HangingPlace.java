@@ -15,7 +15,7 @@ public class HangingPlace extends ListenerWrapper implements Listener {
         final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(!player.canBuildHere(event.getBlock().getLocation())) {
             event.setCancelled(true);
-            player.sendMessage(Message.CANT_BUILD_HERE);
+            player.sendNormal(Message.CANT_BUILD_HERE);
         }
     }
 }

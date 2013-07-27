@@ -30,7 +30,7 @@ public class PlayerJoin implements Listener {
                 player.setRank(PlayerRank.OWNER);
                 player.sendMessage(ChatColor.GOLD + "Welcome to your new server, I hope everything goes well.");
             } else {
-                Bukkit.broadcastMessage(Color.BROADCAST + "A new player, free gifts for everyone!");
+                UDSPlugin.sendBroadcast("A new player, free gifts for everyone!");
                 final ItemStack gift = new ItemStack(UDSPlugin.getConfigMaterial(ConfigRef.WELCOME_GIFT));
                 for(SaveablePlayer onlinePlayer : PlayerUtils.getOnlinePlayers()) {
                     onlinePlayer.giveAndDrop(gift);
@@ -41,9 +41,9 @@ public class PlayerJoin implements Listener {
         if(UDSPlugin.isLockedDown() && !player.hasLockdownPass()) {
             player.kickPlayer("The server is currently in lockdown please check back later.");
         } else {
-            player.sendMessage(Color.MESSAGE + UDSPlugin.getConfigString(ConfigRef.WELCOME_MSG));
+            player.sendNormal(UDSPlugin.getConfigString(ConfigRef.WELCOME_MSG));
             if(player.isRank(PlayerRank.NEWBIE)) {
-                player.sendMessage(Color.MESSAGE + "Kill monsters or trade with players to earn " + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " credits then type /acceptrules in chat.");
+                player.sendNormal("Kill monsters or trade with players to earn " + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " credits then type /acceptrules in chat.");
             } else if(player.hasRank(PlayerRank.MOD)) {
                 player.sendMessage(UDSPlugin.getConfigString(ConfigRef.WELCOME_ADMIN));
             }
@@ -52,7 +52,7 @@ public class PlayerJoin implements Listener {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, true);
                     } else {
-                        onlinePlayer.sendMessage(Color.WHISPER + player.getNick() + " has joined.");
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player.getNick() + " has joined.");
                     }
 
                 }

@@ -1,7 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -61,7 +60,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
 
     private void bountyKill(final SaveablePlayer udsKiller, final SaveablePlayer udsVictim) {
         final int total = udsVictim.getBounty();
-        Bukkit.broadcastMessage(Color.BROADCAST + udsKiller.getNick() + " collected the " + total + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCY) + " bounty on " + udsVictim.getNick() + ".");
+        UDSPlugin.sendBroadcast(udsKiller.getNick() + " collected the " + total + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCY) + " bounty on " + udsVictim.getNick() + ".");
         udsKiller.credit(total);
         udsVictim.setBounty(0);
     }

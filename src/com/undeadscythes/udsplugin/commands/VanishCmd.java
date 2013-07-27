@@ -19,9 +19,9 @@ public class VanishCmd extends CommandWrapper {
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, true);
-                        onlinePlayer.sendMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
                     } else {
-                        onlinePlayer.sendMessage(Color.WHISPER + player.getNick() + " has vanished.");
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player.getNick() + " has vanished.");
                     }
                 }
             } else {
@@ -29,17 +29,17 @@ public class VanishCmd extends CommandWrapper {
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, false);
-                        onlinePlayer.sendMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
                     } else {
-                        onlinePlayer.sendMessage(Color.WHISPER + player.getNick() + " has reappeared.");
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player.getNick() + " has reappeared.");
                     }
                 }
             }
         } else if(numArgsHelp(1)) {
             if("list".equals(subCmd)) {
-                player.sendMessage(Color.MESSAGE + "Vanished players:");
+                player.sendNormal("Vanished players:");
                 for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
-                    player.sendMessage(Color.TEXT + hiddenPlayer.getNick());
+                    player.sendText(hiddenPlayer.getNick());
                 }
             } else {
                 subCmdHelp();

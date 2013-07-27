@@ -20,22 +20,22 @@ public class AsyncPlayerChat implements Listener {
         final String logMessage = player.getNick() + ": " + event.getMessage();
         Bukkit.getLogger().info(logMessage);
         if(!player.newChat()) {
-            player.sendMessage(Color.ERROR + "You have been jailed for spamming chat.");
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " gets jail time for spamming chat.");
+            player.sendError("You have been jailed for spamming chat.");
+            UDSPlugin.sendBroadcast(player.getNick() + " gets jail time for spamming chat.");
             JailCmd.jail(player, 5, 1000);
         } else if(player.getChannel() == ChatChannel.PUBLIC) {
             String message = event.getMessage();
             if(Censor.noCensor(message)) {
                 message = (player.getRankColor() + player.getNick() + ": " + Color.TEXT).concat(message);
             } else {
-                player.sendMessage(Color.ERROR + "Please do not use bad language.");
+                player.sendError("Please do not use bad language.");
                 message = player.getRankColor() + player.getNick() + ": " + Color.TEXT + Censor.fix(message);
                 if(player.canAfford(1)) {
                     player.debit(1);
-                    Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " put 1 " + UDSPlugin.getConfigString(ConfigRef.CURRENCY) + " in the swear jar.");
+                    UDSPlugin.sendBroadcast(player.getNick() + " put 1 " + UDSPlugin.getConfigString(ConfigRef.CURRENCY) + " in the swear jar.");
                 } else {
-                    player.sendMessage(Color.ERROR + "You have no money to put in the swear jar.");
-                    Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " gets jail time for using bad language.");
+                    player.sendError("You have no money to put in the swear jar.");
+                    UDSPlugin.sendBroadcast(player.getNick() + " gets jail time for using bad language.");
                     JailCmd.jail(player, 1, 1);
                 }
             }
@@ -53,15 +53,15 @@ public class AsyncPlayerChat implements Listener {
             }
         } else if(player.getChannel() == ChatChannel.CLAN) {
             final Clan clan = player.getClan();
-            final String message = Color.CLAN + "[" + clan.getName() + "] " + player.getNick() + ": " + event.getMessage();
+            final String message = "[" + clan.getName() + "] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : clan.getOnlineMembers()) {
-                target.sendMessage(message);
+                target.sendClan(message);
             }
         } else if(player.getChannel() == ChatChannel.PRIVATE) {
             final ChatRoom chatRoom = player.getChatRoom();
-            final String message = Color.PRIVATE + "[" + chatRoom.getName() + "] " + player.getNick() + ": " + event.getMessage();
+            final String message = "[" + chatRoom.getName() + "] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : chatRoom.getOnlineMembers()) {
-                target.sendMessage(message);
+                target.sendPrivate(message);
             }
         }
     }

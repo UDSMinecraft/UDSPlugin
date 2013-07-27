@@ -21,15 +21,15 @@ public class ServerCmd extends CommandWrapper {
                 Bukkit.shutdown();
             } else if(subCmd.equals("reload")) {
                 UDSPlugin.reloadConf();
-                player.sendMessage(Color.MESSAGE + "Configuration file reloaded.");
+                player.sendNormal("Configuration file reloaded.");
             } else if(subCmd.equals("info")) {
-                player.sendMessage(Color.MESSAGE + "Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");
-                player.sendMessage(Color.MESSAGE + "There have been " + PlayerUtils.numPlayers() + " unique visitors.");
+                player.sendNormal("Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");
+                player.sendNormal("There have been " + PlayerUtils.numPlayers() + " unique visitors.");
             } else if(subCmd.equals("setspawn")) {
                 final Location location = player.getLocation();
                 player.getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());
                 UDSPlugin.getData().setSpawn(location);
-                player.sendMessage(Color.MESSAGE + "Spawn location moved.");
+                player.sendNormal("Spawn location moved.");
             } else {
                 subCmdHelp();
             }

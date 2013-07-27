@@ -13,7 +13,7 @@ public class PrivateCmd extends CommandWrapper {
             final ChatRoom chatRoom = UDSPlugin.getChatRooms().get(args[0]);
             if(chatRoom == null) {
                 UDSPlugin.getChatRooms().put(args[0], new ChatRoom(player, args[0]));
-                player.sendMessage(Color.MESSAGE + "Private chat room created.");
+                player.sendNormal("Private chat room created.");
             } else {
                 if(chatRoom.isMember(player)) {
                     chatRoom.delMember(player);

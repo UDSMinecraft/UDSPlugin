@@ -61,9 +61,9 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
     private boolean isProtected(final InventoryHolder holder) {
         if(!player.canBuildHere(((BlockState)holder).getBlock().getLocation())) {
             if(player.hasPermission(Perm.BYPASS)) {
-                player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                player.sendNormal("Protection bypassed.");
             } else {
-                player.sendMessage(Color.ERROR + "You do not have access to this block.");
+                player.sendError("You do not have access to this block.");
                 return true;
             }
         }

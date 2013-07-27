@@ -20,7 +20,7 @@ public class HangingBreak extends ListenerWrapper implements Listener {
             final SaveablePlayer player = PlayerUtils.getOnlinePlayer(((Player)remover).getName());
             if(!player.canBuildHere(location)) {
                 event.setCancelled(true);
-                player.sendMessage(Message.CANT_BUILD_HERE);
+                player.sendNormal(Message.CANT_BUILD_HERE);
             }
         } else if(hasFlag(location, RegionFlag.PROTECTION)) {
             event.setCancelled(true);

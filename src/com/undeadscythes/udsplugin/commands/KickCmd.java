@@ -2,7 +2,6 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import org.apache.commons.lang.*;
-import org.bukkit.Bukkit;
 
 /**
  * Kick a player from the server.
@@ -20,9 +19,9 @@ public class KickCmd extends CommandWrapper {
                 }
                 target.getWorld().strikeLightningEffect(target.getLocation());
                 target.kickPlayer(message);
-                Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been kicked for breaking the rules.");
+                UDSPlugin.sendBroadcast(target.getNick() + " has been kicked for breaking the rules.");
             } else {
-                player.sendMessage(Color.ERROR + "You cannot kick this player.");
+                player.sendError("You cannot kick this player.");
             }
         }
     }

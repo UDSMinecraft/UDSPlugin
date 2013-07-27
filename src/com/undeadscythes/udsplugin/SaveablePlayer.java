@@ -1068,6 +1068,10 @@ public class SaveablePlayer implements Saveable {
         isAfk ^= true;
         return isAfk;
     }
+    
+    public final void sendWhisper(final String message) {
+        sendMessage(Color.WHISPER + message);
+    }
 
     /**
      * Teleport a player but reserve pitch and yaw of player.
@@ -1152,6 +1156,34 @@ public class SaveablePlayer implements Saveable {
         if(player != null) {
             player.sendMessage(message);
         }
+    }
+    
+    public final void sendPrivate(final String message) {
+        sendMessage(Color.PRIVATE + message);
+    }
+    
+    public final void sendNormal(final String message) {
+        sendMessage(Color.MESSAGE + message);
+    }
+    
+    public final void sendError(final String message) {
+        sendMessage(Color.ERROR + message);
+    }
+    
+    public final void sendClan(final String message) {
+        sendMessage(Color.CLAN + message);
+    }
+    
+    public final void sendBroadcast(final String message) {
+        sendMessage(Color.BROADCAST + message);
+    }
+    
+    public final void sendListItem(final String item, final String message) {
+        sendMessage(Color.ITEM + item + Color.TEXT + message);
+    }
+    
+    public final void sendText(final String message) {
+        sendMessage(Color.TEXT + message);
     }
 
     /**

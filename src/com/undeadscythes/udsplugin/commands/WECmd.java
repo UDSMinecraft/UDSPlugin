@@ -83,9 +83,9 @@ public class WECmd extends CommandWrapper {
                             }
                         }
                         out.close();
-                        player.sendMessage(Color.MESSAGE + "Saved " + volume + " blocks to disk.");
+                        player.sendNormal("Saved " + volume + " blocks to disk.");
                     } catch (IOException ex) {
-                        player.sendMessage(Color.ERROR + "Error writing file.");
+                        player.sendError("Error writing file.");
                     }
                 }
             }
@@ -113,9 +113,9 @@ public class WECmd extends CommandWrapper {
                     }
                 }
                 in.close();
-                player.sendMessage(Color.MESSAGE + "Loaded " + volume + " blocks from disk.");
+                player.sendNormal("Loaded " + volume + " blocks from disk.");
             } catch (IOException ex) {
-                player.sendMessage(Color.ERROR + "Error reading file.");
+                player.sendError("Error reading file.");
             }
         }
     }
@@ -151,10 +151,10 @@ public class WECmd extends CommandWrapper {
                         }
                     }
                 }
-                player.sendMessage(Color.MESSAGE + "Drained " + count + " blocks.");
+                player.sendNormal("Drained " + count + " blocks.");
             }
         } else {
-            player.sendMessage(Color.ERROR + "Value is out of range.");
+            player.sendError("Value is out of range.");
         }
     }
 
@@ -182,12 +182,12 @@ public class WECmd extends CommandWrapper {
                                     }
                                 }
                             }
-                            player.sendMessage(Color.MESSAGE + "Set " + volume + " blocks.");
+                            player.sendNormal("Set " + volume + " blocks.");
                         } else {
-                            player.sendMessage(Color.ERROR + "You have selected a bad block.");
+                            player.sendError("You have selected a bad block.");
                         }
                     } else {
-                        player.sendMessage(Color.ERROR + "You have selected too many blocks.");
+                        player.sendError("You have selected too many blocks.");
                     }
                 }
             }
@@ -199,7 +199,7 @@ public class WECmd extends CommandWrapper {
         if(hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
             final Cuboid undo = session.load();
             undo.revert();
-            player.sendMessage(Color.MESSAGE + "Undone " + undo.getVolume() + " blocks.");
+            player.sendNormal("Undone " + undo.getVolume() + " blocks.");
         }
     }
 
@@ -230,11 +230,11 @@ public class WECmd extends CommandWrapper {
                                     }
                                 }
                             }
-                            player.sendMessage(Color.MESSAGE + "Replaced " + count + " blocks.");
+                            player.sendNormal("Replaced " + count + " blocks.");
                         }
                     }
                 } else {
-                    player.sendMessage(Color.ERROR + "You have selected too many blocks.");
+                    player.sendError("You have selected too many blocks.");
                 }
             }
         }
@@ -262,7 +262,7 @@ public class WECmd extends CommandWrapper {
                                     put(world, min, max, Material.AIR);
                                     min.add(direction.toVector().clone().multiply(distance));
                                     cuboid.place(world, min);
-                                    player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
+                                    player.sendNormal("Moved " + volume + " blocks.");
                                 } else if(direction == Direction.DOWN || direction == Direction.WEST || direction == Direction.NORTH) {
                                     final Vector min = Vector.getMinimum(v1, v2);
                                     final Vector max = Vector.getMaximum(v1, v2);
@@ -273,13 +273,13 @@ public class WECmd extends CommandWrapper {
                                     put(world, min, max, Material.AIR);
                                     min.add((direction.toVector().clone().multiply(distance)));
                                     cuboid.place(world, min);
-                                    player.sendMessage(Color.MESSAGE + "Moved " + volume + " blocks.");
+                                    player.sendNormal("Moved " + volume + " blocks.");
                                 }
                             }
-                        } else player.sendMessage(Color.ERROR + "The area you have selected is too large.");
+                        } else player.sendError("The area you have selected is too large.");
                     }
                 } else {
-                    player.sendMessage(Color.ERROR + "That value is out of range.");
+                    player.sendError("That value is out of range.");
                 }
             }
         }
@@ -291,7 +291,7 @@ public class WECmd extends CommandWrapper {
         final Session session = getSession();
         if(hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
             session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation().toVector()));
-            player.sendMessage(Color.MESSAGE + "Copied " + session.getClipboard().getVolume() + " blocks.");
+            player.sendNormal("Copied " + session.getClipboard().getVolume() + " blocks.");
         }
     }
 
@@ -300,9 +300,9 @@ public class WECmd extends CommandWrapper {
         if(session.hasClipboard() && hasPerm(Perm.WE_PASTE)) {
             final Cuboid clipboard = session.getClipboard();
             session.save(clipboard.offset(player.getWorld(), player.getLocation().toVector()));
-            player.sendMessage(Color.MESSAGE + "Pasted " + clipboard.getVolume() + " blocks.");
+            player.sendNormal("Pasted " + clipboard.getVolume() + " blocks.");
         } else {
-            player.sendMessage(Color.ERROR + "You have nothing to paste.");
+            player.sendError("You have nothing to paste.");
         }
     }
 
@@ -335,9 +335,9 @@ public class WECmd extends CommandWrapper {
                         }
                     }
                 }
-                player.sendMessage(Color.MESSAGE + "Extinguished " + count + " fires.");
+                player.sendNormal("Extinguished " + count + " fires.");
             } else {
-                player.sendMessage(Color.ERROR + "That value is out of range.");
+                player.sendError("That value is out of range.");
             }
         }
     }

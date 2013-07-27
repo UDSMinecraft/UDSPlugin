@@ -13,10 +13,10 @@ public class PromoteCmd extends CommandWrapper {
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
             PlayerRank rank;
             if(player.outRanks(target) && (rank = target.promote()) != null) {
-                player.sendMessage(Color.MESSAGE + target.getNick() + " has been promoted to " + rank.toString() + ".");
-                target.sendMessage(Color.MESSAGE + "You have been promoted to " + rank.toString() + ".");
+                player.sendNormal(target.getNick() + " has been promoted to " + rank.toString() + ".");
+                target.sendNormal("You have been promoted to " + rank.toString() + ".");
             } else {
-                player.sendMessage(Color.ERROR + "You can't promote this player any further.");
+                player.sendError("You can't promote this player any further.");
             }
         }
     }

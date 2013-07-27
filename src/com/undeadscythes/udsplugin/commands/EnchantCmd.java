@@ -40,12 +40,12 @@ public class EnchantCmd extends CommandWrapper {
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {
-            player.sendMessage(Color.MESSAGE + "--- Available Enchantments " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            player.sendNormal("--- Available Enchantments " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
             for(Enchantment enchantment : enchantments) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + "- " + enchantment.getName());
+                    player.sendListItem("- " + enchantment.getName(), "");
                     posted++;
                 } else {
                     skipped++;

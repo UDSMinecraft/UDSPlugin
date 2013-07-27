@@ -90,11 +90,11 @@ public class Timer implements Runnable {
                 }
             }
         }
-        Bukkit.broadcastMessage(Color.BROADCAST + "The quarries have been refilled.");
+        UDSPlugin.sendBroadcast("The quarries have been refilled.");
         for(SaveablePlayer vip : PlayerUtils.getVips()) {
             vip.setVIPSpawns(UDSPlugin.getConfigInt(ConfigRef.VIP_SPAWNS));
             if(vip.isOnline()) {
-                vip.sendMessage(Color.MESSAGE + "Your daily item spawns have been refilled.");
+                vip.sendNormal("Your daily item spawns have been refilled.");
             }
         }
     }
@@ -117,7 +117,7 @@ public class Timer implements Runnable {
                             }
                         }
                     }
-                    Bukkit.broadcastMessage(Color.BROADCAST + "The Ender Dragon has regained his strength and awaits brave warriors in The End.");
+                    UDSPlugin.sendBroadcast("The Ender Dragon has regained his strength and awaits brave warriors in The End.");
                 }
                 if(!UDSPlugin.checkWorldFlag(world, RegionFlag.TIME)) {
                     world.setTime(world.getTime() - (now - lastSlow));
@@ -141,11 +141,11 @@ public class Timer implements Runnable {
             if(player.isRank(PlayerRank.VIP) && player.getVIPTime() + UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) < now) {
                 player.setVIPTime(0);
                 player.setRank(PlayerRank.MEMBER);
-                player.sendMessage(Color.MESSAGE + "Your time as a VIP has come to an end.");
+                player.sendNormal("Your time as a VIP has come to an end.");
             }
             if(player.isJailed() && player.getJailTime() + player.getJailSentence() < now) {
                 player.release();
-                player.sendMessage(Color.MESSAGE + "You have served your time.");
+                player.sendNormal("You have served your time.");
             }
             if(player.hasGodMode()) {
                 player.setFoodLevel(20);
@@ -154,13 +154,13 @@ public class Timer implements Runnable {
             if(distanceSq - UDSPlugin.getConfigIntSq(ConfigRef.WORLD_BORDER) > 100) {
                 final double ratio = UDSPlugin.getConfigIntSq(ConfigRef.WORLD_BORDER) / distanceSq;
                 player.move(Warp.findSafePlace(player.getLocation().clone().multiply(ratio)));
-                player.sendMessage(Color.MESSAGE + "You have reached the edge of the currently explorable world.");
+                player.sendNormal("You have reached the edge of the currently explorable world.");
             }
         }
         for(final Iterator<Map.Entry<String, Request>> i = UDSPlugin.getRequests().entrySet().iterator(); i.hasNext();) {
             final Request request = i.next().getValue();
             if(request.getTime() + UDSPlugin.getConfigLong(ConfigRef.REQUEST_TTL) < now) {
-                request.getSender().sendMessage(Color.MESSAGE + "Your request has timed out.");
+                request.getSender().sendNormal("Your request has timed out.");
                 i.remove();
             }
         }

@@ -15,7 +15,7 @@ public class NCmd extends CommandWrapper {
             UDSPlugin.getRequests().remove(player.getName());
             final SaveablePlayer sender = PlayerUtils.getPlayer(request.getSender().getName());
             if(sender.isOnline()) {
-                sender.sendMessage(Color.MESSAGE + player.getNick() + " has denied your request.");
+                sender.sendNormal(player.getNick() + " has denied your request.");
             }
         }
     }

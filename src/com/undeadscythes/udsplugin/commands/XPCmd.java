@@ -17,11 +17,11 @@ public class XPCmd extends CommandWrapper {
                     target.getWorld().spawnEntity(target.getLocation(), EntityType.EXPERIENCE_ORB);
                 }
                 target.giveExpLevels(Integer.parseInt(args[1]));
-                player.sendMessage(Color.MESSAGE + target.getNick() + " has been granted experience.");
+                player.sendNormal(target.getNick() + " has been granted experience.");
             } else if(args[1].matches("reset")) {
                 target.setExp(0);
                 target.setLevel(0);
-                player.sendMessage(Color.MESSAGE + target.getNick() + "'s experience has been reset.");
+                player.sendNormal(target.getNick() + "'s experience has been reset.");
             } else {
                 subCmdHelp();
             }

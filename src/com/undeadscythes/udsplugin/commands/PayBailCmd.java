@@ -11,7 +11,7 @@ public class PayBailCmd extends CommandWrapper {
     public void playerExecute() {
         if(isJailed() && canAfford(player.getBail())) {
             player.debit(player.getBail());
-            player.sendMessage(Color.MESSAGE + "You have paid your bail.");
+            player.sendNormal("You have paid your bail.");
             player.release();
         }
     }

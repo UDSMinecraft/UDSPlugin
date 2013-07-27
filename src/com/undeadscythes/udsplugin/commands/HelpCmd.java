@@ -335,7 +335,7 @@ public class HelpCmd extends CommandWrapper {
                 case HOME_MAKE:
                     return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.HOME_COST) + " credits" + Color.TEXT + ")";
                 case SHOP_BUY:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM+ UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) + " credits" + Color.TEXT + ")";
                 case VIP:
                     return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.VIP_COST) + " credits" + Color.TEXT + ")";
                 case CLAN_NEW:
@@ -370,12 +370,12 @@ public class HelpCmd extends CommandWrapper {
             } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
                 final Usage usage = Usage.getByName(args[0]);
                 if(usage == null) {
-                    player.sendMessage(Color.ERROR + "No command exists by that name.");
+                    player.sendError("No command exists by that name.");
                 } else {
                     if(usage.isExtended()) {
                         sendCommandHelp(usage);
                     } else {
-                        player.sendMessage(Color.ITEM + usage.getUsage() + Color.TEXT + " - " + usage.getDescription());
+                        player.sendListItem(usage.getUsage(), " - " + usage.getDescription());
                     }
                 }
             }
@@ -413,16 +413,16 @@ public class HelpCmd extends CommandWrapper {
     private void sendPage(final int page, final SaveablePlayer player, final Set<Usage> list, final String title) {
         final int pages = (list.size() + 8) / 9;
         if(pages == 0) {
-            player.sendMessage(Color.MESSAGE + "There is no help available.");
+            player.sendNormal("There is no help available.");
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {
-            player.sendMessage(Color.MESSAGE + "--- " + title + " " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            player.sendNormal("--- " + title + " " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
             for(Usage usage : list) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + usage.getUsage() + Color.TEXT + " - " + usage.getDescription());
+                    player.sendListItem(usage.getUsage(), " - " + usage.getDescription());
                     posted++;
                 } else {
                     skipped++;

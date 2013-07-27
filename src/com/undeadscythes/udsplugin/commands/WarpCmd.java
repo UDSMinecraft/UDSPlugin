@@ -20,10 +20,10 @@ public class WarpCmd extends CommandWrapper {
                 }
             }
             if(warps.isEmpty()) {
-                player.sendMessage(Color.MESSAGE + "You don't have access to any warps.");
+                player.sendNormal("You don't have access to any warps.");
             } else {
-                player.sendMessage(Color.MESSAGE + "Available warps (with prices):");
-                player.sendMessage(Color.TEXT + StringUtils.join(warps.toArray(), ", "));
+                player.sendNormal("Available warps (with prices):");
+                player.sendText(StringUtils.join(warps.toArray(), ", "));
             }
         } else if(numArgsHelp(1) && (warp = getWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
             player.debit(warp.getPrice());

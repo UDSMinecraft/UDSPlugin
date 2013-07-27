@@ -83,17 +83,17 @@ public class RegionCmd extends CommandWrapper {
             }
             region.setType(type);
             UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
-            player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set to type " + type.toString() + ".");
+            player.sendNormal("Region " + region.getName() + " set to type " + type.toString() + ".");
         }
     }
 
     private void showTypes() {
-        player.sendMessage(Color.MESSAGE + "Available region types:");
+        player.sendNormal("Available region types:");
         String types = "";
         for(RegionType type : RegionType.values()) {
             types = types.concat(type.toString() + ", ");
         }
-        player.sendMessage(Color.TEXT + types.substring(0, types.length() - 2));
+        player.sendText(types.substring(0, types.length() - 2));
     }
 
     private void contract() {
@@ -102,7 +102,7 @@ public class RegionCmd extends CommandWrapper {
         int distance;
         if((region = getRegion(args[1])) != null && (direction = getCardinalDirection(args[3])) != null && (distance = parseInt(args[2])) > -1) {
             region.contract(direction, distance);
-            player.sendMessage(Color.MESSAGE + "Region has been contracted.");
+            player.sendNormal("Region has been contracted.");
         }
     }
 
@@ -112,7 +112,7 @@ public class RegionCmd extends CommandWrapper {
         int distance;
         if((region = getRegion(args[1])) != null && (direction = getCardinalDirection(args[3])) != null && (distance = parseInt(args[2])) > -1) {
             region.expand(direction, distance);
-            player.sendMessage(Color.MESSAGE + "Region has been expanded.");
+            player.sendNormal("Region has been expanded.");
         }
     }
 
@@ -120,7 +120,7 @@ public class RegionCmd extends CommandWrapper {
         final Session session = getSession();
         if(session != null && hasTwoPoints(session)) {
             session.vert();
-            player.sendMessage(Color.MESSAGE + "Region extended from bedrock to build limit.");
+            player.sendNormal("Region extended from bedrock to build limit.");
         }
     }
 
@@ -133,27 +133,27 @@ public class RegionCmd extends CommandWrapper {
         }
         final String regionType = type.name().replaceFirst("[a-z]", type.name().substring(0, 1).toUpperCase());
         if(list.isEmpty()) {
-            player.sendMessage(Color.MESSAGE + "There are no " + regionType + " regions.");
+            player.sendNormal("There are no " + regionType + " regions.");
         } else {
-            player.sendMessage(Color.MESSAGE + regionType + " Regions:");
-            player.sendMessage(Color.TEXT + list.substring(0, list.length() - 2));
+            player.sendNormal(regionType + " Regions:");
+            player.sendText(list.substring(0, list.length() - 2));
         }
     }
 
     private void flagList() {
-        player.sendMessage(Color.MESSAGE + "Available region flags:");
+        player.sendNormal("Available region flags:");
         String message = "";
         for(RegionFlag test : RegionFlag.values()) {
             message = message.concat(test.name() + ", ");
         }
-        player.sendMessage(Color.TEXT + message.substring(0, message.length() - 2));
+        player.sendText(message.substring(0, message.length() - 2));
     }
 
     private void flag() {
         final Region region = getRegion(args[1]);
         final RegionFlag flag = getFlag(args[2]);
         if(region != null && flag != null) {
-            player.sendMessage(Color.MESSAGE + region.getName() + " flag " + flag.toString() + " now set to " + region.toggleFlag(flag) + ".");
+            player.sendNormal(region.getName() + " flag " + flag.toString() + " now set to " + region.toggleFlag(flag) + ".");
         }
     }
 
@@ -164,7 +164,7 @@ public class RegionCmd extends CommandWrapper {
             if(!region.getType().equals(RegionType.GENERIC)) {
                 UDSPlugin.getRegions(region.getType()).remove(region.getName());
             }
-            player.sendMessage(Color.MESSAGE + "Region deleted.");
+            player.sendNormal("Region deleted.");
         }
     }
 
@@ -187,7 +187,7 @@ public class RegionCmd extends CommandWrapper {
         final Region region = getRegion(args[1]);
         if(session != null && hasTwoPoints(session) && region != null) {
             region.changeV(session.getV1(), session.getV2());
-            player.sendMessage(Color.MESSAGE + "Region reset with new points.");
+            player.sendNormal("Region reset with new points.");
         }
     }
 
@@ -196,7 +196,7 @@ public class RegionCmd extends CommandWrapper {
         if(region != null) {
             final Session session = getSession();
             session.setVPair(region.getV1(), region.getV2(), region.getWorld());
-            player.sendMessage(Color.MESSAGE + "Points set. " + session.getVolume() + " blocks selected.");
+            player.sendNormal("Points set. " + session.getVolume() + " blocks selected.");
         }
     }
 
@@ -208,7 +208,7 @@ public class RegionCmd extends CommandWrapper {
             if(!region.getType().equals(RegionType.GENERIC)) {
                 UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
             }
-            player.sendMessage(Color.MESSAGE + "Region " + region.getName() + " set.");
+            player.sendNormal("Region " + region.getName() + " set.");
         }
     }
 
@@ -217,7 +217,7 @@ public class RegionCmd extends CommandWrapper {
         final SaveablePlayer target = getMatchingPlayer(args[2]);
         if(region != null && target != null) {
             region.addMember(target);
-            player.sendMessage(Color.MESSAGE + target.getNick() + " add to region " + region.getName() + ".");
+            player.sendNormal(target.getNick() + " add to region " + region.getName() + ".");
         }
     }
 
@@ -226,7 +226,7 @@ public class RegionCmd extends CommandWrapper {
         final SaveablePlayer target = getMatchingPlayer(args[2]);
         if(region != null && target != null) {
             region.delMember(target);
-            player.sendMessage(Color.MESSAGE + target.getNick() + " removed from region " + region.getName() + ".");
+            player.sendNormal(target.getNick() + " removed from region " + region.getName() + ".");
         }
     }
 
@@ -235,7 +235,7 @@ public class RegionCmd extends CommandWrapper {
         final SaveablePlayer target = getMatchingPlayer(args[2]);
         if(region != null && target != null) {
             region.changeOwner(target);
-            player.sendMessage(Color.MESSAGE + target.getNick() + " made owner of region " + region.getName() + ".");
+            player.sendNormal(target.getNick() + " made owner of region " + region.getName() + ".");
         }
     }
 
@@ -249,7 +249,7 @@ public class RegionCmd extends CommandWrapper {
             if(!region.getType().equals(RegionType.GENERIC)) {
                 UDSPlugin.getRegions(region.getType()).replace(oldName, region.getName(), region);
             }
-            player.sendMessage(Color.MESSAGE + "Region " + oldName + " renamed to " + region.getName());
+            player.sendNormal("Region " + oldName + " renamed to " + region.getName());
         }
     }
 }

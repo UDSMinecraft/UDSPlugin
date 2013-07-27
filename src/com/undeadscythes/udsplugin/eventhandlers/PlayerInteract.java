@@ -134,16 +134,16 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             final Location location = block.getLocation();
             if(!player.canBuildHere(location) && hasFlag(location, RegionFlag.LOCK)) {
                 if(player.hasPermission(Perm.BYPASS)) {
-                    player.sendMessage(Color.MESSAGE + "Protection bypassed.");
+                    player.sendNormal("Protection bypassed.");
                 } else {
-                    player.sendMessage(Color.ERROR + "You can't do that here.");
+                    player.sendError("You can't do that here.");
                     return true;
                 }
             }
         } else if(material == Material.STONE_BUTTON || material == Material.LEVER) {
             final Location location = block.getLocation();
             if(!player.canBuildHere(location) && !hasFlag(location, RegionFlag.POWER)) {
-                player.sendMessage(Color.ERROR + "You can't do that here.");
+                player.sendError("You can't do that here.");
                 return true;
             }
         } else if(material == Material.WOOD_PLATE || material == Material.STONE_PLATE || material == Material.TRIPWIRE) {
@@ -165,7 +165,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         final byte itemData = player.getItemInHand().getData().getData();
         player.setItemInHand(new ItemStack(Material.MONSTER_EGG, player.getItemInHand().getAmount() - 1, (short)0, itemData));
         ((CreatureSpawner)block.getState()).setSpawnedType(EntityType.fromId(itemData));
-        player.sendMessage(Color.MESSAGE + "Spawner set.");
+        player.sendNormal("Spawner set.");
     }
 
     /**
@@ -177,9 +177,9 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     private void wand1(final SaveablePlayer player, final Block block) {
         final Session session = player.forceSession();
         session.setV1(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
-        player.sendMessage(Color.MESSAGE + "Point 1 set.");
+        player.sendNormal("Point 1 set.");
         if(session.getV1() != null && session.getV2() != null) {
-            player.sendMessage(Color.MESSAGE.toString() + session.getVolume() + " blocks selected.");
+            player.sendNormal(session.getVolume() + " blocks selected.");
         }
     }
 
@@ -191,9 +191,9 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     private void wand2(final SaveablePlayer player, final Block block) {
         final Session session = player.forceSession();
         session.setV2(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
-        player.sendMessage(Color.MESSAGE + "Point 2 set.");
+        player.sendNormal("Point 2 set.");
         if(session.getV1() != null && session.getV2() != null) {
-            player.sendMessage(Color.MESSAGE.toString() + session.getVolume() + " blocks selected.");
+            player.sendNormal(session.getVolume() + " blocks selected.");
         }
     }
 
@@ -206,7 +206,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         if(block.getType().isSolid()) {
             player.move(Warp.findSafePlace(block.getLocation()));
         } else {
-            player.sendMessage(Color.ERROR + "No block in range.");
+            player.sendError("No block in range.");
         }
     }
 
@@ -224,7 +224,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             final Location location = block.getRelative(los.get(0).getFace(block)).getLocation();
             player.move(Warp.findSafePlace(location));
         } else {
-            player.sendMessage(Color.ERROR + "No block in range.");
+            player.sendError("No block in range.");
         }
     }
 
@@ -235,18 +235,18 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      */
     private void paperSimple(final SaveablePlayer player, final Location location) {
         if(regionsHere(location).isEmpty()) {
-            player.sendMessage(Color.MESSAGE + "No regions here.");
+            player.sendNormal("No regions here.");
         } else {
             final List<Region> testRegions = regionsHere(location);
             for(Region region : testRegions) {
                 if(region.getOwner() == null) {
-                    player.sendMessage(Color.MESSAGE + "This area is protected.");
+                    player.sendNormal("This area is protected.");
                 } else if(region.getOwner().equals(player)) {
-                    player.sendMessage(Color.MESSAGE + "You own this block.");
+                    player.sendNormal("You own this block.");
                 } else if(region.getMembers().contains(player)) {
-                    player.sendMessage(Color.MESSAGE + "Your room mate owns this block.");
+                    player.sendNormal("Your room mate owns this block.");
                 } else {
-                    player.sendMessage(Color.MESSAGE + "Somebody else owns this block.");
+                    player.sendNormal("Somebody else owns this block.");
                 }
             }
         }
@@ -260,7 +260,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     private void paperComplex(final SaveablePlayer player, final Location location) {
         final List<Region> testRegions = regionsHere(location);
         if(testRegions.isEmpty()) {
-            player.sendMessage(Color.MESSAGE + "No regions here.");
+            player.sendNormal("No regions here.");
         } else {
             for(Region region : testRegions) {
                 region.sendInfo(player);
@@ -274,24 +274,24 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param sign Sign clicked.
      */
     private void sign(final SaveablePlayer player, final Sign sign) {
-        final String cantDoThat = Color.ERROR + "You can't do that.";
+        final String cantDoThat = "You can't do that.";
         if(sign.getLine(0).equals(Color.SIGN + "[CHECKPOINT]")) {
             if(player.hasPermission(Perm.CHECK)) {
                 player.setCheckPoint(player.getLocation());
-                player.sendMessage(Color.MESSAGE + "Checkpoint set. Use /check to return here. Good luck.");
+                player.sendNormal("Checkpoint set. Use /check to return here. Good luck.");
             } else {
-                player.sendMessage(cantDoThat);
+                player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[MINECART]")) {
             if(player.hasPermission(Perm.MINECART)) {
                 final Location location = sign.getBlock().getLocation();
                 if(EntityTracker.minecartNear(location)) {
-                    player.sendMessage(Color.MESSAGE + "There is a minecart already at the station.");
+                    player.sendNormal("There is a minecart already at the station.");
                 } else {
                     player.getWorld().spawnEntity(location.clone().add(0.5, -1, 0.5), EntityType.MINECART);
                 }
             } else {
-                player.sendMessage(cantDoThat);
+                player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[PRIZE]")) {
             if(player.hasPermission(Perm.PRIZE)) {
@@ -301,10 +301,10 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                     item.setAmount(Integer.parseInt(sign.getLine(2)));
                     player.getInventory().addItem(item);
                 } else {
-                    player.sendMessage(Color.ERROR + "You have already claimed a prize today.");
+                    player.sendError("You have already claimed a prize today.");
                 }
             } else {
-                player.sendMessage(cantDoThat);
+                player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[ITEM]")) {
             if(player.hasPermission(Perm.ITEM)) {
@@ -314,27 +314,27 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                         item.setAmount(Integer.parseInt(sign.getLine(2)) - owned);
                         player.getInventory().addItem(item);
                     } else {
-                        player.sendMessage(Color.ERROR + "You already have enough of that item.");
+                        player.sendError("You already have enough of that item.");
                     }
             } else {
-                player.sendMessage(cantDoThat);
+                player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[WARP]")) {
             if(player.hasPermission(Perm.WARP)) {
                 final Warp warp = UDSPlugin.getWarps().get(sign.getLine(1));
                 if(warp == null) {
-                    player.sendMessage(Color.ERROR + "This warp cannot be found.");
+                    player.sendError("This warp cannot be found.");
                 } else {
                     player.teleport(warp.getLocation());
                 }
             } else {
-                player.sendMessage(cantDoThat);
+                player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[SPLEEF]")) {
             if(player.hasPermission(Perm.SPLEEF)) {
                 final Region region = UDSPlugin.getRegions(RegionType.ARENA).get(sign.getLine(1));
                 if(region == null) {
-                    player.sendMessage(Color.ERROR + "No region exists to refresh.");
+                    player.sendError("No region exists to refresh.");
                 } else {
                     final Vector min = region.getV1();
                     final Vector max = region.getV2();
@@ -348,7 +348,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                     }
                 }
             } else {
-                player.sendMessage(Color.ERROR + "You can't do that.");
+                player.sendError(cantDoThat);
             }
         }
     }

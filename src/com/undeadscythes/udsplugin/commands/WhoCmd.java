@@ -25,7 +25,7 @@ public class WhoCmd extends CommandWrapper {
                 onlinePlayers++;
             }
         }
-        player.sendMessage(Color.MESSAGE + "--- Online Players (" + onlinePlayers + "/" + Bukkit.getMaxPlayers() + ") ---");
+        player.sendNormal("--- Online Players (" + onlinePlayers + "/" + Bukkit.getMaxPlayers() + ") ---");
         for(Map.Entry<PlayerRank, String> entry : lists.entrySet()) {
             if(!entry.getValue().equals("")) {
                 player.sendMessage(entry.getKey().getColor() + entry.getValue());

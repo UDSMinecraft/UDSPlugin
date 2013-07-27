@@ -25,7 +25,7 @@ public class SignChange extends ListenerWrapper implements Listener {
                 event.setLine(0, Color.SIGN + "[SHOP]");
             } else {
                 event.setCancelled(true);
-                player.sendMessage(Color.ERROR + "The second line must contain a number.");
+                player.sendError("The second line must contain a number.");
                 block.breakNaturally();
             }
         } else if(line1.equalsIgnoreCase("[checkpoint]") && checkPerm(Perm.SIGN_CHECKPOINT)) {
@@ -54,7 +54,7 @@ public class SignChange extends ListenerWrapper implements Listener {
     private boolean checkPerm(final Perm perm) {
         if(!player.hasPermission(perm)) {
             block.breakNaturally();
-            player.sendMessage(Color.ERROR + "You do not have permission to place this sign.");
+            player.sendError("You do not have permission to place this sign.");
             return false;
         }
         return true;
@@ -62,6 +62,6 @@ public class SignChange extends ListenerWrapper implements Listener {
 
     private void badFormat() {
         block.breakNaturally();
-        player.sendMessage(Color.ERROR + "You have not written this sign correctly.");
+        player.sendError("You have not written this sign correctly.");
     }
 }

@@ -13,7 +13,7 @@ public class PCmd extends CommandWrapper {
         if(inChatRoom()) {
             if(args.length == 0) {
                 if(player.toggleChannel(ChatChannel.PRIVATE)) {
-                    player.sendMessage(Color.MESSAGE + "You are now talking in .");
+                    player.sendNormal("You are now talking in .");
                 } else {
                     player.sendMessage(Message.PUBLIC_CHAT);
                 }

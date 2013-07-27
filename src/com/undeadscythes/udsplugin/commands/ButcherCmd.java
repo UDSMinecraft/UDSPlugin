@@ -36,7 +36,7 @@ public class ButcherCmd extends CommandWrapper {
                     }
                 }
             }
-            player.sendMessage(Color.MESSAGE + "Butchered " + count + " mobs.");
+            player.sendNormal("Butchered " + count + " mobs.");
         }
     }
 }

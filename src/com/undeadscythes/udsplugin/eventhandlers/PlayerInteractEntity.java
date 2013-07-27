@@ -21,11 +21,11 @@ public class PlayerInteractEntity extends ListenerWrapper implements Listener {
                 if(ownerName.equals(event.getPlayer().getName())) {
                     if(event.getPlayer().isSneaking()) {
                         PlayerUtils.getPlayer(event.getPlayer().getName()).selectPet(entity.getUniqueId());
-                        event.getPlayer().sendMessage(Color.MESSAGE + "Pet selected.");
+                        PlayerUtils.getPlayer(event.getPlayer().getName()).sendNormal("Pet selected.");
                         event.setCancelled(true);
                     }
                 } else {
-                    event.getPlayer().sendMessage(Color.MESSAGE + "This animal belongs to " + PlayerUtils.getPlayer(ownerName).getNick());
+                    PlayerUtils.getPlayer(event.getPlayer().getName()).sendNormal("This animal belongs to " + PlayerUtils.getPlayer(ownerName).getNick());
                     event.setCancelled(true);
                 }
             }
@@ -33,7 +33,7 @@ public class PlayerInteractEntity extends ListenerWrapper implements Listener {
             final SaveablePlayer player = PlayerUtils.getPlayer(event.getPlayer().getName());
             if(!(player.canBuildHere(entity.getLocation()))) {
                 event.setCancelled(true);
-                player.sendMessage(Message.CANT_BUILD_HERE);
+                player.sendNormal(Message.CANT_BUILD_HERE);
             }
         }
     }

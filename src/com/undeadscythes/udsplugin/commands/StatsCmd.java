@@ -18,15 +18,15 @@ public class StatsCmd extends CommandWrapper {
     }
 
     private void sendStats(final SaveablePlayer target) {
-        player.sendMessage(Color.MESSAGE + target.getNick() + "'s stats:");
-        player.sendMessage(Color.TEXT + "Minecraft name: " + target.getName());
-        player.sendMessage(Color.TEXT + "Rank: " + target.getRankColor() + target.getRankName());
-        player.sendMessage(Color.TEXT + "Clan: " + (target.isInClan() ? target.getClan().getName() : "not in clan"));
-        player.sendMessage(Color.TEXT + "Current bounty: " + target.getBounty());
+        player.sendNormal(target.getNick() + "'s stats:");
+        player.sendText("Minecraft name: " + target.getName());
+        player.sendText("Rank: " + target.getRankColor() + target.getRankName());
+        player.sendText("Clan: " + (target.isInClan() ? target.getClan().getName() : "not in clan"));
+        player.sendText("Current bounty: " + target.getBounty());
         if(target.isOnline()) {
-            player.sendMessage(Color.TEXT + "Current level: " + target.getLevel());
+            player.sendText("Current level: " + target.getLevel());
         }
-        player.sendMessage(Color.TEXT + "Time logged: " + target.getTimeLogged());
-        player.sendMessage(Color.TEXT + "Last seen: " + (target.isOnline() && !target.isHidden() ? "online now in world " + target.getWorld().getName() : target.getLastSeen()));
+        player.sendText("Time logged: " + target.getTimeLogged());
+        player.sendText("Last seen: " + (target.isOnline() && !target.isHidden() ? "online now in world " + target.getWorld().getName() : target.getLastSeen()));
     }
 }

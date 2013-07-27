@@ -10,7 +10,7 @@ public class CheckCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(!player.quietTeleport(player.getCheckPoint())) {
-            player.sendMessage(Color.ERROR + "You do not currently have a checkpoint set.");
+            player.sendError("You do not currently have a checkpoint set.");
         }
     }
 }

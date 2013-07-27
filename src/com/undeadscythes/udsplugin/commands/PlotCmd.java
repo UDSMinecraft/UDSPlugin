@@ -69,9 +69,9 @@ public class PlotCmd extends CommandWrapper {
             square(v1.clone().subtract(new Vector(3, 0, 3)), v2.clone().add(new Vector(4, 0, 4)), Material.QUARTZ_BLOCK);
             square(v1.clone().subtract(new Vector(1, 0, 1)), v2.clone().add(new Vector(2, 0, 2)), Material.NETHER_BRICK);
             square(v1.clone(), v2.clone().add(new Vector(1, 0 ,1)), Material.GRASS);
-            player.sendMessage(Color.MESSAGE + "Region claimed.");
+            player.sendNormal("Region claimed.");
         } else {
-            player.sendMessage(Color.ERROR + "This plot has already been claimed.");
+            player.sendError("This plot has already been claimed.");
         }
     }
     
@@ -85,7 +85,7 @@ public class PlotCmd extends CommandWrapper {
         if(plot != null) {
             UDSPlugin.getPlots().remove(plot);
             UDSPlugin.getRegions(RegionType.GENERIC).remove(plot.getName());
-            player.sendMessage(Color.MESSAGE + plot.getName() + " removed.");
+            player.sendNormal(plot.getName() + " removed.");
         }
     }
     
@@ -107,9 +107,9 @@ public class PlotCmd extends CommandWrapper {
             } else {
                 plot.setData("" + (Integer.parseInt(cur) + 1));
             }
-            player.sendMessage(Color.MESSAGE + "You liked this plot.");
+            player.sendNormal("You liked this plot.");
         } else {
-            player.sendMessage(Color.ERROR + "You are not in a plot.");
+            player.sendError("You are not in a plot.");
         }
     }
     
@@ -124,7 +124,7 @@ public class PlotCmd extends CommandWrapper {
     
     private boolean numPlots() {
         if(nextPlot() > 4 && !player.hasPermission(Perm.PLOT_MANY)) { // Limit hardcoded for speed right now
-            player.sendMessage(Color.ERROR + "You have reached the maximum number of plots you can own.");
+            player.sendError("You have reached the maximum number of plots you can own.");
             return false;
         }
         return true;
@@ -148,10 +148,10 @@ public class PlotCmd extends CommandWrapper {
             }
         }
         if(!plots.isEmpty()) {
-            player.sendMessage(Color.MESSAGE + "Your creative plots:");
-            player.sendMessage(Color.TEXT + StringUtils.join(plots, ", "));
+            player.sendNormal("Your creative plots:");
+            player.sendText(StringUtils.join(plots, ", "));
         } else {
-            player.sendMessage(Color.MESSAGE + "You do not have any creative plots.");
+            player.sendNormal("You do not have any creative plots.");
         }
     }
     
@@ -166,14 +166,14 @@ public class PlotCmd extends CommandWrapper {
         Region plot;
         if((plot = ownsPlot(plotName)) != null && noCensor(name)) {
             UDSPlugin.renamePlot(plot, name);
-            player.sendMessage(Color.MESSAGE + "Plot renamed to " + name + ".");
+            player.sendNormal("Plot renamed to " + name + ".");
         }
     }
     
     private Region ownsPlot(final String name) {
         final Region plot;
         if((plot = plotExists(name)) != null && !plot.getOwner().equals(player)) {
-            player.sendMessage(Color.ERROR + "You do not own that plot.");
+            player.sendError("You do not own that plot.");
             return null;
         }
         return plot;
@@ -182,7 +182,7 @@ public class PlotCmd extends CommandWrapper {
     private Region plotExists(final String name) {
         final Region plot = UDSPlugin.getPlot(name);
         if(plot == null) {
-            player.sendMessage(Color.ERROR + "No plot exists by that name.");
+            player.sendError("No plot exists by that name.");
         }
         return plot;
     }

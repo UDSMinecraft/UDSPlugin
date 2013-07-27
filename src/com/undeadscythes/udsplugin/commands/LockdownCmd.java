@@ -12,10 +12,10 @@ public class LockdownCmd extends CommandWrapper {
         SaveablePlayer target;
         if(args.length == 0) {
             UDSPlugin.toggleLockdown();
-            player.sendMessage(Color.MESSAGE + "The server is " + (UDSPlugin.isLockedDown() ? "now" : "no longer") + " in lockdown.");
+            player.sendNormal("The server is " + (UDSPlugin.isLockedDown() ? "now" : "no longer") + " in lockdown.");
         } else if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
             target.toggleLockdownPass();
-            player.sendMessage(Color.MESSAGE + target.getNick() + (target.hasLockdownPass() ? " now" : " no longer") + " has a lockdown pass.");
+            player.sendNormal(target.getNick() + (target.hasLockdownPass() ? " now" : " no longer") + " has a lockdown pass.");
         }
     }
 }

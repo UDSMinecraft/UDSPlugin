@@ -17,7 +17,7 @@ public class CityCmd extends CommandWrapper {
             if(subCmd.equals("set")) {
                 if((city = getCurrentRegion()).getType() == RegionType.CITY && getMunicipality(city.getName()) != null) {
                     city.setWarp(player.getLocation());
-                    player.sendMessage(Color.MESSAGE + "City spawn point set.");
+                    player.sendNormal("City spawn point set.");
                 }
             } else if(subCmd.equals("list")) {
                 sendPage(1, player);
@@ -37,16 +37,16 @@ public class CityCmd extends CommandWrapper {
                         UDSPlugin.getRegions(RegionType.CITY).put(args[1], city);
                         city.placeMoreMarkers();
                         city.placeTowers();
-                        player.sendMessage(Color.MESSAGE + "City founded.");
-                        Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " has just founded " + args[1] + ".");
+                        player.sendNormal("City founded.");
+                        UDSPlugin.sendBroadcast(player.getNick() + " has just founded " + args[1] + ".");
                     }
                 }
             } else if(subCmd.equals("leave")) {
                 if((city = getMatchingCity(args[1])) != null && notMayor(city)) {
                     if(city.delMember(player)) {
-                        player.sendMessage(Color.MESSAGE + "You have left " + city.getName() + ".");
+                        player.sendNormal("You have left " + city.getName() + ".");
                     } else {
-                        player.sendMessage(Color.ERROR + "You are not a citizen of " + city.getName() + ".");
+                        player.sendError("You are not a citizen of " + city.getName() + ".");
                     }
                 }
             } else if(subCmd.equals("warp")) {
@@ -61,7 +61,7 @@ public class CityCmd extends CommandWrapper {
                 if((city = getMunicipality(args[1])) != null) {
                     UDSPlugin.getRegions(RegionType.GENERIC).remove(city.getName());
                     UDSPlugin.getRegions(RegionType.CITY).remove(city.getName());
-                    Bukkit.broadcastMessage(Color.BROADCAST + city.getName() + " has been abandoned.");
+                    UDSPlugin.sendBroadcast(city.getName() + " has been abandoned.");
                 }
             } else {
                 subCmdHelp();
@@ -71,20 +71,20 @@ public class CityCmd extends CommandWrapper {
             if(subCmd.equals("invite")) {
                 if((city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
                     if(city.addMember(target)) {
-                        player.sendMessage(Color.MESSAGE + target.getNick() + " was added as a citizen of " + city.getName() + ".");
-                        target.sendMessage(Color.MESSAGE + "You have been added as a citizen of " + city.getName());
+                        player.sendNormal(target.getNick() + " was added as a citizen of " + city.getName() + ".");
+                        target.sendNormal("You have been added as a citizen of " + city.getName());
                     } else {
-                        player.sendMessage(Color.ERROR + target.getNick() + " is already a citizen of " + city.getName() + ".");
+                        player.sendError(target.getNick() + " is already a citizen of " + city.getName() + ".");
                     }
                 }
             } else if(subCmd.equals("banish")) {
                 if((city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
                     if(city.delMember(target)) {
-                        player.sendMessage(Color.MESSAGE + target.getNick() + " has been banished from " + city.getName() + ".");
-                        target.sendMessage(Color.MESSAGE + "You have been banished from " + city.getName() + ".");
+                        player.sendNormal(target.getNick() + " has been banished from " + city.getName() + ".");
+                        target.sendNormal("You have been banished from " + city.getName() + ".");
                         target.quietTeleport(city.getWarp());
                     } else {
-                        player.sendMessage(Color.ERROR + target.getNick() + " is not a citizen of " + city.getName() + ".");
+                        player.sendError(target.getNick() + " is not a citizen of " + city.getName() + ".");
                     }
                 }
             } else if(subCmd.equals("mayor")) {
@@ -92,7 +92,7 @@ public class CityCmd extends CommandWrapper {
                     city.addMember(city.getOwner());
                     city.delMember(target);
                     city.changeOwner(target);
-                    Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been elected as the new mayor of " + city.getName());
+                    UDSPlugin.sendBroadcast(target.getNick() + " has been elected as the new mayor of " + city.getName());
                 }
             } else {
                 subCmdHelp();
@@ -109,16 +109,16 @@ public class CityCmd extends CommandWrapper {
         final List<Region> cities = UDSPlugin.getRegions(RegionType.CITY).getSortedValues(new SortByPop());
         final int pages = (cities.size() + 8) / 9;
         if(pages == 0) {
-            player.sendMessage(Color.MESSAGE + "There are no cities yet.");
+            player.sendNormal("There are no cities yet.");
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {
-            player.sendMessage(Color.MESSAGE + "--- Current Cities " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            player.sendNormal("--- Current Cities " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
             for(Region city : cities) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + city.getName() + " - " + Color.TEXT + "Mayor " + city.getOwner() + ", Pop. " + (city.getMemberNo() + 1));
+                    player.sendListItem(city.getName() + " - ", "Mayor " + city.getOwner() + ", Pop. " + (city.getMemberNo() + 1));
                     posted++;
                 } else {
                     skipped++;

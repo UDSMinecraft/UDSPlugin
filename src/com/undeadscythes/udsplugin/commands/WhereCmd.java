@@ -22,6 +22,6 @@ public class WhereCmd extends CommandWrapper {
             message = message.concat(" at sea level");
         }
         message = message.concat(" in a " + player.getLocation().getBlock().getBiome().toString().toLowerCase().replace("_", " ") + " biome");
-        player.sendMessage(Color.MESSAGE + message);
+        player.sendNormal(message);
     }
 }

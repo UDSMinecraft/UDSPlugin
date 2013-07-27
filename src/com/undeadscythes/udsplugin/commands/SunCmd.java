@@ -11,6 +11,6 @@ public class SunCmd extends CommandWrapper {
     public void playerExecute() {
         player.getWorld().setStorm(false);
         player.getWorld().setThundering(false);
-        player.sendMessage(Color.MESSAGE + "Clear skies on the way.");
+        player.sendNormal("Clear skies on the way.");
     }
 }

@@ -10,7 +10,7 @@ public class NightCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         player.getWorld().setTime(14000);
-        player.sendMessage(Color.MESSAGE + "Summoning the moon.");
+        player.sendNormal("Summoning the moon.");
     }
 
 }

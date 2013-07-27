@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
@@ -16,8 +15,8 @@ public class AcceptRulesCmd extends CommandWrapper {
         if(canAfford(UDSPlugin.getConfigInt(ConfigRef.BUILD_COST))) {
             player.setRank(PlayerRank.MEMBER);
             player.debit(UDSPlugin.getConfigInt(ConfigRef.BUILD_COST));
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " has accepted the rules.");
-            player.sendMessage(Color.MESSAGE + "Thanks for accepting the rules, enjoy your stay on " + Bukkit.getServerName() + ".");
+            UDSPlugin.sendBroadcast(player.getNick() + " has accepted the rules.");
+            player.sendNormal("Thanks for accepting the rules, enjoy your stay on " + Bukkit.getServerName() + ".");
         }
     }
 }

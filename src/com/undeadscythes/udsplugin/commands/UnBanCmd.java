@@ -12,7 +12,7 @@ public class UnBanCmd extends CommandWrapper {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isBanned(target) && notSelf(target)) {
             target.setBanned(false);
-            player.sendMessage(Color.MESSAGE + target.getNick() + " is no longer banned.");
+            player.sendNormal(target.getNick() + " is no longer banned.");
         }
     }
 }

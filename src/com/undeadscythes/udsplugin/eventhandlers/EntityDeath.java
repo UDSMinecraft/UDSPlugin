@@ -41,7 +41,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         final int base = (UDSPlugin.getMobReward(victim.getType()) / 2) + 1;
         final int reward = rng.nextInt(base) + base;
         player.credit(reward);
-        player.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
+        player.sendNormal("You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
         if(rng.nextDouble() < UDSPlugin.getConfigDouble(ConfigRef.SKULL)) {
             ItemStack skull;
             if(victim.getType().equals(EntityType.ZOMBIE)) {
@@ -61,12 +61,12 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         UDSPlugin.getData().setLastEnderDeath(System.currentTimeMillis());
         if(killer instanceof Player) {
             final SaveablePlayer player = PlayerUtils.getPlayer(((Player)killer).getName());
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " has dealt the killing blow to the Ender Dragon!");
+            UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Ender Dragon!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
         final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>();
         for(Player endPlayer : players) {
-            endPlayer.sendMessage(Color.MESSAGE + "You can use commands such as /spawn to return to the overworld.");
+            PlayerUtils.getPlayer(endPlayer.getName()).sendNormal("You can use commands such as /spawn to return to the overworld.");
             if(endPlayer.getLocation().distance(location) < 100) {
                 SaveablePlayer endKiller = PlayerUtils.getPlayer((endPlayer).getName());
                 if(endKiller.getGameMode().equals(GameMode.SURVIVAL) && !endKiller.hasGodMode()) {
@@ -80,7 +80,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             for(SaveablePlayer endKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 endKiller.credit(reward);
-                endKiller.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
+                PlayerUtils.getPlayer(endKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
             }
         }
     }
@@ -88,7 +88,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
     private void witherKill(final Entity killer, final Location location) {
         if(killer instanceof Player) {
             final SaveablePlayer player = PlayerUtils.getPlayer(((Player)killer).getName());
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " has dealt the killing blow to the Wither!");
+            UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Wither!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
         final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>();
@@ -106,7 +106,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             for(SaveablePlayer witherKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 witherKiller.credit(reward);
-                witherKiller.sendMessage(Color.MESSAGE + "You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
+                PlayerUtils.getPlayer(witherKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
             }
         }
     }

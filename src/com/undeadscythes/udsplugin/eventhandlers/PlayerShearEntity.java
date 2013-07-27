@@ -15,7 +15,7 @@ public class PlayerShearEntity extends ListenerWrapper implements Listener {
         final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(!player.canBuildHere(event.getEntity().getLocation())) {
             event.setCancelled(true);
-            player.sendMessage(Color.ERROR + "You cannot shear this animal.");
+            player.sendError("You cannot shear this animal.");
         }
     }
 }

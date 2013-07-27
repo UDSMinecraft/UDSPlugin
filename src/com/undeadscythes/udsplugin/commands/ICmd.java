@@ -27,14 +27,14 @@ public class ICmd extends CommandWrapper {
                             item.setAmount(player.getVIPSpawns());
                         }
                         if(player.useVIPSpawns(item.getAmount()) == 0) {
-                            player.sendMessage(Color.MESSAGE + "You have just used up your last spawns for today.");
+                            player.sendNormal("You have just used up your last spawns for today.");
                         }
                         player.getInventory().addItem(item);
                     } else {
-                        player.sendMessage(Color.ERROR + "Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");
+                        player.sendError("Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");
                     }
                 } else {
-                    player.sendMessage(Color.ERROR + "You are out of spawns for today.");
+                    player.sendError("You are out of spawns for today.");
                 }
             }
         }

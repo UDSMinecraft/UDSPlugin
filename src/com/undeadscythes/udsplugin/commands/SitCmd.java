@@ -10,7 +10,7 @@ import org.bukkit.block.*;
 public class SitCmd extends CommandWrapper {
     @Override
     public final void playerExecute() {
-        player.sendMessage(Color.MESSAGE + "Sorry this command is currently unavailable.");
+        player.sendNormal("Sorry this command is currently unavailable.");
 //        if(!player.isInsideVehicle()) {
 //            final Block target = player.getTargetBlock(null, 3);
 //            if((isStairs(target)) && target.getRelative(BlockFace.DOWN).getTypeId() != 0) {

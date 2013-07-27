@@ -10,17 +10,17 @@ public class HealCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;
-        final String message = Color.MESSAGE + "You have been healed.";
+        final String message = "You have been healed.";
         if(args.length == 0) {
             player.setHealth(player.getMaxHealth());
             player.setFoodLevel(20);
-            player.sendMessage(message);
+            player.sendNormal(message);
         } else if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
             target.setHealth(target.getMaxHealth());
             target.setFoodLevel(20);
-            target.sendMessage(message);
+            target.sendNormal(message);
             if(!player.equals(target)) {
-                player.sendMessage(Color.MESSAGE + target.getNick() + " has been healed.");
+                player.sendNormal(target.getNick() + " has been healed.");
             }
         }
     }

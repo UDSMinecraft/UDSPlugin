@@ -198,20 +198,20 @@ public class Region implements Saveable {
      * @param player
      */
     public void sendInfo(final SaveablePlayer player) {
-        player.sendMessage(Color.MESSAGE + "Region " + name + " info:");
-        player.sendMessage(Color.TEXT + "Owner:" + (owner == null ? "" : " " + owner.getName()) + (rank.equals(PlayerRank.NONE) ? "" : " " + rank.toString() + "+"));
-        player.sendMessage(Color.TEXT + "Members: " + getMemberList());
-        player.sendMessage(Color.TEXT + "Type: " + type.toString());
+        player.sendNormal("Region " + name + " info:");
+        player.sendText("Owner:" + (owner == null ? "" : " " + owner.getName()) + (rank.equals(PlayerRank.NONE) ? "" : " " + rank.toString() + "+"));
+        player.sendText("Members: " + getMemberList());
+        player.sendText("Type: " + type.toString());
         if(flags.isEmpty()) {
-            player.sendMessage(Color.TEXT + "No flags.");
+            player.sendText("No flags.");
         } else {
             String flagString = "";
             for(RegionFlag test : flags) {
                 flagString = flagString.concat(test.toString() + ", ");
             }
-            player.sendMessage(Color.TEXT + "Flags: " + flagString.substring(0, flagString.length() - 2));
+            player.sendText("Flags: " + flagString.substring(0, flagString.length() - 2));
         }
-        player.sendMessage(Color.TEXT + "Volume: " + getVolume());
+        player.sendText("Volume: " + getVolume());
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
 import com.undeadscythes.udsplugin.timers.Timer;
@@ -276,6 +277,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("c").setExecutor(new CCmd());
         getCommand("call").setExecutor(new CallCmd());
         getCommand("challenge").setExecutor(new ChallengeCmd());
+        getCommand("chat").setExecutor(new ChatCmd());
         getCommand("check").setExecutor(new CheckCmd());
         getCommand("chunk").setExecutor(new ChunkCmd());
         getCommand("ci").setExecutor(new CiCmd());
@@ -698,5 +700,9 @@ public class UDSPlugin extends JavaPlugin {
     public static void addPlot(final Region plot) {
         REGIONS.put(plot.getName(), plot);
         PLOTS.put(plot.getName(), plot);
+    }
+    
+    public static void sendBroadcast(final String message) {
+        Bukkit.broadcastMessage(Color.BROADCAST + message);
     }
 }

@@ -24,9 +24,9 @@ public class JailCmd extends CommandWrapper {
                     }
                 }
                 if(sentence > -1 && bail > -1) {
-                    target.sendMessage(Color.MESSAGE + "You have been jailed for breaking the rules.");
+                    target.sendNormal("You have been jailed for breaking the rules.");
                     jail(target, sentence, bail);
-                    Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been jailed for breaking the rules.");
+                    UDSPlugin.sendBroadcast(target.getNick() + " has been jailed for breaking the rules.");
                 }
             }
         }
@@ -43,9 +43,9 @@ public class JailCmd extends CommandWrapper {
                 player.quietTeleport(UDSPlugin.getWarps().get("jail"));
             }
             player.jail(sentence, bail);
-            player.sendMessage(Color.MESSAGE + "You have been jailed for " + sentence + " minutes.");
+            player.sendNormal("You have been jailed for " + sentence + " minutes.");
             if(bail != 0) {
-                player.sendMessage(Color.MESSAGE + "If you can afford it, use /paybail to get out early for " + bail + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
+                player.sendNormal("If you can afford it, use /paybail to get out early for " + bail + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
             }
         }
     }

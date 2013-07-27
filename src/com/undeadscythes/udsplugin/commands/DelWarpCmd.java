@@ -12,7 +12,7 @@ public class DelWarpCmd extends CommandWrapper {
         Warp warp;
         if(numArgsHelp(1) && (warp = getWarp(args[0])) != null) {
             UDSPlugin.getWarps().remove(warp.getName());
-            player.sendMessage(Color.MESSAGE + "Warp removed.");
+            player.sendNormal("Warp removed.");
         }
     }
 

@@ -12,7 +12,7 @@ public class CCmd extends CommandWrapper {
     public void playerExecute() {
         if(args.length == 0 && isInClan()) {
             if(player.toggleChannel(ChatChannel.CLAN)) {
-                player.sendMessage(Color.MESSAGE + "You are now talking in clan chat.");
+                player.sendNormal("You are now talking in clan chat.");
             } else {
                 player.sendMessage(Message.PUBLIC_CHAT);
             }

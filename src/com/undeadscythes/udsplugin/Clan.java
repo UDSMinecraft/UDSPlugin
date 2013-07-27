@@ -214,7 +214,7 @@ public class Clan implements Saveable {
      */
     public void sendMessage(final String message) {
         for(SaveablePlayer member : getOnlineMembers()) {
-            member.sendMessage(Color.CLAN + "[" + name + "] " + message);
+            member.sendClan("[" + name + "] " + message);
         }
     }
 }

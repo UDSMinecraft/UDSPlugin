@@ -2,7 +2,6 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 
 /**
  * Ban a player from the server.
@@ -22,7 +21,7 @@ public class BanCmd extends CommandWrapper {
                 target.kickPlayer(message);
             }
             target.setBanned(true);
-            Bukkit.broadcastMessage(Color.BROADCAST + target.getNick() + " has been banned for breaking the rules.");
+            UDSPlugin.sendBroadcast(target.getNick() + " has been banned for breaking the rules.");
         }
     }
 }

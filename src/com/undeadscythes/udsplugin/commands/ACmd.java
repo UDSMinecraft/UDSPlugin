@@ -12,7 +12,7 @@ public class ACmd extends CommandWrapper {
     public final void playerExecute() {
         if(args.length == 0) {
             if(player.toggleChannel(ChatChannel.ADMIN)) {
-                player.sendMessage(Color.MESSAGE + "You are now talking in admin chat.");
+                player.sendNormal("You are now talking in admin chat.");
             } else {
                 player.sendMessage(Message.PUBLIC_CHAT);
             }

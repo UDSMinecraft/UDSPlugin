@@ -10,7 +10,7 @@ public class BackCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(!player.quietTeleport(player.getBack())) {
-            player.sendMessage(Color.ERROR + "You can't teleport back at this time.");
+            player.sendError("You can't teleport back at this time.");
         }
     }
 

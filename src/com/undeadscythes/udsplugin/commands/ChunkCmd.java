@@ -33,10 +33,10 @@ public class ChunkCmd extends CommandWrapper {
                         }
                     }
                 }
-                player.sendMessage(Color.MESSAGE + "Chunk contents:");
+                player.sendNormal("Chunk contents:");
                 DecimalFormat df = new DecimalFormat("###.##");
                 for(Map.Entry<Material, Integer> entry : blockDistro.entrySet()) {
-                    player.sendMessage(Color.ITEM + entry.getKey().toString() + ": " + entry.getValue() + ", " + df.format(((double)entry.getValue() * 100) / (double)blockCount) + "%");
+                    player.sendListItem(entry.getKey().toString() + ": " + entry.getValue() + ", " + df.format(((double)entry.getValue() * 100) / (double)blockCount) + "%", "");
                 }
             }
         }

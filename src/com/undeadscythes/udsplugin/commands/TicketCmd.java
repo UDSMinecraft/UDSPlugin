@@ -21,7 +21,7 @@ public class TicketCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(args.length == 0) {
-            player.sendMessage(Color.ERROR + "You cannot send a blank ticket.");
+            player.sendError("You cannot send a blank ticket.");
         } else {
             final String username = UDSPlugin.getConfigString(ConfigRef.GMAIL_ADDRESS);
             final String password = UDSPlugin.getConfigString(ConfigRef.GMAIL_PASSWORD);
@@ -43,9 +43,9 @@ public class TicketCmd extends CommandWrapper {
                 transport.connect("smtp.gmail.com", username, password);
                 transport.sendMessage(message, message.getAllRecipients());
                 transport.close();
-                player.sendMessage(Color.MESSAGE + "Ticket sent.");
+                player.sendNormal("Ticket sent.");
             } catch (MessagingException e) {
-                player.sendMessage(Color.ERROR + "There was an error sending your ticket.");
+                player.sendError("There was an error sending your ticket.");
             }
         }
     }

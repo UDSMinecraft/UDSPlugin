@@ -12,10 +12,10 @@ public class IgnoreCmd extends CommandWrapper {
         SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target) && !target.hasRank(PlayerRank.WARDEN)) {
             if(player.ignorePlayer(target)) {
-                player.sendMessage(Color.MESSAGE + "You are now ignoring " + target.getNick() + ".");
+                player.sendNormal("You are now ignoring " + target.getNick() + ".");
             } else {
                 player.unignorePlayer(target);
-                player.sendMessage(Color.MESSAGE + "You are no longer ignoring " + target.getNick() + ".");
+                player.sendNormal("You are no longer ignoring " + target.getNick() + ".");
             }
         }
     }

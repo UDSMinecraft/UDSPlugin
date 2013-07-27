@@ -13,7 +13,7 @@ public class CallCmd extends CommandWrapper {
         if(numArgsHelp(1) && (target = getMatchingOtherOnlinePlayer(args[0])) != null && canRequest(target) && notJailed(target) && canTP()) {
             UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.TP, "", target));
             player.sendMessage(Message.REQUEST_SENT);
-            target.sendMessage(Color.MESSAGE + player.getName() + " wishes to teleport to you.");
+            target.sendNormal(player.getName() + " wishes to teleport to you.");
             target.sendMessage(Message.REQUEST_Y_N);
         }
     }

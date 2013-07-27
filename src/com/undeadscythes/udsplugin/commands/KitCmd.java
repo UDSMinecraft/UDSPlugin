@@ -11,13 +11,13 @@ public class KitCmd extends CommandWrapper {
     @Override
     public final void playerExecute() {
         if(args.length == 0) {
-            player.sendMessage(Color.MESSAGE + "--- Available Kits ---");
+            player.sendNormal("--- Available Kits ---");
             for(Kit kit : UDSPlugin.getKits()) {
                 String contents = "";
                 for(ItemStack item : kit.getItems()) {
                     contents = contents.concat(item.getType().toString().toLowerCase().replace("_", " ") + ", ");
                 }
-                player.sendMessage(Color.ITEM + kit.getName() + " (" + kit.getPrice() + "): " + Color.TEXT + contents.substring(0, contents.length() - 2));
+                player.sendListItem(kit.getName() + " (" + kit.getPrice() + "): ", contents.substring(0, contents.length() - 2));
             }
         } else if(numArgsHelp(1)) {
             boolean given = false;
@@ -31,7 +31,7 @@ public class KitCmd extends CommandWrapper {
                 }
             }
             if(!given) {
-                player.sendMessage(Color.ERROR + "No kit found by that name.");
+                player.sendError("No kit found by that name.");
             }
         }
     }

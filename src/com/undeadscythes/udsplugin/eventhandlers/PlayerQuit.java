@@ -17,7 +17,7 @@ public class PlayerQuit implements Listener {
         player.addTime(System.currentTimeMillis() - player.getLastPlayed());
         if(player.isHidden()) {
             for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
-                hiddenPlayer.sendMessage(Color.WHISPER + player.getNick() + " has left.");
+                hiddenPlayer.sendWhisper(player.getNick() + " has left.");
             }
         } else {
             event.setQuitMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");

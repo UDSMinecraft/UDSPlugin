@@ -52,7 +52,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected PlayerRank getRank(final String string) {
         final PlayerRank rank = PlayerRank.getByName(string);
         if(rank == null) {
-            player.sendMessage(Color.ERROR + "You have not entered a valid rank.");
+            player.sendError("You have not entered a valid rank.");
         }
         return rank;
     }
@@ -63,7 +63,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notAirHand() {
         if(player.getItemInHand().getType().equals(Material.AIR)) {
-            player.sendMessage(Color.ERROR + "You need an item in your hand.");
+            player.sendError("You need an item in your hand.");
             return false;
         } else {
             return true;
@@ -80,7 +80,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(enchantment.canEnchantItem(item)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You cannot use that enchantment on that item.");
+            player.sendError("You cannot use that enchantment on that item.");
             return false;
         }
     }
@@ -92,7 +92,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected UUID getSelectedPet() {
         final UUID pet = player.getSelectedPet();
         if(pet == null) {
-            player.sendMessage(Color.ERROR + "Right click a pet while sneaking to select it first.");
+            player.sendError("Right click a pet while sneaking to select it first.");
         }
         return pet;
     }
@@ -105,7 +105,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         List<Entity> entities = player.getNearbyEntities(10, 3, 10);
         for(Entity entity : entities) {
             if(UDSPlugin.getHostileMobs().contains(entity.getType())) {
-                player.sendMessage(Color.ERROR + "You cannot do that now, there are monsters nearby.");
+                player.sendError("You cannot do that now, there are monsters nearby.");
                 return false;
             }
         }
@@ -119,7 +119,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getShop() {
         final Region shop = UDSPlugin.getRegions(RegionType.SHOP).get(player.getName() + "shop");
         if(shop == null) {
-            player.sendMessage(Color.ERROR + "You do not own a shop.");
+            player.sendError("You do not own a shop.");
         }
         return shop;
     }
@@ -170,8 +170,8 @@ public abstract class CommandWrapper implements CommandExecutor {
      * Send the player help relating to the number of arguments used.
      */
     private void numArgsHelp() {
-        player.sendMessage(Color.ERROR + "You have made an error using this command.");
-        player.sendMessage(Color.MESSAGE + "Use /help " + commandName + " to check the correct usage.");
+        player.sendError("You have made an error using this command.");
+        player.sendNormal("Use /help " + commandName + " to check the correct usage.");
     }
 
     /**
@@ -186,8 +186,8 @@ public abstract class CommandWrapper implements CommandExecutor {
                 sendHelp(1);
             }
         } else {
-            player.sendMessage(Color.ERROR + "That is not a valid sub command.");
-            player.sendMessage(Color.MESSAGE + "Use /" + commandName + " help to check the available sub commands.");
+            player.sendError("That is not a valid sub command.");
+            player.sendNormal("Use /" + commandName + " help to check the available sub commands.");
         }
     }
 
@@ -206,7 +206,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notAfk(final SaveablePlayer target) {
         if(target.isAfk()) {
-            player.sendMessage(Color.MESSAGE + "That player is currently AFK.");
+            player.sendNormal("That player is currently AFK.");
             return false;
         } else {
             return true;
@@ -234,7 +234,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(session.hasUndo()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You have nothing to undo.");
+            player.sendError("You have nothing to undo.");
             return false;
         }
     }
@@ -247,7 +247,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getShop(final SaveablePlayer target) {
         final Region shop = UDSPlugin.getRegions(RegionType.SHOP).get(target.getName() + "shop");
         if(shop == null) {
-            player.sendMessage(Color.ERROR + "That player does not own a shop.");
+            player.sendError("That player does not own a shop.");
         }
         return shop;
     }
@@ -262,7 +262,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(level <= enchantment.getMaxLevel()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "The level you have chosen is too high.");
+            player.sendError("The level you have chosen is too high.");
             return false;
         }
     }
@@ -287,7 +287,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected SaveablePlayer getWhisperer() {
         final SaveablePlayer target = player.getWhisperer();
         if(target == null) {
-            player.sendMessage(Color.ERROR + "There is no one to send this message to.");
+            player.sendError("There is no one to send this message to.");
         }
         return target;
     }
@@ -298,7 +298,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean inChatRoom() {
         if(player.getChatRoom() == null) {
-            player.sendMessage(Color.ERROR + "You are not in any private chat rooms.");
+            player.sendError("You are not in any private chat rooms.");
             return false;
         } else {
             return true;
@@ -321,7 +321,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getRegion(final String regionName) {
         final Region region = UDSPlugin.getRegions(RegionType.GENERIC).get(regionName);
         if(region == null) {
-            player.sendMessage(Color.ERROR + "No region exists by that name.");
+            player.sendError("No region exists by that name.");
         }
         return region;
     }
@@ -329,7 +329,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Portal getPortal(final String portalName) {
         final Portal portal = UDSPlugin.getPortals().get(portalName);
         if(portal == null) {
-            player.sendMessage(Color.ERROR + "No portal exists by that name.");
+            player.sendError("No portal exists by that name.");
         }
         return portal;
     }
@@ -342,7 +342,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected RegionFlag getFlag(final String name) {
         final RegionFlag flag = RegionFlag.getByName(name);
         if(flag == null) {
-            player.sendMessage(Color.ERROR + "That is not a valid region type.");
+            player.sendError("That is not a valid region type.");
         }
         return flag;
     }
@@ -355,7 +355,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected RegionType getRegionType(final String name) {
         final RegionType type = RegionType.getByName(name);
         if(type == null) {
-            player.sendMessage(Color.ERROR + "That is not a valid region type.");
+            player.sendError("That is not a valid region type.");
         }
         return type;
     }
@@ -367,7 +367,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean hasTwoPoints(final Session session) {
         if(session.getV1() == null || session.getV2() == null) {
-            player.sendMessage(Color.ERROR + "You need to select two points.");
+            player.sendError("You need to select two points.");
             return false;
         } else {
             return true;
@@ -380,7 +380,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean noShop() {
         if(UDSPlugin.getRegions(RegionType.SHOP).containsKey(player.getName() + "shop")) {
-            player.sendMessage(Color.ERROR + "You already own a shop.");
+            player.sendError("You already own a shop.");
             return false;
         } else {
             return true;
@@ -396,7 +396,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(target.isBanned()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "That player is not banned.");
+            player.sendError("That player is not banned.");
             return false;
         }
     }
@@ -408,7 +408,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Request getRequest() {
         final Request request = UDSPlugin.getRequests().get(player.getName());
         if(request == null) {
-            player.sendMessage(Color.ERROR + "You have no pending requests.");
+            player.sendError("You have no pending requests.");
         }
         return request;
     }
@@ -420,7 +420,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getHome() {
         final Region home = UDSPlugin.getRegions(RegionType.HOME).get(player.getName() + "home");
         if(home == null) {
-            player.sendMessage(Color.ERROR + "You do not have a home.");
+            player.sendError("You do not have a home.");
         }
         return home;
     }
@@ -433,7 +433,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Direction getDirection(final String dir) {
         final Direction direction = Direction.getByName(dir);
         if(direction == null) {
-            player.sendMessage(Color.ERROR + "That is not a valid direction.");
+            player.sendError("That is not a valid direction.");
         }
         return direction;
     }
@@ -451,7 +451,7 @@ public abstract class CommandWrapper implements CommandExecutor {
             if(direction.isCardinal()) {
                 return direction;
             } else {
-                player.sendMessage(Color.ERROR + "You must choose a cardinal direction.");
+                player.sendError("You must choose a cardinal direction.");
                 return null;
             }
         }
@@ -463,7 +463,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean noHome() {
         if(UDSPlugin.getRegions(RegionType.HOME).containsKey(player.getName() + "home")) {
-            player.sendMessage(Color.ERROR + "You already have a home.");
+            player.sendError("You already have a home.");
             return false;
         } else {
             return true;
@@ -477,7 +477,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean noBase(final Clan clan) {
         if(UDSPlugin.getRegions(RegionType.BASE).containsKey(clan.getName() + "base")) {
-            player.sendMessage(Color.ERROR + "Your clan already has a base.");
+            player.sendError("Your clan already has a base.");
             return false;
         } else {
             return true;
@@ -492,7 +492,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Clan getClan(final String name) {
         final Clan clan = UDSPlugin.getClans().get(name);
         if(clan == null) {
-            player.sendMessage(Color.ERROR + "That clan does not exist.");
+            player.sendError("That clan does not exist.");
         }
         return clan;
     }
@@ -505,7 +505,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(player.getClan() == null) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You are already in a clan.");
+            player.sendError("You are already in a clan.");
             return false;
         }
     }
@@ -520,7 +520,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(player.getClan().equals(clan)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "That player is not in your clan.");
+            player.sendError("That player is not in your clan.");
             return false;
         }
     }
@@ -532,7 +532,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notClan(final String name) {
         if(UDSPlugin.getClans().containsKey(name)) {
-            player.sendMessage(Color.ERROR + "A clan already exists with that name.");
+            player.sendError("A clan already exists with that name.");
             return false;
         } else {
             return true;
@@ -548,7 +548,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(clan.getLeader().equals(player)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You must be clan leader to do this.");
+            player.sendError("You must be clan leader to do this.");
             return false;
         }
     }
@@ -560,7 +560,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Clan getClan() {
         final Clan clan = player.getClan();
         if(clan == null) {
-            player.sendMessage(Color.ERROR + "You are not in a clan.");
+            player.sendError("You are not in a clan.");
         }
         return clan;
     }
@@ -573,7 +573,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getBase(final Clan clan) {
         final Region region = UDSPlugin.getRegions(RegionType.BASE).get(clan.getName() + "base");
         if(region == null) {
-            player.sendMessage(Color.ERROR + "Your clan does not have a base.");
+            player.sendError("Your clan does not have a base.");
         }
         return region;
     }
@@ -587,7 +587,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(Censor.noCensor(string)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You can't use bad words here.");
+            player.sendError("You can't use bad words here.");
             return false;
         }
     }
@@ -615,7 +615,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(UDSPlugin.getWarps().get(warpName) == null) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "A warp already exists called " + warpName + ".");
+            player.sendError("A warp already exists called " + warpName + ".");
             return false;
         }
     }
@@ -628,7 +628,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(player.isJailed()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You are not in jail.");
+            player.sendError("You are not in jail.");
             return false;
         }
     }
@@ -642,7 +642,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(target.isJailed()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + target.getNick() + " is not in jail.");
+            player.sendError(target.getNick() + " is not in jail.");
             return false;
         }
     }
@@ -661,7 +661,7 @@ public abstract class CommandWrapper implements CommandExecutor {
             if(string.split(":")[1].matches("[0-9][0-9]*")) {
                 data = Byte.parseByte(string.split(":")[1]);
             } else {
-                player.sendMessage(Color.ERROR + "That is not a valid data value.");
+                player.sendError("That is not a valid data value.");
                 return null;
             }
             matString = string.split(":")[0].toUpperCase();
@@ -674,7 +674,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(material == null) {
             final ShortItem item = ShortItem.getByName(matString);
             if(item == null) {
-                player.sendMessage(Color.ERROR + "That is not a valid item.");
+                player.sendError("That is not a valid item.");
                 return null;
             } else {
                 return item.toItemStack();
@@ -692,7 +692,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Enchantment getEnchantment(final String enchant) {
         final Enchantment enchantment = Enchantment.getByName(enchant.toUpperCase());
         if(enchantment == null) {
-            player.sendMessage(Color.ERROR + "That is not a valid enchantment.");
+            player.sendError("That is not a valid enchantment.");
             return null;
         } else {
             return enchantment;
@@ -708,7 +708,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(player.hasRank(rank)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You don't have the rank required to do that.");
+            player.sendError("You don't have the rank required to do that.");
             return false;
         }
     }
@@ -720,7 +720,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getCurrentRegion() {
         final Region region = player.getCurrentRegion(RegionType.CITY);
         if(region == null) {
-            player.sendMessage(Color.ERROR + "You are not in a city.");
+            player.sendError("You are not in a city.");
         }
         return region;
     }
@@ -734,7 +734,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(home.hasMember(player)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You are not that players room mate.");
+            player.sendError("You are not that players room mate.");
             return false;
         }
     }
@@ -749,7 +749,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(shop.hasMember(target)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "That player is not your worker.");
+            player.sendError("That player is not your worker.");
             return false;
         }
     }
@@ -763,7 +763,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(shop.getOwner() == null) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "Somebody already owns this shop.");
+            player.sendError("Somebody already owns this shop.");
             return false;
         }
     }
@@ -775,7 +775,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getContainingShop() {
         final Region shop = player.getCurrentRegion(RegionType.SHOP);
         if(shop == null) {
-            player.sendMessage(Color.ERROR + "You must be stood inside a shop to buy it.");
+            player.sendError("You must be stood inside a shop to buy it.");
         }
         return shop;
     }
@@ -790,7 +790,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(home.hasMember(target)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "That player is not your room mate.");
+            player.sendError("That player is not your room mate.");
             return false;
         }
     }
@@ -803,7 +803,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected Region getHome(final SaveablePlayer target) {
         final Region home = UDSPlugin.getRegions(RegionType.HOME).get(target.getName() + "home");
         if(home == null) {
-            player.sendMessage(Color.ERROR + "That player does not have a home.");
+            player.sendError("That player does not have a home.");
         }
         return home;
     }
@@ -818,7 +818,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(target.getLocation().toVector().isInAABB(home.getV1(), home.getV2())) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "That player is not in your home.");
+            player.sendError("That player is not in your home.");
             return false;
         }
     }
@@ -830,7 +830,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notRegion(final String name) {
         if(UDSPlugin.getRegions(RegionType.GENERIC).containsKey(name)) {
-            player.sendMessage(Color.ERROR + "A protected area already exists with that name.");
+            player.sendError("A protected area already exists with that name.");
             return false;
         } else {
             return true;
@@ -850,7 +850,7 @@ public abstract class CommandWrapper implements CommandExecutor {
             if((city = UDSPlugin.getRegions(RegionType.CITY).matchKey(cityName)) != null) {
                 return city;
             } else {
-                player.sendMessage(Color.ERROR + "No city exists by that name.");
+                player.sendError("No city exists by that name.");
                 return null;
             }
         }
@@ -863,7 +863,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notMayor(final Region city) {
         if(city.isOwner(player)) {
-            player.sendMessage(Color.ERROR + "You cannot do that while you are the mayor.");
+            player.sendError("You cannot do that while you are the mayor.");
             return false;
         } else {
             return true;
@@ -881,7 +881,7 @@ public abstract class CommandWrapper implements CommandExecutor {
             if(city.getOwner().equals(player)) {
                 return city;
             } else {
-                player.sendMessage(Color.ERROR + "You are not the mayor of that city.");
+                player.sendError("You are not the mayor of that city.");
                 return null;
             }
         } else {
@@ -897,7 +897,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected boolean noOverlaps(final Region region) {
         for(Region test : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
             if(test != region && test.hasOverlap(region)) {
-                player.sendMessage(Color.ERROR + "You cannot do that here, you are too close to another protected area.");
+                player.sendError("You cannot do that here, you are too close to another protected area.");
                 return false;
             }
         }
@@ -911,7 +911,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notDueling(final SaveablePlayer target) {
         if(target.isDuelling()) {
-            player.sendMessage(Color.MESSAGE + "That player is already dueling someone else.");
+            player.sendNormal("That player is already dueling someone else.");
             return false;
         } else {
             return true;
@@ -925,7 +925,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notSelf(final SaveablePlayer target) {
         if(target.equals(player)) {
-            player.sendMessage(Color.ERROR + "You cannot use that command on yourself.");
+            player.sendError("You cannot use that command on yourself.");
             return false;
         } else {
             return true;
@@ -940,7 +940,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(player.isInClan()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You must be in a clan to do that.");
+            player.sendError("You must be in a clan to do that.");
             return false;
         }
     }
@@ -953,7 +953,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(player.getLastDamageCaused() + UDSPlugin.getConfigLong(ConfigRef.PVP_TIME) < System.currentTimeMillis()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You can't do that at this time.");
+            player.sendError("You can't do that at this time.");
             return false;
         }
     }
@@ -964,7 +964,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notJailed() {
         if(player.isJailed()) {
-            player.sendMessage(Color.ERROR + "You cannot do this while you are in jail.");
+            player.sendError("You cannot do this while you are in jail.");
             return false;
         } else {
             return true;
@@ -978,7 +978,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notJailed(final SaveablePlayer target) {
         if(target.isJailed()) {
-            player.sendMessage(Color.ERROR + "You can't do this while that player is in jail.");
+            player.sendError("You can't do this while that player is in jail.");
             return false;
         } else {
             return true;
@@ -992,7 +992,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean noRequests(final SaveablePlayer target) {
         if(UDSPlugin.getRequests().containsKey(target.getName())) {
-            player.sendMessage(Color.ERROR + "That player already has a request pending.");
+            player.sendError("That player already has a request pending.");
             return false;
         } else {
             return true;
@@ -1020,7 +1020,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected boolean notIgnored(final SaveablePlayer target) {
         if(target.isIgnoringPlayer(player)) {
-            player.sendMessage(Color.ERROR + "This player can't be reached at this time.");
+            player.sendError("This player can't be reached at this time.");
             return false;
         } else {
             return true;
@@ -1036,7 +1036,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(number.matches(UDSPlugin.INT_REGEX)) {
             return Integer.parseInt(number);
         } else {
-            player.sendMessage(Color.ERROR + "The number you entered was invalid.");
+            player.sendError("The number you entered was invalid.");
             return -1;
         }
     }
@@ -1050,7 +1050,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(target.isOnline()) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "That player is not online.");
+            player.sendError("That player is not online.");
             return false;
         }
     }
@@ -1099,7 +1099,7 @@ public abstract class CommandWrapper implements CommandExecutor {
                             }
                         }
                     }
-                    player.sendMessage(Color.ERROR + "Cannot find a player by that name.");
+                    player.sendError("Cannot find a player by that name.");
                     return null;
                 }
             }
@@ -1131,7 +1131,7 @@ public abstract class CommandWrapper implements CommandExecutor {
                         return test;
                     }
                 }
-                player.sendMessage(Color.ERROR + "Cannot find that player.");
+                player.sendError("Cannot find that player.");
                 return null;
             }
         }
@@ -1151,7 +1151,7 @@ public abstract class CommandWrapper implements CommandExecutor {
             if(warp != null) {
                 return warp;
             } else {
-                player.sendMessage(Color.ERROR + "That warp point does not exist.");
+                player.sendError("That warp point does not exist.");
                 return null;
             }
         }
@@ -1166,7 +1166,7 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(player.canAfford(cost)) {
             return true;
         } else {
-            player.sendMessage(Color.ERROR + "You do not have enough money to do that.");
+            player.sendError("You do not have enough money to do that.");
             return false;
         }
     }
@@ -1181,10 +1181,10 @@ public abstract class CommandWrapper implements CommandExecutor {
             if(perm.getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(perm.getMode())) {
                 return true;
             } else {
-                player.sendMessage(Color.ERROR + "You can't use that command in this world.");
+                player.sendError("You can't use that command in this world.");
             }
         } else {
-            player.sendMessage(Color.ERROR + "You do not have permission to do that.");
+            player.sendError("You do not have permission to do that.");
         }
         return false;
     }
@@ -1195,7 +1195,7 @@ public abstract class CommandWrapper implements CommandExecutor {
             final int y = session.getV1().getBlockY() - session.getV2().getBlockY();
             final int z = session.getV1().getBlockZ() - session.getV2().getBlockZ();
             if(x != 0 && y != 0 && z != 0) {
-                player.sendMessage(Color.ERROR + "The edit points must form a square, not a cube.");
+                player.sendError("The edit points must form a square, not a cube.");
                 return false;
             } else {
                 return true;
@@ -1207,7 +1207,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     
     protected boolean notPortal(final String name) {
         if(UDSPlugin.getPortals().containsKey(name)) {
-            player.sendMessage(Color.ERROR + "A portal already exists with that name.");
+            player.sendError("A portal already exists with that name.");
             return false;
         } else {
             return true;

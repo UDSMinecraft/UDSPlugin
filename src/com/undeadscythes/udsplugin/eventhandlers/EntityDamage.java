@@ -40,10 +40,10 @@ public class EntityDamage extends ListenerWrapper implements Listener {
         final SaveablePlayer winner = loser.getChallenger();
         winner.credit(2 * winner.getWager());
         winner.endChallenge();
-        winner.sendMessage(Color.MESSAGE + "You won the challenge.");
+        winner.sendNormal("You won the challenge.");
         winner.setHealth(winner.getMaxHealth());
         loser.endChallenge();
-        loser.sendMessage(Color.MESSAGE + "You lost the challenge.");
+        loser.sendNormal("You lost the challenge.");
         loser.setHealth(loser.getMaxHealth());
     }
 }

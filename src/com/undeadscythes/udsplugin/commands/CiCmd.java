@@ -10,6 +10,6 @@ public class CiCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         player.getInventory().clear(-1, -1);
-        player.sendMessage(Color.MESSAGE + "Inventory cleared.");
+        player.sendNormal("Inventory cleared.");
     }
 }

@@ -26,7 +26,7 @@ public class BountyCmd extends CommandWrapper {
         } else if(numArgsHelp(2) && (target = getMatchingOtherPlayer(args[0])) != null && (bounty = getAffordablePrice(args[1])) != -1) {
             player.debit(bounty);
             target.addBounty(bounty);
-            Bukkit.broadcastMessage(Color.BROADCAST + player.getNick() + " placed a bounty on " + target.getNick() + ".");
+            UDSPlugin.sendBroadcast(player.getNick() + " placed a bounty on " + target.getNick() + ".");
         }
     }
 
@@ -45,16 +45,16 @@ public class BountyCmd extends CommandWrapper {
         }
         final int pages = (bounties.size() + 8) / 9;
         if(pages == 0) {
-            player.sendMessage(Color.MESSAGE + "There are no bounties to collect.");
+            player.sendNormal("There are no bounties to collect.");
         } else if(page > pages) {
             player.sendMessage(Message.NO_PAGE);
         } else {
-            player.sendMessage(Color.MESSAGE + "--- Current Bounties " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            player.sendNormal("--- Current Bounties " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
             for(SaveablePlayer bounty : bounties) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendMessage(Color.ITEM + "- " + bounty.getNick() + "'s reward: " + Color.TEXT + bounty.getBounty() + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
+                    player.sendListItem(bounty.getNick() + "'s reward: ", bounty.getBounty() + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                     posted++;
                 } else {
                     skipped++;

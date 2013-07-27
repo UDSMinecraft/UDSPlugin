@@ -79,7 +79,7 @@ public class ChatRoom {
      */
     public void sendMessage(final String message) {
         for(SaveablePlayer member : getOnlineMembers()) {
-            member.sendMessage(Color.PRIVATE + "[" + name + "] " + message);
+            member.sendPrivate("[" + name + "] " + message);
         }
     }
 }

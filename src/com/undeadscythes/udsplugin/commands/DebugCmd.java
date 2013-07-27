@@ -15,7 +15,7 @@ public class DebugCmd extends CommandWrapper {
                 for(Entity entity : player.getWorld().getEntitiesByClass(EnderDragon.class)) {
                     ((EnderDragon)entity).setHealth(1);
                 }
-                player.sendMessage(Color.MESSAGE + "Ender Dragons reduced to 1 HP.");
+                player.sendNormal("Ender Dragons reduced to 1 HP.");
             }
         }
     }

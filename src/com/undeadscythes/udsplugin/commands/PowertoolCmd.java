@@ -13,11 +13,11 @@ public class PowertoolCmd extends CommandWrapper {
         if(args.length >= 1 && notAirHand()) {
             player.setPowertoolID(player.getItemInHand().getTypeId());
             player.setPowertool(StringUtils.join(args, " ").replaceFirst("/", ""));
-            player.sendMessage(Color.MESSAGE + "Powertool set.");
+            player.sendNormal("Powertool set.");
         } else {
             player.setPowertoolID(0);
             player.setPowertool("");
-            player.sendMessage(Color.MESSAGE + "Powertool removed.");
+            player.sendNormal("Powertool removed.");
         }
     }
 }

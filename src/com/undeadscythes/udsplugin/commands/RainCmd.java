@@ -14,11 +14,11 @@ public class RainCmd extends CommandWrapper {
         if(args.length == 0) {
             player.getWorld().setStorm(true);
             player.getWorld().setWeatherDuration(6000);
-            player.sendMessage(Color.MESSAGE + "5 minute storm on the way.");
+            player.sendNormal("5 minute storm on the way.");
         } else if(numArgsHelp(1) && (duration = parseInt(args[0])) != -1) {
             player.getWorld().setStorm(true);
             player.getWorld().setWeatherDuration((int)(duration * Timer.MINUTE / Timer.TICKS));
-            player.sendMessage(Color.MESSAGE.toString() + duration + " minute storm on the way.");
+            player.sendNormal(duration + " minute storm on the way.");
         }
     }
 }

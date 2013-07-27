@@ -38,16 +38,16 @@ public class YCmd extends CommandWrapper {
                                 sender.credit(price);
                                 player.setPet((Tameable)entity);
                                 player.teleportHere(entity);
-                                player.sendMessage(Color.MESSAGE + "Your bought " + sender.getNick() + "'s pet.");
-                                sender.sendMessage(Color.MESSAGE + player.getNick() + " bought your pet.");
+                                player.sendNormal("Your bought " + sender.getNick() + "'s pet.");
+                                sender.sendNormal(player.getNick() + " bought your pet.");
                             }
                         }
                     }
                     break;
                 case PVP:
                     if(canAfford(price = Integer.parseInt(request.getData()))) {
-                        sender.sendMessage(Color.MESSAGE + player.getNick() + " accepted your duel, may the best player win.");
-                        player.sendMessage(Color.MESSAGE + "Duel accepted, may the best player win.");
+                        sender.sendNormal(player.getNick() + " accepted your duel, may the best player win.");
+                        player.sendNormal("Duel accepted, may the best player win.");
                         player.setChallenger(sender);
                         sender.setChallenger(sender);
                         player.setWager(price);
@@ -64,7 +64,7 @@ public class YCmd extends CommandWrapper {
                     }
                     break;
                 default:
-                    sender.sendMessage(Color.MESSAGE + player.getNick() + " was unable to accept your request.");
+                    sender.sendNormal(player.getNick() + " was unable to accept your request.");
             }
         }
         UDSPlugin.getRequests().remove(player.getName());

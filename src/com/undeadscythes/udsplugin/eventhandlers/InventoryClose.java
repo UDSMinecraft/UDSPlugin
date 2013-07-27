@@ -36,11 +36,11 @@ public class InventoryClose extends ListenerWrapper implements Listener {
             }
             if(totalDue > 0) {
                 if(shopper.canAfford(totalDue)) {
-                    shopper.sendMessage(Color.MESSAGE + "You spent " + totalDue + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
+                    shopper.sendNormal("You spent " + totalDue + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
                     shopper.debit(totalDue);
                     findShopOwner(block.getLocation()).credit(totalDue);
                 } else {
-                    shopper.sendMessage(Color.MESSAGE + "You do not have enough money to buy these items.");
+                    shopper.sendError("You do not have enough money to buy these items.");
                     Inventory shop = event.getInventory();
                     Inventory cart = shopper.getInventory();
                     for(ItemStack item : shoppingList) {

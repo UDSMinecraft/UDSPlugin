@@ -9,24 +9,24 @@ import com.undeadscythes.udsplugin.*;
 public class SignsCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
-        player.sendMessage(Color.MESSAGE + "Special signs available to you and format (lines 1-4):");
+        player.sendNormal("Special signs available to you and format (lines 1-4):");
         if(player.hasPermission(Perm.SIGN_CHECKPOINT)) {
-            player.sendMessage(Color.ITEM + "Checkpoint - " + Color.TEXT + "1: [checkpoint], 2-4: Anything");
+            player.sendListItem("Checkpoint - ", "1: [checkpoint], 2-4: Anything");
         }
         if(player.hasPermission(Perm.SIGN_MINECART)) {
-            player.sendMessage(Color.ITEM + "Minecart - " + Color.TEXT + "1: [minecart], 2-4: Anything");
+            player.sendListItem("Minecart - ", "1: [minecart], 2-4: Anything");
         }
         if(player.hasPermission(Perm.SIGN_ITEM)) {
-            player.sendMessage(Color.ITEM + "Item - " + Color.TEXT + "1: [item], 2: <item>, 3: <amount>, 4: Anything");
+            player.sendListItem("Item - ", "1: [item], 2: <item>, 3: <amount>, 4: Anything");
         }
         if(player.hasPermission(Perm.SIGN_PRIZE)) {
-            player.sendMessage(Color.ITEM + "Prize - " + Color.TEXT + "1: [prize], 2: <item>, 3: <amount>, 4: Anything");
+            player.sendListItem("Prize - ", "1: [prize], 2: <item>, 3: <amount>, 4: Anything");
         }
         if(player.hasPermission(Perm.SIGN_WARP)) {
-            player.sendMessage(Color.ITEM + "Warp - " + Color.TEXT + "1: [warp], 2: <warp>, 3-4: Anything");
+            player.sendListItem("Warp - ", "1: [warp], 2: <warp>, 3-4: Anything");
         }
         if(player.hasPermission(Perm.SIGN_SPLEEF)) {
-            player.sendMessage(Color.ITEM + "Spleef - " + Color.TEXT + "1: [spleef], 2: <region>, 3-4: Anything");
+            player.sendListItem("Spleef - ", "1: [spleef], 2: <region>, 3-4: Anything");
         }
     }
 }

@@ -38,7 +38,7 @@ public class OwnedMinecart {
     public final void remove() {
         this.minecart.remove();
         if(owner != null) {
-            owner.sendMessage(Color.MESSAGE + "You picked up your minecart.");
+            owner.sendNormal("You picked up your minecart.");
             owner.giveAndDrop(new ItemStack(Material.MINECART));
         }
     }

@@ -10,6 +10,6 @@ public class DayCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         player.getWorld().setTime(0);
-        player.sendMessage(Color.MESSAGE + "Summoning the sun.");
+        player.sendNormal("Summoning the sun.");
     }
 }
