@@ -47,7 +47,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                     paperComplex(player, player.getLocation());
                     event.setCancelled(true);
                 } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
-                    paperSimple(player, block.getLocation());
+                    paperSimple(player, player.getLocation());
                     event.setCancelled(true);
                 } else if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
                     compassThru(player);
@@ -239,7 +239,9 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         } else {
             final List<Region> testRegions = regionsHere(location);
             for(Region region : testRegions) {
-                if(region.getOwner().equals(player)) {
+                if(region.getOwner() == null) {
+                    player.sendMessage(Color.MESSAGE + "This area is protected.");
+                } else if(region.getOwner().equals(player)) {
                     player.sendMessage(Color.MESSAGE + "You own this block.");
                 } else if(region.getMembers().contains(player)) {
                     player.sendMessage(Color.MESSAGE + "Your room mate owns this block.");
