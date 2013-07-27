@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin;
 
-import org.bukkit.*;
 import org.bukkit.util.*;
 
 /**

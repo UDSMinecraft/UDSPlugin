@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import java.text.*;
 import java.util.*;

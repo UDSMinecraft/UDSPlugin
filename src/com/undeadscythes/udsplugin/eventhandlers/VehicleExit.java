@@ -1,11 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.vehicle.*;
-import org.bukkit.inventory.*;
 
 /**
  * Fired when an entity leaves a vehicle.

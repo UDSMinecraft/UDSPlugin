@@ -1,10 +1,11 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.commands.JailCmd;
+import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 

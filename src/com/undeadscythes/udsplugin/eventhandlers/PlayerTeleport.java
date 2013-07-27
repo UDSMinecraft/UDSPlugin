@@ -1,27 +1,15 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ConfigRef;
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.PlayerRank;
-import com.undeadscythes.udsplugin.UDSPlugin;
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
+import java.io.*;
+import java.util.*;
+import org.bukkit.*;
+import org.bukkit.configuration.file.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.*;
 
 /**
  * Triggered when a player teleports.

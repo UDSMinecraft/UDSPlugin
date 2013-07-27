@@ -17,7 +17,6 @@ import org.bukkit.util.*;
 public class BlockDispense extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final BlockDispenseEvent event) {
-        final Material itemType = event.getItem().getType();
         if(hasFlag(event.getBlock().getLocation(), RegionFlag.DISPENSER)) {
             final BlockFace blockFace = ((Dispenser)event.getBlock().getState().getData()).getFacing();
             Location location = event.getBlock().getRelative(blockFace).getLocation().add(0.5, 0.5, 0.5);

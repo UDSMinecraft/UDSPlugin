@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 import org.bukkit.material.*;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.*;
 import org.bukkit.util.Vector;
 

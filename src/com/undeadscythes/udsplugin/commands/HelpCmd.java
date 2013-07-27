@@ -1,15 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.Color;
-import com.undeadscythes.udsplugin.CommandWrapper;
-import com.undeadscythes.udsplugin.ConfigRef;
-import com.undeadscythes.udsplugin.Message;
-import com.undeadscythes.udsplugin.Perm;
-import com.undeadscythes.udsplugin.SaveablePlayer;
-import com.undeadscythes.udsplugin.UDSPlugin;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Get help on certain commands.

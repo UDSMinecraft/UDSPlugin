@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.Color;
 import org.apache.commons.lang.*;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 
 /**
  * Send an action.

@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.Location;
+import org.bukkit.*;
 
 /**
  * Give a description of the players surroundings.

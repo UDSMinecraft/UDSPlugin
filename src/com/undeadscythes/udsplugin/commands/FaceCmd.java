@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.bukkit.Location;
+import org.bukkit.*;
 
 /**
  * Face a player in a certain direction or get the direction a player is facing.

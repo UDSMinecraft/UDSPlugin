@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.timers.Timer;
+import com.undeadscythes.udsplugin.timers.*;
 
 /**
  * A reference that points to a particular value of the configuration YAML and

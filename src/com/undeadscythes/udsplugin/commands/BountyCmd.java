@@ -1,10 +1,8 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
-import org.bukkit.*;
 
 /**
  * Place and check bounties on players.

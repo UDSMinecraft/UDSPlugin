@@ -1,17 +1,14 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Color;
-import com.undeadscythes.udsplugin.CommandWrapper;
-import com.undeadscythes.udsplugin.ConfigRef;
-import com.undeadscythes.udsplugin.UDSPlugin;
-import java.util.Properties;
+import com.undeadscythes.udsplugin.*;
+import java.util.*;
+import javax.mail.*;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang.StringUtils;
+import javax.mail.internet.*;
+import org.apache.commons.lang.*;
+
+
 
 /**
  * Toggles the admin chat channel.
