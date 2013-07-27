@@ -12,7 +12,7 @@ public class VIPCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         if(args.length == 0) {
-            if(player.isRank(PlayerRank.VIP)) {
+            if(player.hasPermission(Perm.VIP)) {
                 player.sendNormal("You have " + player.getVIPTimeString()+ " left in VIP.");
             } else if(canAfford(UDSPlugin.getConfigInt(ConfigRef.VIP_COST)) && notJailed() && hasPerm(Perm.VIP_BUY)) {
                 player.setRank(PlayerRank.VIP);

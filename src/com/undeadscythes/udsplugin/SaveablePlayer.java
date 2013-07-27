@@ -813,14 +813,6 @@ public class SaveablePlayer implements Saveable {
         return backPoint;
     }
 
-//    /**
-//     * Get a player current rank.
-//     * @return Player rank.
-//     */
-//    public final PlayerRank getRank() {
-//        return rank;
-//    }
-    
     public final boolean hasRank(final PlayerRank rank) {
         return this.rank.compareTo(rank) >= 0;
     }

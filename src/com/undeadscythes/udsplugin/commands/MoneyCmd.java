@@ -30,13 +30,13 @@ public class MoneyCmd extends CommandWrapper {
                 int printed = 0;
                 player.sendNormal("Top 5 Richest Players:");
                 for(SaveablePlayer ranker : players) {
-                    if(printed < 5 && !ranker.hasRank(PlayerRank.MOD)) {
+                    if(printed < 5 && !ranker.hasPermission(Perm.MIDAS)) {
                         player.sendText("" + (printed + 1) + ": " + ranker.getRankColor() + ranker.getNick() + ", " + Color.TEXT + ranker.getMoney() + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
                         printed++;
                     }
                 }
                 final int rank = players.indexOf(player);
-                if(rank > 5 && !player.hasRank(PlayerRank.MOD)) {
+                if(rank > 5 && !player.hasPermission(Perm.MIDAS)) {
                     player.sendNormal("Your rank is " + rank + ".");
                 }
             } else if(subCmd.equals("help")) {

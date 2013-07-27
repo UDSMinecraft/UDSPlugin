@@ -128,7 +128,7 @@ public class Timer implements Runnable {
 
     private void fastTask() {
         for(SaveablePlayer player : PlayerUtils.getOnlinePlayers()) {
-            if(player.isRank(PlayerRank.VIP) && player.getVIPTime() + UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) < now) {
+            if(player.hasPermission(Perm.VIP) && player.getVIPTime() + UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) < now) {
                 player.setVIPTime(0);
                 player.setRank(PlayerRank.MEMBER);
                 player.sendNormal("Your time as a VIP has come to an end.");

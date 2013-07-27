@@ -22,7 +22,7 @@ public class PlayerTeleport extends ListenerWrapper implements Listener {
     public void onEvent(final PlayerTeleportEvent event) {
         final World from = event.getFrom().getWorld();
         final World to = event.getTo().getWorld();
-        if(!from.equals(to) && !PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).hasRank(PlayerRank.MOD)) {
+        if(!from.equals(to) && !PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).hasPermission(Perm.SHAREDINV)) {
             for(String string : UDSPlugin.getConfigStringList(ConfigRef.SHARES)) {
                 List<String> shares = Arrays.asList(string.split(","));
                 if(!shares.contains(from.getName()) || !shares.contains(to.getName())) {
@@ -37,7 +37,7 @@ public class PlayerTeleport extends ListenerWrapper implements Listener {
                 }
             }
             GameMode mode = UDSPlugin.getWorldMode(to);
-            if(mode != null && !PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).hasRank(PlayerRank.MOD)) {
+            if(mode != null && !PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).hasPermission(Perm.ANYMODE)) {
                 event.getPlayer().setGameMode(mode);
             }
         }

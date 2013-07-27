@@ -10,7 +10,7 @@ public class IgnoreCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
         SaveablePlayer target;
-        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target) && !target.hasRank(PlayerRank.WARDEN)) {
+        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target) && !target.hasPermission(Perm.UNAVOIDABLE)) {
             if(player.ignorePlayer(target)) {
                 player.sendNormal("You are now ignoring " + target.getNick() + ".");
             } else {
