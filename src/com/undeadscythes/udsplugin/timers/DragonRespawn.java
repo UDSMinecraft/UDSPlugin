@@ -43,9 +43,6 @@ public class DragonRespawn implements Runnable {
                     }
                     UDSPlugin.sendBroadcast("The Ender Dragon has regained his strength and awaits brave warriors in The End.");
                 }
-                if(!UDSPlugin.checkWorldFlag(world, RegionFlag.TIME)) {
-                    world.setTime(world.getTime() - (System.currentTimeMillis() - UDSPlugin.getConfigLong(ConfigRef.SLOW_TIME)));
-                }
             }
         }
     }
