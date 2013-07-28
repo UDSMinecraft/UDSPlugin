@@ -14,7 +14,8 @@ public class PlayerQuit implements Listener {
     public void onEvent(final PlayerQuitEvent event) {
         final String name = event.getPlayer().getName();
         final SaveablePlayer player = PlayerUtils.getOnlinePlayer(name);
-        player.addTime(System.currentTimeMillis() - player.getLastPlayed());
+        final long time = player.getLastPlayed();
+        player.addTime(System.currentTimeMillis() - (time == 0 ? System.currentTimeMillis() : time));
         if(player.isHidden()) {
             for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
                 hiddenPlayer.sendWhisper(player.getNick() + " has left.");
