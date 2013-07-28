@@ -118,5 +118,11 @@ public class RegionUtils {
         return REGIONS.get(type).getSortedValues(comp);
     }
     
+    public static void changeType(final Region region, final RegionType type) {
+        REGIONS.get(region.getType()).remove(region.getName());
+        region.setType(type);
+        REGIONS.get(type).put(region.getName(), region);
+    }
+    
     private RegionUtils() {}
 }

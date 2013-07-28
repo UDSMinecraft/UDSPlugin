@@ -26,10 +26,7 @@ public class RegionCmd extends CommandWrapper {
             if(subCmd.equals("del")) {
                 del();
             } else if(subCmd.equals("list")) {
-                final RegionType type = getRegionType(args[1]);
-                if(type != null) {
-                    list(type);
-                }
+                list(args[1]);
             } else if(subCmd.equals("tp")) {
                 tp();
             } else if(subCmd.equals("info")) {
@@ -55,12 +52,11 @@ public class RegionCmd extends CommandWrapper {
             } else if(subCmd.equals("rename")) {
                 rename();
             } else if(subCmd.equals("set")) {
-                final RegionType type = getRegionType(args[2]);
-                if(type != null) {
-                    set(type);
-                }
+                set(args[2]);
             } else if(subCmd.equals("type")) {
                 changeType();
+            } else if(subCmd.equals("rank")) {
+                changeRank();
             } else {
                 subCmdHelp();
             }
@@ -79,11 +75,7 @@ public class RegionCmd extends CommandWrapper {
         final Region region;
         final RegionType type;
         if((region = getRegion(args[1])) != null && ((type = getRegionType(args[2]))) != null) {
-            if(!region.getType().equals(RegionType.GENERIC)) {
-                RegionUtils.removeRegion(region);
-            }
-            region.setType(type);
-            RegionUtils.addRegion(region);
+            RegionUtils.changeType(region, type);
             player.sendNormal("Region " + region.getName() + " set to type " + type.toString() + ".");
         }
     }
@@ -125,12 +117,16 @@ public class RegionCmd extends CommandWrapper {
         }
     }
 
+    private void list(final String type) {
+        if(getRegionType(type) != null) {
+            list(getRegionType(type));
+        }
+    }
+    
     private void list(final RegionType type) {
         String list = "";
-        for(Region test : RegionUtils.getRegions(RegionType.GENERIC)) {
-            if(test.getType().equals(type)) {
-                list = list.concat(test.getName() + ", ");
-            }
+        for(Region test : RegionUtils.getRegions(type)) {
+            list = list.concat(test.getName() + ", ");
         }
         final String regionType = type.name().replaceFirst("[a-z]", type.name().substring(0, 1).toUpperCase());
         if(list.isEmpty()) {
@@ -162,9 +158,6 @@ public class RegionCmd extends CommandWrapper {
         final Region region = getRegion(args[1]);
         if(region != null) {
             RegionUtils.removeRegion(region);
-            if(!region.getType().equals(RegionType.GENERIC)) {
-                RegionUtils.removeRegion(region);
-            }
             player.sendNormal("Region deleted.");
         }
     }
@@ -201,14 +194,17 @@ public class RegionCmd extends CommandWrapper {
         }
     }
 
+    private void set(final String type) {
+        if(getRegionType(type) != null) {
+            set(getRegionType(type));
+        }
+    }
+    
     private void set(final RegionType type) {
         final Session session = getSession();
         if(session != null && hasTwoPoints(session) && notRegion(args[1]) && noCensor(args[1])) {
             final Region region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), null, "", type);
             RegionUtils.addRegion(region);
-            if(!region.getType().equals(RegionType.GENERIC)) {
-                RegionUtils.addRegion(region);
-            }
             player.sendNormal("Region " + region.getName() + " set.");
         }
     }
@@ -237,6 +233,15 @@ public class RegionCmd extends CommandWrapper {
         if(region != null && target != null) {
             region.changeOwner(target);
             player.sendNormal(target.getNick() + " made owner of region " + region.getName() + ".");
+        }
+    }
+
+    private void changeRank() {
+        final Region region = getRegion(args[1]);
+        final PlayerRank rank = getRank(args[2]);
+        if(region != null && rank != null) {
+            region.setRank(rank);
+            player.sendNormal(region.getName() + " now owned by " + rank.name() + ".");
         }
     }
 

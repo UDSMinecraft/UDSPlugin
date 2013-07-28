@@ -111,7 +111,7 @@ public class ListenerWrapper {
      */
     public boolean hasFlag(final Location location, final RegionFlag flag) {
         boolean inRegion = false;
-        for(Region region : RegionUtils.getRegions(RegionType.GENERIC)) {
+        for(Region region : RegionUtils.getRegions()) {
             if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 inRegion = true;
                 if(region.hasFlag(flag)) {
@@ -130,7 +130,7 @@ public class ListenerWrapper {
     public List<Region> regionsHere(final Location location) {
         final List<Region> regions = new ArrayList<Region>();
         final Vector vector = location.toVector();
-        for(Region region : RegionUtils.getRegions(RegionType.GENERIC)) {
+        for(Region region : RegionUtils.getRegions()) {
             if(location.getWorld().equals(region.getWorld()) && vector.isInAABB(region.getV1(), region.getV2())) {
                 regions.add(region);
             }

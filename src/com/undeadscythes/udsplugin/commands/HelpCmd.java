@@ -199,6 +199,7 @@ public class HelpCmd extends CommandWrapper {
         REGION_INFO(Perm.REGION, "/region info <region>", "Get detailed info on a region.", REGION),
         REGION_LIST(Perm.REGION, "/region list <type>", "List regions of a certain type.", REGION),
         REGION_OWNER(Perm.REGION, "/region owner <region> <player>", "Set the owner of a region.", REGION),
+        REGION_RANK(Perm.REGION, "/region rank <region> <rank>", "Set region rank.", REGION),
         REGION_RENAME(Perm.REGION, "/region rename <region> <name>", "Rename a region.", REGION),
         REGION_RESET(Perm.REGION, "/region reset <region>", "Rest a region with new points.", REGION),
         REGION_SELECT(Perm.REGION, "/region select <region>", "Select a regions points.", REGION),

@@ -18,9 +18,9 @@ public class Region implements Saveable {
     private Vector max;
     private Location warp;
     private SaveablePlayer owner;
-    private Set<SaveablePlayer> members = new HashSet<SaveablePlayer>();
+    private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>(0);
     private String data;
-    private Set<RegionFlag> flags;
+    private EnumSet<RegionFlag> flags;
     private RegionType type;
     private PlayerRank rank = PlayerRank.NONE;
 
@@ -41,7 +41,6 @@ public class Region implements Saveable {
         this.warp = warp;
         this.owner = owner;
         this.data = data;
-        flags = new HashSet<RegionFlag>();
         for(RegionFlag flag : RegionFlag.values()) {
             if(flag.isDefaulted()) {
                 flags.add(flag);
@@ -62,14 +61,13 @@ public class Region implements Saveable {
         max = getBlockPos(recordSplit[2]);
         warp = SaveableLocation.parseLocation(recordSplit[3]);
         owner = PlayerUtils.getPlayer(recordSplit[4]);
-        members = new HashSet<SaveablePlayer>();
-        if(!recordSplit[5].equals("")) {
+        members = new HashSet<SaveablePlayer>(0);
+        if(!recordSplit[5].isEmpty()) {
             for(String member : recordSplit[5].split(",")) {
                 members.add(PlayerUtils.getPlayer(member));
             }
         }
         data = recordSplit[6];
-        flags = new HashSet<RegionFlag>();
         for(String flag : recordSplit[7].split(",")) {
             flags.add(RegionFlag.getByName(flag));
         }
@@ -96,13 +94,13 @@ public class Region implements Saveable {
 
     @Override
     public String getRecord() {
-        final ArrayList<String> record = new ArrayList<String>();
+        final ArrayList<String> record = new ArrayList<String>(10);
         record.add(name);
         record.add(min.toString());
         record.add(max.toString());
         record.add(SaveableLocation.getString(warp));
         record.add(owner == null ? "" : owner.getName());
-        final ArrayList<String> memberList = new ArrayList<String>();
+        final ArrayList<String> memberList = new ArrayList<String>(0);
         for(SaveablePlayer member : members) {
             memberList.add(member.getName());
         }
@@ -118,7 +116,7 @@ public class Region implements Saveable {
      * Clear the members of the region.
      */
     public void clearMembers() {
-        members = new HashSet<SaveablePlayer>();
+        members = new HashSet<SaveablePlayer>(0);
     }
 
     @Override
@@ -133,6 +131,7 @@ public class Region implements Saveable {
      */
     public void changeOwner(final SaveablePlayer owner) {
         this.owner = owner;
+        rank = null;
     }
 
     /**
@@ -273,6 +272,7 @@ public class Region implements Saveable {
      */
     public void setRank(final PlayerRank rank) {
         this.rank = rank;
+        owner = null;
     }
 
     /**
@@ -511,7 +511,9 @@ public class Region implements Saveable {
             for(int y = min.getBlockY(); y < max.getBlockY(); y++) {
                 for(int z = min.getBlockZ(); z < max.getBlockZ(); z++) {
                     final Block block = world.getBlockAt(x, y, z);
-                    if(!block.getType().equals(from)) continue;
+                    if(!block.getType().equals(from)) {
+                        continue;
+                    }
                     block.setType(to);
                 }
             }
