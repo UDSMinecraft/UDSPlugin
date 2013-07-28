@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Jail a player.
@@ -34,12 +35,12 @@ public class JailCmd extends CommandWrapper {
     public static void jail(final SaveablePlayer player, final long sentence, final int bail) {
         if(player != null) {
             player.getWorld().strikeLightningEffect(player.getLocation());
-            if(player.quietTeleport(UDSPlugin.getWarps().get("jail" + nextCell))) {
+            if(player.quietTeleport(WarpUtils.getWarp("jail" + nextCell))) {
                 nextCell++;
-            } else if(player.quietTeleport(UDSPlugin.getWarps().get("jail0"))) {
+            } else if(player.quietTeleport(WarpUtils.getWarp("jail0"))) {
                 nextCell = 1;
             } else {
-                player.quietTeleport(UDSPlugin.getWarps().get("jail"));
+                player.quietTeleport(WarpUtils.getWarp("jail"));
             }
             player.jail(sentence, bail);
             player.sendNormal("You have been jailed for " + sentence + " minutes.");

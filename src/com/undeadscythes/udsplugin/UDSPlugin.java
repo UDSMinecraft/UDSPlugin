@@ -40,7 +40,6 @@ public class UDSPlugin extends JavaPlugin {
     private static final Map<RegionFlag, Boolean> GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
     private static final SaveableHashMap CLANS = new SaveableHashMap();
     private static final SaveableHashMap REGIONS = new SaveableHashMap();
-    private static final SaveableHashMap WARPS = new SaveableHashMap();
     private static final SaveableHashMap PORTALS = new SaveableHashMap();
     private static final MatchableHashMap<ChatRoom> CHAT_ROOMS = new MatchableHashMap<ChatRoom>();
     private static final MatchableHashMap<Request> REQUESTS = new MatchableHashMap<Request>();
@@ -187,11 +186,12 @@ public class UDSPlugin extends JavaPlugin {
     public static int saveFiles() throws IOException {
         data.saveData();
         worldFlags.save();
+        PlayerUtils.savePlayers(DATA_PATH);
+        WarpUtils.saveWarps(DATA_PATH);
         CLANS.save(DATA_PATH + File.separator + Clan.PATH);
         REGIONS.save(DATA_PATH + File.separator + Region.PATH);
-        WARPS.save(DATA_PATH + File.separator + Warp.PATH);
         PORTALS.save(DATA_PATH + File.separator + Portal.PATH);
-        return CLANS.size() + REGIONS.size() + WARPS.size() + PORTALS.size() + PlayerUtils.savePlayers(DATA_PATH);
+        return CLANS.size() + REGIONS.size() + WarpUtils.numWarps() + PORTALS.size() + PlayerUtils.numPlayers();
     }
 
     /**
@@ -203,8 +203,10 @@ public class UDSPlugin extends JavaPlugin {
         BufferedReader file;
         String nextLine;
         String message;
-        final int count = PlayerUtils.loadPlayers(DATA_PATH);
-        if(count > 0) getLogger().info("Loaded " + count + " players.");
+        PlayerUtils.loadPlayers(DATA_PATH);
+        if(PlayerUtils.numPlayers() > 0) {
+            getLogger().info("Loaded " + PlayerUtils.numPlayers() + " players.");
+        }
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Region.PATH));
             while((nextLine = file.readLine()) != null) {
@@ -232,16 +234,9 @@ public class UDSPlugin extends JavaPlugin {
         } catch (FileNotFoundException ex) {
             getLogger().info("No region file exists yet.");
         }
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Warp.PATH));
-            while((nextLine = file.readLine()) != null) {
-                WARPS.put(nextLine.split("\t")[0], new Warp(nextLine));
-            }
-            file.close();
-            message = WARPS.size() + " warps loaded.";
-            getLogger().info(message);
-        } catch (FileNotFoundException ex) {
-            getLogger().info("No warp file exists yet.");
+        WarpUtils.loadWarps(DATA_PATH);
+        if(WarpUtils.numWarps() > 0) {
+            getLogger().info("Loaded " + WarpUtils.numWarps() + " warps.");
         }
         try {
             file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
@@ -522,14 +517,6 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static MatchableHashMap<Session> getSessions() {
         return SESSIONS;
-    }
-
-    /**
-     * Grab and cast the warps map.
-     * @return Warps map.
-     */
-    public static MatchableHashMap<Warp> getWarps() {
-        return WARPS.toMatchableHashMap(Warp.class);
     }
 
     /**

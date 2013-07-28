@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 
@@ -14,7 +15,7 @@ public class WarpCmd extends CommandWrapper {
         Warp warp;
         if(args.length == 0) {
             final Set<String> warps = new TreeSet<String>();
-            for(Warp test : UDSPlugin.getWarps().values()) {
+            for(Warp test : WarpUtils.getWarps()) {
                 if(player.hasRank(test.getRank())) {
                     warps.add(test.getName() + (test.getPrice() > 0 ? " (" + test.getPrice() + ")" : ""));
                 }

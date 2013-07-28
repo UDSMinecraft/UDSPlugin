@@ -321,7 +321,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[WARP]")) {
             if(player.hasPermission(Perm.WARP)) {
-                final Warp warp = UDSPlugin.getWarps().get(sign.getLine(1));
+                final Warp warp = WarpUtils.getWarp(sign.getLine(1));
                 if(warp == null) {
                     player.sendError("This warp cannot be found.");
                 } else {

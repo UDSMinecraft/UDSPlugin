@@ -14,6 +14,7 @@ public class PlayerUtils {
      */
     private static final String PATH = "players.csv";
     private static final SaveableHashMap PLAYERS = new SaveableHashMap();
+    private static MatchableHashMap<SaveablePlayer> MATCHABLE_PLAYERS;
     private static final MatchableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new MatchableHashMap<SaveablePlayer>();
     private static final MatchableHashMap<SaveablePlayer> ONLINE_PLAYERS = new MatchableHashMap<SaveablePlayer>();
     private static final MatchableHashMap<SaveablePlayer> VIPS = new MatchableHashMap<SaveablePlayer>();
@@ -23,27 +24,28 @@ public class PlayerUtils {
      * @return Players map.
      */
     public static Collection<SaveablePlayer> getPlayers() {
-        return PLAYERS.toMatchableHashMap(SaveablePlayer.class).values();
+        return MATCHABLE_PLAYERS.values();
     }
     
     public static SaveablePlayer getPlayer(final String name) {
-        return (SaveablePlayer)PLAYERS.get(name);
+        return MATCHABLE_PLAYERS.get(name);
     }
     
     public static List<SaveablePlayer> getSortedPlayers(final Comparator<SaveablePlayer> comp) {
-        return PLAYERS.toMatchableHashMap(SaveablePlayer.class).getSortedValues(comp);
+        return MATCHABLE_PLAYERS.getSortedValues(comp);
     }
     
     public static SaveablePlayer matchPlayer(final String partial) {
-        return PLAYERS.toMatchableHashMap(SaveablePlayer.class).matchKey(partial);
+        return MATCHABLE_PLAYERS.matchKey(partial);
     }
     
     public static void addPlayer(final SaveablePlayer player) {
         PLAYERS.put(player.getName(), player);
+        MATCHABLE_PLAYERS = PLAYERS.toMatchableHashMap(SaveablePlayer.class);
     }
     
     public static boolean existingPlayer(final String name) {
-        return PLAYERS.toMatchableHashMap(SaveablePlayer.class).containsKey(name);
+        return MATCHABLE_PLAYERS.containsKey(name);
     }
     
     public static int numPlayers() {
@@ -98,12 +100,11 @@ public class PlayerUtils {
         return ONLINE_PLAYERS.remove(name);
     }
     
-    public static int savePlayers(final File path) throws IOException {
+    public static void savePlayers(final File path) throws IOException {
         PLAYERS.save(path + File.separator + PATH);
-        return PLAYERS.size();
     }
     
-    public static int loadPlayers(final File path) throws IOException {
+    public static void loadPlayers(final File path) throws IOException {
         try {
             final BufferedReader file = new BufferedReader(new FileReader(path + File.separator + PATH));
             String nextLine;
@@ -115,10 +116,8 @@ public class PlayerUtils {
                 }
             }
             file.close();
-            return PLAYERS.size();
-        } catch (FileNotFoundException ex) {
-            return 0;
-        }
+        } catch (FileNotFoundException ex) {}
+        MATCHABLE_PLAYERS = PLAYERS.toMatchableHashMap(SaveablePlayer.class);
     }
     
     private PlayerUtils() {}

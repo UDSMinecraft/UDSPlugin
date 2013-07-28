@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -39,7 +40,7 @@ public class Portal implements Saveable {
                 exit = Direction.getByName(recordSplit[6]);
             default:
                 name = recordSplit[0];
-                warp = UDSPlugin.getWarps().get(recordSplit[1]);
+                warp = WarpUtils.getWarp(recordSplit[1]);
                 portalLink = recordSplit[2];
                 world = Bukkit.getWorld(recordSplit[3]);
                 min = Region.getBlockPos(recordSplit[4]);

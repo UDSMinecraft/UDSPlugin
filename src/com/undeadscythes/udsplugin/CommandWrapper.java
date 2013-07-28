@@ -612,7 +612,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if no warp exists by this name, <code>false</code> otherwise.
      */
     protected boolean notWarp(final String warpName) {
-        if(UDSPlugin.getWarps().get(warpName) == null) {
+        if(WarpUtils.getWarp(warpName) == null) {
             return true;
         } else {
             player.sendError("A warp already exists called " + warpName + ".");
@@ -1143,11 +1143,11 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The warp matched or <code>null</code> if there were no matches.
      */
     protected Warp getWarp(final String partial) {
-        Warp warp = UDSPlugin.getWarps().get(partial);
+        Warp warp = WarpUtils.getWarp(partial);
         if(warp != null) {
             return warp;
         } else {
-            warp = UDSPlugin.getWarps().matchKey(partial);
+            warp = WarpUtils.matchWarp(partial);
             if(warp != null) {
                 return warp;
             } else {

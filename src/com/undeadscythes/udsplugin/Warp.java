@@ -10,11 +10,6 @@ import org.bukkit.block.*;
  * @author UndeadScythes
  */
 public class Warp implements Saveable {
-    /**
-     * File name of warp file.
-     */
-    public static final String PATH = "warps.csv";
-
     private final String name;
     private final Location location;
     private final PlayerRank rank;
