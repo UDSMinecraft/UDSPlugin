@@ -40,7 +40,6 @@ public class UDSPlugin extends JavaPlugin {
     private static final Map<RegionFlag, Boolean> GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
     private static final SaveableHashMap CLANS = new SaveableHashMap();
     private static final SaveableHashMap REGIONS = new SaveableHashMap();
-    private static final SaveableHashMap PORTALS = new SaveableHashMap();
     private static final MatchableHashMap<ChatRoom> CHAT_ROOMS = new MatchableHashMap<ChatRoom>();
     private static final MatchableHashMap<Request> REQUESTS = new MatchableHashMap<Request>();
     private static final MatchableHashMap<Session> SESSIONS = new MatchableHashMap<Session>();
@@ -190,8 +189,8 @@ public class UDSPlugin extends JavaPlugin {
         WarpUtils.saveWarps(DATA_PATH);
         CLANS.save(DATA_PATH + File.separator + Clan.PATH);
         REGIONS.save(DATA_PATH + File.separator + Region.PATH);
-        PORTALS.save(DATA_PATH + File.separator + Portal.PATH);
-        return CLANS.size() + REGIONS.size() + WarpUtils.numWarps() + PORTALS.size() + PlayerUtils.numPlayers();
+        PortalUtils.savePortals(DATA_PATH);
+        return CLANS.size() + REGIONS.size() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
     }
 
     /**
@@ -251,21 +250,9 @@ public class UDSPlugin extends JavaPlugin {
         } catch (FileNotFoundException ex) {
             getLogger().info("No clan file exists yet.");
         }
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Portal.PATH));
-            while((nextLine = file.readLine()) != null) {
-                PORTALS.put(nextLine.split("\t")[0], new Portal(nextLine));
-            }
-            file.close();
-            message = PORTALS.size() + " portals loaded.";
-            getLogger().info(message);
-            for(Portal portal : getPortals().values()) {
-                portal.linkPortal();
-            }
-            message = "Portals linked.";
-            getLogger().info(message);
-        } catch (FileNotFoundException ex) {
-            getLogger().info("No portal file exists yet.");
+        PortalUtils.loadPortals(DATA_PATH);
+        if(PortalUtils.numPortals() > 0) {
+            getLogger().info("Loaded " + PortalUtils.numPortals() + " portals.");
         }
     }
 
@@ -543,10 +530,6 @@ public class UDSPlugin extends JavaPlugin {
         }
     }
 
-    public static MatchableHashMap<Portal> getPortals() {
-        return PORTALS.toMatchableHashMap(Portal.class);
-    }
-    
     /**
      *
      * @return

@@ -12,11 +12,6 @@ import org.bukkit.util.Vector;
  * @author UndeadScythes
  */
 public class Portal implements Saveable {
-    /**
-     * File name of portal file.
-     */
-    public static final String PATH = "portals.csv";
-
     private final String name;
     private Warp warp;
     private Portal portal;
@@ -147,7 +142,7 @@ public class Portal implements Saveable {
     
     public final void linkPortal() {
         if(!portalLink.equals("")) {
-            setPortal(UDSPlugin.getPortals().get(portalLink));
+            setPortal(PortalUtils.getPortal(portalLink));
         }
     }
     

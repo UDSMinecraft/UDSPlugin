@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.util.*;
 
@@ -47,7 +48,7 @@ public class PortalCmd extends CommandWrapper {
     
     private void list() {
         String list = "";
-        for(Portal test : UDSPlugin.getPortals().values()) {
+        for(Portal test : PortalUtils.getPortals()) {
             list = list.concat(test.getName() + (test.getWarpName() == null ? ", " : ("(" + test.getWarpName() + "), ")));
         }
         if(list.isEmpty()) {
@@ -70,7 +71,7 @@ public class PortalCmd extends CommandWrapper {
     private void remove() {
         final Portal portal = getPortal(args[1]);
         if(portal != null) {
-            UDSPlugin.getPortals().remove(portal.getName());
+            PortalUtils.removePortal(portal);
             replace(portal, true);
             player.sendNormal("Portal removed.");
         }
@@ -80,7 +81,7 @@ public class PortalCmd extends CommandWrapper {
         final Session session = getSession();
         if(session != null && inLine(session) && notPortal(args[1]) && noCensor(args[1])) {
             final Portal portal = new Portal(args[1], warp, session.getWorld(), session.getV1(), session.getV2());
-            UDSPlugin.getPortals().put(portal.getName(), portal);
+            PortalUtils.addPortal(portal);
             replace(portal, false);
             player.sendNormal("Portal " + portal.getName() + " set.");
         }

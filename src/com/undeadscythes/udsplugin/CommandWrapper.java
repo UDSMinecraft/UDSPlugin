@@ -327,7 +327,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     }
     
     protected Portal getPortal(final String portalName) {
-        final Portal portal = UDSPlugin.getPortals().get(portalName);
+        final Portal portal = PortalUtils.getPortal(portalName);
         if(portal == null) {
             player.sendError("No portal exists by that name.");
         }
@@ -1206,7 +1206,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     }
     
     protected boolean notPortal(final String name) {
-        if(UDSPlugin.getPortals().containsKey(name)) {
+        if(PortalUtils.portalExists(name)) {
             player.sendError("A portal already exists with that name.");
             return false;
         } else {
