@@ -14,8 +14,7 @@ public class WarpUtils {
      */
     public static final String PATH = "warps.csv";
 
-    private static final SaveableHashMap WARPS = new SaveableHashMap();
-    private static MatchableHashMap<Warp> MATCHABLE_WARPS;
+    private static MatchableHashMap<Warp> WARPS;
 
     public static int numWarps() {
         return WARPS.size();
@@ -34,7 +33,6 @@ public class WarpUtils {
             }
             file.close();
         } catch (FileNotFoundException ex) {}
-        MATCHABLE_WARPS = WARPS.toMatchableHashMap(Warp.class);
     }
     
     /**
@@ -42,25 +40,23 @@ public class WarpUtils {
      * @return Warps map.
      */
     public static Collection<Warp> getWarps() {
-        return MATCHABLE_WARPS.values();
+        return WARPS.values();
     }
     
     public static Warp getWarp(final String name) {
-        return MATCHABLE_WARPS.get(name);
+        return WARPS.get(name);
     }
     
     public static Warp matchWarp(final String name) {
-        return MATCHABLE_WARPS.matchKey(name);
+        return WARPS.matchKey(name);
     }
     
     public static void addWarp(final Warp warp) {
         WARPS.put(warp.getName(), warp);
-        MATCHABLE_WARPS = WARPS.toMatchableHashMap(Warp.class);
     }
     
     public static void removeWarp(final Warp warp) {
         WARPS.remove(warp.getName());
-        MATCHABLE_WARPS = WARPS.toMatchableHashMap(Warp.class);
     }
     
     private WarpUtils() {}

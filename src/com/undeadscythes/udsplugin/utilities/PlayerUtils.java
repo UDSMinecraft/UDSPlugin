@@ -13,8 +13,7 @@ public class PlayerUtils {
      * File name of player file.
      */
     private static final String PATH = "players.csv";
-    private static final SaveableHashMap PLAYERS = new SaveableHashMap();
-    private static MatchableHashMap<SaveablePlayer> MATCHABLE_PLAYERS;
+    private static MatchableHashMap<SaveablePlayer> PLAYERS;
     private static final MatchableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new MatchableHashMap<SaveablePlayer>();
     private static final MatchableHashMap<SaveablePlayer> ONLINE_PLAYERS = new MatchableHashMap<SaveablePlayer>();
     private static final MatchableHashMap<SaveablePlayer> VIPS = new MatchableHashMap<SaveablePlayer>();
@@ -24,28 +23,27 @@ public class PlayerUtils {
      * @return Players map.
      */
     public static Collection<SaveablePlayer> getPlayers() {
-        return MATCHABLE_PLAYERS.values();
+        return PLAYERS.values();
     }
     
     public static SaveablePlayer getPlayer(final String name) {
-        return MATCHABLE_PLAYERS.get(name);
+        return PLAYERS.get(name);
     }
     
     public static List<SaveablePlayer> getSortedPlayers(final Comparator<SaveablePlayer> comp) {
-        return MATCHABLE_PLAYERS.getSortedValues(comp);
+        return PLAYERS.getSortedValues(comp);
     }
     
     public static SaveablePlayer matchPlayer(final String partial) {
-        return MATCHABLE_PLAYERS.matchKey(partial);
+        return PLAYERS.matchKey(partial);
     }
     
     public static void addPlayer(final SaveablePlayer player) {
         PLAYERS.put(player.getName(), player);
-        MATCHABLE_PLAYERS = PLAYERS.toMatchableHashMap(SaveablePlayer.class);
     }
     
     public static boolean existingPlayer(final String name) {
-        return MATCHABLE_PLAYERS.containsKey(name);
+        return PLAYERS.containsKey(name);
     }
     
     public static int numPlayers() {
@@ -117,7 +115,6 @@ public class PlayerUtils {
             }
             file.close();
         } catch (FileNotFoundException ex) {}
-        MATCHABLE_PLAYERS = PLAYERS.toMatchableHashMap(SaveablePlayer.class);
     }
     
     private PlayerUtils() {}

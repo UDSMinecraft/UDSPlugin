@@ -14,8 +14,7 @@ public class PortalUtils {
      */
     public static final String PATH = "portals.csv";
 
-    private static final SaveableHashMap PORTALS = new SaveableHashMap();
-    private static MatchableHashMap<Portal> MATCHABLE_PORTALS;
+    private static MatchableHashMap<Portal> PORTALS;
     
     public static void savePortals(final File path) throws IOException {
         PORTALS.save(path + File.separator + PATH);
@@ -30,8 +29,7 @@ public class PortalUtils {
             }
             file.close();
         } catch (FileNotFoundException ex) {}
-        MATCHABLE_PORTALS = PORTALS.toMatchableHashMap(Portal.class);
-        for(Portal portal : MATCHABLE_PORTALS.values()) {
+        for(Portal portal : PORTALS.values()) {
             portal.linkPortal();
         }
     }
@@ -41,21 +39,19 @@ public class PortalUtils {
     }
     
     public static Collection<Portal> getPortals() {
-        return MATCHABLE_PORTALS.values();
+        return PORTALS.values();
     }
     
     public static Portal getPortal(final String name) {
-        return MATCHABLE_PORTALS.get(name);
+        return PORTALS.get(name);
     }
     
     public static void addPortal(final Portal portal) {
         PORTALS.put(portal.getName(), portal);
-        MATCHABLE_PORTALS = PORTALS.toMatchableHashMap(Portal.class);
     }
     
     public static void removePortal(final Portal portal) {
         PORTALS.remove(portal.getName());
-        MATCHABLE_PORTALS = PORTALS.toMatchableHashMap(Portal.class);
     }
     
     public static boolean portalExists(final String name) {

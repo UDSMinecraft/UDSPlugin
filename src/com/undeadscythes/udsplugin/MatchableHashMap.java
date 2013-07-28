@@ -1,22 +1,24 @@
 package com.undeadscythes.udsplugin;
 
+import java.io.*;
 import java.util.*;
 
 /**
  * A LinkedHashMap whose contents can be matched with partials.
- * @param <Object>
+ * @param <Saveable>
  * @author UndeadScythes
  */
-public class MatchableHashMap<Object> extends HashMap<String, Object> {
+public class MatchableHashMap<T extends Saveable> extends HashMap<String, T> {
+    
     /**
      * Find all matches for a given partial key.
      * @param partial Partial key to search the map with.
      * @return A list of objects corresponding to matches of the partial key.
      */
-    public List<Object> getKeyMatches(final String partial) {
+    public List<T> getKeyMatches(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        final ArrayList<Object> matches = new ArrayList<Object>();
-        for(Map.Entry<String, Object> entry : super.entrySet()) {
+        final ArrayList<T> matches = new ArrayList<T>();
+        for(Map.Entry<String, T> entry : super.entrySet()) {
             if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 matches.add(entry.getValue());
             }
@@ -29,9 +31,9 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param partial Partial key to search the map with.
      * @return The first match or <code>null</code> if there are no matches.
      */
-    public Object matchKey(final String partial) {
+    public T matchKey(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        for(Map.Entry<String, Object> entry : super.entrySet()) {
+        for(Map.Entry<String, T> entry : super.entrySet()) {
             if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 return entry.getValue();
             }
@@ -41,7 +43,7 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
     }
 
     @Override
-    public Object put(final String key, final Object object) {
+    public T put(final String key, final T object) {
         return super.put(key.toLowerCase(), object);
     }
 
@@ -50,7 +52,7 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param key The key to search for.
      * @return The object to which the key relates.
      */
-    public Object get(final String key) {
+    public T get(final String key) {
         return super.get(key.toLowerCase());
     }
 
@@ -59,7 +61,7 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param key The key to remove.
      * @return The object the key used to match or <code>null</code> if the key didn't exist.
      */
-    public Object remove(final String key) {
+    public T remove(final String key) {
         return super.remove(key.toLowerCase());
     }
 
@@ -77,8 +79,8 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param comp Comparator to define sort priorities.
      * @return Sorted array of objects.
      */
-    public List<Object> getSortedValues(final Comparator<Object> comp) {
-        final ArrayList<Object> values = new ArrayList<Object>(this.values());
+    public List<T> getSortedValues(final Comparator<T> comp) {
+        final ArrayList<T> values = new ArrayList<T>(this.values());
         Collections.sort(values, comp);
         return values;
     }
@@ -89,8 +91,22 @@ public class MatchableHashMap<Object> extends HashMap<String, Object> {
      * @param newKey New key.
      * @param object Object to relate to new key.
      */
-    public void replace(final String oldKey, final String newKey, final Object object) {
+    public void replace(final String oldKey, final String newKey, final T object) {
         remove(oldKey);
         put(newKey, object);
+    }
+    
+    /**
+     * Save each value of the map to disk.
+     * @param path The filename to save the map to.
+     * @throws IOException Thrown when the file could not be opened.
+     */
+    public void save(final String path) throws IOException {
+        final BufferedWriter file = new BufferedWriter(new FileWriter(path));
+        for(Saveable value : this.values()) {
+            file.write(value.getRecord());
+            file.newLine();
+        }
+        file.close();
     }
 }

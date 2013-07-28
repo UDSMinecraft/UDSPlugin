@@ -15,11 +15,14 @@ public class ClanUtils {
      */
     public static final String PATH = "clans.csv";
     
-    private static final SaveableHashMap CLANS = new SaveableHashMap();
-    private static MatchableHashMap<Clan> MATCHABLE_CLANS;
+    private static MatchableHashMap<Clan> CLANS;
     
     public static void saveClans(final File path) throws IOException {
-        CLANS.save(path + File.separator + PATH);
+        final MatchableHashMap<Clan> clans = new MatchableHashMap<Clan>();
+        for(final Clan clan : CLANS.values()) {
+            clans.put(clan.getName(), clan);
+        }
+        clans.save(path + File.separator + PATH);
     }
     
     public static void loadClans(final File path) throws IOException {
@@ -33,7 +36,6 @@ public class ClanUtils {
             }
             file.close();
         } catch (FileNotFoundException ex) {}
-        MATCHABLE_CLANS = CLANS.toMatchableHashMap(Clan.class);
     }
     
     public static int numClans() {
@@ -45,29 +47,27 @@ public class ClanUtils {
      * @return Clans map.
      */
     public static Collection<Clan> getClans() {
-        return MATCHABLE_CLANS.values();
+        return CLANS.values();
     }
 
     public static void addClan(final Clan clan) {
         CLANS.put(clan.getName(), clan);
-        MATCHABLE_CLANS = CLANS.toMatchableHashMap(Clan.class);
     }
     
     public static void removeClan(final Clan clan) {
         CLANS.remove(clan.getName());
-        MATCHABLE_CLANS = CLANS.toMatchableHashMap(Clan.class);
     }
     
     public static Clan getClan(final String name) {
-        return MATCHABLE_CLANS.get(name);
+        return CLANS.get(name);
     }
     
     public static boolean clanExists(final String name) {
-        return MATCHABLE_CLANS.containsKey(name);
+        return CLANS.containsKey(name);
     }
     
     public static List<Clan> getSortedClans(final Comparator<Clan> comp) {
-        return MATCHABLE_CLANS.getSortedValues(comp);
+        return CLANS.getSortedValues(comp);
     }
     
     private ClanUtils() {}
