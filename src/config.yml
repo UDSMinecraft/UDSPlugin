@@ -66,6 +66,7 @@ server-rules:
 - No bug exploits
 - No advertising
 - No hacks
+- No alt accounts
 # Stop block damage from various creatures and explosions.
 block:
   creeper: true
