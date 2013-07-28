@@ -21,7 +21,7 @@ public class NickCmd extends CommandWrapper {
             }
         } else if(numArgsHelp(2) && hasPerm(Perm.NICK_OTHER) && (target = getMatchingPlayer(args[0])) != null && noCensor(args[1])) {
             target.setDisplayName(args[1]);
-            player.sendNormal(player.getName() + "'s nickname has been changed to " + args[1] + ".");
+            player.sendNormal(target.getName() + "'s nickname has been changed to " + args[1] + ".");
             target.sendNormal("Your nickname has been changed to " + args[1] + ".");
         }
     }
