@@ -17,7 +17,7 @@ public class YamlConfig {
         file = new File(path);
     }
     
-    public void load() {
+    public final void load() {
         if(!file.exists()) {
             file.getParentFile().mkdirs();
             try {
@@ -30,8 +30,10 @@ public class YamlConfig {
         loaded = true;
     }
     
-    public void save() {
-        if(!loaded) return;
+    public final void save() {
+        if(!loaded) {
+            return;
+        }
         try {
             config.save(file);
         } catch (IOException ex) {
@@ -40,7 +42,9 @@ public class YamlConfig {
     }
     
     public FileConfiguration get() {
-        if(loaded) return config;
+        if(loaded) {
+            return config;
+        }
         return null;
     }
 }

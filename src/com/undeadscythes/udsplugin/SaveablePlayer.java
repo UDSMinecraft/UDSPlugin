@@ -112,6 +112,7 @@ public class SaveablePlayer implements Saveable {
     public final void wrapPlayer(final Player player) {
         this.player = player;
         player.setDisplayName(nick);
+        player.setPlayerListName(nick);
     }
 
     /**

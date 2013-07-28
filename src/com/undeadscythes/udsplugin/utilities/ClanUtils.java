@@ -18,11 +18,7 @@ public class ClanUtils {
     private static SaveableHashMap<Clan> CLANS;
     
     public static void saveClans(final File path) throws IOException {
-        final SaveableHashMap<Clan> clans = new SaveableHashMap<Clan>();
-        for(final Clan clan : CLANS.values()) {
-            clans.put(clan.getName(), clan);
-        }
-        clans.save(path + File.separator + PATH);
+        CLANS.save(path + File.separator + PATH);
     }
     
     public static void loadClans(final File path) throws IOException {

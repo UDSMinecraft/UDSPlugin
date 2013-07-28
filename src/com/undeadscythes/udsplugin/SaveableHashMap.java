@@ -9,7 +9,6 @@ import java.util.*;
  * @author UndeadScythes
  */
 public class SaveableHashMap<T extends Saveable> extends HashMap<String, T> {
-    
     /**
      * Find all matches for a given partial key.
      * @param partial Partial key to search the map with.
