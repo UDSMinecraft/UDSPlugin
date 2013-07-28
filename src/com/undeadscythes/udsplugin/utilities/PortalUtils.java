@@ -14,7 +14,7 @@ public class PortalUtils {
      */
     public static final String PATH = "portals.csv";
 
-    private static MatchableHashMap<Portal> PORTALS;
+    private static SaveableHashMap<Portal> PORTALS;
     
     public static void savePortals(final File path) throws IOException {
         PORTALS.save(path + File.separator + PATH);

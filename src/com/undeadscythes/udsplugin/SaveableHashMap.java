@@ -8,7 +8,7 @@ import java.util.*;
  * @param <Saveable>
  * @author UndeadScythes
  */
-public class MatchableHashMap<T extends Saveable> extends HashMap<String, T> {
+public class SaveableHashMap<T extends Saveable> extends HashMap<String, T> {
     
     /**
      * Find all matches for a given partial key.

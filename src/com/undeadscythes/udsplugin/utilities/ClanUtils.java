@@ -15,10 +15,10 @@ public class ClanUtils {
      */
     public static final String PATH = "clans.csv";
     
-    private static MatchableHashMap<Clan> CLANS;
+    private static SaveableHashMap<Clan> CLANS;
     
     public static void saveClans(final File path) throws IOException {
-        final MatchableHashMap<Clan> clans = new MatchableHashMap<Clan>();
+        final SaveableHashMap<Clan> clans = new SaveableHashMap<Clan>();
         for(final Clan clan : CLANS.values()) {
             clans.put(clan.getName(), clan);
         }

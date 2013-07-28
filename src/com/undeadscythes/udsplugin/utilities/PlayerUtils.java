@@ -13,10 +13,10 @@ public class PlayerUtils {
      * File name of player file.
      */
     private static final String PATH = "players.csv";
-    private static MatchableHashMap<SaveablePlayer> PLAYERS;
-    private static final MatchableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new MatchableHashMap<SaveablePlayer>();
-    private static final MatchableHashMap<SaveablePlayer> ONLINE_PLAYERS = new MatchableHashMap<SaveablePlayer>();
-    private static final MatchableHashMap<SaveablePlayer> VIPS = new MatchableHashMap<SaveablePlayer>();
+    private static SaveableHashMap<SaveablePlayer> PLAYERS;
+    private static final SaveableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new SaveableHashMap<SaveablePlayer>();
+    private static final SaveableHashMap<SaveablePlayer> ONLINE_PLAYERS = new SaveableHashMap<SaveablePlayer>();
+    private static final SaveableHashMap<SaveablePlayer> VIPS = new SaveableHashMap<SaveablePlayer>();
 
     /**
      * Grab and cast the players map.
