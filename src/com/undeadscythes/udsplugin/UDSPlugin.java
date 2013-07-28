@@ -38,7 +38,6 @@ public class UDSPlugin extends JavaPlugin {
     private static final List<Kit> KITS = new ArrayList<Kit>();
     private static final Map<EntityType, Integer> MOB_REWARDS = new HashMap<EntityType, Integer>();
     private static final Map<RegionFlag, Boolean> GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
-    private static final SaveableHashMap CLANS = new SaveableHashMap();
     private static final SaveableHashMap REGIONS = new SaveableHashMap();
     private static final MatchableHashMap<ChatRoom> CHAT_ROOMS = new MatchableHashMap<ChatRoom>();
     private static final MatchableHashMap<Request> REQUESTS = new MatchableHashMap<Request>();
@@ -187,10 +186,10 @@ public class UDSPlugin extends JavaPlugin {
         worldFlags.save();
         PlayerUtils.savePlayers(DATA_PATH);
         WarpUtils.saveWarps(DATA_PATH);
-        CLANS.save(DATA_PATH + File.separator + Clan.PATH);
+        ClanUtils.saveClans(DATA_PATH);
         REGIONS.save(DATA_PATH + File.separator + Region.PATH);
         PortalUtils.savePortals(DATA_PATH);
-        return CLANS.size() + REGIONS.size() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
+        return ClanUtils.numClans() + REGIONS.size() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
     }
 
     /**
@@ -237,18 +236,9 @@ public class UDSPlugin extends JavaPlugin {
         if(WarpUtils.numWarps() > 0) {
             getLogger().info("Loaded " + WarpUtils.numWarps() + " warps.");
         }
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Clan.PATH));
-            while((nextLine = file.readLine()) != null) {
-                final Clan clan = new Clan(nextLine);
-                CLANS.put(nextLine.split("\t")[0], clan);
-                clan.linkMembers();
-            }
-            file.close();
-            message = CLANS.size() + " clans loaded.";
-            getLogger().info(message);
-        } catch (FileNotFoundException ex) {
-            getLogger().info("No clan file exists yet.");
+        ClanUtils.loadClans(DATA_PATH);
+        if(ClanUtils.numClans() > 0) {
+            getLogger().info("Loaded " + ClanUtils.numClans() + " clans.");
         }
         PortalUtils.loadPortals(DATA_PATH);
         if(PortalUtils.numPortals() > 0) {
@@ -480,14 +470,6 @@ public class UDSPlugin extends JavaPlugin {
      */
     public static MatchableHashMap<ChatRoom> getChatRooms() {
         return CHAT_ROOMS;
-    }
-
-    /**
-     * Grab and cast the clans map.
-     * @return Clans map.
-     */
-    public static MatchableHashMap<Clan> getClans() {
-        return CLANS.toMatchableHashMap(Clan.class);
     }
 
     /**

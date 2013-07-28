@@ -490,7 +490,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The clan if it exists, <code>null</code> otherwise.
      */
     protected Clan getClan(final String name) {
-        final Clan clan = UDSPlugin.getClans().get(name);
+        final Clan clan = ClanUtils.getClan(name);
         if(clan == null) {
             player.sendError("That clan does not exist.");
         }
@@ -531,7 +531,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if no clan exists by this name, <code>false</code> otherwise.
      */
     protected boolean notClan(final String name) {
-        if(UDSPlugin.getClans().containsKey(name)) {
+        if(ClanUtils.clanExists(name)) {
             player.sendError("A clan already exists with that name.");
             return false;
         } else {

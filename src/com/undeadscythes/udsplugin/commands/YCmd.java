@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.entity.*;
 
 /**
@@ -19,7 +20,7 @@ public class YCmd extends CommandWrapper {
                     sender.teleport(player);
                     break;
                 case CLAN:
-                    clanRequest(UDSPlugin.getClans().get(request.getData()));
+                    clanRequest(ClanUtils.getClan(request.getData()));
                     break;
                 case HOME:
                     if(canAfford(price = Integer.parseInt(request.getData())) && noHome()) {

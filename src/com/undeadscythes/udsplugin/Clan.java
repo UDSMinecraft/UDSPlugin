@@ -10,11 +10,6 @@ import org.bukkit.*;
  * @author UndeadScythes
  */
 public class Clan implements Saveable {
-    /**
-     * File name of clan file.
-     */
-    public static final String PATH = "clans.csv";
-
     private String name;
     private SaveablePlayer leader;
     private final Set<SaveablePlayer> members;

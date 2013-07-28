@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.text.*;
 import java.util.*;
 import org.bukkit.util.Vector;
@@ -28,7 +29,7 @@ public class ClanCmd extends CommandWrapper {
                         }
                         clan.sendMessage(player.getNick() + " has left the clan.");
                     } else {
-                        UDSPlugin.getClans().remove(clan.getName());
+                        ClanUtils.removeClan(clan);
                         UDSPlugin.getRegions(RegionType.BASE).remove(clan.getName() + "base");
                         UDSPlugin.getRegions(RegionType.GENERIC).remove(clan.getName() + "base");
                         UDSPlugin.sendBroadcast(clan.getName() + " no longer exists as all members have left.");
@@ -59,7 +60,7 @@ public class ClanCmd extends CommandWrapper {
             } else if(subCmd.equals("disband")) {
                 if((clan = getClan()) != null && isLeader(clan)) {
                     UDSPlugin.sendBroadcast(clan.getName() + " has been disbanded.");
-                    UDSPlugin.getClans().remove(clan.getName());
+                    ClanUtils.removeClan(clan);
                     clan.sendMessage("Your clan has been disbanded.");
                     for(SaveablePlayer member : clan.getMembers()) {
                         member.setClan(null);
@@ -85,7 +86,7 @@ public class ClanCmd extends CommandWrapper {
                     player.debit(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST));
                     clan = new Clan(args[1], player);
                     player.setClan(clan);
-                    UDSPlugin.getClans().put(args[1], clan);
+                    ClanUtils.addClan(clan);
                     UDSPlugin.sendBroadcast(player.getNick() + " just created " + args[1] + ".");
                 }
             } else if(subCmd.equals("invite")) {
@@ -132,7 +133,7 @@ public class ClanCmd extends CommandWrapper {
             } else if(subCmd.equals("rename")) {
                 if((clan = getClan()) != null && isLeader(clan) && noCensor(args[1]) && notClan(args[1]) && canAfford(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST))) {
                     player.debit(UDSPlugin.getConfigInt(ConfigRef.CLAN_COST));
-                    UDSPlugin.getClans().remove(clan.getName());
+                    ClanUtils.removeClan(clan);
                     if((base = UDSPlugin.getRegions(RegionType.BASE).remove(clan.getName() + "base")) != null) {
                         UDSPlugin.getRegions(RegionType.GENERIC).remove(clan.getName() + "base");
                         base.rename(args[1] + "base");
@@ -140,7 +141,7 @@ public class ClanCmd extends CommandWrapper {
                         UDSPlugin.getRegions(RegionType.BASE).put(args[1] + "base", base);
                     }
                     clan.rename(args[1]);
-                    UDSPlugin.getClans().put(args[1], clan);
+                    ClanUtils.addClan(clan);
                     clan.sendMessage("Your clan has been renamed " + args[1] + ".");
                     UDSPlugin.sendBroadcast(player.getNick() + " has rebranded their clan as " + args[1] + ".");
                 }
@@ -194,7 +195,7 @@ public class ClanCmd extends CommandWrapper {
     }
 
     private void sendPage(int page, SaveablePlayer player) {
-        final List<Clan> clans = UDSPlugin.getClans().getSortedValues(new SortByKDR());
+        final List<Clan> clans = ClanUtils.getSortedClans(new SortByKDR());
         final int pages = (clans.size() + 8) / 9;
         if(pages == 0) {
             player.sendNormal("There are no clans on the server.");
