@@ -358,7 +358,7 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public final boolean isInShop(final Location location) {
-        for(Region region : UDSPlugin.getRegions(RegionType.SHOP).values()) {
+        for(Region region : RegionUtils.getRegions(RegionType.SHOP)) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 return true;
             }
@@ -583,13 +583,13 @@ public class SaveablePlayer implements Saveable {
     public final Region getCurrentRegion(final RegionType type) {
         if(player != null) {
             if(type == RegionType.CITY) {
-                for(Region region : UDSPlugin.getRegions(RegionType.CITY).values()) {
+                for(Region region : RegionUtils.getRegions(RegionType.CITY)) {
                     if(player.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                         return region;
                     }
                 }
             } else if(type == RegionType.SHOP) {
-                for(Region region : UDSPlugin.getRegions(RegionType.SHOP).values()) {
+                for(Region region : RegionUtils.getRegions(RegionType.SHOP)) {
                     if(player.getLocation().toVector().isInAABB(region.getV1(), region.getV2())) {
                         return region;
                     }
@@ -691,7 +691,7 @@ public class SaveablePlayer implements Saveable {
      */
     public final boolean canBuildHere(final Location location) {
         boolean contained = false;
-        for(Region region : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
+        for(Region region : RegionUtils.getRegions(RegionType.GENERIC)) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 if(((region.getRank() != null && rank.compareTo(region.getRank()) >= 0)) || region.isOwner(this) || region.hasMember(this)) {
                     return true;

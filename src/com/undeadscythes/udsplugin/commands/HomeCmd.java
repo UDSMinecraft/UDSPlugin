@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.util.*;
 
 /**
@@ -25,16 +26,14 @@ public class HomeCmd extends CommandWrapper {
                     home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", RegionType.HOME);
                     if(noOverlaps(home)) {
                         player.debit(UDSPlugin.getConfigInt(ConfigRef.HOME_COST));
-                        UDSPlugin.getRegions(RegionType.GENERIC).put(home.getName(), home);
-                        UDSPlugin.getRegions(RegionType.HOME).put(home.getName(), home);
+                        RegionUtils.addRegion(home);
                         home.placeCornerMarkers();
                         player.sendNormal("Home area protected.");
                     }
                 }
             } else if(subCmd.equals("clear")) {
                 if((home = getHome()) != null) {
-                    UDSPlugin.getRegions(RegionType.GENERIC).remove(home.getName());
-                    UDSPlugin.getRegions(RegionType.HOME).remove(home.getName());
+                    RegionUtils.removeRegion(home);
                     player.sendNormal("Home protection removed.");
                 }
             } else if(subCmd.equals("power")) {
@@ -48,7 +47,7 @@ public class HomeCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("roomies")) {
                 String message = "";
-                for(Region otherHome : UDSPlugin.getRegions(RegionType.HOME).values()) {
+                for(Region otherHome : RegionUtils.getRegions(RegionType.HOME)) {
                     if(otherHome.hasMember(player)) {
                         message = message.concat(otherHome.getOwner().getNick() + ", ");
                     }
@@ -57,7 +56,7 @@ public class HomeCmd extends CommandWrapper {
                         player.sendText(message.substring(0, message.length() - 2));
                     }
                     message = "";
-                    if((home = UDSPlugin.getRegions(RegionType.HOME).get(player.getName() + "home")) != null) {
+                    if((home = RegionUtils.getRegion(RegionType.HOME, player.getName() + "home")) != null) {
                         for(SaveablePlayer member : home.getMembers()) {
                             message = message.concat(member.getNick() + ", ");
                         }

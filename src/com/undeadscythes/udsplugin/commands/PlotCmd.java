@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -62,9 +63,9 @@ public class PlotCmd extends CommandWrapper {
             do {
                 name = player.getName() + "Plot" + next;
                 next++;
-            } while(UDSPlugin.getPlot(name) != null);
+            } while(RegionUtils.getRegion(RegionType.PLOT, name) != null);
             final Region plot = new Region(name, v1, v2, player.getLocation(), player, "", RegionType.PLOT);
-            UDSPlugin.addPlot(plot);
+            RegionUtils.addRegion(plot);
             square(v1.clone().subtract(new Vector(3, 0, 3)), v2.clone().add(new Vector(4, 0, 4)), Material.QUARTZ_BLOCK);
             square(v1.clone().subtract(new Vector(1, 0, 1)), v2.clone().add(new Vector(2, 0, 2)), Material.NETHER_BRICK);
             square(v1.clone(), v2.clone().add(new Vector(1, 0 ,1)), Material.GRASS);
@@ -82,8 +83,7 @@ public class PlotCmd extends CommandWrapper {
             plot = ownsPlot(plotName);
         }
         if(plot != null) {
-            UDSPlugin.getPlots().remove(plot);
-            UDSPlugin.getRegions(RegionType.GENERIC).remove(plot.getName());
+            RegionUtils.removeRegion(plot);
             player.sendNormal(plot.getName() + " removed.");
         }
     }
@@ -113,7 +113,7 @@ public class PlotCmd extends CommandWrapper {
     }
     
     private Region getPlot() {
-        for(Region plot : UDSPlugin.getPlots()) {
+        for(Region plot : RegionUtils.getRegions(RegionType.PLOT)) {
             if(plot.contains(player.getLocation())) {
                 return plot;
             }
@@ -131,7 +131,7 @@ public class PlotCmd extends CommandWrapper {
     
     private int nextPlot() {
         int count = 1;
-        for(Region plot : UDSPlugin.getPlots()) {
+        for(Region plot : RegionUtils.getRegions(RegionType.PLOT)) {
             if(plot.getOwner().equals(player)) {
                 count++;
             }
@@ -141,7 +141,7 @@ public class PlotCmd extends CommandWrapper {
     
     private void list() {
         List<String> plots = new ArrayList<String>();
-        for(Region plot : UDSPlugin.getPlots()) {
+        for(Region plot : RegionUtils.getRegions(RegionType.PLOT)) {
             if(plot.getOwner().equals(player)) {
                 plots.add(plot.getName());
             }
@@ -164,7 +164,7 @@ public class PlotCmd extends CommandWrapper {
     private void name(final String plotName, final String name) {
         Region plot;
         if((plot = ownsPlot(plotName)) != null && noCensor(name)) {
-            UDSPlugin.renamePlot(plot, name);
+            RegionUtils.renameRegion(plot, name);
             player.sendNormal("Plot renamed to " + name + ".");
         }
     }
@@ -179,7 +179,7 @@ public class PlotCmd extends CommandWrapper {
     }
     
     private Region plotExists(final String name) {
-        final Region plot = UDSPlugin.getPlot(name);
+        final Region plot = RegionUtils.getRegion(RegionType.PLOT, name);
         if(plot == null) {
             player.sendError("No plot exists by that name.");
         }

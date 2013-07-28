@@ -117,7 +117,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The shop region or <code>null</code> if the player does not own a shop.
      */
     protected Region getShop() {
-        final Region shop = UDSPlugin.getRegions(RegionType.SHOP).get(player.getName() + "shop");
+        final Region shop = RegionUtils.getRegion(RegionType.SHOP, player.getName() + "shop");
         if(shop == null) {
             player.sendError("You do not own a shop.");
         }
@@ -245,7 +245,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The targets shop if they own one, <code>null</code> otherwise.
      */
     protected Region getShop(final SaveablePlayer target) {
-        final Region shop = UDSPlugin.getRegions(RegionType.SHOP).get(target.getName() + "shop");
+        final Region shop = RegionUtils.getRegion(RegionType.SHOP, target.getName() + "shop");
         if(shop == null) {
             player.sendError("That player does not own a shop.");
         }
@@ -319,7 +319,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The region or <code>null</code> if no region exists by this name.
      */
     protected Region getRegion(final String regionName) {
-        final Region region = UDSPlugin.getRegions(RegionType.GENERIC).get(regionName);
+        final Region region = RegionUtils.getRegion(regionName);
         if(region == null) {
             player.sendError("No region exists by that name.");
         }
@@ -379,7 +379,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if the players does not own a shop, <code>false</code> otherwise.
      */
     protected boolean noShop() {
-        if(UDSPlugin.getRegions(RegionType.SHOP).containsKey(player.getName() + "shop")) {
+        if(RegionUtils.regionExists(RegionType.SHOP, player.getName() + "shop")) {
             player.sendError("You already own a shop.");
             return false;
         } else {
@@ -418,7 +418,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The players home region if it exists, <code>null</code> otherwise.
      */
     protected Region getHome() {
-        final Region home = UDSPlugin.getRegions(RegionType.HOME).get(player.getName() + "home");
+        final Region home = RegionUtils.getRegion(RegionType.HOME, player.getName() + "home");
         if(home == null) {
             player.sendError("You do not have a home.");
         }
@@ -462,7 +462,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if the player does not have a home, <code>false</code> otherwise.
      */
     protected boolean noHome() {
-        if(UDSPlugin.getRegions(RegionType.HOME).containsKey(player.getName() + "home")) {
+        if(RegionUtils.regionExists(RegionType.HOME, player.getName() + "home")) {
             player.sendError("You already have a home.");
             return false;
         } else {
@@ -476,7 +476,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if the clan does not have a base, <code>false</code> otherwise.
      */
     protected boolean noBase(final Clan clan) {
-        if(UDSPlugin.getRegions(RegionType.BASE).containsKey(clan.getName() + "base")) {
+        if(RegionUtils.regionExists(RegionType.BASE, clan.getName() + "base")) {
             player.sendError("Your clan already has a base.");
             return false;
         } else {
@@ -571,7 +571,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The clan's base or <code>null</code> if the clan does not have a base.
      */
     protected Region getBase(final Clan clan) {
-        final Region region = UDSPlugin.getRegions(RegionType.BASE).get(clan.getName() + "base");
+        final Region region = RegionUtils.getRegion(RegionType.BASE, clan.getName() + "base");
         if(region == null) {
             player.sendError("Your clan does not have a base.");
         }
@@ -801,7 +801,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The target players home if it exists, <code>null</code> otherwise.
      */
     protected Region getHome(final SaveablePlayer target) {
-        final Region home = UDSPlugin.getRegions(RegionType.HOME).get(target.getName() + "home");
+        final Region home = RegionUtils.getRegion(RegionType.HOME, target.getName() + "home");
         if(home == null) {
             player.sendError("That player does not have a home.");
         }
@@ -829,7 +829,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if no region already exists with the given name, <code>false</code> otherwise.
      */
     protected boolean notRegion(final String name) {
-        if(UDSPlugin.getRegions(RegionType.GENERIC).containsKey(name)) {
+        if(RegionUtils.regionExists(name)) {
             player.sendError("A protected area already exists with that name.");
             return false;
         } else {
@@ -844,10 +844,10 @@ public abstract class CommandWrapper implements CommandExecutor {
      */
     protected Region getMatchingCity(final String cityName) {
         Region city;
-        if((city = UDSPlugin.getRegions(RegionType.CITY).get(cityName)) != null) {
+        if((city = RegionUtils.getRegion(RegionType.CITY, cityName)) != null) {
             return city;
         } else {
-            if((city = UDSPlugin.getRegions(RegionType.CITY).matchKey(cityName)) != null) {
+            if((city = RegionUtils.matchRegion(RegionType.CITY, cityName)) != null) {
                 return city;
             } else {
                 player.sendError("No city exists by that name.");
@@ -895,7 +895,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if there are no overlaps with other regions, <code>false</code> otherwise.
      */
     protected boolean noOverlaps(final Region region) {
-        for(Region test : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
+        for(Region test : RegionUtils.getRegions()) {
             if(test != region && test.hasOverlap(region)) {
                 player.sendError("You cannot do that here, you are too close to another protected area.");
                 return false;

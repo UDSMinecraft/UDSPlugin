@@ -60,7 +60,7 @@ public class ListenerWrapper {
      * @return
      */
     public SaveablePlayer findShopOwner(final Location location) {
-        for(Region shop : UDSPlugin.getRegions(RegionType.SHOP).values()) {
+        for(Region shop : RegionUtils.getRegions(RegionType.SHOP)) {
             if(location.toVector().isInAABB(shop.getV1(), shop.getV2())) {
                 return shop.getOwner();
             }
@@ -111,7 +111,7 @@ public class ListenerWrapper {
      */
     public boolean hasFlag(final Location location, final RegionFlag flag) {
         boolean inRegion = false;
-        for(Region region : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
+        for(Region region : RegionUtils.getRegions(RegionType.GENERIC)) {
             if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 inRegion = true;
                 if(region.hasFlag(flag)) {
@@ -130,7 +130,7 @@ public class ListenerWrapper {
     public List<Region> regionsHere(final Location location) {
         final List<Region> regions = new ArrayList<Region>();
         final Vector vector = location.toVector();
-        for(Region region : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
+        for(Region region : RegionUtils.getRegions(RegionType.GENERIC)) {
             if(location.getWorld().equals(region.getWorld()) && vector.isInAABB(region.getV1(), region.getV2())) {
                 regions.add(region);
             }
@@ -169,7 +169,7 @@ public class ListenerWrapper {
      * @return
      */
     public boolean isInQuarry(final Location location) {
-        for(Region quarry : UDSPlugin.getRegions(RegionType.QUARRY).values()) {
+        for(Region quarry : RegionUtils.getRegions(RegionType.QUARRY)) {
             if(location.toVector().isInAABB(quarry.getV1(), quarry.getV2())) {
                 return true;
             }

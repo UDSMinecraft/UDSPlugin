@@ -38,17 +38,9 @@ public class UDSPlugin extends JavaPlugin {
     private static final List<Kit> KITS = new ArrayList<Kit>();
     private static final Map<EntityType, Integer> MOB_REWARDS = new HashMap<EntityType, Integer>();
     private static final Map<RegionFlag, Boolean> GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
-    private static final SaveableHashMap REGIONS = new SaveableHashMap();
-    private static final MatchableHashMap<ChatRoom> CHAT_ROOMS = new MatchableHashMap<ChatRoom>();
-    private static final MatchableHashMap<Request> REQUESTS = new MatchableHashMap<Request>();
-    private static final MatchableHashMap<Session> SESSIONS = new MatchableHashMap<Session>();
-    private static final MatchableHashMap<Region> ARENAS = new MatchableHashMap<Region>();
-    private static final MatchableHashMap<Region> BASES = new MatchableHashMap<Region>();
-    private static final MatchableHashMap<Region> CITIES = new MatchableHashMap<Region>();
-    private static final MatchableHashMap<Region> HOMES = new MatchableHashMap<Region>();
-    private static final MatchableHashMap<Region> QUARRIES = new MatchableHashMap<Region>();
-    private static final MatchableHashMap<Region> SHOPS = new MatchableHashMap<Region>();
-    private static final MatchableHashMap<Region> PLOTS = new MatchableHashMap<Region>();
+    private static final HashMap<String, ChatRoom> CHAT_ROOMS = new HashMap<String, ChatRoom>();
+    private static final HashMap<String, Request> REQUESTS = new HashMap<String, Request>();
+    private static final HashMap<String, Session> SESSIONS = new HashMap<String, Session>();
 
     private static UDSPlugin plugin;
     private static AutoSave autoSave = new AutoSave();
@@ -60,7 +52,7 @@ public class UDSPlugin extends JavaPlugin {
     private static VipSpawns vipSpawns = new VipSpawns();
     private static Data data;
     private static boolean serverLockedDown = false;
-    private static final CustomConfig worldFlags = new CustomConfig(DATA_PATH + "/worlds.yml");
+    private static final YamlConfig worldFlags = new YamlConfig(DATA_PATH + "/worlds.yml");
 
     /**
      * Used for testing in NetBeans. Woo! NetBeans!
@@ -187,9 +179,9 @@ public class UDSPlugin extends JavaPlugin {
         PlayerUtils.savePlayers(DATA_PATH);
         WarpUtils.saveWarps(DATA_PATH);
         ClanUtils.saveClans(DATA_PATH);
-        REGIONS.save(DATA_PATH + File.separator + Region.PATH);
+        RegionUtils.saveRegions(DATA_PATH);
         PortalUtils.savePortals(DATA_PATH);
-        return ClanUtils.numClans() + REGIONS.size() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
+        return ClanUtils.numClans() + RegionUtils.numRegions() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
     }
 
     /**
@@ -205,32 +197,9 @@ public class UDSPlugin extends JavaPlugin {
         if(PlayerUtils.numPlayers() > 0) {
             getLogger().info("Loaded " + PlayerUtils.numPlayers() + " players.");
         }
-        try {
-            file = new BufferedReader(new FileReader(DATA_PATH + File.separator + Region.PATH));
-            while((nextLine = file.readLine()) != null) {
-                final Region region = new Region(nextLine);
-                REGIONS.put(region.getName(), region);
-                if(region.getType().equals(RegionType.BASE)) {
-                    BASES.put(region.getName(), region);
-                } else if(region.getType().equals(RegionType.HOME)) {
-                    HOMES.put(region.getName(), region);
-                } else if(region.getType().equals(RegionType.QUARRY)) {
-                    QUARRIES.put(region.getName(), region);
-                } else if(region.getType().equals(RegionType.SHOP)) {
-                    SHOPS.put(region.getName(), region);
-                } else if(region.getType().equals(RegionType.CITY)) {
-                    CITIES.put(region.getName(), region);
-                } else if(region.getType().equals(RegionType.ARENA)) {
-                    ARENAS.put(region.getName(), region);
-                } else if(region.getType().equals(RegionType.PLOT)) {
-                    PLOTS.put(region.getName(), region);
-                }
-            }
-            file.close();
-            message = REGIONS.size() + " regions loaded.";
-            getLogger().info(message);
-        } catch (FileNotFoundException ex) {
-            getLogger().info("No region file exists yet.");
+        RegionUtils.loadRegions(DATA_PATH);
+        if(RegionUtils.numRegions() > 0) {
+            getLogger().info("Loaded " + RegionUtils.numRegions() + " regions.");
         }
         WarpUtils.loadWarps(DATA_PATH);
         if(WarpUtils.numWarps() > 0) {
@@ -468,7 +437,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the chat rooms map.
      * @return Chat rooms map.
      */
-    public static MatchableHashMap<ChatRoom> getChatRooms() {
+    public static HashMap<String, ChatRoom> getChatRooms() {
         return CHAT_ROOMS;
     }
 
@@ -476,7 +445,7 @@ public class UDSPlugin extends JavaPlugin {
      * Grab the requests map.
      * @return Requests map.
      */
-    public static MatchableHashMap<Request> getRequests() {
+    public static HashMap<String, Request> getRequests() {
         return REQUESTS;
     }
 
@@ -484,32 +453,8 @@ public class UDSPlugin extends JavaPlugin {
      * Grab and cast the sessions map.
      * @return Sessions map.
      */
-    public static MatchableHashMap<Session> getSessions() {
+    public static HashMap<String, Session> getSessions() {
         return SESSIONS;
-    }
-
-    /**
-     * Grab the regions list of the corresponding type.
-     * @param type Region type.
-     * @return The corresponding list.
-     */
-    public static MatchableHashMap<Region> getRegions(final RegionType type) {
-        switch(type) {
-            case QUARRY:
-                return QUARRIES;
-            case SHOP:
-                return SHOPS;
-            case BASE:
-                return BASES;
-            case HOME:
-                return HOMES;
-            case ARENA:
-                return ARENAS;
-            case CITY:
-                return CITIES;
-            default:
-                return REGIONS.toMatchableHashMap(Region.class);
-        }
     }
 
     /**
@@ -644,27 +589,6 @@ public class UDSPlugin extends JavaPlugin {
     
     public static int getMobReward(final EntityType mob) {
         return MOB_REWARDS.get(mob);
-    }
-    
-    public static Collection<Region> getPlots() {
-        return PLOTS.values();
-    }
-    
-    public static Region getPlot(final String name) {
-        return PLOTS.get(name);
-    }
-    
-    public static void renamePlot(final Region plot, final String name) {
-        REGIONS.remove(plot.getName());
-        PLOTS.remove(plot.getName());
-        plot.rename(name);
-        REGIONS.put(name, plot);
-        PLOTS.put(name, plot);
-    }
-    
-    public static void addPlot(final Region plot) {
-        REGIONS.put(plot.getName(), plot);
-        PLOTS.put(plot.getName(), plot);
     }
     
     public static void sendBroadcast(final String message) {

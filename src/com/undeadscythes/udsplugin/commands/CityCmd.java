@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.util.Vector;
 
@@ -32,8 +33,7 @@ public class CityCmd extends CommandWrapper {
                     city = new Region(args[1], min, max, player.getLocation(), player, "", RegionType.CITY);
                     if(noOverlaps(city)) {
                         player.debit(UDSPlugin.getConfigInt(ConfigRef.CITY_COST));
-                        UDSPlugin.getRegions(RegionType.GENERIC).put(args[1], city);
-                        UDSPlugin.getRegions(RegionType.CITY).put(args[1], city);
+                        RegionUtils.addRegion(city);
                         city.placeMoreMarkers();
                         city.placeTowers();
                         player.sendNormal("City founded.");
@@ -58,8 +58,7 @@ public class CityCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("clear")) {
                 if((city = getMunicipality(args[1])) != null) {
-                    UDSPlugin.getRegions(RegionType.GENERIC).remove(city.getName());
-                    UDSPlugin.getRegions(RegionType.CITY).remove(city.getName());
+                    RegionUtils.removeRegion(city);
                     UDSPlugin.sendBroadcast(city.getName() + " has been abandoned.");
                 }
             } else {
@@ -105,7 +104,7 @@ public class CityCmd extends CommandWrapper {
      * @param player Player to send page to.
      */
     private void sendPage(final int page, final SaveablePlayer player) {
-        final List<Region> cities = UDSPlugin.getRegions(RegionType.CITY).getSortedValues(new SortByPop());
+        final List<Region> cities = RegionUtils.getSortedRegions(RegionType.CITY, new SortByPop());
         final int pages = (cities.size() + 8) / 9;
         if(pages == 0) {
             player.sendNormal("There are no cities yet.");

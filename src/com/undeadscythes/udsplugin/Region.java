@@ -13,11 +13,6 @@ import org.bukkit.util.Vector;
  * @author UndeadScythes
  */
 public class Region implements Saveable {
-    /**
-     * File name of region storage file.
-     */
-    public static final String PATH = "regions.csv";
-
     private String name;
     private Vector min;
     private Vector max;

@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Region related commands.
@@ -79,10 +80,10 @@ public class RegionCmd extends CommandWrapper {
         final RegionType type;
         if((region = getRegion(args[1])) != null && ((type = getRegionType(args[2]))) != null) {
             if(!region.getType().equals(RegionType.GENERIC)) {
-                UDSPlugin.getRegions(region.getType()).remove(region.getName());
+                RegionUtils.removeRegion(region);
             }
             region.setType(type);
-            UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
+            RegionUtils.addRegion(region);
             player.sendNormal("Region " + region.getName() + " set to type " + type.toString() + ".");
         }
     }
@@ -126,7 +127,7 @@ public class RegionCmd extends CommandWrapper {
 
     private void list(final RegionType type) {
         String list = "";
-        for(Region test : UDSPlugin.getRegions(RegionType.GENERIC).values()) {
+        for(Region test : RegionUtils.getRegions(RegionType.GENERIC)) {
             if(test.getType().equals(type)) {
                 list = list.concat(test.getName() + ", ");
             }
@@ -160,9 +161,9 @@ public class RegionCmd extends CommandWrapper {
     private void del() {
         final Region region = getRegion(args[1]);
         if(region != null) {
-            UDSPlugin.getRegions(RegionType.GENERIC).remove(region.getName());
+            RegionUtils.removeRegion(region);
             if(!region.getType().equals(RegionType.GENERIC)) {
-                UDSPlugin.getRegions(region.getType()).remove(region.getName());
+                RegionUtils.removeRegion(region);
             }
             player.sendNormal("Region deleted.");
         }
@@ -204,9 +205,9 @@ public class RegionCmd extends CommandWrapper {
         final Session session = getSession();
         if(session != null && hasTwoPoints(session) && notRegion(args[1]) && noCensor(args[1])) {
             final Region region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), null, "", type);
-            UDSPlugin.getRegions(RegionType.GENERIC).put(region.getName(), region);
+            RegionUtils.addRegion(region);
             if(!region.getType().equals(RegionType.GENERIC)) {
-                UDSPlugin.getRegions(region.getType()).put(region.getName(), region);
+                RegionUtils.addRegion(region);
             }
             player.sendNormal("Region " + region.getName() + " set.");
         }
@@ -243,12 +244,7 @@ public class RegionCmd extends CommandWrapper {
         final Region region = getRegion(args[1]);
         if(region != null && noCensor(args[1]) && notRegion(args[2])) {
             final String oldName = region.getName();
-            UDSPlugin.getRegions(RegionType.GENERIC).remove(oldName);
-            region.changeName(args[2]);
-            UDSPlugin.getRegions(RegionType.GENERIC).put(region.getName(), region);
-            if(!region.getType().equals(RegionType.GENERIC)) {
-                UDSPlugin.getRegions(region.getType()).replace(oldName, region.getName(), region);
-            }
+            RegionUtils.renameRegion(region, args[2]);
             player.sendNormal("Region " + oldName + " renamed to " + region.getName());
         }
     }

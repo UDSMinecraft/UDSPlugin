@@ -20,7 +20,7 @@ public class EntityDamage extends ListenerWrapper implements Listener {
                 event.setCancelled(true);
             }
             if(((Damageable)event.getEntity()).getHealth() < event.getDamage()) {
-                for(Region arena : UDSPlugin.getRegions(RegionType.ARENA).values()) {
+                for(Region arena : RegionUtils.getRegions(RegionType.ARENA)) {
                     if(arena.contains(player.getLocation())) {
                         event.setCancelled(true);
                         player.teleport(arena.getWarp());

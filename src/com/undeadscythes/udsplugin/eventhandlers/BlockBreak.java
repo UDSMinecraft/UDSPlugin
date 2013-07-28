@@ -33,7 +33,7 @@ public class BlockBreak implements Listener {
             event.setExpToDrop(UDSPlugin.getConfigInt(ConfigRef.SPAWNER_EXP));
         } else if(event.getBlock().getType().equals(Material.SNOW_BLOCK)) {
             final ItemStack item = new ItemStack(player.getItemInHand());
-            for(Region arena : UDSPlugin.getRegions(RegionType.ARENA).values()) {
+            for(Region arena : RegionUtils.getRegions(RegionType.ARENA)) {
                 if(arena.contains(event.getBlock().getLocation())) {
                     event.setCancelled(true);
                     event.getBlock().setType(Material.AIR);

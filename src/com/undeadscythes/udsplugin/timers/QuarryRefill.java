@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.timers;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
 /**
@@ -20,7 +21,7 @@ public class QuarryRefill implements Runnable {
      */
     @Override
     public void run() {
-        for(Region quarry : UDSPlugin.getRegions(RegionType.QUARRY).values()) {
+        for(Region quarry : RegionUtils.getRegions(RegionType.QUARRY)) {
             final Material material = Material.getMaterial(quarry.getData().toUpperCase());
             final int dX = quarry.getV2().getBlockX() - quarry.getV1().getBlockX();
             final int dY = quarry.getV2().getBlockY() - quarry.getV1().getBlockY();
