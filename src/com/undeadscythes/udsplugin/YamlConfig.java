@@ -8,12 +8,12 @@ import org.bukkit.configuration.file.*;
  *
  * @author UndeadScythes
  */
-public class CustomConfig {
+public class YamlConfig {
     private FileConfiguration config = null;
     private final File file;
     private boolean loaded = false;
     
-    public CustomConfig(final String path) {
+    public YamlConfig(final String path) {
         file = new File(path);
     }
     
