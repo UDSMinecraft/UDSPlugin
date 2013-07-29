@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class RegionUtils {
     private static final String PATH = "regions.csv";
-    private static HashMap<RegionType, SaveableHashMap<Region>> REGIONS;
+    private static HashMap<RegionType, SaveableHashMap<Region>> REGIONS = new HashMap<RegionType, SaveableHashMap<Region>>();
 
     public static void saveRegions(final File path) throws IOException {
         final SaveableHashMap<Region> regions = new SaveableHashMap<Region>();

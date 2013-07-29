@@ -13,7 +13,7 @@ public class PlayerUtils {
      * File name of player file.
      */
     private static final String PATH = "players.csv";
-    private static SaveableHashMap<SaveablePlayer> PLAYERS;
+    private static SaveableHashMap<SaveablePlayer> PLAYERS = new SaveableHashMap<SaveablePlayer>();
     private static final SaveableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new SaveableHashMap<SaveablePlayer>();
     private static final SaveableHashMap<SaveablePlayer> ONLINE_PLAYERS = new SaveableHashMap<SaveablePlayer>();
     private static final SaveableHashMap<SaveablePlayer> VIPS = new SaveableHashMap<SaveablePlayer>();

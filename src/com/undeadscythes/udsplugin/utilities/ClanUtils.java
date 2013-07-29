@@ -15,7 +15,7 @@ public class ClanUtils {
      */
     public static final String PATH = "clans.csv";
     
-    private static SaveableHashMap<Clan> CLANS;
+    private static SaveableHashMap<Clan> CLANS = new SaveableHashMap<Clan>();
     
     public static void saveClans(final File path) throws IOException {
         CLANS.save(path + File.separator + PATH);

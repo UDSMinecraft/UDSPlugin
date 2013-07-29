@@ -20,7 +20,7 @@ public class Region implements Saveable {
     private SaveablePlayer owner;
     private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>(0);
     private String data;
-    private EnumSet<RegionFlag> flags;
+    private EnumSet<RegionFlag> flags = EnumSet.noneOf(RegionFlag.class);
     private RegionType type;
     private PlayerRank rank = PlayerRank.NONE;
 
@@ -69,7 +69,9 @@ public class Region implements Saveable {
         }
         data = recordSplit[6];
         for(String flag : recordSplit[7].split(",")) {
-            flags.add(RegionFlag.getByName(flag));
+            if(RegionFlag.getByName(flag) != null) {
+                flags.add(RegionFlag.getByName(flag));
+            }
         }
         type = RegionType.getByName(recordSplit[8]);
         rank = PlayerRank.getByName(recordSplit[9]);

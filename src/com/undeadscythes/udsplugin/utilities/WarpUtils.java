@@ -14,7 +14,7 @@ public class WarpUtils {
      */
     public static final String PATH = "warps.csv";
 
-    private static SaveableHashMap<Warp> WARPS;
+    private static SaveableHashMap<Warp> WARPS = new SaveableHashMap<Warp>();
 
     public static int numWarps() {
         return WARPS.size();
