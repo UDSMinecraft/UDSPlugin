@@ -120,7 +120,7 @@ public enum Perm {
     UNJAIL(PlayerRank.WARDEN),
     UNKICKABLE(PlayerRank.MOD),
     VANISH(PlayerRank.MOD),
-    VIP(PlayerRank.VIP, false),
+    VIP(PlayerRank.NEWBIE),
     VIP_BUY(PlayerRank.MEMBER, false),
     VIP_HELP(PlayerRank.VIP, false),
     WAND(PlayerRank.MEMBER),
