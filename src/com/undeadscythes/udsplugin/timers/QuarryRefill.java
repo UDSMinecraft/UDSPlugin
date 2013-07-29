@@ -3,6 +3,7 @@ package com.undeadscythes.udsplugin.timers;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
+import org.bukkit.block.*;
 
 /**
  * Threaded class to run scheduled functions for maintenance.
@@ -29,7 +30,10 @@ public class QuarryRefill implements Runnable {
             for(int x = 0; x <= dX; x++) {
                 for(int y = 0; y <= dY; y++) {
                     for(int z = 0; z <= dZ; z++) {
-                        quarry.getWorld().getBlockAt(x, y, z).setType(material);
+                        final Block block = quarry.getWorld().getBlockAt(quarry.getV1().getBlockX() + x, quarry.getV1().getBlockY() + y, quarry.getV1().getBlockZ() + z);
+                        if(!block.getType().equals(Material.BEDROCK)) {
+                            block.setType(material);
+                        }
                     }
                 }
             }
