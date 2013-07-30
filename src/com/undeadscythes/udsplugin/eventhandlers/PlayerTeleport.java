@@ -12,12 +12,13 @@ import org.bukkit.event.player.*;
  * @author UndeadScythes
  */
 public class PlayerTeleport extends ListenerWrapper implements Listener {
-    private static String PATH = "plugins/UDSPlugin/inventories";
-    
     @EventHandler
     public void onEvent(final PlayerTeleportEvent event) {
         final World from = event.getFrom().getWorld();
         final World to = event.getTo().getWorld();
+        if(from == null || to == null) {
+            event.setCancelled(true);
+        }
         if(!from.equals(to) && !PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).hasPermission(Perm.SHAREDINV)) {
             for(String string : UDSPlugin.getConfigStringList(ConfigRef.SHARES)) {
                 List<String> shares = Arrays.asList(string.split(","));

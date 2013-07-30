@@ -86,6 +86,7 @@ public class UDSPlugin extends JavaPlugin {
         data.saveData();
         getLogger().info("Data loaded.");
         loadWorlds();
+        data.reloadData();
         getLogger().info("Worlds loaded.");
         worldFlags.load();
         getLogger().info("Flags loaded.");
@@ -165,7 +166,8 @@ public class UDSPlugin extends JavaPlugin {
 
     public void loadWorlds() {
         for(String world : data.getWorlds()) {
-            Bukkit.createWorld(new WorldCreator(world));
+            final WorldCreator creator = new WorldCreator(world);
+            creator.createWorld();
         }
     }
 
