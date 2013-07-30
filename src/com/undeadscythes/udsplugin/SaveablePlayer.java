@@ -137,13 +137,13 @@ public class SaveablePlayer implements Saveable {
     
     public final void addKill() {
         kills++;
-        player.getScoreboard().getObjective("PvP").getScore(player).setScore(kills);
+        player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME).getScore(player).setScore(kills);
         pvpTime = System.currentTimeMillis();
     }
     
     public final void removeKill() {
         kills--;
-        player.getScoreboard().getObjective("PvP").getScore(player).setScore(kills);
+        player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME).getScore(player).setScore(kills);
         pvpTime = System.currentTimeMillis();
     }
     

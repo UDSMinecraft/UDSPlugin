@@ -52,7 +52,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
             clanKill(killer, victim);
         }
         dropHead(victim);
-        victim.addKill();
+        killer.addKill();
     }
    
     private void dropItems(final SaveablePlayer victim) {
