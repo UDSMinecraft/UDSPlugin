@@ -7,6 +7,7 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
+import org.bukkit.scoreboard.*;
 
 /**
  * An extension of Minecraft players adding various fields and methods.
@@ -50,7 +51,10 @@ public class SaveablePlayer implements Saveable {
     private ItemStack[] armorCopy = null;
     private final Inventory shoppingCart = Bukkit.createInventory(null, 36);
     private final LinkedList<Long> lastChatTimes = new LinkedList<Long>();
-    private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>();
+    private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>(0);
+    private boolean pvp = false;
+    private int kills = 0;
+    private long pvpTime = 0;
 
     /**
      *
@@ -68,22 +72,28 @@ public class SaveablePlayer implements Saveable {
      */
     public SaveablePlayer(final String record) {
         final String[] recordSplit = record.split("\t");
-        name = recordSplit[0];
-        bounty = Integer.parseInt(recordSplit[1]);
-        money = Integer.parseInt(recordSplit[2]);
-        rank = PlayerRank.getByName(recordSplit[3]);
-        vipTime = Long.parseLong(recordSplit[4]);
-        vipSpawns = Integer.parseInt(recordSplit[5]);
-        timeJailed = Long.parseLong(recordSplit[6]);
-        jailSentence = Long.parseLong(recordSplit[7]);
-        bail = Integer.parseInt(recordSplit[8]);
-        nick = recordSplit[9];
-        timeLogged = Long.parseLong(recordSplit[10]);
+        switch(recordSplit.length) {
+            case 13:
+                pvpTime = Long.parseLong(recordSplit[11]);
+                kills = Integer.parseInt(recordSplit[12]);
+            default:
+                name = recordSplit[0];
+                bounty = Integer.parseInt(recordSplit[1]);
+                money = Integer.parseInt(recordSplit[2]);
+                rank = PlayerRank.getByName(recordSplit[3]);
+                vipTime = Long.parseLong(recordSplit[4]);
+                vipSpawns = Integer.parseInt(recordSplit[5]);
+                timeJailed = Long.parseLong(recordSplit[6]);
+                jailSentence = Long.parseLong(recordSplit[7]);
+                bail = Integer.parseInt(recordSplit[8]);
+                nick = recordSplit[9];
+                timeLogged = Long.parseLong(recordSplit[10]);
+        }
     }
 
     @Override
     public final String getRecord() {
-        final List<String> record = new ArrayList<String>();
+        final List<String> record = new ArrayList<String>(13);
         record.add(name);
         record.add(Integer.toString(bounty));
         record.add(Integer.toString(money));
@@ -95,6 +105,8 @@ public class SaveablePlayer implements Saveable {
         record.add(Integer.toString(bail));
         record.add(nick);
         record.add(Long.toString(timeLogged));
+        record.add(Long.toString(pvpTime));
+        record.add(Integer.toString(kills));
         return StringUtils.join(record.toArray(), "\t");
     }
 
@@ -121,6 +133,22 @@ public class SaveablePlayer implements Saveable {
      */
     public final void addTime(final long time) {
         timeLogged += time;
+    }
+    
+    public final void addKill() {
+        kills++;
+        player.getScoreboard().getObjective("PvP").getScore(player).setScore(kills);
+        pvpTime = System.currentTimeMillis();
+    }
+    
+    public final void removeKill() {
+        kills--;
+        player.getScoreboard().getObjective("PvP").getScore(player).setScore(kills);
+        pvpTime = System.currentTimeMillis();
+    }
+    
+    public final int getTotalExp() {
+        return player.getTotalExperience();
     }
 
     /**
@@ -201,6 +229,10 @@ public class SaveablePlayer implements Saveable {
      */
     public final boolean isBuying() {
         return isBuying;
+    }
+    
+    public final boolean hasPvp() {
+        return pvp;
     }
 
     /**
@@ -1465,5 +1497,31 @@ public class SaveablePlayer implements Saveable {
     
     public final PlayerRank getRank() {
         return rank;
+    }
+    
+    public final void togglePvp() {
+        pvp ^= true;
+        if(pvp) {
+            pvpTime = System.currentTimeMillis();
+            kills = 0;
+            final Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+            final Objective objective = board.registerNewObjective("PvP", "dummy");
+            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            objective.setDisplayName("PvP");
+            objective.getScore(player).setScore(kills);
+            player.setScoreboard(board);
+        } else {
+            pvpTime = 0;
+            kills = 0;
+            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        }
+    }
+    
+    public final int getKills() {
+        return kills;
+    }
+    
+    public final long getPvpTime() {
+        return pvpTime;
     }
 }

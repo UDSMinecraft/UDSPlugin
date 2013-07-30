@@ -39,6 +39,9 @@ public class PlayerChecks implements Runnable {
                 player.move(Warp.findSafePlace(player.getLocation().clone().multiply(ratio)));
                 player.sendNormal("You have reached the edge of the currently explorable world.");
             }
+            if(player.getKills() > 0 && player.getPvpTime() + TimeUtils.HOUR < System.currentTimeMillis()) {
+                    player.removeKill();
+            }
         }
     }
 }

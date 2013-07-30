@@ -24,8 +24,6 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
         if(player.hasPermission(Perm.BACK_ON_DEATH)) {
             player.sendNormal("Use /back to return to where you died.");
         }
-        if(player.hasLoadItems()) {
-            player.loadItems();
-        }
+        PlayerUtils.loadInventory(player);
     }
 }

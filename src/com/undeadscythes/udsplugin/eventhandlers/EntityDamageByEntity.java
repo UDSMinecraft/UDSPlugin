@@ -23,15 +23,7 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     }
 
     private boolean pvp(final SaveablePlayer attacker, final SaveablePlayer defender) {
-        if(!defender.isInClan()) {
-            attacker.sendNormal("This player is not in a clan.");
-            return true;
-        } else if(!attacker.isInClan()) {
-            attacker.sendNormal("You need to be in a clan to PvP.");
-            return true;
-        } else {
-            return defender.hasGodMode() || defender.isAfk() || attacker.getClan().equals(defender.getClan()) || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
-        }
+        return !attacker.hasPvp() || !defender.hasPvp() || defender.hasGodMode() || defender.isAfk() || !(attacker.isInClan() && defender.isInClan()) || attacker.getClan().equals(defender.getClan()) || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
     }
 
     private boolean isAfk(final Entity defender) {

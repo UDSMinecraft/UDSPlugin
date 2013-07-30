@@ -27,7 +27,7 @@ public class UDSPlugin extends JavaPlugin {
     public static final String INT_REGEX = "[0-9][0-9]*";
     private static final Vector HALF_BLOCK = new Vector(.5, .5, .5);
     private static final File BLOCKS_PATH = new File("plugins/UDSPlugin/blocks");
-    private static final File DATA_PATH = new File("plugins/UDSPlugin/data");
+    public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
     private static final HashSet<Byte> TRANSPARENT_BLOCKS = new HashSet<Byte>();
     private static final List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
     private static final List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL));
@@ -270,6 +270,7 @@ public class UDSPlugin extends JavaPlugin {
         getCommand("powertool").setExecutor(new PowertoolCmd());
         getCommand("private").setExecutor(new PrivateCmd());
         getCommand("promote").setExecutor(new PromoteCmd());
+        getCommand("pvp").setExecutor(new PvpCmd());
         getCommand("r").setExecutor(new RCmd());
         getCommand("rain").setExecutor(new RainCmd());
         getCommand("region").setExecutor(new RegionCmd());
