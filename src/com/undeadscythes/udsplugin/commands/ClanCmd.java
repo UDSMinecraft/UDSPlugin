@@ -38,20 +38,25 @@ public class ClanCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("members")) {
                 if((clan = getClan()) != null) {
-                    String members = "";
-                    for(SaveablePlayer member : clan.getMembers()) {
-                        if(!member.equals(player)) {
-                            members = members.concat(member.getNick() + ", ");
-                        }
-                    }
                     if(!clan.getLeader().equals(player)) {
                         player.sendNormal("Your clan leader is " + clan.getLeader() + ".");
                     }
-                    if(members.isEmpty()) {
+                    boolean empty = true;
+                    for(final ClanRank rank : ClanRank.values()) {
+                        String members = "";
+                        for(SaveablePlayer member : clan.getRankMembers(rank)) {
+                            if(!member.equals(player)) {
+                                members = members.concat(member.getNick() + ", ");
+                            }
+                        }
+                        if(!members.isEmpty()) {
+                            empty = false;
+                            player.sendNormal(clan.getName() + "s " + rank.toString() + "s are:");
+                            player.sendText(members.substring(0, members.length() - 2));
+                        }
+                    }
+                    if(empty) {
                         player.sendNormal("Your clan has no other members.");
-                    } else {
-                        player.sendNormal("Your fellow clan members are:");
-                        player.sendText(members.substring(0, members.length() - 2));
                     }
                 }
             } else if(subCmd.equals("list")) {
@@ -89,14 +94,14 @@ public class ClanCmd extends CommandWrapper {
                     UDSPlugin.sendBroadcast(player.getNick() + " just created " + args[1] + ".");
                 }
             } else if(subCmd.equals("invite")) {
-                if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && canRequest(target) && (clan = getClan()) != null && isLeader(clan) && notSelf(target)) {
+                if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && canRequest(target) && (clan = getClan()) != null && hasClanRank(clan, player) && notSelf(target)) {
                     UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.CLAN, clan.getName(), target));
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " has invited you to join " + clan.getName() + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                 }
             } else if(subCmd.equals("kick")) {
-                if((target = getMatchingPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan)) {
+                if((target = getMatchingPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
                     clan.delMember(target);
                     target.setClan(null);
                     if((base = RegionUtils.getRegion(RegionType.BASE, clan.getName() + "base")) != null) {
@@ -105,6 +110,26 @@ public class ClanCmd extends CommandWrapper {
                     target.sendNormal(player.getNick() + " has kicked you out of " + clan.getName() + ".");
                     player.sendNormal(target.getNick() + " has been kicked out of your clan.");
                     clan.sendMessage(target.getNick() + " has left the clan.");
+                }
+            } else if(subCmd.equals("promote")) {
+                if((target = getMatchingPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
+                    if(clan.promote(target)) {
+                        target.sendNormal("You have been promoted in clan " + clan.getName() + ".");
+                        player.sendNormal(target.getNick() + " has been promoted.");
+                        clan.sendMessage(target.getNick() + " has been promoted.");
+                    } else {
+                        player.sendError("That player cannot be promoted any further.");
+                    }
+                }
+            } else if(subCmd.equals("demote")) {
+                if((target = getMatchingPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
+                    if(clan.demote(target)) {
+                        target.sendNormal("You have been demoted in clan " + clan.getName() + ".");
+                        player.sendNormal(target.getNick() + " has been promoted.");
+                        clan.sendMessage(target.getNick() + " has been demoted.");
+                    } else {
+                        player.sendError("That player cannot be demoted any further.");
+                    }
                 }
             } else if(subCmd.equals("members")) {
                 if((clan = getClan(args[1])) != null) {
@@ -209,6 +234,14 @@ public class ClanCmd extends CommandWrapper {
                 }
             }
         }
+    }
+    
+    private boolean hasClanRank(final Clan clan, final SaveablePlayer player) {
+        if(!clan.hasClanRank(player)) {
+            player.sendError("You are not high enough rank in the clan to do this.");
+            return false;
+        }
+        return true;
     }
 }
 

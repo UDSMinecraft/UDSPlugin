@@ -134,6 +134,8 @@ public class HelpCmd extends CommandWrapper {
         CLAN_BASE_SET(Perm.CLAN, "/clan base set", "Set your bases warp point.", CLAN),
         CLAN_DISBAND(Perm.CLAN, "/clan disband", "Disband your clan.", CLAN),
         CLAN_INVITE(Perm.CLAN, "/clan invite <player>", "Invite a player to your clan.", CLAN),
+        CLAN_PROMOTE(Perm.CLAN, "/clan promote <player>", "Promote a player in your clan.", CLAN),
+        CLAN_DEMOTE(Perm.CLAN, "/clan demote <player>", "Demote a player in your clan.", CLAN),
         CLAN_KICK(Perm.CLAN, "/clan kick <player>", "Kick a player from your clan.", CLAN),
         CLAN_LEAVE(Perm.CLAN, "/clan leave", "Leave your clan.", CLAN),
         CLAN_LIST(Perm.CLAN, "/clan list", "View a list of clans.", CLAN),

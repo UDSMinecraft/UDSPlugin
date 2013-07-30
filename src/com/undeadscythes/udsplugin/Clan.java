@@ -12,7 +12,7 @@ import org.bukkit.*;
 public class Clan implements Saveable {
     private String name;
     private SaveablePlayer leader;
-    private final Set<SaveablePlayer> members;
+    private final HashMap<SaveablePlayer, ClanRank> members;
 
     private int kills = 0;
     private int deaths = 0;
@@ -25,7 +25,8 @@ public class Clan implements Saveable {
     public Clan(final String name, final SaveablePlayer leader) {
         this.name = name;
         this.leader = leader;
-        members = new HashSet<SaveablePlayer>(Arrays.asList(leader));
+        members = new HashMap<SaveablePlayer, ClanRank>(1);
+        members.put(leader, ClanRank.LEADER);
     }
 
     /**
@@ -38,22 +39,25 @@ public class Clan implements Saveable {
         leader = PlayerUtils.getPlayer(recordSplit[1]);
         kills = Integer.parseInt(recordSplit[2]);
         deaths = Integer.parseInt(recordSplit[3]);
-        members = new HashSet<SaveablePlayer>();
+        members = new HashMap<SaveablePlayer, ClanRank>(recordSplit[4].split(",").length);
         for(String member : recordSplit[4].split(",")) {
-            members.add(PlayerUtils.getPlayer(member));
+            members.put(PlayerUtils.getPlayer(member.split(":")[0]), member.split(":").length > 1 ? ClanRank.valueOf(member.split(":")[1]) : ClanRank.RECRUIT);
         }
+        members.put(leader, ClanRank.LEADER);
     }
 
     @Override
     public String getRecord() {
-        final List<String> record = new ArrayList<String>();
+        final List<String> record = new ArrayList<String>(5);
         record.add(name);
         record.add(leader.getName());
         record.add(Integer.toString(kills));
         record.add(Integer.toString(deaths));
-        final List<String> memberList = new ArrayList<String>();
-        for(SaveablePlayer member : members) {
-            memberList.add(member.getName());
+        final List<String> memberList = new ArrayList<String>(members.size());
+        final Iterator<Map.Entry<SaveablePlayer, ClanRank>> i = members.entrySet().iterator();
+        while(i.hasNext()) {
+            Map.Entry<SaveablePlayer, ClanRank> pair = i.next();
+            memberList.add(pair.getKey().getName() + ":" + pair.getValue().name());
         }
         record.add(StringUtils.join(memberList, ","));
         return StringUtils.join(record.toArray(), "\t");
@@ -63,7 +67,7 @@ public class Clan implements Saveable {
      *
      */
     public void linkMembers() {
-        for(SaveablePlayer member : members) {
+        for(SaveablePlayer member : members.keySet()) {
             member.setClan(this);
         }
     }
@@ -73,8 +77,8 @@ public class Clan implements Saveable {
      * @return Online members.
      */
     public Set<SaveablePlayer> getOnlineMembers() {
-        final Set<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>();
-        for(SaveablePlayer member : members) {
+        final Set<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>(members.size());
+        for(SaveablePlayer member : members.keySet()) {
             if(member != null) {
                 onlineMembers.add(member);
             }
@@ -87,9 +91,21 @@ public class Clan implements Saveable {
      * @return
      */
     public Set<SaveablePlayer> getMembers() {
-        return members;
+        return members.keySet();
     }
-
+    
+    public Set<SaveablePlayer> getRankMembers(final ClanRank rank) {
+        final Set<SaveablePlayer> ranked = new HashSet<SaveablePlayer>(members.size());
+        final Iterator<Map.Entry<SaveablePlayer, ClanRank>> i = members.entrySet().iterator();
+        while(i.hasNext()) {
+            Map.Entry<SaveablePlayer, ClanRank> pair = i.next();
+            if(pair.getValue().equals(rank)) {
+                ranked.add(pair.getKey());
+            }
+        }
+        return ranked;
+    }
+    
     /**
      *
      * @return
@@ -156,7 +172,7 @@ public class Clan implements Saveable {
      * @return <code>true</code> if successful, <code>false</code> otherwise.
      */
     public boolean changeLeader(final SaveablePlayer player) {
-        if(members.contains(player)) {
+        if(members.containsKey(player)) {
             leader = player;
             return true;
         } else {
@@ -181,7 +197,7 @@ public class Clan implements Saveable {
      * @param player Player name.
      */
     public void addMember(final SaveablePlayer player) {
-        members.add(player);
+        members.put(player, ClanRank.RECRUIT);
     }
 
     /**
@@ -195,7 +211,7 @@ public class Clan implements Saveable {
             if(members.isEmpty()) {
                 return false;
             } else {
-                leader = members.toArray(new SaveablePlayer[members.size()])[0];
+                leader = members.keySet().toArray(new SaveablePlayer[members.size()])[0];
                 return true;
             }
         } else {
@@ -211,5 +227,21 @@ public class Clan implements Saveable {
         for(SaveablePlayer member : getOnlineMembers()) {
             member.sendClan("[" + name + "] " + message);
         }
+    }
+    
+    public boolean promote(final SaveablePlayer member) {
+        ClanRank prev = members.get(member);
+        members.put(member, prev.next());
+        return !members.get(member).equals(prev);
+    }
+    
+    public boolean demote(final SaveablePlayer member) {
+        ClanRank prev = members.get(member);
+        members.put(member, prev.prev());
+        return !members.get(member).equals(prev);
+    }
+    
+    public boolean hasClanRank(final SaveablePlayer player) {
+        return members.get(player).compareTo(ClanRank.RECRUIT) > 0;
     }
 }
