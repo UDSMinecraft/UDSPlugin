@@ -104,7 +104,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected boolean notNearMobs() {
         List<Entity> entities = player.getNearbyEntities(10, 3, 10);
         for(Entity entity : entities) {
-            if(UDSPlugin.getHostileMobs().contains(entity.getType())) {
+            if(UDSPlugin.isHostile(entity.getType())) {
                 player.sendError("You cannot do that now, there are monsters nearby.");
                 return false;
             }
@@ -176,7 +176,6 @@ public abstract class CommandWrapper implements CommandExecutor {
 
     /**
      * If the arguments are asking for help, send help otherwise advise about bad arguments.
-     * @param args Arguments to the command.
      */
     protected void subCmdHelp() {
         if(args[0].equalsIgnoreCase("help")) {
@@ -406,7 +405,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The players current request if it exists, <code>null</code> otherwise.
      */
     protected Request getRequest() {
-        final Request request = UDSPlugin.getRequests().get(player.getName());
+        final Request request = UDSPlugin.getRequest(player);
         if(request == null) {
             player.sendError("You have no pending requests.");
         }
@@ -843,17 +842,11 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The city if it exists, <code>null</code> otherwise.
      */
     protected Region getMatchingCity(final String cityName) {
-        Region city;
-        if((city = RegionUtils.getRegion(RegionType.CITY, cityName)) != null) {
-            return city;
-        } else {
-            if((city = RegionUtils.matchRegion(RegionType.CITY, cityName)) != null) {
-                return city;
-            } else {
-                player.sendError("No city exists by that name.");
-                return null;
-            }
+        final Region city = RegionUtils.matchRegion(RegionType.CITY, cityName);
+        if(city == null) {
+            player.sendError("No city exists by that name.");
         }
+        return city;
     }
 
     /**
@@ -862,7 +855,7 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if the player is the mayor of the city, <code>false</code> otherwise.
      */
     protected boolean notMayor(final Region city) {
-        if(city.isOwner(player)) {
+        if(city.isOwnedBy(player)) {
             player.sendError("You cannot do that while you are the mayor.");
             return false;
         } else {
@@ -876,17 +869,12 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The city if both the city exists and the player is the mayor, <code>null</code> otherwise.
      */
     protected Region getMunicipality(final String cityName) {
-        Region city;
-        if((city = getMatchingCity(cityName)) != null) {
-            if(city.getOwner().equals(player)) {
-                return city;
-            } else {
-                player.sendError("You are not the mayor of that city.");
-                return null;
-            }
-        } else {
+        final Region city = getMatchingCity(cityName);
+        if(city != null && !city.isOwnedBy(player)) {
+            player.sendError("You are not the mayor of that city.");
             return null;
         }
+        return city;
     }
 
     /**
@@ -991,12 +979,11 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return <code>true</code> if the target player has no requests pending, <code>false</code> otherwise.
      */
     protected boolean noRequests(final SaveablePlayer target) {
-        if(UDSPlugin.getRequests().containsKey(target.getName())) {
+        if(UDSPlugin.getRequest(target) != null) {
             player.sendError("That player already has a request pending.");
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -1005,8 +992,8 @@ public abstract class CommandWrapper implements CommandExecutor {
      * @return The player if it matched and was not this player, <code>null</code> otherwise.
      */
     protected SaveablePlayer getMatchingOtherOnlinePlayer(final String name) {
-        SaveablePlayer target;
-        if((target = getMatchingOnlinePlayer(name)) != null && notSelf(target)) {
+        final SaveablePlayer target = getMatchingOnlinePlayer(name);
+        if(target != null && notSelf(target)) {
             return target;
         } else {
             return null;

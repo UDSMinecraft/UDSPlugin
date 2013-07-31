@@ -15,6 +15,31 @@ import org.bukkit.util.*;
  * @author UndeadScythes
  */
 public class BlockDispense extends ListenerWrapper implements Listener {
+    private static Vector toVector(final BlockFace blockFace) {
+        switch(blockFace) {
+            case UP:
+                return new Vector(0, 1, 0);
+            case DOWN:
+                return new Vector(0, -1, 0);
+            case NORTH:
+                return new Vector(0, 0, -1);
+            case SOUTH:
+                return new Vector(0, 0, 1);
+            case EAST:
+                return new Vector(1, 0, 0);
+            case WEST:
+                return new Vector(-1, 0, 0);
+            default:
+                return new Vector(0, 0, 0);
+        }
+    }
+
+    private static Entity fireEntity(final Location location, final EntityType entityType, final Vector vector) {
+        final Entity entity = location.getWorld().spawnEntity(location, entityType);
+        entity.setVelocity(vector);
+        return entity;
+    }
+
     @EventHandler
     public final void onEvent(final BlockDispenseEvent event) {
         if(hasFlag(event.getBlock().getLocation(), RegionFlag.DISPENSER)) {
@@ -45,12 +70,12 @@ public class BlockDispense extends ListenerWrapper implements Listener {
                     firework.setFireworkMeta((FireworkMeta)(event.getItem().getItemMeta()));
                     break;
                 case MINECART:
-                    if(UDSPlugin.getRails().contains(location.getBlock().getType())) {
+                    if(UDSPlugin.isRail(location.getBlock().getType())) {
                         fireEntity(location, EntityType.MINECART, new Vector(0, 0, 0));
                     }
                     break;
                 case BOAT:
-                    if(UDSPlugin.getWater().contains(location.getBlock().getRelative(BlockFace.DOWN).getType())) {
+                    if(UDSPlugin.isWater(location.getBlock().getRelative(BlockFace.DOWN).getType())) {
                         fireEntity(location, EntityType.BOAT, new Vector(0, 0, 0));
                     }
                     break;
@@ -62,30 +87,5 @@ public class BlockDispense extends ListenerWrapper implements Listener {
             }
             event.setCancelled(true);
         }
-    }
-
-    private static Vector toVector(final BlockFace blockFace) {
-        switch(blockFace) {
-            case UP:
-                return new Vector(0, 1, 0);
-            case DOWN:
-                return new Vector(0, -1, 0);
-            case NORTH:
-                return new Vector(0, 0, -1);
-            case SOUTH:
-                return new Vector(0, 0, 1);
-            case EAST:
-                return new Vector(1, 0, 0);
-            case WEST:
-                return new Vector(-1, 0, 0);
-            default:
-                return new Vector(0, 0, 0);
-        }
-    }
-
-    private static Entity fireEntity(final Location location, final EntityType entityType, final Vector vector) {
-        final Entity entity = location.getWorld().spawnEntity(location, entityType);
-        entity.setVelocity(vector);
-        return entity;
     }
 }

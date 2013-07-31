@@ -10,8 +10,6 @@ import java.util.*;
 public class RequestTimeOut implements Runnable {
     /**
      * Initiates the timer.
-     * @param plugin The UDSPlugin.
-     * @param interval The interval between passes.
      */
     public RequestTimeOut() {}
 
@@ -20,7 +18,7 @@ public class RequestTimeOut implements Runnable {
      */
     @Override
     public void run() {
-        for(final Iterator<Map.Entry<String, Request>> i = UDSPlugin.getRequests().entrySet().iterator(); i.hasNext();) {
+        for(final Iterator<Map.Entry<String, Request>> i = UDSPlugin.getRequestIterator(); i.hasNext();) {
             final Request request = i.next().getValue();
             if(request.getTime() + UDSPlugin.getConfigLong(ConfigRef.REQUEST_TTL) < System.currentTimeMillis()) {
                 request.getSender().sendNormal("Your request has timed out.");

@@ -117,7 +117,7 @@ public class ShopCmd extends CommandWrapper {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " wants to sell you their shop for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
-                    UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.SHOP, price, target));
+                    UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.SHOP, price, target));
                 }
             } else {
                 subCmdHelp();

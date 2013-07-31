@@ -18,7 +18,9 @@ public class EntityDeath extends ListenerWrapper implements Listener {
     public final void onEvent(final EntityDeathEvent event) {
         final Entity victim = event.getEntity();
         final EntityDamageEvent cause = victim.getLastDamageCause();
-        if(!(cause instanceof EntityDamageByEntityEvent)) return;
+        if(!(cause instanceof EntityDamageByEntityEvent)) {
+            return;
+        }
         final Entity killer = getAbsoluteEntity(((EntityDamageByEntityEvent)cause).getDamager());
         if(victim instanceof EnderDragon) {
             enderKill(killer, event.getEntity().getLocation());
@@ -35,7 +37,9 @@ public class EntityDeath extends ListenerWrapper implements Listener {
     }
 
     private void payReward(final SaveablePlayer player, final Entity victim) {
-        if(player.getGameMode() == GameMode.CREATIVE || player.hasGodMode()) return;
+        if(player.getGameMode() == GameMode.CREATIVE || player.hasGodMode()) {
+            return;
+        }
         final Random rng = new Random();
         final int base = (UDSPlugin.getMobReward(victim.getType()) / 2) + 1;
         final int reward = rng.nextInt(base) + base;
@@ -63,7 +67,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Ender Dragon!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
-        final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>();
+        final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>(1);
         for(Player endPlayer : players) {
             PlayerUtils.getPlayer(endPlayer.getName()).sendNormal("You can use commands such as /spawn to return to the overworld.");
             if(endPlayer.getLocation().distance(location) < 100) {
@@ -74,7 +78,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             }
         }
         if(!killers.isEmpty()) {
-            final int split = ((UDSPlugin.getMobRewards().get(EntityType.ENDER_DRAGON) / killers.size()) / 2) + 1;
+            final int split = ((UDSPlugin.getMobReward(EntityType.ENDER_DRAGON) / killers.size()) / 2) + 1;
             final Random generator = new Random();
             for(SaveablePlayer endKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
@@ -90,7 +94,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Wither!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
-        final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>();
+        final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>(1);
         for(Player witherPlayer : players) {
             if(witherPlayer.getLocation().distance(location) < 100) {
                 SaveablePlayer witherKiller = PlayerUtils.getPlayer((witherPlayer).getName());
@@ -100,7 +104,7 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             }
         }
         if(!killers.isEmpty()) {
-            final int split = ((UDSPlugin.getMobRewards().get(EntityType.WITHER) / killers.size()) / 2) + 1;
+            final int split = ((UDSPlugin.getMobReward(EntityType.WITHER) / killers.size()) / 2) + 1;
             final Random generator = new Random();
             for(SaveablePlayer witherKiller : killers) {
                 final int reward = generator.nextInt(split) + split;

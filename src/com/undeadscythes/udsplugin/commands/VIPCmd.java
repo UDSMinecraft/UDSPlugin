@@ -22,11 +22,13 @@ public class VIPCmd extends CommandWrapper {
             }
         } else if(maxArgsHelp(2)) {
             if(subCmd.equals("spawns")) {
-                int page;
-                if(args.length == 2 && (page = parseInt(args[1])) != -1) {
-                    sendPage(page, player);
-                } else {
+                if(args.length != 2) {
                     sendPage(1, player);
+                } else {
+                    final int page = parseInt(args[1]);
+                    if(page != -1) {
+                        sendPage(page, player);
+                    }
                 }
             } else {
                 subCmdHelp();
@@ -35,7 +37,7 @@ public class VIPCmd extends CommandWrapper {
     }
 
     private void sendPage(final int page, final SaveablePlayer player) {
-        final int pages = (UDSPlugin.getVipWhitelist().size() + 8) / 9;
+        final int pages = (UDSPlugin.VIP_WHITELIST.size() + 8) / 9;
         if(pages == 0) {
             player.sendNormal("There are no currently whitelisted items.");
         } else if(page > pages) {
@@ -44,7 +46,7 @@ public class VIPCmd extends CommandWrapper {
             player.sendNormal("--- VIP Item Whitelist " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
-            for(Material i : UDSPlugin.getVipWhitelist()) {
+            for(Material i : UDSPlugin.VIP_WHITELIST) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
                     String item = i.toString();
                     item = item.substring(0, 1).toUpperCase().concat(item.substring(1, item.length()).toLowerCase());

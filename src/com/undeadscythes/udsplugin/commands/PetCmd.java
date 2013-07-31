@@ -27,7 +27,7 @@ public class PetCmd extends CommandWrapper {
                 }
             }
         } else if(numArgsHelp(3) && args[0].equals("sell") && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && canRequest(target) && getSelectedPet() != null && (price = parseInt(args[2])) != -1) {
-            UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.PET, price, target));
+            UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.PET, price, target));
             player.sendMessage(Message.REQUEST_SENT);
             target.sendNormal(player.getNick() + " wants to sell their pet to you for " + price + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
             target.sendMessage(Message.REQUEST_Y_N);

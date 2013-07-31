@@ -173,7 +173,7 @@ public class Region implements Saveable {
      * @param player Player to check.
      * @return <code>true</code> if this is the owner of the region, <code>false</code> otherwise.
      */
-    public boolean isOwner(final SaveablePlayer player) {
+    public boolean isOwnedBy(final SaveablePlayer player) {
         return player != null && player.equals(owner);
     }
 

@@ -127,7 +127,7 @@ public class HomeCmd extends CommandWrapper {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " wants to sell you their house for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
-                    UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.HOME, price, target));
+                    UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.HOME, price, target));
                 }
             } else {
                 subCmdHelp();

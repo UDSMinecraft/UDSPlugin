@@ -35,6 +35,6 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     }
 
     private boolean pve(final Entity defender) {
-        return UDSPlugin.getPassiveMobs().contains(defender.getType()) && !hasFlag(defender.getLocation(), RegionFlag.PVE);
+        return UDSPlugin.isPassiveMob(defender.getType()) && !hasFlag(defender.getLocation(), RegionFlag.PVE);
     }
 }

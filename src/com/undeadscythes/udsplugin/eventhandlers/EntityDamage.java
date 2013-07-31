@@ -31,7 +31,7 @@ public class EntityDamage extends ListenerWrapper implements Listener {
                     challengeLoss(player);
                 }
             }
-        } else if(UDSPlugin.getPassiveMobs().contains(event.getEntity().getType()) && !hasFlag(event.getEntity().getLocation(), RegionFlag.PVE)) {
+        } else if(UDSPlugin.isPassiveMob(event.getEntity().getType()) && !hasFlag(event.getEntity().getLocation(), RegionFlag.PVE)) {
             event.setCancelled(true);
         }
     }

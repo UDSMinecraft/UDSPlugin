@@ -103,6 +103,10 @@ public class RegionUtils {
     }
     
     public static Region matchRegion(final RegionType type, final String partial) {
+        final Region region = REGIONS.get(type).get(partial);
+        if(region != null) {
+            return region;
+        }
         return REGIONS.get(type).matchKey(partial);
     }
     

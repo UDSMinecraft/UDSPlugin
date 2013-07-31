@@ -72,22 +72,20 @@ public class SaveablePlayer implements Saveable {
      */
     public SaveablePlayer(final String record) {
         final String[] recordSplit = record.split("\t");
-        switch(recordSplit.length) {
-            case 13:
-                pvpTime = Long.parseLong(recordSplit[11]);
-                kills = Integer.parseInt(recordSplit[12]);
-            default:
-                name = recordSplit[0];
-                bounty = Integer.parseInt(recordSplit[1]);
-                money = Integer.parseInt(recordSplit[2]);
-                rank = PlayerRank.getByName(recordSplit[3]);
-                vipTime = Long.parseLong(recordSplit[4]);
-                vipSpawns = Integer.parseInt(recordSplit[5]);
-                timeJailed = Long.parseLong(recordSplit[6]);
-                jailSentence = Long.parseLong(recordSplit[7]);
-                bail = Integer.parseInt(recordSplit[8]);
-                nick = recordSplit[9];
-                timeLogged = Long.parseLong(recordSplit[10]);
+        name = recordSplit[0];
+        bounty = Integer.parseInt(recordSplit[1]);
+        money = Integer.parseInt(recordSplit[2]);
+        rank = PlayerRank.getByName(recordSplit[3]);
+        vipTime = Long.parseLong(recordSplit[4]);
+        vipSpawns = Integer.parseInt(recordSplit[5]);
+        timeJailed = Long.parseLong(recordSplit[6]);
+        jailSentence = Long.parseLong(recordSplit[7]);
+        bail = Integer.parseInt(recordSplit[8]);
+        nick = recordSplit[9];
+        timeLogged = Long.parseLong(recordSplit[10]);
+        if(recordSplit.length == 13) {
+            pvpTime = Long.parseLong(recordSplit[11]);
+            kills = Integer.parseInt(recordSplit[12]);
         }
     }
 
@@ -330,10 +328,10 @@ public class SaveablePlayer implements Saveable {
      * @return
      */
     public final Session forceSession() {
-        Session session = UDSPlugin.getSessions().get(getName());
+        Session session = UDSPlugin.getSession(getName());
         if(session == null) {
             session = new Session();
-            UDSPlugin.getSessions().put(getName(), session);
+            UDSPlugin.addSession(getName(), session);
         }
         return session;
     }
@@ -728,7 +726,7 @@ public class SaveablePlayer implements Saveable {
         boolean contained = false;
         for(Region region : RegionUtils.getRegions()) {
             if(location.toVector().isInAABB(region.getV1(), region.getV2())) {
-                if(((region.getRank() != null && rank.compareTo(region.getRank()) >= 0)) || region.isOwner(this) || region.hasMember(this)) {
+                if(((region.getRank() != null && rank.compareTo(region.getRank()) >= 0)) || region.isOwnedBy(this) || region.hasMember(this)) {
                     return true;
                 }
                 contained = true;

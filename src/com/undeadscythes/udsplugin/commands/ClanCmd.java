@@ -95,7 +95,7 @@ public class ClanCmd extends CommandWrapper {
                 }
             } else if(subCmd.equals("invite")) {
                 if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && canRequest(target) && (clan = getClan()) != null && hasClanRank(clan, player) && notSelf(target)) {
-                    UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.CLAN, clan.getName(), target));
+                    UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.CLAN, clan.getName(), target));
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " has invited you to join " + clan.getName() + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

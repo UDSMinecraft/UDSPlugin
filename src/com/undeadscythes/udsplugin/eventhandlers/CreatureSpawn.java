@@ -11,7 +11,7 @@ import org.bukkit.event.entity.*;
 public class CreatureSpawn extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final CreatureSpawnEvent event) {
-        if(UDSPlugin.getHostileMobs().contains(event.getEntityType()) && !hasFlag(event.getLocation(), RegionFlag.MOBS)) {
+        if(UDSPlugin.isHostileMob(event.getEntityType()) && !hasFlag(event.getLocation(), RegionFlag.MOBS)) {
             event.setCancelled(true);
         }
     }

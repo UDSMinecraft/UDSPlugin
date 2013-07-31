@@ -12,7 +12,7 @@ public class ChallengeCmd extends CommandWrapper {
         SaveablePlayer target;
         int wager;
         if(numArgsHelp(2) && notJailed() && (target = getMatchingPlayer(args[0])) != null && isOnline(target) && notJailed(target) && (wager = parseInt(args[1])) != -1 && canAfford(wager) && canRequest(target) && notDueling(target) && notSelf(target)) {
-            UDSPlugin.getRequests().put(target.getName(), new Request(player, RequestType.PVP, wager, target));
+            UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.PVP, wager, target));
             target.sendNormal(player.getNick() + " has challenged you to a duel for " + wager + " credits.");
             target.sendMessage(Message.REQUEST_Y_N);
             player.sendMessage(Message.REQUEST_SENT);

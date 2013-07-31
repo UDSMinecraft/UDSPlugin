@@ -12,7 +12,6 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
-import org.bukkit.material.*;
 import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.*;
 import org.bukkit.scheduler.*;
@@ -25,23 +24,22 @@ import org.bukkit.util.Vector;
 public class UDSPlugin extends JavaPlugin {
     public static final int BUILD_LIMIT = 255;
     public static final String INT_REGEX = "[0-9][0-9]*";
+    public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
+    public static final HashSet<Byte> TRANSPARENT_BLOCKS = new HashSet<Byte>(0);
+    public static final List<Material> VIP_WHITELIST = new ArrayList<Material>(29);
+    private static final List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
+    private static final List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL, Material.ACTIVATOR_RAIL));
     private static final Vector HALF_BLOCK = new Vector(.5, .5, .5);
     private static final File BLOCKS_PATH = new File("plugins/UDSPlugin/blocks");
-    public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
-    private static final HashSet<Byte> TRANSPARENT_BLOCKS = new HashSet<Byte>();
-    private static final List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
-    private static final List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL));
-    private static final List<Material> VIP_WHITELIST = new ArrayList<Material>();
     private static final List<EntityType> HOSTILE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.ENDER_DRAGON, EntityType.GHAST, EntityType.MAGMA_CUBE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.WITCH, EntityType.WITHER, EntityType.ZOMBIE));
     private static final List<EntityType> PASSIVE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.SHEEP, EntityType.SQUID, EntityType.VILLAGER));
     private static final List<EntityType> NEUTRAL_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.IRON_GOLEM, EntityType.PIG_ZOMBIE, EntityType.SNOWMAN, EntityType.WOLF));
-    private static final List<Kit> KITS = new ArrayList<Kit>();
-    private static final Map<EntityType, Integer> MOB_REWARDS = new HashMap<EntityType, Integer>();
-    private static final Map<RegionFlag, Boolean> GLOBAL_FLAGS = new HashMap<RegionFlag, Boolean>();
-    private static final HashMap<String, ChatRoom> CHAT_ROOMS = new HashMap<String, ChatRoom>();
-    private static final HashMap<String, Request> REQUESTS = new HashMap<String, Request>();
-    private static final HashMap<String, Session> SESSIONS = new HashMap<String, Session>();
-
+    private static final List<Kit> KITS = new ArrayList<Kit>(3);
+    private static final EnumMap<EntityType, Integer> MOB_REWARDS = new EnumMap<EntityType, Integer>(EntityType.class);
+    private static final EnumMap<RegionFlag, Boolean> GLOBAL_FLAGS = new EnumMap<RegionFlag, Boolean>(RegionFlag.class);
+    private static final HashMap<String, ChatRoom> CHAT_ROOMS = new HashMap<String, ChatRoom>(0);
+    private static final HashMap<String, Request> REQUESTS = new HashMap<String, Request>(0);
+    private static final HashMap<String, Session> SESSIONS = new HashMap<String, Session>(0);
     private static UDSPlugin plugin;
     private static AutoSave autoSave = new AutoSave();
     private static DragonRespawn dragonRespawn = new DragonRespawn();
@@ -59,6 +57,178 @@ public class UDSPlugin extends JavaPlugin {
      * @param args Blah.
      */
     public static void main(final String[] args) {}
+
+        public static void reloadConf() {
+        plugin.reloadConfig();
+        plugin.loadConfig();
+    }
+
+    /**
+     * Saves all the listed objects to file.
+     * @return Number of individual data records written.
+     * @throws IOException When a file can't be opened.
+     */
+    public static int saveFiles() throws IOException {
+        data.saveData();
+        worldFlags.save();
+        PlayerUtils.savePlayers(DATA_PATH);
+        WarpUtils.saveWarps(DATA_PATH);
+        ClanUtils.saveClans(DATA_PATH);
+        RegionUtils.saveRegions(DATA_PATH);
+        PortalUtils.savePortals(DATA_PATH);
+        return ClanUtils.numClans() + RegionUtils.numRegions() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
+    }
+
+    public static Request getRequest(final SaveablePlayer player) {
+        return REQUESTS.get(player.getName());
+    }
+
+    /**
+     * Grab and cast the sessions map.
+     * @param name Name of player.
+     * @return Sessions map.
+     */
+    public static Session getSession(final String name) {
+        return SESSIONS.get(name);
+    }
+
+    public static void addSession(final String name, final Session session) {
+        SESSIONS.put(name, session);
+    }
+
+    public static Iterator<Map.Entry<String, Request>> getRequestIterator() {
+        return REQUESTS.entrySet().iterator();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static Data getData() {
+        return data;
+    }
+
+    public static void toggleLockdown() {
+        serverLockedDown ^= true;
+    }
+
+    public static boolean isLockedDown() {
+        return serverLockedDown;
+    }
+
+    public static double getConfigDouble(final ConfigRef ref) {
+        return plugin.getConfig().getDouble(ref.getReference());
+    }
+
+    public static boolean getConfigBool(final ConfigRef ref) {
+        return plugin.getConfig().getBoolean(ref.getReference());
+    }
+
+    public static byte getConfigByte(final ConfigRef ref) {
+        return (byte)plugin.getConfig().getInt(ref.getReference());
+    }
+    
+    public static int getConfigInt(final ConfigRef ref) {
+        return plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier();
+    }
+    
+    public static int getConfigIntSq(final ConfigRef ref) {
+        return (int)Math.pow(plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier(), 2);
+    }
+
+    public static long getConfigLong(final ConfigRef ref) {
+        return plugin.getConfig().getLong(ref.getReference()) * ref.getMultiplier();
+    }
+
+    public static String getConfigString(final ConfigRef ref) {
+        return plugin.getConfig().getString(ref.getReference());
+    }
+
+    public static List<String> getConfigStringList(final ConfigRef ref) {
+        return plugin.getConfig().getStringList(ref.getReference());
+    }
+
+    public static Material getConfigMaterial(final ConfigRef ref) {
+        return Material.getMaterial(plugin.getConfig().getString(ref.getReference()).toUpperCase());
+    }
+
+    public static File getBlocksPath() {
+        return BLOCKS_PATH;
+    }
+
+    public static Vector getHalfBlock() {
+        return HALF_BLOCK;
+    }
+
+    public static boolean isRail(final Material type) {
+        return RAILS.contains(type);
+    }
+
+    public static String getVersion() {
+        return plugin.getDescription().getVersion();
+    }
+
+    public static boolean checkWorldFlag(final World world, final RegionFlag flag) {
+        FileConfiguration flags = worldFlags.get();
+        final String path = world.getName() + "." + flag.name();
+        if(flags.contains(path)) {
+            return flags.getBoolean(path);
+        }
+        final boolean def = GLOBAL_FLAGS.get(flag);
+        flags.set(path, def);
+        return def;
+    }
+
+    public static boolean toggleWorldFlag(final World world, final RegionFlag flag) {
+        final boolean after = !checkWorldFlag(world, flag);
+        worldFlags.get().set(world.getName() + "." + flag.name(), after);
+        return after;
+    }
+
+    public static void changeWorldMode(final World world, final GameMode mode) {
+        worldFlags.get().set(world.getName() + ".mode", mode.getValue());
+    }
+
+    public static GameMode getWorldMode(final World world) {
+        final String path = world.getName() + ".mode";
+        if(worldFlags.get().contains(path)) {
+            return GameMode.getByValue(worldFlags.get().getInt(path));
+        }
+        changeWorldMode(world, GameMode.SURVIVAL);
+        return GameMode.SURVIVAL;
+    }
+
+    public static int getMobReward(final EntityType mob) {
+        return MOB_REWARDS.get(mob);
+    }
+
+    public static void sendBroadcast(final String message) {
+        Bukkit.broadcastMessage(Color.BROADCAST + message);
+    }
+
+    public static boolean isPassiveMob(final EntityType mob) {
+        return PASSIVE_MOBS.contains(mob);
+    }
+
+    public static boolean isHostileMob(final EntityType mob) {
+        return HOSTILE_MOBS.contains(mob);
+    }
+    
+    public static boolean isWater(final Material type) {
+        return WATER.contains(type);
+    }
+    
+    public static void addRequest(final String name, final Request request) {
+        REQUESTS.put(name, request);
+    }
+    
+    public static ChatRoom getChatRoom(final String name) {
+        return CHAT_ROOMS.get(name);
+    }
+    
+    public static void addChatRoom(final String name, final ChatRoom chatRoom) {
+        CHAT_ROOMS.put(name, chatRoom);
+    }
 
     @Override
     public final void onEnable() {
@@ -118,6 +288,7 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info(message); // Looks a bit like the Sims loading screen right?
     }
 
+
     @Override
     public final void onDisable() {
         try {
@@ -129,11 +300,6 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info(message);
     }
 
-    public static void reloadConf() {
-        plugin.reloadConfig();
-        plugin.loadConfig();
-    }
-
     public final void loadConfig() {
         final FileConfiguration config = getConfig();
         UDSPlugin.VIP_WHITELIST.clear();
@@ -143,7 +309,7 @@ public class UDSPlugin extends JavaPlugin {
         UDSPlugin.KITS.clear();
         for(String kit : config.getStringList(ConfigRef.KITS.getReference())) {
             final String[] kitSplit = kit.split(",");
-            final List<ItemStack> items = new ArrayList<ItemStack>();
+            final List<ItemStack> items = new ArrayList<ItemStack>(ArrayUtils.subarray(kitSplit, 3, kitSplit.length -1).length);
             for(Object item : ArrayUtils.subarray(kitSplit, 3, kitSplit.length -1)) {
                 items.add(new ItemStack(Material.getMaterial(Integer.parseInt((String)item))));
             }
@@ -169,21 +335,6 @@ public class UDSPlugin extends JavaPlugin {
             final WorldCreator creator = new WorldCreator(world);
             creator.createWorld();
         }
-    }
-
-    /**
-     * Saves all the listed objects to file.
-     * @throws IOException When a file can't be opened.
-     */
-    public static int saveFiles() throws IOException {
-        data.saveData();
-        worldFlags.save();
-        PlayerUtils.savePlayers(DATA_PATH);
-        WarpUtils.saveWarps(DATA_PATH);
-        ClanUtils.saveClans(DATA_PATH);
-        RegionUtils.saveRegions(DATA_PATH);
-        PortalUtils.savePortals(DATA_PATH);
-        return ClanUtils.numClans() + RegionUtils.numRegions() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
     }
 
     /**
@@ -363,238 +514,9 @@ public class UDSPlugin extends JavaPlugin {
         manager.registerEvents(new WeatherChange(), this);
     }
 
-    private final static String ROW = "AAA";
-    private final static String SWJ = "ABA";
-    private final static String GAP = "A A";
-    private final static String DOT = " A ";
-
-    @SuppressWarnings("deprecation")
     private void addRecipes() {
-        final ShapedRecipe mossyStoneBrick = new ShapedRecipe(new ItemStack(98, 1, (short) 0, (byte) 1)).shape(ROW, SWJ, ROW).setIngredient('A', Material.VINE).setIngredient('B', new MaterialData(98, (byte) 0));
-        this.getServer().addRecipe(mossyStoneBrick);
-        final ShapelessRecipe crackedStoneBrick = new ShapelessRecipe(new ItemStack(98, 1, (short) 0, (byte) 2)).addIngredient(Material.WOOD_PICKAXE).addIngredient(new MaterialData(98, (byte) 0));
-        this.getServer().addRecipe(crackedStoneBrick);
-        final ShapedRecipe circleStoneBrick = new ShapedRecipe(new ItemStack(98, 8, (short) 0, (byte) 3)).shape(ROW, GAP, ROW).setIngredient('A', new MaterialData(98, (byte) 0));
-        this.getServer().addRecipe(circleStoneBrick);
-        final ShapedRecipe mossyCobbleStone = new ShapedRecipe(new ItemStack(48, 1)).shape(ROW, SWJ, ROW).setIngredient('A', Material.VINE).setIngredient('B', Material.COBBLESTONE);
-        this.getServer().addRecipe(mossyCobbleStone);
-        final ShapedRecipe iceBlock = new ShapedRecipe(new ItemStack(79, 1)).shape(DOT, SWJ, DOT).setIngredient('A', Material.SNOW_BALL).setIngredient('B', Material.WATER_BUCKET);
-        this.getServer().addRecipe(iceBlock);
-        final ShapedRecipe chainHelmet = new ShapedRecipe(new ItemStack(302, 1)).shape(ROW, GAP).setIngredient('A', Material.FLINT);
-        this.getServer().addRecipe(chainHelmet);
-        final ShapedRecipe chainChest = new ShapedRecipe(new ItemStack(303, 1)).shape(GAP, ROW ,ROW).setIngredient('A', Material.FLINT);
-        this.getServer().addRecipe(chainChest);
-        final ShapedRecipe chainLegs = new ShapedRecipe(new ItemStack(304, 1)).shape(ROW, GAP, GAP).setIngredient('A', Material.FLINT);
-        this.getServer().addRecipe(chainLegs);
-        final ShapedRecipe chainBoots = new ShapedRecipe(new ItemStack(305, 1)).shape(GAP, GAP).setIngredient('A', Material.FLINT);
-        this.getServer().addRecipe(chainBoots);
-        final ShapedRecipe grassBlock = new ShapedRecipe(new ItemStack(Material.GRASS, 1)).shape("A", "B").setIngredient('A', new MaterialData(31, (byte) 1)).setIngredient('B', Material.DIRT);
-        this.getServer().addRecipe(grassBlock);
-        final ShapedRecipe snowLayer = new ShapedRecipe(new ItemStack(Material.SNOW, 1)).shape(ROW).setIngredient('A', Material.SNOW_BALL);
-        this.getServer().addRecipe(snowLayer);
-        final ShapedRecipe creeperEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 50)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SULPHUR);
-        this.getServer().addRecipe(creeperEgg);
-        final ShapedRecipe skeletonEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 51)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.BONE);
-        this.getServer().addRecipe(skeletonEgg);
-        final ShapedRecipe spiderEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 52)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SPIDER_EYE);
-        this.getServer().addRecipe(spiderEgg);
-        final ShapedRecipe zombieEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 54)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.ROTTEN_FLESH);
-        this.getServer().addRecipe(zombieEgg);
-        final ShapedRecipe slimeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 55)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.SLIME_BALL);
-        this.getServer().addRecipe(slimeEgg);
-        final ShapedRecipe ghastEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 56)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.GHAST_TEAR);
-        this.getServer().addRecipe(ghastEgg);
-        final ShapedRecipe pigZombieEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 57)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.GOLD_NUGGET);
-        this.getServer().addRecipe(pigZombieEgg);
-        final ShapedRecipe endermanEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 58)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.ENDER_PEARL);
-        this.getServer().addRecipe(endermanEgg);
-        final ShapedRecipe caveSpiderEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 59)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.STRING);
-        this.getServer().addRecipe(caveSpiderEgg);
-        final ShapedRecipe silverFishEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 60)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.STONE);
-        this.getServer().addRecipe(silverFishEgg);
-        final ShapedRecipe blazeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 61)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.BLAZE_ROD);
-        this.getServer().addRecipe(blazeEgg);
-        final ShapedRecipe magmaCubeEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 62)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.MAGMA_CREAM);
-        this.getServer().addRecipe(magmaCubeEgg);
-        final ShapedRecipe pigEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 90)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.PORK);
-        this.getServer().addRecipe(pigEgg);
-        final ShapedRecipe sheepEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 91)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.WOOL);
-        this.getServer().addRecipe(sheepEgg);
-        final ShapedRecipe cowEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 92)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.LEATHER);
-        this.getServer().addRecipe(cowEgg);
-        final ShapedRecipe chickenEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 93)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.FEATHER);
-        this.getServer().addRecipe(chickenEgg);
-        final ShapedRecipe squidEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 94)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.INK_SACK);
-        this.getServer().addRecipe(squidEgg);
-        final ShapedRecipe wolfEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 95)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.WHEAT);
-        this.getServer().addRecipe(wolfEgg);
-        final ShapedRecipe mooshroomEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 96)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.RED_MUSHROOM);
-        this.getServer().addRecipe(mooshroomEgg);
-        final ShapedRecipe villagerEgg = new ShapedRecipe(new ItemStack(383, 1, (short) 0, (byte) 120)).shape(ROW, SWJ, ROW).setIngredient('A', Material.GOLD_BLOCK).setIngredient('B', Material.RED_ROSE);
-        this.getServer().addRecipe(villagerEgg);
-        final ShapedRecipe webBlock = new ShapedRecipe(new ItemStack(Material.WEB)).shape(ROW, GAP, ROW).setIngredient('A', Material.STRING);
-        this.getServer().addRecipe(webBlock);
-    }
-
-    /**
-     * Grab the chat rooms map.
-     * @return Chat rooms map.
-     */
-    public static HashMap<String, ChatRoom> getChatRooms() {
-        return CHAT_ROOMS;
-    }
-
-    /**
-     * Grab the requests map.
-     * @return Requests map.
-     */
-    public static HashMap<String, Request> getRequests() {
-        return REQUESTS;
-    }
-
-    /**
-     * Grab and cast the sessions map.
-     * @return Sessions map.
-     */
-    public static HashMap<String, Session> getSessions() {
-        return SESSIONS;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static Data getData() {
-        return data;
-    }
-
-    public static void toggleLockdown() {
-        serverLockedDown ^= true;
-    }
-
-    public static boolean isLockedDown() {
-        return serverLockedDown;
-    }
-
-    public static double getConfigDouble(final ConfigRef ref) {
-        return plugin.getConfig().getDouble(ref.getReference());
-    }
-
-    public static boolean getConfigBool(final ConfigRef ref) {
-        return plugin.getConfig().getBoolean(ref.getReference());
-    }
-
-    public static byte getConfigByte(final ConfigRef ref) {
-        return (byte)plugin.getConfig().getInt(ref.getReference());
-    }
-
-    public static int getConfigInt(final ConfigRef ref) {
-        return plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier();
-    }
-
-    public static int getConfigIntSq(final ConfigRef ref) {
-        return (int)Math.pow(plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier(), 2);
-    }
-
-    public static long getConfigLong(final ConfigRef ref) {
-        return plugin.getConfig().getLong(ref.getReference()) * ref.getMultiplier();
-    }
-
-    public static String getConfigString(final ConfigRef ref) {
-        return plugin.getConfig().getString(ref.getReference());
-    }
-
-    public static List<String> getConfigStringList(final ConfigRef ref) {
-        return plugin.getConfig().getStringList(ref.getReference());
-    }
-
-    public static Material getConfigMaterial(final ConfigRef ref) {
-        return Material.getMaterial(plugin.getConfig().getString(ref.getReference()).toUpperCase());
-    }
-
-    public static File getBlocksPath() {
-        return BLOCKS_PATH;
-    }
-
-    public static Vector getHalfBlock() {
-        return HALF_BLOCK;
-    }
-
-    public static Map<RegionFlag, Boolean> getGlobalFlags() {
-        return GLOBAL_FLAGS;
-    }
-
-    public static List<Material> getVipWhitelist() {
-        return VIP_WHITELIST;
-    }
-
-    public static Map<EntityType, Integer> getMobRewards() {
-        return MOB_REWARDS;
-    }
-
-    public static List<Kit> getKits() {
-        return KITS;
-    }
-
-    public static List<Material> getRails() {
-        return RAILS;
-    }
-
-    public static List<Material> getWater() {
-        return WATER;
-    }
-
-    public static List<EntityType> getHostileMobs() {
-        return HOSTILE_MOBS;
-    }
-
-    public static List<EntityType> getPassiveMobs() {
-        return PASSIVE_MOBS;
-    }
-
-    public static HashSet<Byte> getTransparentBlocks() {
-        return TRANSPARENT_BLOCKS;
-    }
-
-    public static String getVersion() {
-        return plugin.getDescription().getVersion();
-    }
-    
-    public static boolean checkWorldFlag(final World world, final RegionFlag flag) {
-        FileConfiguration flags = worldFlags.get();
-        final String path = world.getName() + "." + flag.name();
-        if(flags.contains(path)) {
-            return flags.getBoolean(path);
+        for(final CustomRecipe recipe : CustomRecipe.values()) {
+            Bukkit.getServer().addRecipe(recipe.getRecipe());
         }
-        final boolean def = GLOBAL_FLAGS.get(flag);
-        flags.set(path, def);
-        return def;
-    }
-    
-    public static boolean toggleWorldFlag(final World world, final RegionFlag flag) {
-        final boolean after = !checkWorldFlag(world, flag);
-        worldFlags.get().set(world.getName() + "." + flag.name(), after);
-        return after;
-    }
-    
-    public static void changeWorldMode(final World world, final GameMode mode) {
-        worldFlags.get().set(world.getName() + ".mode", mode.getValue());
-    }
-    
-    public static GameMode getWorldMode(final World world) {
-        final String path = world.getName() + ".mode";
-        if(worldFlags.get().contains(path)) {
-            return GameMode.getByValue(worldFlags.get().getInt(path));
-        }
-        changeWorldMode(world, GameMode.SURVIVAL);
-        return GameMode.SURVIVAL;
-    }
-    
-    public static int getMobReward(final EntityType mob) {
-        return MOB_REWARDS.get(mob);
-    }
-    
-    public static void sendBroadcast(final String message) {
-        Bukkit.broadcastMessage(Color.BROADCAST + message);
     }
 }
