@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import Comparators.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.text.*;
@@ -40,6 +41,7 @@ public class ClanCmd extends CommandWrapper {
                 if((clan = getClan()) != null) {
                     if(!clan.getLeader().equals(player)) {
                         player.sendNormal("Your clan leader is " + clan.getLeader() + ".");
+                        player.sendNormal("Your rank is " + clan.getRankOf(player));
                     }
                     boolean empty = true;
                     for(final ClanRank rank : ClanRank.values()) {
@@ -244,11 +246,3 @@ public class ClanCmd extends CommandWrapper {
         return true;
     }
 }
-
-class SortByKDR implements Comparator<Clan> {
-    @Override
-    public int compare(final Clan clan1, final Clan clan2) {
-        return (int)((clan2.getRatio() - clan1.getRatio()) * 100);
-    }
-}
-
