@@ -50,7 +50,7 @@ public enum Color {
     /*
      * Color for player connection related messages.
      */
-    CONNECTION(ChatColor.DARK_BLUE);
+    CONNECTION(ChatColor.GRAY);
 
     private final ChatColor color;
 
