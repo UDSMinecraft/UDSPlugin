@@ -9,10 +9,10 @@ import com.undeadscythes.udsplugin.*;
 public class DemoteCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
-        SaveablePlayer target;
+        final SaveablePlayer target;
         if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && notSelf(target)) {
-            PlayerRank rank;
-            if(player.sameRank(target) && (rank = target.demote()) != null) {
+            final PlayerRank rank;
+            if(player.outRanks(target) && (rank = target.demote()) != null) {
                 player.sendNormal(target.getNick() + " has been demoted to " + rank.toString() + ".");
                 target.sendNormal("You have been demoted to " + rank.toString() + ".");
             } else {

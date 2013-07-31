@@ -650,7 +650,9 @@ public class SaveablePlayer implements Saveable {
      */
     public final PlayerRank promote() {
         final PlayerRank newRank = PlayerRank.getAbove(rank);
-        if(newRank != null) {
+        if(newRank == PlayerRank.OWNER) {
+            return null;
+        } else if(newRank != null) {
             rank = newRank;
         }
         return newRank;
@@ -820,7 +822,7 @@ public class SaveablePlayer implements Saveable {
     }
     
     public final boolean isRank(final PlayerRank rank) {
-        return this.rank.compareTo(rank) == 0;
+        return this.rank.equals(rank);
     }
 
     /**
