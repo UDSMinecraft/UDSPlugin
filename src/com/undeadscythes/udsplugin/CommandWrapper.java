@@ -1196,9 +1196,16 @@ public abstract class CommandWrapper implements CommandExecutor {
         if(PortalUtils.portalExists(name)) {
             player.sendError("A portal already exists with that name.");
             return false;
-        } else {
-            return true;
         }
+        return true;
+    }
+    
+    protected boolean outRanks(final SaveablePlayer target) {
+        if(!player.outRanks(target)) {
+            player.sendMessage("You do not out rank this player.");
+            return false;
+        }
+        return true;
     }
 
     /**

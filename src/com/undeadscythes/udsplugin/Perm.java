@@ -28,6 +28,7 @@ public enum Perm {
     CHECK(PlayerRank.NEWBIE),
     CHUNK(PlayerRank.ADMIN),
     CI(PlayerRank.MEMBER),
+    CI_OTHER(PlayerRank.MOD),
     CITY(PlayerRank.MEMBER, GameMode.SURVIVAL),
     CLAN(PlayerRank.MEMBER),
     CLAN_BASE_BUILD(PlayerRank.MEMBER, GameMode.SURVIVAL),
