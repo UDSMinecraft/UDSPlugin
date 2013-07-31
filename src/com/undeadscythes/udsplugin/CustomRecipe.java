@@ -62,18 +62,28 @@ public enum CustomRecipe {
                     ((ShapedRecipe)recipe).shape(row1, row2, row3);
                     break;
             }
+            switch((ing1 == null ? 0 : 1) + (ing2 == null ? 0 : 1) + (ing3 == null ? 0 : 1)) {
+                case 3:
+                    ((ShapedRecipe)recipe).setIngredient('C', ing3);
+                case 2:
+                    ((ShapedRecipe)recipe).setIngredient('B', ing2);
+                case 1:
+                    ((ShapedRecipe)recipe).setIngredient('A', ing1);
+                    break;
+            }
         } else {
             recipe = new ShapelessRecipe(item.toItemStack(num));
+            switch((ing1 == null ? 0 : 1) + (ing2 == null ? 0 : 1) + (ing3 == null ? 0 : 1)) {
+                case 3:
+                    ((ShapelessRecipe)recipe).addIngredient(ing3);
+                case 2:
+                    ((ShapelessRecipe)recipe).addIngredient(ing2);
+                case 1:
+                    ((ShapelessRecipe)recipe).addIngredient(ing1);
+                    break;
+            }
         }
-        switch((ing1 == null ? 0 : 1) + (ing2 == null ? 0 : 1) + (ing3 == null ? 0 : 1)) {
-            case 3:
-                ((ShapedRecipe)recipe).setIngredient('C', ing3);
-            case 2:
-                ((ShapedRecipe)recipe).setIngredient('B', ing2);
-            case 1:
-                ((ShapedRecipe)recipe).setIngredient('A', ing1);
-                break;
-        }
+        
     }
     
     private CustomRecipe(final Material out, final int data, final String row1, final String row2, final String row3, final Material ing1, final Material ing2) {
