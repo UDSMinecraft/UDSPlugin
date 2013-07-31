@@ -10,9 +10,9 @@ import com.undeadscythes.udsplugin.utilities.*;
 public class NCmd extends CommandWrapper {
     @Override
     public void playerExecute() {
-        Request request;
-        if((request = getRequest()) != null) {
-            UDSPlugin.getRequests().remove(player.getName());
+        final Request request = getRequest();
+        if(request != null) {
+            UDSPlugin.removeRequest(player.getName());
             final SaveablePlayer sender = PlayerUtils.getPlayer(request.getSender().getName());
             if(sender.isOnline()) {
                 sender.sendNormal(player.getNick() + " has denied your request.");

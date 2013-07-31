@@ -68,7 +68,7 @@ public class YCmd extends CommandWrapper {
                     sender.sendNormal(player.getNick() + " was unable to accept your request.");
             }
         }
-        UDSPlugin.getRequests().remove(player.getName());
+        UDSPlugin.removeRequest(player.getName());
     }
 
     private void clanRequest(final Clan clan) {

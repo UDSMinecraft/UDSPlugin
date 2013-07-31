@@ -104,7 +104,7 @@ public abstract class CommandWrapper implements CommandExecutor {
     protected boolean notNearMobs() {
         List<Entity> entities = player.getNearbyEntities(10, 3, 10);
         for(Entity entity : entities) {
-            if(UDSPlugin.isHostile(entity.getType())) {
+            if(UDSPlugin.isHostileMob(entity.getType())) {
                 player.sendError("You cannot do that now, there are monsters nearby.");
                 return false;
             }

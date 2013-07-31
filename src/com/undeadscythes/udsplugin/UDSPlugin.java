@@ -27,6 +27,7 @@ public class UDSPlugin extends JavaPlugin {
     public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
     public static final HashSet<Byte> TRANSPARENT_BLOCKS = new HashSet<Byte>(0);
     public static final List<Material> VIP_WHITELIST = new ArrayList<Material>(29);
+    public static final List<Kit> KITS = new ArrayList<Kit>(3);
     private static final List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
     private static final List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL, Material.ACTIVATOR_RAIL));
     private static final Vector HALF_BLOCK = new Vector(.5, .5, .5);
@@ -34,7 +35,6 @@ public class UDSPlugin extends JavaPlugin {
     private static final List<EntityType> HOSTILE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.ENDER_DRAGON, EntityType.GHAST, EntityType.MAGMA_CUBE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.WITCH, EntityType.WITHER, EntityType.ZOMBIE));
     private static final List<EntityType> PASSIVE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.SHEEP, EntityType.SQUID, EntityType.VILLAGER));
     private static final List<EntityType> NEUTRAL_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.IRON_GOLEM, EntityType.PIG_ZOMBIE, EntityType.SNOWMAN, EntityType.WOLF));
-    private static final List<Kit> KITS = new ArrayList<Kit>(3);
     private static final EnumMap<EntityType, Integer> MOB_REWARDS = new EnumMap<EntityType, Integer>(EntityType.class);
     private static final EnumMap<RegionFlag, Boolean> GLOBAL_FLAGS = new EnumMap<RegionFlag, Boolean>(RegionFlag.class);
     private static final HashMap<String, ChatRoom> CHAT_ROOMS = new HashMap<String, ChatRoom>(0);
@@ -230,6 +230,11 @@ public class UDSPlugin extends JavaPlugin {
         CHAT_ROOMS.put(name, chatRoom);
     }
 
+    public static void removeRequest(final String name) {
+        REQUESTS.remove(name);
+    }
+
+
     @Override
     public final void onEnable() {
         UDSPlugin.plugin = this;
@@ -287,7 +292,6 @@ public class UDSPlugin extends JavaPlugin {
         final String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
         getLogger().info(message); // Looks a bit like the Sims loading screen right?
     }
-
 
     @Override
     public final void onDisable() {
