@@ -33,7 +33,9 @@ public class PlayerJoin implements Listener {
                 UDSPlugin.sendBroadcast("A new player, free gifts for everyone!");
                 final ItemStack gift = new ItemStack(UDSPlugin.getConfigMaterial(ConfigRef.WELCOME_GIFT));
                 for(final SaveablePlayer onlinePlayer : PlayerUtils.getOnlinePlayers()) {
-                    onlinePlayer.giveAndDrop(gift);
+                    if(!onlinePlayer.isAfk()) {
+                        onlinePlayer.giveAndDrop(gift);
+                    }
                 }
             }
             player.quietTeleport(UDSPlugin.getData().getSpawn());
