@@ -32,7 +32,7 @@ public class PlayerJoin implements Listener {
             } else {
                 UDSPlugin.sendBroadcast("A new player, free gifts for everyone!");
                 final ItemStack gift = new ItemStack(UDSPlugin.getConfigMaterial(ConfigRef.WELCOME_GIFT));
-                for(SaveablePlayer onlinePlayer : PlayerUtils.getOnlinePlayers()) {
+                for(final SaveablePlayer onlinePlayer : PlayerUtils.getOnlinePlayers()) {
                     onlinePlayer.giveAndDrop(gift);
                 }
             }
@@ -48,7 +48,7 @@ public class PlayerJoin implements Listener {
                 player.sendMessage(UDSPlugin.getConfigString(ConfigRef.WELCOME_ADMIN));
             }
             if(player.isHidden()) {
-                for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                for(final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, true);
                     } else {
@@ -57,10 +57,10 @@ public class PlayerJoin implements Listener {
 
                 }
             } else {
-                event.setJoinMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
+                event.setJoinMessage(Color.CONNECTION + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
             }
             if(!player.hasPermission(Perm.VANISH)) {
-                for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
+                for(final SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
                     hiddenPlayer.hideFrom(event.getPlayer(), true);
                 }
             }

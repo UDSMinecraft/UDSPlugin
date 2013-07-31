@@ -17,11 +17,11 @@ public class PlayerQuit implements Listener {
         final long time = player.getLastPlayed();
         player.addTime(System.currentTimeMillis() - (time == 0 ? System.currentTimeMillis() : time));
         if(player.isHidden()) {
-            for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
+            for(final SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
                 hiddenPlayer.sendWhisper(player.getNick() + " has left.");
             }
         } else {
-            event.setQuitMessage(Color.BROADCAST + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
+            event.setQuitMessage(Color.CONNECTION + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
         }
         PlayerUtils.removeOnlinePlayer(name);
         player.nullBase();
