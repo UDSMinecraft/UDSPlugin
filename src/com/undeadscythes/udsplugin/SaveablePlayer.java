@@ -55,6 +55,7 @@ public class SaveablePlayer implements Saveable {
     private boolean pvp = false;
     private int kills = 0;
     private long pvpTime = 0;
+    private ArrayList<Float> lastView = new ArrayList<Float>(2);
 
     /**
      *
@@ -123,6 +124,8 @@ public class SaveablePlayer implements Saveable {
         this.player = player;
         player.setDisplayName(nick);
         player.setPlayerListName(nick);
+        lastView.add(0, player.getLocation().getPitch());
+        lastView.add(1, player.getLocation().getYaw());
     }
 
     /**
@@ -131,6 +134,14 @@ public class SaveablePlayer implements Saveable {
      */
     public final void addTime(final long time) {
         timeLogged += time;
+    }
+    
+    public final ArrayList<Float> getLastView() {
+        return lastView;
+    }
+    
+    public final void setLastView(final ArrayList<Float> view) {
+        lastView = view;
     }
     
     public final void addKill() {

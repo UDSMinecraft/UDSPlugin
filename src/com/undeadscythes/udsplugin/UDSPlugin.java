@@ -41,6 +41,7 @@ public class UDSPlugin extends JavaPlugin {
     private static final HashMap<String, Request> REQUESTS = new HashMap<String, Request>(0);
     private static final HashMap<String, Session> SESSIONS = new HashMap<String, Session>(0);
     private static UDSPlugin plugin;
+    private static AfkCheck afkCheck = new AfkCheck();
     private static AutoSave autoSave = new AutoSave();
     private static DragonRespawn dragonRespawn = new DragonRespawn();
     private static MinecartChecks minecartChecks = new MinecartChecks();
@@ -271,6 +272,7 @@ public class UDSPlugin extends JavaPlugin {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
         final BukkitScheduler sched = Bukkit.getScheduler();
+        sched.scheduleSyncRepeatingTask(this, afkCheck, 300000, 300000);
         sched.scheduleSyncRepeatingTask(this, autoSave, 18000, 18000);
         sched.scheduleSyncRepeatingTask(this, dragonRespawn, 6000, 36000);
         sched.scheduleSyncRepeatingTask(this, minecartChecks, 400, 400);
@@ -347,9 +349,6 @@ public class UDSPlugin extends JavaPlugin {
      * @throws IOException When a file can't be read from.
      */
     private void loadFiles() throws IOException {
-        BufferedReader file;
-        String nextLine;
-        String message;
         PlayerUtils.loadPlayers(DATA_PATH);
         if(PlayerUtils.numPlayers() > 0) {
             getLogger().info("Loaded " + PlayerUtils.numPlayers() + " players.");
