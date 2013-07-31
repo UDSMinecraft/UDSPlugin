@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
  * Various clan related commands.
  * @author UndeadScythes
  */
-public class ClanCmd extends CommandWrapper {
+public class ClanCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         Clan clan;

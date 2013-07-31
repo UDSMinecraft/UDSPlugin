@@ -11,7 +11,7 @@ import org.bukkit.util.*;
  * WorldEdit-like tools.
  * @author UndeadScythes
  */
-public class WECmd extends CommandWrapper {
+public class WECmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(args.length == 1) {

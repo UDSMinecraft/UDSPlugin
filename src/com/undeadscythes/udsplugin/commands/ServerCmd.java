@@ -8,7 +8,7 @@ import org.bukkit.*;
  * Server related commands.
  * @author UndeadScythes
  */
-public class ServerCmd extends CommandWrapper {
+public class ServerCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(numArgsHelp(1)) {

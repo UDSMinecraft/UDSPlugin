@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Checks the identity of a player.
  * @author UndeadScythes
  */
-public class WhoIsCmd extends CommandWrapper {
+public class WhoIsCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

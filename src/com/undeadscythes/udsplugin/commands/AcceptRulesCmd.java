@@ -9,7 +9,7 @@ import org.bukkit.*;
  * Lets a player get build rights and promotes them to member.
  * @author UndeadScythes
  */
-public class AcceptRulesCmd extends CommandWrapper {
+public class AcceptRulesCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(canAfford(UDSPlugin.getConfigInt(ConfigRef.BUILD_COST))) {

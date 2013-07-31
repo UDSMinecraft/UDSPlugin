@@ -8,7 +8,7 @@ import org.bukkit.util.*;
  * Home region related commands.
  * @author UndeadScythes
  */
-public class HomeCmd extends CommandWrapper {
+public class HomeCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         Region home;

@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Ban a player from the server.
  * @author UndeadScythes
  */
-public class BanCmd extends CommandWrapper {
+public class BanCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

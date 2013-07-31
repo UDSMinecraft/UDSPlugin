@@ -8,7 +8,7 @@ import org.bukkit.inventory.*;
  * Give a player a spawn map.
  * @author UndeadScythes
  */
-public class MapCmd extends CommandWrapper {
+public class MapCmd extends CommandValidator {
     @Override
     @SuppressWarnings("deprecation")
     public final void playerExecute() {

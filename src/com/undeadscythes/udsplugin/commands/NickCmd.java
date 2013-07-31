@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Change a players nickname.
  * @author UndeadScythes
  */
-public class NickCmd extends CommandWrapper {
+public class NickCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

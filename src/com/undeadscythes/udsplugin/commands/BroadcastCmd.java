@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Broadcast a server wide message.
  * @author UndeadScythes
  */
-public class BroadcastCmd extends CommandWrapper {
+public class BroadcastCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(minArgsHelp(1)) {

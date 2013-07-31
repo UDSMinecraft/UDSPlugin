@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Hold a private conversation with another player.
  * @author UndeadScythes
  */
-public class TellCmd extends CommandWrapper {
+public class TellCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         SaveablePlayer target;

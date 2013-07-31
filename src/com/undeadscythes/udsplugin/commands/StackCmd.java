@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Stack the items in the players inventory.
  * @author UndeadScythes
  */
-public class StackCmd extends CommandWrapper {
+public class StackCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         ItemStack[] items = player.getInventory().getContents();

@@ -9,7 +9,7 @@ import org.apache.commons.lang.*;
  * Use warp points.
  * @author UndeadScythes
  */
-public class WarpCmd extends CommandWrapper {
+public class WarpCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         Warp warp;

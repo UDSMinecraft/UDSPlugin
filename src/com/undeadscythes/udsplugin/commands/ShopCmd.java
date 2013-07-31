@@ -8,7 +8,7 @@ import org.bukkit.inventory.*;
  * Shop related commands.
  * @author UndeadScythes
  */
-public class ShopCmd extends CommandWrapper {
+public class ShopCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         Region shop;

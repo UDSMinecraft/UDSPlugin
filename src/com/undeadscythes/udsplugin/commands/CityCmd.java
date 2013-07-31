@@ -9,7 +9,7 @@ import org.bukkit.util.Vector;
  * City related commands.
  * @author UndeadScythes
  */
-public class CityCmd extends CommandWrapper {
+public class CityCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         Region city;

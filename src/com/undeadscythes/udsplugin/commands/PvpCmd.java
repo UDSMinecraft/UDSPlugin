@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.utilities.*;
  *
  * @author UndeadScythes
  */
-public class PvpCmd extends CommandWrapper {
+public class PvpCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(!player.hasPvp()) {

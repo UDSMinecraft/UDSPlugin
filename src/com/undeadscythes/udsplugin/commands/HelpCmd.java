@@ -7,7 +7,7 @@ import java.util.*;
  * Get help on certain commands.
  * @author UndeadScythes
  */
-public class HelpCmd extends CommandWrapper {
+public class HelpCmd extends CommandValidator {
     private enum Usage {
         HELP(Perm.HELP, "/help [page or command]", "Show these help pages."),
         TICKET(Perm.TICKET, "/ticket <message>", "Submit a suggestion or a bug report."),

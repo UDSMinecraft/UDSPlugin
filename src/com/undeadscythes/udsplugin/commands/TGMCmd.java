@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Toggle a players game mode.
  * @author UndeadScythes
  */
-public class TGMCmd extends CommandWrapper {
+public class TGMCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

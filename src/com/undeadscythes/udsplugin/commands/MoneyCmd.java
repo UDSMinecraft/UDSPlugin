@@ -8,7 +8,7 @@ import java.util.*;
  * Various money handling commands.
  * @author UndeadScythes
  */
-public class MoneyCmd extends CommandWrapper {
+public class MoneyCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         SaveablePlayer target;

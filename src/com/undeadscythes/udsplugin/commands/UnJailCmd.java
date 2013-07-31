@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Remove a player from jail.
  * @author UndeadScythes
  */
-public class UnJailCmd extends CommandWrapper {
+public class UnJailCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

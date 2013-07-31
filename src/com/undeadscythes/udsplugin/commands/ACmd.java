@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Toggles the admin chat channel.
  * @author UndeadScythes
  */
-public class ACmd extends CommandWrapper {
+public class ACmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(args.length == 0) {

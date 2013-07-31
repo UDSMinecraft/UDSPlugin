@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Clears all items from a player's inventory.
  * @author UndeadScythes
  */
-public class CiCmd extends CommandWrapper {
+public class CiCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(args.length == 1) {

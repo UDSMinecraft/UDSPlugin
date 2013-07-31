@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Spawn items into the players inventory.
  * @author UndeadScythes
  */
-public class ICmd extends CommandWrapper {
+public class ICmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(minArgsHelp(1) && maxArgsHelp(2)) {

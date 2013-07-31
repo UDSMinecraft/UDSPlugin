@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Make it sunny in the players world.
  * @author UndeadScythes
  */
-public class SunCmd extends CommandWrapper {
+public class SunCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         player.getWorld().setStorm(false);

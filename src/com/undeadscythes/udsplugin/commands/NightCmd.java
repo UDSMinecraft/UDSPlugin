@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Set the world the players is in to night.
  * @author UndeadScythes
  */
-public class NightCmd extends CommandWrapper {
+public class NightCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         player.getWorld().setTime(14000);

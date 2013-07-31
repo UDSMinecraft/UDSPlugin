@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.utilities.*;
  * Deny a request.
  * @author UndeadScythes
  */
-public class NCmd extends CommandWrapper {
+public class NCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         final Request request = getRequest();

@@ -9,7 +9,7 @@ import org.bukkit.entity.*;
  * Toggles the admin chat channel.
  * @author UndeadScythes
  */
-public class VanishCmd extends CommandWrapper {
+public class VanishCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(args.length == 0) {

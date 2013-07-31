@@ -9,7 +9,7 @@ import org.bukkit.*;
  * Handles various chunk related commands.
  * @author UndeadScythes
  */
-public class ChunkCmd extends CommandWrapper {
+public class ChunkCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(numArgsHelp(1)) {

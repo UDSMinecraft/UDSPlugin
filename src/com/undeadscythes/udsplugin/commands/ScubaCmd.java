@@ -8,7 +8,7 @@ import org.bukkit.inventory.*;
  * Don your scuba gear.
  * @author UndeadScythes
  */
-public class ScubaCmd extends CommandWrapper {
+public class ScubaCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(player.getInventory().getHelmet() == null) {

@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
  * Change a players experience level.
  * @author UndeadScythes
  */
-public class XPCmd extends CommandWrapper {
+public class XPCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

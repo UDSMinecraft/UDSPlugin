@@ -7,7 +7,7 @@ import org.bukkit.block.*;
  * Lets a player 'sit' on stair blocks.
  * @author UndeadScythes
  */
-public class SitCmd extends CommandWrapper {
+public class SitCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         player.sendNormal("Sorry this command is currently unavailable.");

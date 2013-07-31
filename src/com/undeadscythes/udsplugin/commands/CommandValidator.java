@@ -1,5 +1,21 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.Censor;
+import com.undeadscythes.udsplugin.Clan;
+import com.undeadscythes.udsplugin.ConfigRef;
+import com.undeadscythes.udsplugin.Direction;
+import com.undeadscythes.udsplugin.Perm;
+import com.undeadscythes.udsplugin.PlayerRank;
+import com.undeadscythes.udsplugin.Portal;
+import com.undeadscythes.udsplugin.Region;
+import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.RegionType;
+import com.undeadscythes.udsplugin.Request;
+import com.undeadscythes.udsplugin.SaveablePlayer;
+import com.undeadscythes.udsplugin.Session;
+import com.undeadscythes.udsplugin.ShortItem;
+import com.undeadscythes.udsplugin.UDSPlugin;
+import com.undeadscythes.udsplugin.Warp;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -13,7 +29,7 @@ import org.bukkit.inventory.*;
  * Methods allow various checks to be made and messages to be sent to the players on errors.
  * @author UndeadScythes
  */
-public abstract class CommandWrapper implements CommandExecutor {
+public abstract class CommandValidator implements CommandExecutor {
     protected SaveablePlayer player;
     private String commandName;
     protected String[] args;

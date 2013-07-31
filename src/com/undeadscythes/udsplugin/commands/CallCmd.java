@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Request to teleport to another player.
  * @author UndeadScythes
  */
-public class CallCmd extends CommandWrapper {
+public class CallCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

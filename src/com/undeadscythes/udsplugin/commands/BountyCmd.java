@@ -8,7 +8,7 @@ import java.util.*;
  * Place and check bounties on players.
  * @author UndeadScythes
  */
-public class BountyCmd extends CommandWrapper {
+public class BountyCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         int bounty;

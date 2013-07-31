@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class RegionUtils {
     private static final String PATH = "regions.csv";
-    private static HashMap<RegionType, SaveableHashMap<Region>> REGIONS = new HashMap<RegionType, SaveableHashMap<Region>>();
+    private static EnumMap<RegionType, SaveableHashMap<Region>> REGIONS = new EnumMap<RegionType, SaveableHashMap<Region>>(RegionType.class);
 
     public static void saveRegions(final File path) throws IOException {
         final SaveableHashMap<Region> regions = new SaveableHashMap<Region>();
@@ -74,7 +74,7 @@ public class RegionUtils {
     }
     
     public static Collection<Region> getRegions() {
-        final ArrayList<Region> regions = new ArrayList<Region>();
+        final ArrayList<Region> regions = new ArrayList<Region>(0);
         for(final SaveableHashMap<Region> map : REGIONS.values()) {
             for(final Region region : map.values()) {
                 regions.add(region);

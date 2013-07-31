@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.utilities.*;
  * Region related commands.
  * @author UndeadScythes
  */
-public class RegionCmd extends CommandWrapper {
+public class RegionCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(args.length == 1) {

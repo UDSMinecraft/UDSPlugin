@@ -9,7 +9,7 @@ import org.bukkit.*;
  * Displays a list of online players.
  * @author UndeadScythes
  */
-public class WhoCmd extends CommandWrapper {
+public class WhoCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         final Map<PlayerRank, String> lists = new TreeMap<PlayerRank, String>();

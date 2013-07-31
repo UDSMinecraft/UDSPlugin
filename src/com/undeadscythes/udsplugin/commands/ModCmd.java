@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Allows players to use /mod help.
  * @author UndeadScythes
  */
-public class ModCmd extends CommandWrapper {
+public class ModCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(args.length == 0) {

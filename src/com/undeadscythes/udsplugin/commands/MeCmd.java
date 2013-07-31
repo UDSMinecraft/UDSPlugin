@@ -9,7 +9,7 @@ import org.bukkit.*;
  * Send an action.
  * @author UndeadScythes
  */
-public class MeCmd extends CommandWrapper {
+public class MeCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         final String action = StringUtils.join(args, " ");

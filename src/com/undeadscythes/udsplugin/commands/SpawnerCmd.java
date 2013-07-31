@@ -9,7 +9,7 @@ import org.bukkit.entity.*;
  * Change the mob type of a spawner.
  * @author UndeadScythes
  */
-public class SpawnerCmd extends CommandWrapper {
+public class SpawnerCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(numArgsHelp(1)) {

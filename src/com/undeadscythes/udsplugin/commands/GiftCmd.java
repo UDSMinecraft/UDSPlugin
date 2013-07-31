@@ -9,7 +9,7 @@ import org.bukkit.inventory.*;
  * Send another player a gift.
  * @author UndeadScythes
  */
-public class GiftCmd extends CommandWrapper {
+public class GiftCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

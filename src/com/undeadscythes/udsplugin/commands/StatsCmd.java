@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Get statistics on a player.
  * @author UndeadScythes
  */
-public class StatsCmd extends CommandWrapper {
+public class StatsCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

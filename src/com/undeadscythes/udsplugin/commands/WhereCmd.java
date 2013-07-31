@@ -7,7 +7,7 @@ import org.bukkit.*;
  * Give a description of the players surroundings.
  * @author UndeadScythes
  */
-public class WhereCmd extends CommandWrapper {
+public class WhereCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         final Location playerLocation = player.getLocation();

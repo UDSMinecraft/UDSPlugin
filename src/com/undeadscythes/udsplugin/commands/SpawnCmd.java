@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Teleport a player to spawn.
  * @author UndeadScythes
  */
-public class SpawnCmd extends CommandWrapper {
+public class SpawnCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(notPinned() && notJailed()) {

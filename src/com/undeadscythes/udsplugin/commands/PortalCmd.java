@@ -9,7 +9,7 @@ import org.bukkit.util.*;
  * Command to create and manage portals.
  * @author UndeadScythes
  */
-public class PortalCmd extends CommandWrapper {
+public class PortalCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(args.length == 1) {

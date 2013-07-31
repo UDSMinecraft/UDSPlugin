@@ -8,7 +8,7 @@ import org.bukkit.entity.*;
  * Perform actions with pets.
  * @author UndeadScythes
  */
-public class PetCmd extends CommandWrapper {
+public class PetCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         SaveablePlayer target;

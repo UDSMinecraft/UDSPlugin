@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Allows players to use /warden help.
  * @author UndeadScythes
  */
-public class WardenCmd extends CommandWrapper {
+public class WardenCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         if(args.length == 0) {

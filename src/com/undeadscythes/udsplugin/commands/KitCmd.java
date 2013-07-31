@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
  * Spawns the player a kit.
  * @author UndeadScythes
  */
-public class KitCmd extends CommandWrapper {
+public class KitCmd extends CommandValidator {
     @Override
     public final void playerExecute() {
         if(args.length == 0) {

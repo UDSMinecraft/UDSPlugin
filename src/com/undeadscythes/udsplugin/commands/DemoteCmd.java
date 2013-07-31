@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Demote a player by a single rank.
  * @author UndeadScythes
  */
-public class DemoteCmd extends CommandWrapper {
+public class DemoteCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         final SaveablePlayer target;
