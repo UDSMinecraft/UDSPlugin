@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import Comparators.*;
+import com.undeadscythes.udsplugin.comparators.SortByKDR;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.text.*;
