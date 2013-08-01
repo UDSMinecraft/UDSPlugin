@@ -49,6 +49,7 @@ public class PlayerJoin implements Listener {
             } else if(player.hasPermission(Perm.ADMINMSG)) {
                 player.sendMessage(Config.WELCOME_ADMIN);
             }
+            player.newLogin(System.currentTimeMillis());
             if(player.isHidden()) {
                 for(final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {

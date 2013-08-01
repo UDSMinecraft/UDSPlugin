@@ -9,6 +9,8 @@ public class TimeUtils {
      * Number to divide to convert milliseconds to ticks.
      */
     public static final long TICKS = 50;
+    
+    public static final long WEEK = 604800000;//TODO: add gray bit
     /**
      * The number of milliseconds in a day.
      */

@@ -56,6 +56,7 @@ public class SaveablePlayer implements Saveable {
     private int kills = 0;
     private long pvpTime = 0;
     private ArrayList<Float> lastView = new ArrayList<Float>(2);
+    private final LinkedList<Long> lastLogins = new LinkedList<Long>();
 
     /**
      *
@@ -1537,5 +1538,14 @@ public class SaveablePlayer implements Saveable {
     
     public final long getPvpTime() {
         return pvpTime;
+    }
+    public final void newLogin(final long time) {
+        lastLogins.add(time);
+        while(lastLogins.size() > 2) {   
+            lastLogins.remove();
+        }       
+    }
+    public final boolean isActive() {
+        return lastLogins.size() == 2 && System.currentTimeMillis() - TimeUtils.WEEK < lastLogins.get(1);
     }
 }
