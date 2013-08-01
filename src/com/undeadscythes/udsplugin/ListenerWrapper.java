@@ -5,6 +5,7 @@ import java.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
+import org.bukkit.material.*;
 import org.bukkit.util.Vector;
 
 /**
@@ -17,7 +18,6 @@ public class ListenerWrapper {
      * @param item
      * @return
      */
-    @SuppressWarnings("deprecation")
     public static ItemStack findItem(final String item) {
         ItemStack itemStack;
         if(item.contains(":")) {
@@ -31,7 +31,8 @@ public class ListenerWrapper {
             if(material == null) {
                 return null;
             } else {
-                itemStack = new ItemStack(material, 1, (short) 0, Byte.parseByte(item.split(":")[1]));
+                final MaterialData mat = new MaterialData(material, Byte.parseByte(item.split(":")[1]));
+                itemStack = mat.toItemStack(1);
             }
         } else {
             Material material;
@@ -56,20 +57,6 @@ public class ListenerWrapper {
 
     /**
      *
-     * @param location
-     * @return
-     */
-    public SaveablePlayer findShopOwner(final Location location) {
-        for(Region shop : RegionUtils.getRegions(RegionType.SHOP)) {
-            if(location.toVector().isInAABB(shop.getV1(), shop.getV2())) {
-                return shop.getOwner();
-            }
-        }
-        return null;
-    }
-
-    /**
-     *
      * @param lines
      * @return
      */
@@ -89,6 +76,20 @@ public class ListenerWrapper {
             && priceLine.contains(":")                                                              //
             && priceLine.split(":")[0].replace("B ", "").matches("[0-9][0-9]*")                     //
             && priceLine.split(":")[1].replace(" S", "").matches("[0-9][0-9]*");                    //
+    }
+
+    /**
+     *
+     * @param location
+     * @return
+     */
+    public SaveablePlayer findShopOwner(final Location location) {
+        for(Region shop : RegionUtils.getRegions(RegionType.SHOP)) {
+            if(location.toVector().isInAABB(shop.getV1(), shop.getV2())) {
+                return shop.getOwner();
+            }
+        }
+        return null;
     }
 
     /**
@@ -119,7 +120,7 @@ public class ListenerWrapper {
                 }
             }
         }
-        return inRegion ? false : UDSPlugin.checkWorldFlag(location.getWorld(), flag);
+        return inRegion;
     }
 
     /**
@@ -128,7 +129,7 @@ public class ListenerWrapper {
      * @return
      */
     public List<Region> regionsHere(final Location location) {
-        final List<Region> regions = new ArrayList<Region>();
+        final List<Region> regions = new ArrayList<Region>(0);
         final Vector vector = location.toVector();
         for(Region region : RegionUtils.getRegions()) {
             if(location.getWorld().equals(region.getWorld()) && vector.isInAABB(region.getV1(), region.getV2())) {

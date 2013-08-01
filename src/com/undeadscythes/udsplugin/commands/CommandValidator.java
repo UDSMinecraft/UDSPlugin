@@ -1,21 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.Censor;
-import com.undeadscythes.udsplugin.Clan;
-import com.undeadscythes.udsplugin.ConfigRef;
-import com.undeadscythes.udsplugin.Direction;
-import com.undeadscythes.udsplugin.Perm;
-import com.undeadscythes.udsplugin.PlayerRank;
-import com.undeadscythes.udsplugin.Portal;
-import com.undeadscythes.udsplugin.Region;
-import com.undeadscythes.udsplugin.RegionFlag;
-import com.undeadscythes.udsplugin.RegionType;
-import com.undeadscythes.udsplugin.Request;
-import com.undeadscythes.udsplugin.SaveablePlayer;
-import com.undeadscythes.udsplugin.Session;
-import com.undeadscythes.udsplugin.ShortItem;
-import com.undeadscythes.udsplugin.UDSPlugin;
-import com.undeadscythes.udsplugin.Warp;
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -354,8 +339,21 @@ public abstract class CommandValidator implements CommandExecutor {
      * @param name Region flag name.
      * @return The region flag if it exists, <code>null</code> otherwise.
      */
-    protected RegionFlag getFlag(final String name) {
+    protected RegionFlag getRegionFlag(final String name) {
         final RegionFlag flag = RegionFlag.getByName(name);
+        if(flag == null) {
+            player.sendError("That is not a valid region type.");
+        }
+        return flag;
+    }
+    
+    /**
+     * Get a region flag by name.
+     * @param name Region flag name.
+     * @return The region flag if it exists, <code>null</code> otherwise.
+     */
+    protected WorldFlag getWorldFlag(final String name) {
+        final WorldFlag flag = WorldFlag.getByName(name);
         if(flag == null) {
             player.sendError("That is not a valid region type.");
         }
@@ -954,7 +952,7 @@ public abstract class CommandValidator implements CommandExecutor {
      * @return <code>true</code> if the player is not pinned, <code>false</code> otherwise.
      */
     protected boolean notPinned() {
-        if(player.getLastDamageCaused() + UDSPlugin.getConfigLong(ConfigRef.PVP_TIME) < System.currentTimeMillis()) {
+        if(player.getLastDamageCaused() + Config.PVP_TIME < System.currentTimeMillis()) {
             return true;
         } else {
             player.sendError("You can't do that at this time.");

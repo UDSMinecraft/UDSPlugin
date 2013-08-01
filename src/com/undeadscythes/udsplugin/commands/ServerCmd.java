@@ -18,7 +18,7 @@ public class ServerCmd extends CommandValidator {
                 }
                 Bukkit.shutdown();
             } else if(subCmd.equals("reload")) {
-                UDSPlugin.reloadConf();
+                Config.reload();
                 player.sendNormal("Configuration file reloaded.");
             } else if(subCmd.equals("info")) {
                 player.sendNormal("Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");

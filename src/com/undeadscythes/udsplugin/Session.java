@@ -134,7 +134,7 @@ public class Session {
      */
     public final boolean save(final Cuboid blocks) {
         history.push(blocks);
-        if(history.size() > UDSPlugin.getConfigInt(ConfigRef.UNDO_COUNT)) {
+        if(history.size() > Config.UNDO_COUNT) {
             history.remove(0);
             return true;
         }

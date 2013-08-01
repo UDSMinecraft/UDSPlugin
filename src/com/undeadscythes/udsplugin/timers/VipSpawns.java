@@ -10,8 +10,6 @@ import com.undeadscythes.udsplugin.utilities.*;
 public class VipSpawns implements Runnable {
     /**
      * Initiates the timer.
-     * @param plugin The UDSPlugin.
-     * @param interval The interval between passes.
      */
     public VipSpawns() {}
 
@@ -21,7 +19,7 @@ public class VipSpawns implements Runnable {
     @Override
     public void run() {
         for(SaveablePlayer vip : PlayerUtils.getVips()) {
-            vip.setVIPSpawns(UDSPlugin.getConfigInt(ConfigRef.VIP_SPAWNS));
+            vip.setVIPSpawns(Config.VIP_SPAWNS);
             if(vip.isOnline()) {
                 vip.sendNormal("Your daily item spawns have been refilled.");
             }

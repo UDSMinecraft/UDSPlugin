@@ -1,8 +1,6 @@
 package com.undeadscythes.udsplugin.timers;
 
 import com.undeadscythes.udsplugin.*;
-import java.io.*;
-import java.util.logging.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
@@ -14,8 +12,6 @@ import org.bukkit.entity.*;
 public class DragonRespawn implements Runnable {
     /**
      * Initiates the timer.
-     * @param plugin The UDSPlugin.
-     * @param interval The interval between passes.
      */
     public DragonRespawn() {}
 
@@ -24,7 +20,7 @@ public class DragonRespawn implements Runnable {
      */
     @Override
     public void run() {
-        if(UDSPlugin.getData().getLastEnderDeath() > -1 && UDSPlugin.getData().getLastEnderDeath() + UDSPlugin.getConfigLong(ConfigRef.DRAGON_RESPAWN) < System.currentTimeMillis()) {
+        if(UDSPlugin.getData().getLastEnderDeath() > -1 && UDSPlugin.getData().getLastEnderDeath() + Config.DRAGON_RESPAWN < System.currentTimeMillis()) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
                     world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);

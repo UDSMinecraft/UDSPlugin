@@ -41,11 +41,11 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             return;
         }
         final Random rng = new Random();
-        final int base = (UDSPlugin.getMobReward(victim.getType()) / 2) + 1;
+        final int base = (Config.MOB_REWARDS.get(victim.getType()) / 2) + 1;
         final int reward = rng.nextInt(base) + base;
         player.credit(reward);
-        player.sendNormal("You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
-        if(rng.nextDouble() < UDSPlugin.getConfigDouble(ConfigRef.SKULL)) {
+        player.sendNormal("You picked up " + reward + " " + (reward == 1 ? Config.CURRENCY : Config.CURRENCIES) + ".");
+        if(rng.nextDouble() < Config.SKULL) {
             ItemStack skull;
             if(victim.getType().equals(EntityType.ZOMBIE)) {
                 skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.ZOMBIE.ordinal());
@@ -78,12 +78,12 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             }
         }
         if(!killers.isEmpty()) {
-            final int split = ((UDSPlugin.getMobReward(EntityType.ENDER_DRAGON) / killers.size()) / 2) + 1;
+            final int split = ((Config.MOB_REWARDS.get(EntityType.ENDER_DRAGON) / killers.size()) / 2) + 1;
             final Random generator = new Random();
             for(SaveablePlayer endKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 endKiller.credit(reward);
-                PlayerUtils.getPlayer(endKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
+                PlayerUtils.getPlayer(endKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? Config.CURRENCY : Config.CURRENCIES) + ".");
             }
         }
     }
@@ -104,12 +104,12 @@ public class EntityDeath extends ListenerWrapper implements Listener {
             }
         }
         if(!killers.isEmpty()) {
-            final int split = ((UDSPlugin.getMobReward(EntityType.WITHER) / killers.size()) / 2) + 1;
+            final int split = ((Config.MOB_REWARDS.get(EntityType.WITHER) / killers.size()) / 2) + 1;
             final Random generator = new Random();
             for(SaveablePlayer witherKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 witherKiller.credit(reward);
-                PlayerUtils.getPlayer(witherKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? UDSPlugin.getConfigString(ConfigRef.CURRENCY) : UDSPlugin.getConfigString(ConfigRef.CURRENCIES)) + ".");
+                PlayerUtils.getPlayer(witherKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? Config.CURRENCY : Config.CURRENCIES) + ".");
             }
         }
     }

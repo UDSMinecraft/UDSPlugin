@@ -7,11 +7,9 @@ import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
-import org.apache.commons.lang.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
 import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.*;
 import org.bukkit.scheduler.*;
@@ -26,17 +24,12 @@ public class UDSPlugin extends JavaPlugin {
     public static final String INT_REGEX = "[0-9][0-9]*";
     public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
     public static final HashSet<Byte> TRANSPARENT_BLOCKS = new HashSet<Byte>(0);
-    public static final List<Material> VIP_WHITELIST = new ArrayList<Material>(29);
-    public static final List<Kit> KITS = new ArrayList<Kit>(3);
     private static final List<Material> WATER = new ArrayList<Material>(Arrays.asList(Material.WATER, Material.STATIONARY_WATER));
     private static final List<Material> RAILS = new ArrayList<Material>(Arrays.asList(Material.RAILS, Material.POWERED_RAIL, Material.DETECTOR_RAIL, Material.ACTIVATOR_RAIL));
     private static final Vector HALF_BLOCK = new Vector(.5, .5, .5);
     private static final File BLOCKS_PATH = new File("plugins/UDSPlugin/blocks");
     private static final List<EntityType> HOSTILE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.ENDER_DRAGON, EntityType.GHAST, EntityType.MAGMA_CUBE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.WITCH, EntityType.WITHER, EntityType.ZOMBIE));
     private static final List<EntityType> PASSIVE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.SHEEP, EntityType.SQUID, EntityType.VILLAGER));
-    private static final List<EntityType> NEUTRAL_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.IRON_GOLEM, EntityType.PIG_ZOMBIE, EntityType.SNOWMAN, EntityType.WOLF));
-    private static final EnumMap<EntityType, Integer> MOB_REWARDS = new EnumMap<EntityType, Integer>(EntityType.class);
-    private static final EnumMap<RegionFlag, Boolean> GLOBAL_FLAGS = new EnumMap<RegionFlag, Boolean>(RegionFlag.class);
     private static final HashMap<String, ChatRoom> CHAT_ROOMS = new HashMap<String, ChatRoom>(0);
     private static final HashMap<String, Request> REQUESTS = new HashMap<String, Request>(0);
     private static final HashMap<String, Session> SESSIONS = new HashMap<String, Session>(0);
@@ -58,11 +51,6 @@ public class UDSPlugin extends JavaPlugin {
      * @param args Blah.
      */
     public static void main(final String[] args) {}
-
-        public static void reloadConf() {
-        plugin.reloadConfig();
-        plugin.loadConfig();
-    }
 
     /**
      * Saves all the listed objects to file.
@@ -117,42 +105,6 @@ public class UDSPlugin extends JavaPlugin {
         return serverLockedDown;
     }
 
-    public static double getConfigDouble(final ConfigRef ref) {
-        return plugin.getConfig().getDouble(ref.getReference());
-    }
-
-    public static boolean getConfigBool(final ConfigRef ref) {
-        return plugin.getConfig().getBoolean(ref.getReference());
-    }
-
-    public static byte getConfigByte(final ConfigRef ref) {
-        return (byte)plugin.getConfig().getInt(ref.getReference());
-    }
-    
-    public static int getConfigInt(final ConfigRef ref) {
-        return plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier();
-    }
-    
-    public static int getConfigIntSq(final ConfigRef ref) {
-        return (int)Math.pow(plugin.getConfig().getInt(ref.getReference()) * (int)ref.getMultiplier(), 2);
-    }
-
-    public static long getConfigLong(final ConfigRef ref) {
-        return plugin.getConfig().getLong(ref.getReference()) * ref.getMultiplier();
-    }
-
-    public static String getConfigString(final ConfigRef ref) {
-        return plugin.getConfig().getString(ref.getReference());
-    }
-
-    public static List<String> getConfigStringList(final ConfigRef ref) {
-        return plugin.getConfig().getStringList(ref.getReference());
-    }
-
-    public static Material getConfigMaterial(final ConfigRef ref) {
-        return Material.getMaterial(plugin.getConfig().getString(ref.getReference()).toUpperCase());
-    }
-
     public static File getBlocksPath() {
         return BLOCKS_PATH;
     }
@@ -169,18 +121,18 @@ public class UDSPlugin extends JavaPlugin {
         return plugin.getDescription().getVersion();
     }
 
-    public static boolean checkWorldFlag(final World world, final RegionFlag flag) {
+    public static boolean checkWorldFlag(final World world, final WorldFlag flag) {
         FileConfiguration flags = worldFlags.get();
         final String path = world.getName() + "." + flag.name();
         if(flags.contains(path)) {
             return flags.getBoolean(path);
         }
-        final boolean def = GLOBAL_FLAGS.get(flag);
+        final boolean def = flag.isDefaulted();
         flags.set(path, def);
         return def;
     }
 
-    public static boolean toggleWorldFlag(final World world, final RegionFlag flag) {
+    public static boolean toggleWorldFlag(final World world, final WorldFlag flag) {
         final boolean after = !checkWorldFlag(world, flag);
         worldFlags.get().set(world.getName() + "." + flag.name(), after);
         return after;
@@ -197,10 +149,6 @@ public class UDSPlugin extends JavaPlugin {
         }
         changeWorldMode(world, GameMode.SURVIVAL);
         return GameMode.SURVIVAL;
-    }
-
-    public static int getMobReward(final EntityType mob) {
-        return MOB_REWARDS.get(mob);
     }
 
     public static void sendBroadcast(final String message) {
@@ -234,7 +182,10 @@ public class UDSPlugin extends JavaPlugin {
     public static void removeRequest(final String name) {
         REQUESTS.remove(name);
     }
-
+    
+    public static UDSPlugin getPlugin() {
+        return plugin;
+    }
 
     @Override
     public final void onEnable() {
@@ -245,10 +196,7 @@ public class UDSPlugin extends JavaPlugin {
         if(BLOCKS_PATH.mkdirs()) {
             getLogger().info("Created blocks directory tree.");
         }
-        saveDefaultConfig();
-        getConfig().options().copyDefaults(true);
-        saveConfig();
-        loadConfig();
+        Config.init();
         UDSPlugin.TRANSPARENT_BLOCKS.clear();
         for(Material material : Material.values()) {
             if(material.isBlock() && !material.isSolid()) {
@@ -304,36 +252,6 @@ public class UDSPlugin extends JavaPlugin {
         }
         final String message = getName() + " disabled.";
         getLogger().info(message);
-    }
-
-    public final void loadConfig() {
-        final FileConfiguration config = getConfig();
-        UDSPlugin.VIP_WHITELIST.clear();
-        for(int typeId : config.getIntegerList(ConfigRef.VIP_WHITELIST.getReference())) {
-            UDSPlugin.VIP_WHITELIST.add(Material.getMaterial(typeId));
-        }
-        UDSPlugin.KITS.clear();
-        for(String kit : config.getStringList(ConfigRef.KITS.getReference())) {
-            final String[] kitSplit = kit.split(",");
-            final List<ItemStack> items = new ArrayList<ItemStack>(ArrayUtils.subarray(kitSplit, 3, kitSplit.length -1).length);
-            for(Object item : ArrayUtils.subarray(kitSplit, 3, kitSplit.length -1)) {
-                items.add(new ItemStack(Material.getMaterial(Integer.parseInt((String)item))));
-            }
-            KITS.add(new Kit(kitSplit[0], Integer.parseInt(kitSplit[1]), items, PlayerRank.getByName(kitSplit[2])));
-        }
-        UDSPlugin.MOB_REWARDS.clear();
-        for(EntityType entityType : EntityType.values()) {
-            String entityName = ConfigRef.MOB_REWARDS.getReference() + "." + entityType.getName();
-            if(entityName != null) {
-                entityName = entityName.toLowerCase();
-                MOB_REWARDS.put(entityType, config.getInt(entityName));
-            }
-        }
-        UDSPlugin.GLOBAL_FLAGS.clear();
-        for(RegionFlag flag : RegionFlag.values()) {
-            final String flagname = ConfigRef.GLOBAL_FLAGS.getReference() + "." + flag.toString().toLowerCase();
-            GLOBAL_FLAGS.put(flag, config.getBoolean(flagname));
-        }
     }
 
     public void loadWorlds() {

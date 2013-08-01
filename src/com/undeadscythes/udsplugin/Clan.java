@@ -79,7 +79,7 @@ public class Clan implements Saveable {
     public final Set<SaveablePlayer> getOnlineMembers() {
         final Set<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>(members.size());
         for(SaveablePlayer member : members.keySet()) {
-            if(member != null) {
+            if(member.isOnline()) {
                 onlineMembers.add(member);
             }
         }

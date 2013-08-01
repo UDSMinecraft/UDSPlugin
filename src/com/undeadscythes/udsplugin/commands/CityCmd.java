@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.comparators.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.util.Vector;
@@ -27,12 +28,12 @@ public class CityCmd extends CommandValidator {
         } else if(args.length == 2) {
             int page;
             if(subCmd.equals("new")) {
-                if(canAfford(UDSPlugin.getConfigInt(ConfigRef.CITY_COST)) && noCensor(args[1]) && notRegion(args[1])) {
+                if(canAfford(Config.CITY_COST) && noCensor(args[1]) && notRegion(args[1])) {
                     final Vector min = player.getLocation().add(-100, 0, -100).toVector().setY(0);
                     final Vector max = player.getLocation().add(100, 0, 100).toVector().setY(player.getWorld().getMaxHeight());
                     city = new Region(args[1], min, max, player.getLocation(), player, "", RegionType.CITY);
                     if(noOverlaps(city)) {
-                        player.debit(UDSPlugin.getConfigInt(ConfigRef.CITY_COST));
+                        player.debit(Config.CITY_COST);
                         RegionUtils.addRegion(city);
                         city.placeMoreMarkers();
                         city.placeTowers();
@@ -123,16 +124,5 @@ public class CityCmd extends CommandValidator {
                 }
             }
         }
-    }
-}
-
-/**
- * Compare regions by member size.
- * @author UndeadScythe
- */
-class SortByPop implements Comparator<Region> {
-    @Override
-    public int compare(final Region region1, final Region region2) {
-        return region2.getMemberNo() - region1.getMemberNo();
     }
 }

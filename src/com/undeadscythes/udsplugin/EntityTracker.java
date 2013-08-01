@@ -9,8 +9,8 @@ import org.bukkit.entity.*;
  * Tracking entities and various properties.
  * @author UndeadScythes
  */
-public final class EntityTracker {
-    private static final Set<OwnedMinecart> MINECARTS = new HashSet<OwnedMinecart>();
+public class EntityTracker {
+    private static final Set<OwnedMinecart> MINECARTS = new HashSet<OwnedMinecart>(0);
 
     public static boolean minecartNear(final Location location) {
         for(OwnedMinecart minecart : MINECARTS) {
@@ -38,7 +38,7 @@ public final class EntityTracker {
     public static void checkMinecarts() {
         for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
             final OwnedMinecart minecart = i.next();
-            if(minecart.isEmpty() && minecart.age(100) > UDSPlugin.getConfigLong(ConfigRef.MINECART_TTL) / TimeUtils.TICKS) {
+            if(minecart.isEmpty() && minecart.age(100) > Config.MINECART_TTL / TimeUtils.TICKS) {
                 minecart.remove();
                 i.remove();
             }

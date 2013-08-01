@@ -148,7 +148,7 @@ public class RegionCmd extends CommandValidator {
 
     private void flag() {
         final Region region = getRegion(args[1]);
-        final RegionFlag flag = getFlag(args[2]);
+        final RegionFlag flag = getRegionFlag(args[2]);
         if(region != null && flag != null) {
             player.sendNormal(region.getName() + " flag " + flag.toString() + " now set to " + region.toggleFlag(flag) + ".");
         }

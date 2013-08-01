@@ -33,7 +33,7 @@ public class AsyncPlayerChat implements Listener {
                 message = player.getRankColor() + player.getNick() + ": " + Color.TEXT + Censor.fix(message);
                 if(player.canAfford(1)) {
                     player.debit(1);
-                    UDSPlugin.sendBroadcast(player.getNick() + " put 1 " + UDSPlugin.getConfigString(ConfigRef.CURRENCY) + " in the swear jar.");
+                    UDSPlugin.sendBroadcast(player.getNick() + " put 1 " + Config.CURRENCY + " in the swear jar.");
                 } else {
                     player.sendError("You have no money to put in the swear jar.");
                     UDSPlugin.sendBroadcast(player.getNick() + " gets jail time for using bad language.");

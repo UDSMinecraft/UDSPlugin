@@ -22,7 +22,7 @@ public class ICmd extends CommandValidator {
                 if(player.hasPermission(Perm.I_ADMIN)) {
                     player.getInventory().addItem(item);
                 } else if(player.getVIPSpawns() > 0) {
-                    if(UDSPlugin.VIP_WHITELIST.contains(item.getType())) {
+                    if(Config.VIP_WHITELIST.contains(item.getType())) {
                         if(item.getAmount() > player.getVIPSpawns()) {
                             item.setAmount(player.getVIPSpawns());
                         }

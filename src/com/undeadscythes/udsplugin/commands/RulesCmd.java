@@ -10,7 +10,7 @@ public class RulesCmd extends CommandValidator {
     @Override
     public void playerExecute() {
         player.sendNormal("--- Server Rules ---");
-        for(String rules : UDSPlugin.getConfigStringList(ConfigRef.SERVER_RULES)) {
+        for(String rules : Config.SERVER_RULES) {
             player.sendText("- " + rules);
         }
     }

@@ -12,11 +12,11 @@ import org.bukkit.event.entity.*;
 public class EntityExplode extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final EntityExplodeEvent event) {
-        if(event.getEntityType().equals(EntityType.CREEPER) && UDSPlugin.getConfigBool(ConfigRef.BLOCK_CREEPERS)) {
+        if(event.getEntityType().equals(EntityType.CREEPER) && Config.BLOCK_CREEPERS) {
             event.blockList().clear();
-        } else if((event.getEntityType().equals(EntityType.PRIMED_TNT) || event.getEntityType().equals(EntityType.MINECART_TNT)) && UDSPlugin.getConfigBool(ConfigRef.BLOCK_TNT)) {
+        } else if((event.getEntityType().equals(EntityType.PRIMED_TNT) || event.getEntityType().equals(EntityType.MINECART_TNT)) && Config.BLOCK_TNT) {
             event.blockList().clear();
-        } else if((event.getEntityType().equals(EntityType.WITHER_SKULL) || event.getEntityType().equals(EntityType.WITHER)) && UDSPlugin.getConfigBool(ConfigRef.BLOCK_WITHER)) {
+        } else if((event.getEntityType().equals(EntityType.WITHER_SKULL) || event.getEntityType().equals(EntityType.WITHER)) && Config.BLOCK_WITHER) {
             event.blockList().clear();
         }
     }

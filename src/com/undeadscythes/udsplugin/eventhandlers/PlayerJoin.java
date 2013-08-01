@@ -26,12 +26,12 @@ public class PlayerJoin implements Listener {
             player = new SaveablePlayer(event.getPlayer());
             PlayerUtils.addPlayer(player);
             PlayerUtils.addOnlinePlayer(player);
-            if(player.getName().equals(UDSPlugin.getConfigString(ConfigRef.SERVER_OWNER))) {
+            if(player.getName().equals(Config.SERVER_OWNER)) {
                 player.setRank(PlayerRank.OWNER);
                 player.sendMessage(ChatColor.GOLD + "Welcome to your new server, I hope everything goes well.");
             } else {
                 UDSPlugin.sendBroadcast("A new player, free gifts for everyone!");
-                final ItemStack gift = new ItemStack(UDSPlugin.getConfigMaterial(ConfigRef.WELCOME_GIFT));
+                final ItemStack gift = new ItemStack(Config.WELCOME_GIFT);
                 for(final SaveablePlayer onlinePlayer : PlayerUtils.getOnlinePlayers()) {
                     if(!onlinePlayer.isAfk()) {
                         onlinePlayer.giveAndDrop(gift);
@@ -43,11 +43,11 @@ public class PlayerJoin implements Listener {
         if(UDSPlugin.isLockedDown() && !player.hasLockdownPass()) {
             player.kickPlayer("The server is currently in lockdown please check back later.");
         } else {
-            player.sendNormal(UDSPlugin.getConfigString(ConfigRef.WELCOME_MSG));
+            player.sendNormal(Config.WELCOME_MSG);
             if(player.hasPermission(Perm.NEWBIEMSG)) {
-                player.sendNormal("Kill monsters or trade with players to earn " + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " credits then type /acceptrules in chat.");
+                player.sendNormal("Kill monsters or trade with players to earn " + Config.BUILD_COST + " credits then type /acceptrules in chat.");
             } else if(player.hasPermission(Perm.ADMINMSG)) {
-                player.sendMessage(UDSPlugin.getConfigString(ConfigRef.WELCOME_ADMIN));
+                player.sendMessage(Config.WELCOME_ADMIN);
             }
             if(player.isHidden()) {
                 for(final Player onlinePlayer : Bukkit.getOnlinePlayers()) {

@@ -36,7 +36,7 @@ public class InventoryClose extends ListenerWrapper implements Listener {
             }
             if(totalDue > 0) {
                 if(shopper.canAfford(totalDue)) {
-                    shopper.sendNormal("You spent " + totalDue + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
+                    shopper.sendNormal("You spent " + totalDue + " " + Config.CURRENCIES + ".");
                     shopper.debit(totalDue);
                     findShopOwner(block.getLocation()).credit(totalDue);
                 } else {

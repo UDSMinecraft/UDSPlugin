@@ -1,4 +1,3 @@
-
 package com.undeadscythes.udsplugin;
 
 /**
@@ -32,11 +31,15 @@ public enum ClanRank {
 
     private static ClanRank getByRank(final int rank) {
         for(final ClanRank test : ClanRank.values()) {
-            if(test.rank == rank) {
+            if(test.getRank() == rank) {
                 return test;
             }
         }
         return null;
+    }
+    
+    private int getRank() {
+        return rank;
     }
     
     @Override

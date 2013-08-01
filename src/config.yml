@@ -101,6 +101,7 @@ mob-rewards:
   witherboss: 10000
   blaze: 80
   pig: 10
+  horse: 5
 # The flag settings for the global region.
 global-flags:
   protection: false
@@ -115,6 +116,9 @@ global-flags:
   dispenser: false
   piston: true
   power: true
+  weather: true
+  time: true
+  build: true
 # The power of pistons.
 piston-power: 10
 # GMail email address to send tickets to.

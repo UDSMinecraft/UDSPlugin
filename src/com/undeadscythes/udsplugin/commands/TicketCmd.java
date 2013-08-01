@@ -20,8 +20,8 @@ public class TicketCmd extends CommandValidator {
         if(args.length == 0) {
             player.sendError("You cannot send a blank ticket.");
         } else {
-            final String username = UDSPlugin.getConfigString(ConfigRef.GMAIL_ADDRESS);
-            final String password = UDSPlugin.getConfigString(ConfigRef.GMAIL_PASSWORD);
+            final String username = Config.GMAIL_ADDRESS;
+            final String password = Config.GMAIL_PASSWORD;
             Properties props = new Properties();
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.host", "smtp.gmail.com");

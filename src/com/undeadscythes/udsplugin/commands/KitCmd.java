@@ -12,7 +12,7 @@ public class KitCmd extends CommandValidator {
     public final void playerExecute() {
         if(args.length == 0) {
             player.sendNormal("--- Available Kits ---");
-            for(Kit kit : UDSPlugin.KITS) {
+            for(Kit kit : Config.KITS) {
                 String contents = "";
                 for(ItemStack item : kit.getItems()) {
                     contents = contents.concat(item.getType().toString().toLowerCase().replace("_", " ") + ", ");
@@ -21,7 +21,7 @@ public class KitCmd extends CommandValidator {
             }
         } else if(numArgsHelp(1)) {
             boolean given = false;
-            for(Kit kit : UDSPlugin.KITS) {
+            for(Kit kit : Config.KITS) {
                 if(kit.getName().equalsIgnoreCase(args[0]) && canAfford(kit.getPrice())) {
                     for(ItemStack item : kit.getItems()) {
                         player.giveAndDrop(item);

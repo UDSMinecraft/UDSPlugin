@@ -20,7 +20,7 @@ public class RequestTimeOut implements Runnable {
     public void run() {
         for(final Iterator<Map.Entry<String, Request>> i = UDSPlugin.getRequestIterator(); i.hasNext();) {
             final Request request = i.next().getValue();
-            if(request.getTime() + UDSPlugin.getConfigLong(ConfigRef.REQUEST_TTL) < System.currentTimeMillis()) {
+            if(request.getTime() + Config.REQUEST_TTL < System.currentTimeMillis()) {
                 request.getSender().sendNormal("Your request has timed out.");
                 i.remove();
             }

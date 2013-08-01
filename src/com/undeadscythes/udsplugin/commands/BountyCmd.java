@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.comparators.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class BountyCmd extends CommandValidator {
      * @param player Player to send page to.
      */
     private void sendPage(final int page, final SaveablePlayer player) {
-        final List<SaveablePlayer> bounties = new ArrayList<SaveablePlayer>();
+        final List<SaveablePlayer> bounties = new ArrayList<SaveablePlayer>(0);
         final List<SaveablePlayer> sortedPlayers = PlayerUtils.getSortedPlayers(new SortByBounty());
         for(SaveablePlayer test : sortedPlayers) {
             if(test.getBounty() > 0) {
@@ -52,19 +53,12 @@ public class BountyCmd extends CommandValidator {
             int skipped = 1;
             for(SaveablePlayer bounty : bounties) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendListItem(bounty.getNick() + "'s reward: ", bounty.getBounty() + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES));
+                    player.sendListItem(bounty.getNick() + "'s reward: ", bounty.getBounty() + " " + Config.CURRENCIES);
                     posted++;
                 } else {
                     skipped++;
                 }
             }
         }
-    }
-}
-
-class SortByBounty implements Comparator<SaveablePlayer> {
-    @Override
-    public int compare(final SaveablePlayer player1, final SaveablePlayer player2) {
-        return player2.getBounty() - player1.getBounty();
     }
 }

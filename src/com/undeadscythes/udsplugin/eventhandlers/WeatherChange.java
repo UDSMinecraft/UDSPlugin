@@ -11,7 +11,7 @@ import org.bukkit.event.weather.*;
 public class WeatherChange extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final WeatherChangeEvent event) {
-        if(!UDSPlugin.checkWorldFlag(event.getWorld(), RegionFlag.WEATHER)) {
+        if(!UDSPlugin.checkWorldFlag(event.getWorld(), WorldFlag.WEATHER)) {
             event.setCancelled(true);
         }
     }

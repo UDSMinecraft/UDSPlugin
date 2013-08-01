@@ -29,7 +29,7 @@ public class ShopCmd extends CommandValidator {
                     shop.clearMembers();
                     shop.changeOwner(null);
                     player.sendNormal("Shop put back up for sale.");
-                    player.credit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) / 2);
+                    player.credit(Config.SHOP_COST / 2);
                 }
             } else if(subCmd.equals("set")) {
                 if((shop = getShop()) != null) {
@@ -52,7 +52,7 @@ public class ShopCmd extends CommandValidator {
                             message = message.concat(member.getNick() + ", ");
                         }
                     }
-                    if(!message.equals("")) {
+                    if(!message.isEmpty()) {
                         player.sendNormal("Your workers are:");
                         player.sendText(message.substring(0, message.length() - 2));
                     } else {
@@ -60,8 +60,8 @@ public class ShopCmd extends CommandValidator {
                     }
                 }
             } else if(subCmd.equals("buy")) {
-                if((shop = getContainingShop()) != null && canAfford(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST)) && isEmptyShop(shop)) {
-                    player.debit(UDSPlugin.getConfigInt(ConfigRef.SHOP_COST));
+                if((shop = getContainingShop()) != null && canAfford(Config.SHOP_COST) && isEmptyShop(shop)) {
+                    player.debit(Config.SHOP_COST);
                     RegionUtils.renameRegion(shop, player.getName() + "shop");
                     shop.changeName(player.getName() + "shop");
                     player.sendNormal("Shop bought.");
@@ -115,7 +115,7 @@ public class ShopCmd extends CommandValidator {
             if(subCmd.equals("sell")) {
                 if((getShop()) != null && (target = getMatchingPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
-                    target.sendNormal(player.getNick() + " wants to sell you their shop for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
+                    target.sendNormal(player.getNick() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                     UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.SHOP, price, target));
                 }

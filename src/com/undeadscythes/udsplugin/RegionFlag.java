@@ -58,19 +58,7 @@ public enum RegionFlag {
     /**
      * 
      */
-    WEATHER(true),
-    /**
-     * 
-     */
-    TIME(true),
-    /**
-     * 
-     */
-    LAMP(false),
-    /**
-     * 
-     */
-    BUILD(true);
+    LAMP(false);
 
     private boolean defaulted;
 

@@ -10,8 +10,6 @@ import com.undeadscythes.udsplugin.utilities.*;
 public class PlayerChecks implements Runnable {
     /**
      * Initiates the timer.
-     * @param plugin The UDSPlugin.
-     * @param interval The interval between passes.
      */
     public PlayerChecks() {}
 
@@ -21,7 +19,7 @@ public class PlayerChecks implements Runnable {
     @Override
     public void run() {
         for(SaveablePlayer player : PlayerUtils.getOnlinePlayers()) {
-            if(player.hasPermission(Perm.VIP) && player.getVIPTime() + UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) < System.currentTimeMillis()) {
+            if(player.hasPermission(Perm.VIP) && player.getVIPTime() + Config.VIP_TIME < System.currentTimeMillis()) {
                 player.setVIPTime(0);
                 player.setRank(PlayerRank.MEMBER);
                 player.sendNormal("Your time as a VIP has come to an end.");
@@ -34,8 +32,8 @@ public class PlayerChecks implements Runnable {
                 player.setFoodLevel(20);
             }
             final int distanceSq = Math.abs((int)Math.pow(player.getLocation().getBlockX(), 2) + (int)Math.pow(player.getLocation().getBlockZ(), 2));
-            if(distanceSq - UDSPlugin.getConfigIntSq(ConfigRef.WORLD_BORDER) > 100) {
-                final double ratio = UDSPlugin.getConfigIntSq(ConfigRef.WORLD_BORDER) / distanceSq;
+            if(distanceSq - Config.WORLD_BORDER_SQRD > 100) {
+                final double ratio = Config.WORLD_BORDER_SQRD / distanceSq;
                 player.move(Warp.findSafePlace(player.getLocation().clone().multiply(ratio)));
                 player.sendNormal("You have reached the edge of the currently explorable world.");
             }

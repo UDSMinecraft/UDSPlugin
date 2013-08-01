@@ -91,7 +91,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
     
     private void dropHead(final SaveablePlayer victim) {
         final Random rng = new Random();
-        if(rng.nextDouble() < UDSPlugin.getConfigDouble(ConfigRef.SKULL) || victim.hasPermission(Perm.HEADDROP)) {
+        if(rng.nextDouble() < Config.SKULL || victim.hasPermission(Perm.HEADDROP)) {
             final ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
             final SkullMeta meta = (SkullMeta)skull.getItemMeta();
             meta.setOwner(victim.getName());
@@ -103,7 +103,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
 
     private void bountyKill(final SaveablePlayer killer, final SaveablePlayer victim) {
         final int total = victim.getBounty();
-        UDSPlugin.sendBroadcast(killer.getNick() + " collected the " + total + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCY) + " bounty on " + victim.getNick() + ".");
+        UDSPlugin.sendBroadcast(killer.getNick() + " collected the " + total + " " + Config.CURRENCY + " bounty on " + victim.getNick() + ".");
         killer.credit(total);
         victim.setBounty(0);
     }

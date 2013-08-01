@@ -20,12 +20,12 @@ public class HomeCmd extends CommandValidator {
             }
         } else if(args.length == 1) {
             if(subCmd.equals("make")) {
-                if(canAfford(UDSPlugin.getConfigInt(ConfigRef.HOME_COST)) && noHome()) {
+                if(canAfford(Config.HOME_COST) && noHome()) {
                     final Vector min = player.getLocation().add(-10, -12, -10).toVector();
                     final Vector max = player.getLocation().add(10, 28, 10).toVector();
                     home = new Region(player.getName() + "home", min, max, player.getLocation(), player, "", RegionType.HOME);
                     if(noOverlaps(home)) {
-                        player.debit(UDSPlugin.getConfigInt(ConfigRef.HOME_COST));
+                        player.debit(Config.HOME_COST);
                         RegionUtils.addRegion(home);
                         home.placeCornerMarkers();
                         player.sendNormal("Home area protected.");
@@ -61,7 +61,7 @@ public class HomeCmd extends CommandValidator {
                             message = message.concat(member.getNick() + ", ");
                         }
                     }
-                    if(message.equals("")) {
+                    if(message.isEmpty()) {
                         player.sendNormal("You have no room mates.");
                     } else {
                         player.sendNormal("Your room mates are:");
@@ -87,10 +87,10 @@ public class HomeCmd extends CommandValidator {
         } else if(args.length == 2) {
             Direction direction;
             if(subCmd.equals("expand")) {
-                if((home = getHome()) != null && canAfford(UDSPlugin.getConfigInt(ConfigRef.EXPAND_COST)) && (direction = getCardinalDirection(args[1])) != null) {
+                if(hasPerm(Perm.HOME_EXPAND) && (home = getHome()) != null && canAfford(Config.EXPAND_COST) && (direction = getCardinalDirection(args[1])) != null) {
                     home.expand(direction, 1);
                     if(noOverlaps(home)) {
-                        player.debit(UDSPlugin.getConfigInt(ConfigRef.EXPAND_COST));
+                        player.debit(Config.EXPAND_COST);
                         player.sendNormal("Your home has been expanded.");
                     } else {
                         home.expand(direction, -1);
@@ -125,7 +125,7 @@ public class HomeCmd extends CommandValidator {
             if(subCmd.equals("sell")) {
                 if((getHome()) != null && (target = getMatchingPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
-                    target.sendNormal(player.getNick() + " wants to sell you their house for " + price + " " + UDSPlugin.getConfigInt(ConfigRef.CURRENCIES) + ".");
+                    target.sendNormal(player.getNick() + " wants to sell you their house for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                     UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.HOME, price, target));
                 }

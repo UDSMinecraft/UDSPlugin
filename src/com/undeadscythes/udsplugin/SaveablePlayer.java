@@ -137,11 +137,14 @@ public class SaveablePlayer implements Saveable {
     }
     
     public final ArrayList<Float> getLastView() {
-        return lastView;
+        final ArrayList<Float> view = new ArrayList<Float>(2);
+        view.addAll(lastView);
+        return view;
     }
     
     public final void setLastView(final ArrayList<Float> view) {
-        lastView = view;
+        lastView.clear();
+        lastView.addAll(view);
     }
     
     public final void addKill() {
@@ -531,7 +534,7 @@ public class SaveablePlayer implements Saveable {
      * @return English reading string.
      */
     public final String getVIPTimeString() {
-        return TimeUtils.timeToString(UDSPlugin.getConfigLong(ConfigRef.VIP_TIME) - System.currentTimeMillis() - getVIPTime());
+        return TimeUtils.timeToString(Config.VIP_TIME - System.currentTimeMillis() - getVIPTime());
     }
 
     /**
@@ -743,7 +746,7 @@ public class SaveablePlayer implements Saveable {
                 contained = true;
             }
         }
-        return contained ? false : UDSPlugin.checkWorldFlag(location.getWorld(), RegionFlag.BUILD);
+        return contained ? false : UDSPlugin.checkWorldFlag(location.getWorld(), WorldFlag.BUILD);
     }
 
     /**

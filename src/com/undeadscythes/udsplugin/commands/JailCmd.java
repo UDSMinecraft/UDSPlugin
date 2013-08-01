@@ -10,6 +10,24 @@ import com.undeadscythes.udsplugin.utilities.*;
 public class JailCmd extends CommandValidator {
     private static int nextCell = 0;
     
+    public static void jail(final SaveablePlayer player, final long sentence, final int bail) {
+        if(player != null) {
+            player.getWorld().strikeLightningEffect(player.getLocation());
+            if(player.quietTeleport(WarpUtils.getWarp("jail" + nextCell))) {
+                nextCell++;
+            } else if(player.quietTeleport(WarpUtils.getWarp("jail0"))) {
+                nextCell = 1;
+            } else {
+                player.quietTeleport(WarpUtils.getWarp("jail"));
+            }
+            player.jail(sentence, bail);
+            player.sendNormal("You have been jailed for " + sentence + " minutes.");
+            if(bail != 0) {
+                player.sendNormal("If you can afford it, use /paybail to get out early for " + bail + " " + Config.CURRENCIES + ".");
+            }
+        }
+    }
+    
     @Override
     public void playerExecute() {
         SaveablePlayer target;
@@ -28,24 +46,6 @@ public class JailCmd extends CommandValidator {
                     jail(target, sentence, bail);
                     UDSPlugin.sendBroadcast(target.getNick() + " has been jailed for breaking the rules.");
                 }
-            }
-        }
-    }
-    
-    public static void jail(final SaveablePlayer player, final long sentence, final int bail) {
-        if(player != null) {
-            player.getWorld().strikeLightningEffect(player.getLocation());
-            if(player.quietTeleport(WarpUtils.getWarp("jail" + nextCell))) {
-                nextCell++;
-            } else if(player.quietTeleport(WarpUtils.getWarp("jail0"))) {
-                nextCell = 1;
-            } else {
-                player.quietTeleport(WarpUtils.getWarp("jail"));
-            }
-            player.jail(sentence, bail);
-            player.sendNormal("You have been jailed for " + sentence + " minutes.");
-            if(bail != 0) {
-                player.sendNormal("If you can afford it, use /paybail to get out early for " + bail + " " + UDSPlugin.getConfigString(ConfigRef.CURRENCIES) + ".");
             }
         }
     }

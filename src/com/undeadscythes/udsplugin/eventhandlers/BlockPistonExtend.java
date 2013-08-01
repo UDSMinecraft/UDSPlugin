@@ -47,6 +47,6 @@ public class BlockPistonExtend extends ListenerWrapper implements Listener {
     private void boost(final Block block, final Material material) {
         block.setType(Material.AIR);
         final FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation().add(0.5, 1.5, 0.5), material, (byte)0);
-        fallingBlock.setVelocity(new Vector(0, UDSPlugin.getConfigDouble(ConfigRef.PISTON_POWER) / 10, 0));
+        fallingBlock.setVelocity(new Vector(0, Config.PISTON_POWER / 10, 0));
     }
 }

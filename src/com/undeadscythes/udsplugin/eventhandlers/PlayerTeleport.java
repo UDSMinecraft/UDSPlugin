@@ -18,9 +18,10 @@ public class PlayerTeleport extends ListenerWrapper implements Listener {
         final World to = event.getTo().getWorld();
         if(from == null || to == null) {
             event.setCancelled(true);
+            return;
         }
         if(!from.equals(to) && !PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).hasPermission(Perm.SHAREDINV)) {
-            for(String string : UDSPlugin.getConfigStringList(ConfigRef.SHARES)) {
+            for(String string : Config.SHARES) {
                 List<String> shares = Arrays.asList(string.split(","));
                 if(!shares.contains(from.getName()) || !shares.contains(to.getName())) {
                     PlayerUtils.saveInventory(PlayerUtils.getOnlinePlayer(event.getPlayer().getName()), from);

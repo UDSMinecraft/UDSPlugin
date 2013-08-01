@@ -49,7 +49,7 @@ public class WorldCmd extends CommandValidator {
                     player.sendNormal("World created.");
                 }
             } else if("forget".equals(subCmd)) {
-                if(args[1].equals(UDSPlugin.getConfigString(ConfigRef.MAIN_WORLD))) {
+                if(args[1].equals(Config.MAIN_WORLD)) {
                     player.sendError("This world cannot be forgotten.");
                 }
                 final World world = getWorld(args[1]);
@@ -58,7 +58,7 @@ public class WorldCmd extends CommandValidator {
                     player.sendNormal("World forgotten.");
                 }
             } else if("delete".equals(subCmd)) {
-                if(args[1].equals(UDSPlugin.getConfigString(ConfigRef.MAIN_WORLD))) {
+                if(args[1].equals(Config.MAIN_WORLD)) {
                     player.sendError("This world cannot be deleted.");
                 }
                 final World world = getWorld(args[1]);
@@ -110,7 +110,7 @@ public class WorldCmd extends CommandValidator {
         player.sendNormal("World " + world.getName() + " info:");
         player.sendText("Game mode: " + UDSPlugin.getWorldMode(world).toString().toLowerCase());
         String flagString = "";
-        for(RegionFlag test : RegionFlag.values()) {
+        for(WorldFlag test : WorldFlag.values()) {
             if(UDSPlugin.checkWorldFlag(world, test)) {
                 flagString = flagString.concat(test.toString() + ", ");
             }
@@ -123,7 +123,7 @@ public class WorldCmd extends CommandValidator {
     }
     
     private void flag(final World world, final String flagName) {
-        final RegionFlag flag = getFlag(flagName);
+        final WorldFlag flag = getWorldFlag(flagName);
         if(flag != null) {
             player.sendNormal(world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }

@@ -45,6 +45,7 @@ public enum Perm {
     HEAL(PlayerRank.WARDEN),
     HELP(PlayerRank.NEWBIE),
     HOME(PlayerRank.MEMBER),
+    HOME_EXPAND(PlayerRank.VIP),
     HOME_MAKE(PlayerRank.MEMBER, GameMode.SURVIVAL),
     HOME_OTHER(PlayerRank.MOD),
     I(PlayerRank.VIP),

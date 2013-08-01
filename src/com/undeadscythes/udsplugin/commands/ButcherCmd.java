@@ -17,7 +17,7 @@ public class ButcherCmd extends CommandValidator {
             }
             int count = 0;
             for(LivingEntity entity : player.getWorld().getLivingEntities()) {
-                if(!(entity instanceof Player) && entity.getLocation().distanceSquared(player.getLocation()) < UDSPlugin.getConfigIntSq(ConfigRef.BUTCHER_RANGE)) {
+                if(!(entity instanceof Player) && entity.getLocation().distanceSquared(player.getLocation()) < Config.BUTCHER_RANGE) {
                     if((entity instanceof Wolf) && !all) {
                         if(((Wolf)entity).isAngry()) {
                             entity.remove();

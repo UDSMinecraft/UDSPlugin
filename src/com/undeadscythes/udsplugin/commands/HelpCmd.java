@@ -8,6 +8,75 @@ import java.util.*;
  * @author UndeadScythes
  */
 public class HelpCmd extends CommandValidator {
+    @Override
+    public final void playerExecute() {
+        if(maxArgsHelp(2)) {
+            if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
+                sendHelpFiles();
+            } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
+                final Usage usage = Usage.getByName(args[0]);
+                if(usage == null) {
+                    player.sendError("No command exists by that name.");
+                } else {
+                    if(usage.isExtended()) {
+                        sendCommandHelp(usage);
+                    } else {
+                        player.sendListItem(usage.getUsage(), " - " + usage.getDescription());
+                    }
+                }
+            }
+        }
+    }
+
+    private void sendHelpFiles() {
+        final EnumSet<Usage> usages = EnumSet.noneOf(Usage.class);
+        for(Usage usage : Usage.values()) {
+            if(player.hasPermission(usage.getPerm()) && !usage.isExtension() && (usage.getPerm().getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(usage.getPerm().getMode()))) {
+                usages.add(usage);
+            }
+        }
+        if(args.length == 1) {
+            sendPage(Integer.parseInt(args[0]), player, usages, "Help");
+        } else {
+            sendPage(1, player, usages, "Help");
+        }
+    }
+
+    private void sendCommandHelp(final Usage usage) {
+        final EnumSet<Usage> extensions = EnumSet.noneOf(Usage.class);
+        for(Usage extension : Usage.values()) {
+            if(player.hasPermission(extension.getPerm()) && extension.isExtension(usage)) {
+                extensions.add(extension);
+            }
+        }
+        if(args.length == 2) {
+            sendPage(Integer.parseInt(args[1]), player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+        } else {
+            sendPage(1, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+        }
+    }
+
+    private void sendPage(final int page, final SaveablePlayer player, final Set<Usage> list, final String title) {
+        final int pages = (list.size() + 8) / 9;
+        if(pages == 0) {
+            player.sendNormal("There is no help available.");
+        } else if(page > pages) {
+            player.sendMessage(Message.NO_PAGE);
+        } else {
+            player.sendNormal("--- " + title + " " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
+            int posted = 0;
+            int skipped = 1;
+            for(Usage usage : list) {
+                if(skipped > (page - 1) * 9 && posted < 9) {
+                    player.sendListItem(usage.getUsage(), " - " + usage.getDescription());
+                    posted++;
+                } else {
+                    skipped++;
+                }
+            }
+        }
+    }
+    
     private enum Usage {
         HELP(Perm.HELP, "/help [page or command]", "Show these help pages."),
         TICKET(Perm.TICKET, "/ticket <message>", "Submit a suggestion or a bug report."),
@@ -160,7 +229,7 @@ public class HelpCmd extends CommandValidator {
         HOME_ADD(Perm.HOME, "/home add <player>", "Add a player as a room mate.", HOME),
         HOME_KICK(Perm.HOME, "/home kick <player>", "Kick a player from your room mates.", HOME),
         HOME_BOOT(Perm.HOME, "/home boot <player>", "Forcibly boot a player from your home.", HOME),
-        HOME_EXPAND(Perm.HOME, "/home expand <direction>", "Expand your home.", HOME),
+        HOME_EXPAND(Perm.HOME_EXPAND, "/home expand <direction>", "Expand your home.", HOME),
         HOME_LOCK(Perm.HOME, "/home lock", "Lock your house.", HOME),
         HOME_UNLOCK(Perm.HOME, "/home unlock", "Unlock your house.", HOME),
         HOME_POWER(Perm.HOME, "/home power", "Toggle whether players can use redstone.", HOME),
@@ -325,23 +394,23 @@ public class HelpCmd extends CommandValidator {
         public String getDescription() {
             switch(this) {
                 case ACCEPTRULES:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.BUILD_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.BUILD_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case CITY_NEW:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.CITY_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.CITY_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case MAP:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.MAP_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.MAP_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case HOME_MAKE:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.HOME_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.HOME_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case SHOP_BUY:
-                    return description + " (" + Color.ITEM+ UDSPlugin.getConfigInt(ConfigRef.SHOP_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.SHOP_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case VIP:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.VIP_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.VIP_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case CLAN_NEW:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.CLAN_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.CLAN_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case CLAN_BASE_SET:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.BASE_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.BASE_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 case HOME_EXPAND:
-                    return description + " (" + Color.ITEM + UDSPlugin.getConfigInt(ConfigRef.EXPAND_COST) + " credits" + Color.TEXT + ")";
+                    return description + " (" + Color.ITEM + Config.EXPAND_COST + " " + Config.CURRENCIES + Color.TEXT + ")";
                 default:
                     return description;
             }
@@ -357,75 +426,6 @@ public class HelpCmd extends CommandValidator {
 
         public boolean isExtended() {
             return extended;
-        }
-    }
-
-    @Override
-    public final void playerExecute() {
-        if(maxArgsHelp(2)) {
-            if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
-                sendHelpFiles();
-            } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
-                final Usage usage = Usage.getByName(args[0]);
-                if(usage == null) {
-                    player.sendError("No command exists by that name.");
-                } else {
-                    if(usage.isExtended()) {
-                        sendCommandHelp(usage);
-                    } else {
-                        player.sendListItem(usage.getUsage(), " - " + usage.getDescription());
-                    }
-                }
-            }
-        }
-    }
-
-    private void sendHelpFiles() {
-        final Set<Usage> usages = new TreeSet<Usage>();
-        for(Usage usage : Usage.values()) {
-            if(player.hasPermission(usage.getPerm()) && !usage.isExtension() && (usage.getPerm().getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(usage.getPerm().getMode()))) {
-                usages.add(usage);
-            }
-        }
-        if(args.length == 1) {
-            sendPage(Integer.parseInt(args[0]), player, usages, "Help");
-        } else {
-            sendPage(1, player, usages, "Help");
-        }
-    }
-
-    private void sendCommandHelp(final Usage usage) {
-        final Set<Usage> extensions = new TreeSet<Usage>();
-        for(Usage extension : Usage.values()) {
-            if(player.hasPermission(extension.getPerm()) && extension.isExtension(usage)) {
-                extensions.add(extension);
-            }
-        }
-        if(args.length == 2) {
-            sendPage(Integer.parseInt(args[1]), player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
-        } else {
-            sendPage(1, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
-        }
-    }
-
-    private void sendPage(final int page, final SaveablePlayer player, final Set<Usage> list, final String title) {
-        final int pages = (list.size() + 8) / 9;
-        if(pages == 0) {
-            player.sendNormal("There is no help available.");
-        } else if(page > pages) {
-            player.sendMessage(Message.NO_PAGE);
-        } else {
-            player.sendNormal("--- " + title + " " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
-            int posted = 0;
-            int skipped = 1;
-            for(Usage usage : list) {
-                if(skipped > (page - 1) * 9 && posted < 9) {
-                    player.sendListItem(usage.getUsage(), " - " + usage.getDescription());
-                    posted++;
-                } else {
-                    skipped++;
-                }
-            }
         }
     }
 }
