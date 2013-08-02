@@ -21,8 +21,10 @@ public class ServerCmd extends CommandValidator {
                 Config.reload();
                 player.sendNormal("Configuration file reloaded.");
             } else if(subCmd.equals("info")) {
-                player.sendNormal("Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");
+                player.sendNormal("Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");           
+            } else if(subCmd.equals("players")) {   
                 player.sendNormal("There have been " + PlayerUtils.numPlayers() + " unique visitors.");
+                player.sendNormal("There are " + PlayerUtils.numActives() + " active players.");
             } else if(subCmd.equals("setspawn")) {
                 final Location location = player.getLocation();
                 player.getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());

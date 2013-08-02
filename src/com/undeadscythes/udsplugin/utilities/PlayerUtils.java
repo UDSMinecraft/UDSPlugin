@@ -154,5 +154,13 @@ public class PlayerUtils {
         loadInventory(player, player.getWorld());
     }
     
+    public static int numActives() {
+        int count = 0;
+        for(final SaveablePlayer player : PLAYERS.values()) {
+            count += player.isActive() ? 1 : 0;
+        }
+        return count;
+    } 
+    
     private PlayerUtils() {}
 }

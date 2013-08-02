@@ -10,6 +10,10 @@ public class TimeUtils {
      */
     public static final long TICKS = 50;
     /**
+     * The number of milliseconds in a week.
+     */
+    public static final long WEEK = 604800000;
+    /**
      * The number of milliseconds in a day.
      */
     public static final long DAY = 86400000;
