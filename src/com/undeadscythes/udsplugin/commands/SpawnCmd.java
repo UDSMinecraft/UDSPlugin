@@ -1,7 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
-
 /**
  * Teleport a player to spawn.
  * @author UndeadScythes

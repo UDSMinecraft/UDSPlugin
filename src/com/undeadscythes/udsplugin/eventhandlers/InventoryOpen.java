@@ -27,14 +27,16 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
         final InventoryHolder holder = event.getInventory().getHolder();
         player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(holder instanceof DoubleChest) {
-            if(isShop(((DoubleChest)holder).getLeftSide()) || isShop(((DoubleChest)holder).getRightSide())) {
-                startShopping();
+            if(isShop(((DoubleChest)holder).getLeftSide())) {
+                startShopping(((Chest)((DoubleChest)holder).getLeftSide()).getLocation(), player);
+            } else if(isShop(((DoubleChest)holder).getRightSide())) {
+                startShopping(((Chest)((DoubleChest)holder).getRightSide()).getLocation(), player);
             } else {
                 event.setCancelled(isProtected(((DoubleChest)holder).getLeftSide()) || isProtected(((DoubleChest)holder).getRightSide()));
             }
         } else if(holder instanceof Chest) {
             if(isShop(holder)) {
-                startShopping();
+                startShopping(((Chest)holder).getLocation(), player);
             } else {
                 event.setCancelled(isProtected(holder));
             }
@@ -43,9 +45,12 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
         }
     }
 
-    private void startShopping() {
-        player.setShopping(true);
-        player.getShoppingList().clear();
+    private void startShopping(final Location shop, final SaveablePlayer shopper) {
+        if(!shopper.canBuildHere(shop)) {
+            player.setShopping(true);
+            player.getShoppingList().clear();
+            player.setShop(shop);
+        }
     }
 
     private boolean isShop(final InventoryHolder holder) {

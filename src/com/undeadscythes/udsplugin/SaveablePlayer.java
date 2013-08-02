@@ -56,6 +56,7 @@ public class SaveablePlayer implements Saveable {
     private int kills = 0;
     private long pvpTime = 0;
     private ArrayList<Float> lastView = new ArrayList<Float>(2);
+    private Location shop;
 
     /**
      *
@@ -267,6 +268,14 @@ public class SaveablePlayer implements Saveable {
             }
         }
         return false;
+    }
+    
+    public final Location getShop() {
+        return shop;
+    }
+    
+    public final void setShop(final Location shop) {
+        this.shop = shop;
     }
 
     /**
