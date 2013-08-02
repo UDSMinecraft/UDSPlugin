@@ -12,6 +12,7 @@ import org.bukkit.inventory.*;
 /**
  * A command that is designed to be run by a player.
  * Methods allow various checks to be made and messages to be sent to the players on errors.
+ * 
  * @author UndeadScythes
  */
 public abstract class CommandValidator implements CommandExecutor {
@@ -22,6 +23,7 @@ public abstract class CommandValidator implements CommandExecutor {
 
     /**
      * Checks player permission then passes arguments to executor.
+     * 
      * @param sender Player who sent the command.
      * @param command The command sent.
      * @param label ?
@@ -41,6 +43,12 @@ public abstract class CommandValidator implements CommandExecutor {
                 playerExecute();
             }
             return true;
+        } else if(sender instanceof ConsoleCommandSender) {
+            this.args = args.clone();
+            if(args.length > 0) {
+                subCmd = args[0].toLowerCase();
+            }
+            consoleExecute((ConsoleCommandSender)sender);
         }
         return false;
     }
@@ -1226,4 +1234,8 @@ public abstract class CommandValidator implements CommandExecutor {
      * Used when a player on the server executes a command.
      */
     public abstract void playerExecute();
+    
+    public void consoleExecute(final ConsoleCommandSender console) {
+        console.sendMessage("You cannot run this command from the console.");
+    }
 }
