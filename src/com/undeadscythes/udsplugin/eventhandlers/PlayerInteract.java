@@ -175,8 +175,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @return <code>true</code> if event needs to be cancelled.
      */
     private void wand1(final SaveablePlayer player, final Block block) {
-        final Session session = player.forceSession();
-        session.setV1(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
+        final EditSession session = player.forceSession();
+        session.setPoint1(block.getLocation());
         player.sendNormal("Point 1 set.");
         if(session.getV1() != null && session.getV2() != null) {
             player.sendNormal(session.getVolume() + " blocks selected.");
@@ -189,8 +189,8 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
      * @param block
      */
     private void wand2(final SaveablePlayer player, final Block block) {
-        final Session session = player.forceSession();
-        session.setV2(new Vector(block.getX(), block.getY(), block.getZ()), player.getWorld());
+        final EditSession session = player.forceSession();
+        session.setPoint2(block.getLocation());
         player.sendNormal("Point 2 set.");
         if(session.getV1() != null && session.getV2() != null) {
             player.sendNormal(session.getVolume() + " blocks selected.");

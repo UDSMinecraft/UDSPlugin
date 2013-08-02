@@ -351,10 +351,10 @@ public class SaveablePlayer implements Saveable {
      *
      * @return
      */
-    public final Session forceSession() {
-        Session session = UDSPlugin.getSession(getName());
+    public final EditSession forceSession() {
+        EditSession session = UDSPlugin.getSession(getName());
         if(session == null) {
-            session = new Session();
+            session = new EditSession();
             UDSPlugin.addSession(getName(), session);
         }
         return session;

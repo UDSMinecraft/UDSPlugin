@@ -128,5 +128,22 @@ public class RegionUtils {
         REGIONS.get(type).put(region.getName(), region);
     }
     
+    public static org.bukkit.util.Vector floor(final org.bukkit.util.Vector v) {
+        return new org.bukkit.util.Vector(v.getBlockX(), v.getBlockY(), v.getBlockZ());
+    }
+    
+    /**
+     * Helper function to build a new block position from a string.
+     * @param string String containing coded block position.
+     * @return The corresponding new block position.
+     */
+    public static org.bukkit.util.Vector getBlockPos(final String string) {
+        final String[] split = string.replace("(", "").replace(")", "").split(",");
+        final double x = Double.parseDouble(split[0]);
+        final double y = Double.parseDouble(split[1]);
+        final double z = Double.parseDouble(split[2]);
+        return new org.bukkit.util.Vector(x, y, z);
+    }
+    
     private RegionUtils() {}
 }

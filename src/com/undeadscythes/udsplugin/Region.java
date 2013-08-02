@@ -12,10 +12,8 @@ import org.bukkit.util.Vector;
  * An area of blocks with in a world.
  * @author UndeadScythes
  */
-public class Region implements Saveable {
+public class Region extends Cuboid implements Saveable {
     private String name;
-    private Vector min;
-    private Vector max;
     private Location warp;
     private SaveablePlayer owner;
     private HashSet<SaveablePlayer> members = new HashSet<SaveablePlayer>(0);
@@ -36,9 +34,10 @@ public class Region implements Saveable {
      */
     public Region(final String name, final Vector v1, final Vector v2, final Location warp, final SaveablePlayer owner, final String data, final RegionType type) {
         this.name = name;
-        this.min = floor(Vector.getMinimum(v1, v2));
-        this.max = floor(Vector.getMaximum(v1, v2));
+        setV1(RegionUtils.floor(Vector.getMinimum(v1, v2)));
+        setV2(RegionUtils.floor(Vector.getMaximum(v1, v2)));
         this.warp = warp;
+        setWorld(warp.getWorld());
         this.owner = owner;
         this.data = data;
         for(RegionFlag flag : RegionFlag.values()) {
@@ -57,9 +56,10 @@ public class Region implements Saveable {
     public Region(final String record) throws IOException {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        min = getBlockPos(recordSplit[1]);
-        max = getBlockPos(recordSplit[2]);
+        setV1(RegionUtils.getBlockPos(recordSplit[1]));
+        setV2(RegionUtils.getBlockPos(recordSplit[2]));
         warp = SaveableLocation.parseLocation(recordSplit[3]);
+        setWorld(warp.getWorld());
         owner = PlayerUtils.getPlayer(recordSplit[4]);
         members = new HashSet<SaveablePlayer>(0);
         if(!recordSplit[5].isEmpty()) {
@@ -77,29 +77,12 @@ public class Region implements Saveable {
         rank = PlayerRank.getByName(recordSplit[9]);
     }
 
-    public static Vector floor(final Vector v) {
-        return new Vector(v.getBlockX(), v.getBlockY(), v.getBlockZ());
-    }
-    
-    /**
-     * Helper function to build a new block position from a string.
-     * @param string String containing coded block position.
-     * @return The corresponding new block position.
-     */
-    public static Vector getBlockPos(final String string) {
-        final String[] split = string.replace("(", "").replace(")", "").split(",");
-        final double x = Double.parseDouble(split[0]);
-        final double y = Double.parseDouble(split[1]);
-        final double z = Double.parseDouble(split[2]);
-        return new Vector(x, y, z);
-    }
-
     @Override
     public String getRecord() {
         final ArrayList<String> record = new ArrayList<String>(10);
         record.add(name);
-        record.add(min.toString());
-        record.add(max.toString());
+        record.add(getV1String());
+        record.add(getV2String());
         record.add(SaveableLocation.getString(warp));
         record.add(owner == null ? "" : owner.getName());
         final ArrayList<String> memberList = new ArrayList<String>(0);
@@ -141,7 +124,7 @@ public class Region implements Saveable {
      * @return Region members.
      */
     public Set<SaveablePlayer> getMembers() {
-        return members;
+        return members; //TODO: Check calls to this method and add methods for each one.
     }
 
     /**
@@ -211,56 +194,6 @@ public class Region implements Saveable {
     }
 
     /**
-     *
-     * @return
-     */
-    public int getVolume() {
-        return (max.getBlockX() - min.getBlockX() + 1) * (max.getBlockY() - min.getBlockY() + 1) * (max.getBlockZ() - min.getBlockZ() + 1);
-    }
-
-    /**
-     * Expand this region in some direction.
-     * @param direction Direction to expand.
-     * @param distance Distance to expand.
-     */
-    public void expand(final Direction direction, final int distance) {
-        if(direction.equals(Direction.NORTH)) {
-            min.add(new Vector(0, 0, -distance));
-        } else if(direction.equals(Direction.SOUTH)) {
-            max.add(new Vector(0, 0, distance));
-        } else if(direction.equals(Direction.EAST)) {
-            max.add(new Vector(distance, 0, 0));
-        } else if(direction.equals(Direction.WEST)) {
-            min.add(new Vector(-distance, 0, 0));
-        } else if(direction.equals(Direction.UP)) {
-            max.add(new Vector(0, distance, 0));
-        } else if(direction.equals(Direction.DOWN)) {
-            min.add(new Vector(0, -distance, 0));
-        }
-    }
-
-    /**
-     * Expand this region in some direction.
-     * @param direction Direction to expand.
-     * @param distance Distance to expand.
-     */
-    public void contract(final Direction direction, final int distance) {
-        if(direction.equals(Direction.NORTH)) {
-            max.add(new Vector(0, 0, -distance));
-        } else if(direction.equals(Direction.SOUTH)) {
-            min.add(new Vector(0, 0, distance));
-        } else if(direction.equals(Direction.EAST)) {
-            min.add(new Vector(distance, 0, 0));
-        } else if(direction.equals(Direction.WEST)) {
-            max.add(new Vector(-distance, 0, 0));
-        } else if(direction.equals(Direction.UP)) {
-            min.add(new Vector(0, distance, 0));
-        } else if(direction.equals(Direction.DOWN)) {
-            max.add(new Vector(0, -distance, 0));
-        }
-    }
-
-    /**
      * Get the region's rank.
      * @return Player rank of the region.
      */
@@ -282,17 +215,7 @@ public class Region implements Saveable {
      * @return The region flags.
      */
     public Set<RegionFlag> getFlags() {
-        return flags;
-    }
-
-    /**
-     * Change this regions defining points.
-     * @param v1 New v1.
-     * @param v2 New v2.
-     */
-    public void changeV(final Vector v1, final Vector v2) {
-        this.min = v1;
-        this.max = v2;
+        return flags; //TODO: find calls to this method and create new methods for each case.
     }
 
     /**
@@ -300,10 +223,10 @@ public class Region implements Saveable {
      */
     public void placeCornerMarkers() {
         final EditableWorld world = new EditableWorld(getWorld());
-        world.buildTower(min.getBlockX(), min.getBlockZ(), 1, Material.FENCE, Material.TORCH);
-        world.buildTower(max.getBlockX(), min.getBlockZ(), 1, Material.FENCE, Material.TORCH);
-        world.buildTower(min.getBlockX(), max.getBlockZ(), 1, Material.FENCE, Material.TORCH);
-        world.buildTower(max.getBlockX(), max.getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(getV1().getBlockX(), getV1().getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(getV2().getBlockX(), getV1().getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(getV1().getBlockX(), getV2().getBlockZ(), 1, Material.FENCE, Material.TORCH);
+        world.buildTower(getV2().getBlockX(), getV2().getBlockZ(), 1, Material.FENCE, Material.TORCH);
     }
 
     /**
@@ -311,10 +234,10 @@ public class Region implements Saveable {
      */
     public void placeMoreMarkers() {
         final EditableWorld world = new EditableWorld(getWorld());
-        world.buildLine(min.getBlockX(), (min.getBlockZ() + max.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
-        world.buildLine(max.getBlockX(), (min.getBlockZ() + max.getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
-        world.buildLine((min.getBlockX() + max.getBlockX()) / 2 - 3, min.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
-        world.buildLine((min.getBlockX() + max.getBlockX()) / 2 - 3, max.getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
+        world.buildLine(getV1().getBlockX(), (getV1().getBlockZ() + getV2().getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine(getV2().getBlockX(), (getV1().getBlockZ() + getV2().getBlockZ()) / 2 - 3, 0, 6, Material.FENCE, Material.TORCH);
+        world.buildLine((getV1().getBlockX() + getV2().getBlockX()) / 2 - 3, getV1().getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
+        world.buildLine((getV1().getBlockX() + getV2().getBlockX()) / 2 - 3, getV2().getBlockZ(), 6, 0, Material.FENCE, Material.TORCH);
     }
 
     /**
@@ -322,10 +245,10 @@ public class Region implements Saveable {
      */
     public void placeTowers() {
         final EditableWorld world = new EditableWorld(getWorld());
-        world.buildTower(min.getBlockX(), min.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
-        world.buildTower(min.getBlockX(), max.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
-        world.buildTower(max.getBlockX(), min.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
-        world.buildTower(max.getBlockX(), max.getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(getV1().getBlockX(), getV1().getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(getV1().getBlockX(), getV2().getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(getV2().getBlockX(), getV1().getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
+        world.buildTower(getV2().getBlockX(), getV2().getBlockZ(), 10, Material.FENCE, Material.GLOWSTONE);
     }
 
     /**
@@ -334,15 +257,6 @@ public class Region implements Saveable {
      */
     public int getMemberNo() {
         return members.size();
-    }
-
-    /**
-     * Checks if this region overlaps another region.
-     * @param region Region to check.
-     * @return <code>true</code> if this region overlaps with the other, <code>false</code> otherwise.
-     */
-    public boolean hasOverlap(final Region region) {
-        return !(min.getX() > region.getV2().getX() || max.getX() < region.getV1().getX() || min.getZ() > region.getV2().getZ() || max.getZ() < region.getV1().getZ() || min.getY() > region.getV2().getY() || max.getY() < region.getV1().getY());
     }
 
     /**
@@ -386,7 +300,7 @@ public class Region implements Saveable {
      * @return <code>true</code> if the location is contained within the region, <code>false</code> otherwise.
      */
     private boolean contains(final World world, final double x, final double y, final double z) {
-        return warp.getWorld().equals(world) && x > min.getX() && x < max.getX() + 1 && z > min.getZ() && z < max.getZ() + 1 && y > min.getY() && y < max.getY() + 1;
+        return warp.getWorld().equals(world) && x > getV1().getX() && x < getV2().getX() + 1 && z > getV1().getZ() && z < getV2().getZ() + 1 && y > getV1().getY() && y < getV2().getY() + 1;
     }
 
     /**
@@ -430,30 +344,6 @@ public class Region implements Saveable {
      */
     public boolean delMember(final SaveablePlayer player) {
         return members.remove(player);
-    }
-
-    /**
-     * Get the regions minimum vector.
-     * @return Vector 1.
-     */
-    public Vector getV1() {
-        return min;
-    }
-
-    /**
-     * Get the regions maximum vector.
-     * @return Vector 2.
-     */
-    public Vector getV2() {
-        return max;
-    }
-
-    /**
-     * Get the world this region is in.
-     * @return The regions world.
-     */
-    public World getWorld() {
-        return warp.getWorld();
     }
 
     /**
@@ -504,14 +394,14 @@ public class Region implements Saveable {
      * @return
      */
     public boolean contains(final Location location) {
-        return location.toVector().isInAABB(min, max);
+        return location.toVector().isInAABB(getV1(), getV2());
     }
     
     public void replace(final Material from, final Material to) {
         final World world = warp.getWorld();
-        for(int x = min.getBlockX(); x < max.getBlockX(); x++) {
-            for(int y = min.getBlockY(); y < max.getBlockY(); y++) {
-                for(int z = min.getBlockZ(); z < max.getBlockZ(); z++) {
+        for(int x = getV1().getBlockX(); x < getV2().getBlockX(); x++) {
+            for(int y = getV1().getBlockY(); y < getV2().getBlockY(); y++) {
+                for(int z = getV1().getBlockZ(); z < getV2().getBlockZ(); z++) {
                     final Block block = world.getBlockAt(x, y, z);
                     if(!block.getType().equals(from)) {
                         continue;

@@ -24,8 +24,8 @@ public class Portal implements Saveable {
         this.name = name;
         this.warp = warp;
         this.world = world;
-        this.min = Region.floor(Vector.getMinimum(v1, v2));
-        this.max = Region.floor(Vector.getMaximum(v1, v2));
+        this.min = RegionUtils.floor(Vector.getMinimum(v1, v2));
+        this.max = RegionUtils.floor(Vector.getMaximum(v1, v2));
     }
     
     public Portal(final String record) {
@@ -38,14 +38,14 @@ public class Portal implements Saveable {
                 warp = WarpUtils.getWarp(recordSplit[1]);
                 portalLink = recordSplit[2];
                 world = Bukkit.getWorld(recordSplit[3]);
-                min = Region.getBlockPos(recordSplit[4]);
-                max = Region.getBlockPos(recordSplit[5]);
+                min = RegionUtils.getBlockPos(recordSplit[4]);
+                max = RegionUtils.getBlockPos(recordSplit[5]);
         }
     }
 
     @Override
     public final String getRecord() {
-        final ArrayList<String> record = new ArrayList<String>();
+        final ArrayList<String> record = new ArrayList<String>(7);
         record.add(name);
         record.add(warp == null ? "null" : warp.getName());
         record.add(portal == null ? "null" : portal.getName());

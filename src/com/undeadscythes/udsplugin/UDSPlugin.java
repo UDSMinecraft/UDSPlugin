@@ -32,7 +32,7 @@ public class UDSPlugin extends JavaPlugin {
     private static final List<EntityType> PASSIVE_MOBS = new ArrayList<EntityType>(Arrays.asList(EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.SHEEP, EntityType.SQUID, EntityType.VILLAGER));
     private static final HashMap<String, ChatRoom> CHAT_ROOMS = new HashMap<String, ChatRoom>(0);
     private static final HashMap<String, Request> REQUESTS = new HashMap<String, Request>(0);
-    private static final HashMap<String, Session> SESSIONS = new HashMap<String, Session>(0);
+    private static final HashMap<String, EditSession> SESSIONS = new HashMap<String, EditSession>(0);
     private static UDSPlugin plugin;
     private static AfkCheck afkCheck = new AfkCheck();
     private static AutoSave autoSave = new AutoSave();
@@ -77,11 +77,11 @@ public class UDSPlugin extends JavaPlugin {
      * @param name Name of player.
      * @return Sessions map.
      */
-    public static Session getSession(final String name) {
+    public static EditSession getSession(final String name) {
         return SESSIONS.get(name);
     }
 
-    public static void addSession(final String name, final Session session) {
+    public static void addSession(final String name, final EditSession session) {
         SESSIONS.put(name, session);
     }
 

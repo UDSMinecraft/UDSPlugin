@@ -63,7 +63,7 @@ public class WECmd extends CommandValidator {
 
     private void save(final String name) {
         if(hasPerm(Perm.WE_SAVE)) {
-            final Session session = getSession();
+            final EditSession session = getSession();
             if(hasTwoPoints(session)) {
                 final int volume = session.getVolume();
                 if(volume <= Config.EDIT_RANGE) {
@@ -121,7 +121,7 @@ public class WECmd extends CommandValidator {
     private void drain(final int range) {
         if(hasPerm(Perm.WE_DRAIN)) {
             if(range <= Config.DRAIN_RANGE) {
-                final Session session = getSession();
+                final EditSession session = getSession();
                 final Location location = player.getLocation();
                 final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
                 final Vector v2 = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
@@ -129,7 +129,7 @@ public class WECmd extends CommandValidator {
                 final Vector max = Vector.getMaximum(v1, v2);
                 int count = 0;
                 final World world = player.getWorld();
-                session.save(new Cuboid(world, v1, v2, player.getLocation().toVector()));
+                session.save(new BlockBox(world, v1, v2, player.getLocation().toVector()));
                 for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
                     for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
                         for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
@@ -158,7 +158,7 @@ public class WECmd extends CommandValidator {
 
     private void set() {
         if(hasPerm(Perm.WE_SET)) {
-            final Session session = getSession();
+            final EditSession session = getSession();
             if(hasTwoPoints(session)) {
                 final ItemStack item = getItem(args[1]);
                 if(item != null) {
@@ -170,7 +170,7 @@ public class WECmd extends CommandValidator {
                             final Vector min = Vector.getMinimum(v1, v2);
                             final Vector max = Vector.getMaximum(v1, v2);
                             final World world = player.getWorld();
-                            session.save(new Cuboid(world, min, max, player.getLocation().toVector()));
+                            session.save(new BlockBox(world, min, max, player.getLocation().toVector()));
                             final byte itemData = item.getData().getData();
                             final int itemId = item.getTypeId();
                             for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
@@ -193,9 +193,9 @@ public class WECmd extends CommandValidator {
     }
 
     private void undo() {
-        final Session session = getSession();
+        final EditSession session = getSession();
         if(hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
-            final Cuboid undo = session.load();
+            final BlockBox undo = session.load();
             undo.revert();
             player.sendNormal("Undone " + undo.getVolume() + " blocks.");
         }
@@ -203,7 +203,7 @@ public class WECmd extends CommandValidator {
 
     private void replace() {
         if(hasPerm(Perm.WE_REPLACE)) {
-            final Session session = getSession();
+            final EditSession session = getSession();
             if(hasTwoPoints(session)) {
                 final Vector v1 = session.getV1();
                 final Vector v2 = session.getV2();
@@ -215,7 +215,7 @@ public class WECmd extends CommandValidator {
                             final World world = player.getWorld();
                             final Vector min = Vector.getMinimum(v1, v2);
                             final Vector max = Vector.getMaximum(v1, v2);
-                            session.save(new Cuboid(world, min, max, player.getLocation().toVector()));
+                            session.save(new BlockBox(world, min, max, player.getLocation().toVector()));
                             int count = 0;
                             for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
                                 for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
@@ -243,7 +243,7 @@ public class WECmd extends CommandValidator {
             final int distance = parseInt(args[2]);
             if(distance > -1) {
                 if(distance <= Config.MOVE_RANGE) {
-                    final Session session = getSession();
+                    final EditSession session = getSession();
                     if(hasTwoPoints(session)) {
                         final Vector v1 = session.getV1();
                         final Vector v2 = session.getV2();
@@ -254,9 +254,9 @@ public class WECmd extends CommandValidator {
                                     final Vector min = Vector.getMinimum(v1, v2);
                                     final Vector max = Vector.getMaximum(v1, v2);
                                     final World world = player.getWorld();
-                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation().toVector());
+                                    BlockBox cuboid = new BlockBox(world, min, max, player.getLocation().toVector());
                                     int volume = cuboid.getVolume();
-                                    session.save(new Cuboid(world, min, max.clone().add(direction.toVector().clone().multiply(distance)), player.getLocation().toVector()));
+                                    session.save(new BlockBox(world, min, max.clone().add(direction.toVector().clone().multiply(distance)), player.getLocation().toVector()));
                                     put(world, min, max, Material.AIR);
                                     min.add(direction.toVector().clone().multiply(distance));
                                     cuboid.place(world, min);
@@ -265,9 +265,9 @@ public class WECmd extends CommandValidator {
                                     final Vector min = Vector.getMinimum(v1, v2);
                                     final Vector max = Vector.getMaximum(v1, v2);
                                     final World world = player.getWorld();
-                                    Cuboid cuboid = new Cuboid(world, min, max, player.getLocation().toVector());
+                                    BlockBox cuboid = new BlockBox(world, min, max, player.getLocation().toVector());
                                     int volume = cuboid.getVolume();
-                                    session.save(new Cuboid(world, min.clone().add(direction.toVector().clone().multiply(distance)), max, player.getLocation().toVector()));
+                                    session.save(new BlockBox(world, min.clone().add(direction.toVector().clone().multiply(distance)), max, player.getLocation().toVector()));
                                     put(world, min, max, Material.AIR);
                                     min.add((direction.toVector().clone().multiply(distance)));
                                     cuboid.place(world, min);
@@ -288,17 +288,17 @@ public class WECmd extends CommandValidator {
     }
 
     private void copy() {
-        final Session session = getSession();
+        final EditSession session = getSession();
         if(hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
-            session.setClipboard(new Cuboid(player.getWorld(), session.getV1(), session.getV2(), player.getLocation().toVector()));
+            session.setClipboard(new BlockBox(player.getWorld(), session.getV1(), session.getV2(), player.getLocation().toVector()));
             player.sendNormal("Copied " + session.getClipboard().getVolume() + " blocks.");
         }
     }
 
     private void paste() {
-        final Session session = getSession();
+        final EditSession session = getSession();
         if(session.hasClipboard() && hasPerm(Perm.WE_PASTE)) {
-            final Cuboid clipboard = session.getClipboard();
+            final BlockBox clipboard = session.getClipboard();
             session.save(clipboard.offset(player.getWorld(), player.getLocation().toVector()));
             player.sendNormal("Pasted " + clipboard.getVolume() + " blocks.");
         } else {
@@ -315,13 +315,13 @@ public class WECmd extends CommandValidator {
     }
 
     private void ext(final int range) {
-        final Session session = getSession();
+        final EditSession session = getSession();
         if(hasPerm(Perm.WE_EXT)) {
             if(range <= Config.DRAIN_RANGE) {
                 final Location location = player.getLocation();
                 final Vector max = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
                 final Vector min = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
-                session.save(new Cuboid(player.getWorld(), min, max, player.getLocation().toVector()));
+                session.save(new BlockBox(player.getWorld(), min, max, player.getLocation().toVector()));
                 int count = 0;
                 final World world = player.getWorld();
                 for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {

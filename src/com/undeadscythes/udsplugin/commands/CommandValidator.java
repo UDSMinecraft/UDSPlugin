@@ -230,7 +230,7 @@ public abstract class CommandValidator implements CommandExecutor {
         return notPinned() && notJailed();
     }
 
-    protected boolean hasUndo(Session session) {
+    protected boolean hasUndo(EditSession session) {
         if(session.hasUndo()) {
             return true;
         } else {
@@ -309,7 +309,7 @@ public abstract class CommandValidator implements CommandExecutor {
      * Get the players WorldEdit session.
      * @return The players WE session, if the player does not currently have a session one is created.
      */
-    protected Session getSession() {
+    protected EditSession getSession() {
         return player.forceSession();
     }
 
@@ -378,7 +378,7 @@ public abstract class CommandValidator implements CommandExecutor {
      * @param session The players session.
      * @return <code>true</code> if the session has two points, <code>false</code> otherwise.
      */
-    protected boolean hasTwoPoints(final Session session) {
+    protected boolean hasTwoPoints(final EditSession session) {
         if(session.getV1() == null || session.getV2() == null) {
             player.sendError("You need to select two points.");
             return false;
@@ -1190,7 +1190,7 @@ public abstract class CommandValidator implements CommandExecutor {
         return false;
     }
     
-    protected boolean inLine(final Session session) {
+    protected boolean inLine(final EditSession session) {
         if(hasTwoPoints(session)) {
             final int x = session.getV1().getBlockX() - session.getV2().getBlockX();
             final int y = session.getV1().getBlockY() - session.getV2().getBlockY();

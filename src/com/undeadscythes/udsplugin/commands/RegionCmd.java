@@ -110,7 +110,7 @@ public class RegionCmd extends CommandValidator {
     }
 
     private void vert() {
-        final Session session = getSession();
+        final EditSession session = getSession();
         if(session != null && hasTwoPoints(session)) {
             session.vert();
             player.sendNormal("Region extended from bedrock to build limit.");
@@ -177,10 +177,10 @@ public class RegionCmd extends CommandValidator {
     }
 
     private void reset() {
-        final Session session = getSession();
+        final EditSession session = getSession();
         final Region region = getRegion(args[1]);
         if(session != null && hasTwoPoints(session) && region != null) {
-            region.changeV(session.getV1(), session.getV2());
+            region.setPoints(session.getV1(), session.getV2());
             player.sendNormal("Region reset with new points.");
         }
     }
@@ -188,8 +188,9 @@ public class RegionCmd extends CommandValidator {
     private void select() {
         final Region region = getRegion(args[1]);
         if(region != null) {
-            final Session session = getSession();
-            session.setVPair(region.getV1(), region.getV2(), region.getWorld());
+            final EditSession session = getSession();
+            session.setPoints(region.getV1(), region.getV2());
+            session.setWorld(region.getWorld());
             player.sendNormal("Points set. " + session.getVolume() + " blocks selected.");
         }
     }
@@ -201,7 +202,7 @@ public class RegionCmd extends CommandValidator {
     }
     
     private void set(final RegionType type) {
-        final Session session = getSession();
+        final EditSession session = getSession();
         if(session != null && hasTwoPoints(session) && notRegion(args[1]) && noCensor(args[1])) {
             final Region region = new Region(args[1], session.getV1(), session.getV2(), player.getLocation(), null, "", type);
             RegionUtils.addRegion(region);

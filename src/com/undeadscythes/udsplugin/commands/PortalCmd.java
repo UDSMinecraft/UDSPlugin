@@ -78,7 +78,7 @@ public class PortalCmd extends CommandValidator {
     }
         
     private void set(final Warp warp) {
-        final Session session = getSession();
+        final EditSession session = getSession();
         if(session != null && inLine(session) && notPortal(args[1]) && noCensor(args[1])) {
             final Portal portal = new Portal(args[1], warp, session.getWorld(), session.getV1(), session.getV2());
             PortalUtils.addPortal(portal);

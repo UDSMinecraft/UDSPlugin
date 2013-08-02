@@ -1,131 +1,177 @@
 package com.undeadscythes.udsplugin;
 
 import org.bukkit.*;
-import org.bukkit.block.*;
 import org.bukkit.util.*;
 
 /**
- * A clone of an area of blocks in a world.
+ *
  * @author UndeadScythes
  */
-public class Cuboid {
-    final private World world;
-    final private Vector min;
-    final private Vector max;
-    final private Vector offset;
-    final private Vector diagonal;
-    final private int dx;
-    final private int dy;
-    final private int dz;
-    final private int px;
-    final private int py;
-    final private int pz;
-    final private MiniBlock[][][] blocks;
-
+public abstract class Cuboid {
+    private Vector v1 = null;
+    private Vector v2 = null;
+    private World world = null;
+    private int dx = 0;
+    private int dy = 0;
+    private int dz = 0;
+    private int volume = 0;
+    
+    public final void setPoint1(final Location location) {
+        if(world != null && !location.getWorld().equals(world)) {
+            v2 = null;
+        }
+        v1 = location.toVector();
+        world = location.getWorld();
+        resetCache();
+    }
+    
+    public final void setPoint2(final Location location) {
+        if(world != null && !location.getWorld().equals(world)) {
+            v1 = null;
+        }
+        v2 = location.toVector();
+        world = location.getWorld();
+        resetCache();
+    }
+    
+    public final Vector getV1() {
+        return v1;
+    }
+    
+    public final void setV1(final Vector vector) {
+        v1 = vector;
+    }
+    
+    public final Vector getV2() {
+        return v2;
+    }
+    
+    public final void setV2(final Vector vector) {
+        v2 = vector;
+    }
+    
     /**
-     *
-     * @param world
-     * @param v1
-     * @param v2
-     * @param pov
+     * Change this cuboid's defining points.
+     * @param v1 New v1.
+     * @param v2 New v2.
      */
-    public Cuboid(final World world, final Vector v1, final Vector v2, final Vector pov) {
+    public final void setPoints(final Vector v1, final Vector v2) {
+        setV1(v1);
+        setV2(v2);
+    }
+    
+    /**
+     * Expand the selection as far as possible vertically.
+     */
+    public final void vert() {
+        v1.setY(0);
+        v2.setY(world.getMaxHeight());
+    }
+    
+    public final World getWorld() {
+        return world;
+    }
+    
+    public final void setWorld(final World world) {
         this.world = world;
-        min = Vector.getMinimum(v1, v2);
-        px = min.getBlockX();
-        py = min.getBlockY();
-        pz = min.getBlockZ();
-        max = Vector.getMaximum(v1, v2);
-        diagonal = max.clone().subtract(min);
-        dx = diagonal.getBlockX() + 1;
-        dy = diagonal.getBlockY() + 1;
-        dz = diagonal.getBlockZ() + 1;
-        blocks = new MiniBlock[dx][dy][dz];
-        for(int x = 0; x < dx; x++) {
-            for(int y = 0; y < dy; y++) {
-                for(int z = 0; z < dz; z++) {
-                    blocks[x][y][z] = new MiniBlock(world.getBlockAt(px + x, py + y, pz + z));
-                }
-            }
+    }
+    
+    /**
+     * Checks if this region overlaps another cuboid.
+     * @param cuboid Cuboid to check.
+     * @return <code>true</code> if this cuboid overlaps with the other.
+     */
+    public final boolean hasOverlap(final Cuboid cuboid) {
+        return !(getV1().getX() > cuboid.getV2().getX()
+                || getV2().getX() < cuboid.getV1().getX()
+                || getV1().getZ() > cuboid.getV2().getZ()
+                || getV2().getZ() < cuboid.getV1().getZ()
+                || getV1().getY() > cuboid.getV2().getY()
+                || getV2().getY() < cuboid.getV1().getY());
+    }
+    
+    public final String getV1String() {
+        return v1.toString();
+    }
+    
+    public final String getV2String() {
+        return v2.toString();
+    }
+    
+    public final int getDX() {
+        if(dx == 0) {
+            dx = Math.abs(v1.getBlockX() - v2.getBlockX()) + 1;
         }
-        offset = min.clone().subtract(blockify(pov));
+        return dx;
     }
-
-    /**
-     *
-     * @param vector
-     * @return
-     */
-    private final Vector blockify(final Vector vector) {
-        return new Vector(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+    
+    public final int getDY() {
+        if(dy == 0) {
+            dy = Math.abs(v1.getBlockY() - v2.getBlockY()) + 1;
+        }
+        return dy;
     }
-
-    /**
-     *
-     * @return
-     */
-    public int getVolume() {
-        return dx * dy * dz;
+    
+    public final int getDZ() {
+        if(dz == 0) {
+            dz = Math.abs(v1.getBlockZ() - v2.getBlockZ()) + 1;
+        }
+        return dz;
     }
-
-    /**
-     *
-     * @param world
-     * @param place
-     * @return
-     */
-    public Cuboid offset(final World world, final Vector place) {
-        final Vector min = blockify(place).add(offset);
-        final Cuboid undo = new Cuboid(world, min, min.clone().add(diagonal), blockify(place));
-        place(world, min);
-        return undo;
+    
+    public final int getVolume() {
+        if(volume == 0) {
+            volume = getDX() * getDY() * getDZ();
+        }
+        return volume;
     }
-
+    
+    public final void resetCache() {
+        dx = 0;
+        dy = 0;
+        dz = 0;
+        volume = 0;
+    }
+    
     /**
-     *
+     * Expand this cuboid in some direction.
+     * @param direction Direction to expand.
+     * @param distance Distance to expand.
      */
-    public void revert() {
-        for(int x = 0; x < dx; x++) {
-            for(int y = 0; y < dy; y++) {
-                for(int z= 0; z < dz; z++) {
-                    blocks[x][y][z].replace(world.getBlockAt(px + x, py + y, pz + z));
-                }
-            }
+    public final void expand(final Direction direction, final int distance) {
+        if(direction.equals(Direction.WEST)) {
+            v1.subtract(new Vector(distance, 0, 0));
+        } else if(direction.equals(Direction.DOWN)) {
+            v1.subtract(new Vector(0, distance, 0));
+        } else if(direction.equals(Direction.NORTH)) {
+            v1.subtract(new Vector(0, 0, distance));
+        } else if(direction.equals(Direction.EAST)) {
+            v2.add(new Vector(distance, 0, 0));
+        } else if(direction.equals(Direction.UP)) {
+            v2.add(new Vector(0, distance, 0));
+        } else if(direction.equals(Direction.SOUTH)) {
+            v2.add(new Vector(0, 0, distance));
         }
     }
-
+    
     /**
-     *
-     * @param world
-     * @param place
-     * @return
+     * Expand this cuboid in some direction.
+     * @param direction Direction to contract.
+     * @param distance Distance to contract.
      */
-    public Cuboid place(final World world, final Vector place) {
-        final Cuboid undo = new Cuboid(world, place, place.clone().add(diagonal), new Vector());
-        final int nx = place.getBlockX();
-        final int ny = place.getBlockY();
-        final int nz = place.getBlockZ();
-        for(int x = 0; x < dx; x++) {
-            for(int y = 0; y < dy; y++) {
-                for(int z= 0; z < dz; z++) {
-                    blocks[x][y][z].replace(world.getBlockAt(nx + x, ny + y, nz + z));
-                }
-            }
+    public final void contract(final Direction direction, final int distance) {
+        if(direction.equals(Direction.EAST)) {
+            v1.add(new Vector(distance, 0, 0));
+        } else if(direction.equals(Direction.UP)) {
+            v1.add(new Vector(0, distance, 0));
+        } else if(direction.equals(Direction.SOUTH)) {
+            v1.add(new Vector(0, 0, distance));
+        } else if(direction.equals(Direction.WEST)) {
+            v2.subtract(new Vector(distance, 0, 0));
+        } else if(direction.equals(Direction.DOWN)) {
+            v2.subtract(new Vector(0, distance, 0));
+        } else if(direction.equals(Direction.NORTH)) {
+            v2.subtract(new Vector(0, 0, distance));
         }
-        return undo;
-    }
-}
-
-class MiniBlock {
-    private final int type;
-    private final byte data;
-
-    public MiniBlock(final Block block) {
-        type = block.getTypeId();
-        data = block.getData();
-    }
-
-    public void replace(final Block block) {
-        block.setTypeIdAndData(type, data, true);
     }
 }
