@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Handle server lockdown.
  * @author UndeadScythes
  */
-public class LockdownCmd extends CommandValidator {
+public class LockdownCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

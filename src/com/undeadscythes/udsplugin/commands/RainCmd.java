@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.utilities.*;
  * Make it rainy in the current world.
  * @author UndeadScythes
  */
-public class RainCmd extends CommandValidator {
+public class RainCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         int duration;

@@ -7,7 +7,7 @@ import org.bukkit.*;
  * Face a player in a certain direction or get the direction a player is facing.
  * @author UndeadScythes
  */
-public class FaceCmd extends CommandValidator {
+public class FaceCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         Direction direction;

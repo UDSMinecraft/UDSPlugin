@@ -8,7 +8,7 @@ import org.bukkit.*;
  * Rent VIP rank and perform other tasks. Sends help on wrong arguments.
  * @author UndeadScythes
  */
-public class VIPCmd extends CommandValidator {
+public class VIPCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         if(args.length == 0) {

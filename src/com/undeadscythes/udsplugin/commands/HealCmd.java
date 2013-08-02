@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Heal a player's health.
  * @author UndeadScythes
  */
-public class HealCmd extends CommandValidator {
+public class HealCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

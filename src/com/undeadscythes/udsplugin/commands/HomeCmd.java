@@ -8,7 +8,7 @@ import org.bukkit.util.*;
  * Home region related commands.
  * @author UndeadScythes
  */
-public class HomeCmd extends CommandValidator {
+public class HomeCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         Region home;
@@ -81,7 +81,7 @@ public class HomeCmd extends CommandValidator {
                 }
             } else if(subCmd.equals("help")) {
                 sendHelp(1);
-            } else if((target = getMatchingPlayer(args[0])) != null && (home = getHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
+            } else if((target = matchPlayer(args[0])) != null && (home = getHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
                 player.teleport(home.getWarp());
             }
         } else if(args.length == 2) {
@@ -97,13 +97,13 @@ public class HomeCmd extends CommandValidator {
                     }
                 }
             } else if(subCmd.equals("boot")) {
-                if((home = getHome()) != null && (target = getMatchingPlayer(args[1])) != null && isOnline(target) && isInHome(target, home)) {
+                if((home = getHome()) != null && (target = matchPlayer(args[1])) != null && isOnline(target) && isInHome(target, home)) {
                     target.teleport(player.getWorld().getSpawnLocation());
                     target.sendNormal(player.getNick() + " has booted you from their home.");
                     player.sendNormal(target.getNick() + " has been booted.");
                 }
             } else if(subCmd.equals("add")) {
-                if((target = getMatchingPlayer(args[1])) != null && (home = getHome()) != null) {
+                if((target = matchPlayer(args[1])) != null && (home = getHome()) != null) {
                     home.addMember(target);
                     player.sendNormal(target.getNick() + " has been added as your room mate.");
                     if(target.isOnline()) {
@@ -111,7 +111,7 @@ public class HomeCmd extends CommandValidator {
                     }
                 }
             } else if(subCmd.equals("kick")) {
-                if((target = getMatchingPlayer(args[1])) != null && (home = getHome()) != null && isRoomie(target, home)) {
+                if((target = matchPlayer(args[1])) != null && (home = getHome()) != null && isRoomie(target, home)) {
                     home.delMember(target);
                     player.sendNormal(target.getNick() + " is no longer your room mate.");
                     if(target.isOnline()) {
@@ -123,7 +123,7 @@ public class HomeCmd extends CommandValidator {
             }
         } else if(numArgsHelp(3)) {
             if(subCmd.equals("sell")) {
-                if((getHome()) != null && (target = getMatchingPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
+                if((getHome()) != null && (target = matchPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " wants to sell you their house for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

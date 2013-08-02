@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Return a private message from another player.
  * @author UndeadScythes
  */
-public class RCmd extends CommandValidator {
+public class RCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         SaveablePlayer target;

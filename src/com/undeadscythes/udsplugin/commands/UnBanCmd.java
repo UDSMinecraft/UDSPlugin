@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Remove a ban on a player.
  * @author UndeadScythes
  */
-public class UnBanCmd extends CommandValidator {
+public class UnBanCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

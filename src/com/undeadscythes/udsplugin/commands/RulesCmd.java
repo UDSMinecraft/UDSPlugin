@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Display server rules.
  * @author UndeadScythes
  */
-public class RulesCmd extends CommandValidator {
+public class RulesCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         player.sendNormal("--- Server Rules ---");

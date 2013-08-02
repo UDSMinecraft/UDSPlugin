@@ -10,13 +10,13 @@ import org.bukkit.util.Vector;
  * City related commands.
  * @author UndeadScythes
  */
-public class CityCmd extends CommandValidator {
+public class CityCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         Region city;
         if(args.length == 1) {
             if(subCmd.equals("set")) {
-                if((city = getCurrentRegion()).getType() == RegionType.CITY && getMunicipality(city.getName()) != null) {
+                if((city = getRegion()).getType() == RegionType.CITY && getMunicipality(city.getName()) != null) {
                     city.setWarp(player.getLocation());
                     player.sendNormal("City spawn point set.");
                 }
@@ -68,7 +68,7 @@ public class CityCmd extends CommandValidator {
         } else if(numArgsHelp(3)) {
             SaveablePlayer target;
             if(subCmd.equals("invite")) {
-                if((city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
+                if((city = getMunicipality(args[1])) != null && (target = matchPlayer(args[2])) != null) {
                     if(city.addMember(target)) {
                         player.sendNormal(target.getNick() + " was added as a citizen of " + city.getName() + ".");
                         target.sendNormal("You have been added as a citizen of " + city.getName());
@@ -77,7 +77,7 @@ public class CityCmd extends CommandValidator {
                     }
                 }
             } else if(subCmd.equals("banish")) {
-                if((city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
+                if((city = getMunicipality(args[1])) != null && (target = matchPlayer(args[2])) != null) {
                     if(city.delMember(target)) {
                         player.sendNormal(target.getNick() + " has been banished from " + city.getName() + ".");
                         target.sendNormal("You have been banished from " + city.getName() + ".");
@@ -87,7 +87,7 @@ public class CityCmd extends CommandValidator {
                     }
                 }
             } else if(subCmd.equals("mayor")) {
-                if((city = getMunicipality(args[1])) != null && (target = getMatchingPlayer(args[2])) != null) {
+                if((city = getMunicipality(args[1])) != null && (target = matchPlayer(args[2])) != null) {
                     city.addMember(city.getOwner());
                     city.delMember(target);
                     city.changeOwner(target);

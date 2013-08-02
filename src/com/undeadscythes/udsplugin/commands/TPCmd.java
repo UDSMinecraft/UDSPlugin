@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Teleport players to each other.
  * @author UndeadScythes
  */
-public class TPCmd extends CommandValidator {
+public class TPCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer targetFrom;

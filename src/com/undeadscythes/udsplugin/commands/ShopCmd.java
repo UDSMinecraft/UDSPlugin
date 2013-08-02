@@ -8,7 +8,7 @@ import org.bukkit.inventory.*;
  * Shop related commands.
  * @author UndeadScythes
  */
-public class ShopCmd extends CommandValidator {
+public class ShopCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         Region shop;
@@ -88,12 +88,12 @@ public class ShopCmd extends CommandValidator {
                 player.sendText("Check out /shop sign to see how to format new shop signs.");
             } else if(subCmd.equals("help")) {
                 sendHelp(1);
-            } else if((target = getMatchingPlayer(args[0])) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {
+            } else if((target = matchPlayer(args[0])) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {
                 player.teleport(shop.getWarp());
             }
         } else if(args.length == 2) {
             if(subCmd.equals("hire")) {
-                if((target = getMatchingPlayer(args[1])) != null && (shop = getShop()) != null) {
+                if((target = matchPlayer(args[1])) != null && (shop = getShop()) != null) {
                     shop.addMember(target);
                     player.sendNormal(target.getNick() + " has been added as your worker.");
                     if(target.isOnline()) {
@@ -101,7 +101,7 @@ public class ShopCmd extends CommandValidator {
                     }
                 }
             } else if(subCmd.equals("fire")) {
-                if((target = getMatchingPlayer(args[1])) != null && (shop = getShop()) != null && isWorker(target, shop)) {
+                if((target = matchPlayer(args[1])) != null && (shop = getShop()) != null && isWorker(target, shop)) {
                     shop.delMember(target);
                     player.sendNormal(target.getNick() + " is no longer your worker.");
                     if(target.isOnline()) {
@@ -113,7 +113,7 @@ public class ShopCmd extends CommandValidator {
             }
         } else if(numArgsHelp(3)) {
             if(subCmd.equals("sell")) {
-                if((getShop()) != null && (target = getMatchingPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
+                if((getShop()) != null && (target = matchPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

@@ -14,7 +14,7 @@ import org.apache.commons.lang.*;
  * Toggles the admin chat channel.
  * @author UndeadScythes
  */
-public class TicketCmd extends CommandValidator {
+public class TicketCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         if(args.length == 0) {

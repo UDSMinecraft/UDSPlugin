@@ -7,10 +7,10 @@ import org.apache.commons.lang.*;
  * Set up a powertool.
  * @author UndeadScythes
  */
-public class PowertoolCmd extends CommandValidator {
+public class PowertoolCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        if(args.length >= 1 && notAirHand()) {
+        if(args.length >= 1 && isHoldingItem()) {
             player.setPowertoolID(player.getItemInHand().getTypeId());
             player.setPowertool(StringUtils.join(args, " ").replaceFirst("/", ""));
             player.sendNormal("Powertool set.");

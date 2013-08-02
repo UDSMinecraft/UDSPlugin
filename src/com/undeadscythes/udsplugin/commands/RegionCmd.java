@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.utilities.*;
  * Region related commands.
  * @author UndeadScythes
  */
-public class RegionCmd extends CommandValidator {
+public class RegionCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(args.length == 1) {
@@ -212,7 +212,7 @@ public class RegionCmd extends CommandValidator {
 
     private void addMember() {
         final Region region = getRegion(args[1]);
-        final SaveablePlayer target = getMatchingPlayer(args[2]);
+        final SaveablePlayer target = matchPlayer(args[2]);
         if(region != null && target != null) {
             region.addMember(target);
             player.sendNormal(target.getNick() + " add to region " + region.getName() + ".");
@@ -221,7 +221,7 @@ public class RegionCmd extends CommandValidator {
 
     private void delMember() {
         final Region region = getRegion(args[1]);
-        final SaveablePlayer target = getMatchingPlayer(args[2]);
+        final SaveablePlayer target = matchPlayer(args[2]);
         if(region != null && target != null) {
             region.delMember(target);
             player.sendNormal(target.getNick() + " removed from region " + region.getName() + ".");
@@ -230,7 +230,7 @@ public class RegionCmd extends CommandValidator {
 
     private void owner() {
         final Region region = getRegion(args[1]);
-        final SaveablePlayer target = getMatchingPlayer(args[2]);
+        final SaveablePlayer target = matchPlayer(args[2]);
         if(region != null && target != null) {
             region.changeOwner(target);
             player.sendNormal(target.getNick() + " made owner of region " + region.getName() + ".");

@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.utilities.*;
  * Start a storm in the world.
  * @author UndeadScythes
  */
-public class StormCmd extends CommandValidator {
+public class StormCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         int duration;

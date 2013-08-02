@@ -7,7 +7,7 @@ import org.bukkit.enchantments.*;
  * Enchant an item.
  * @author UndeadScythes
  */
-public class EnchantCmd extends CommandValidator {
+public class EnchantCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         int level;
@@ -22,7 +22,7 @@ public class EnchantCmd extends CommandValidator {
                     player.getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
                 }
             }
-        } else if(numArgsHelp(2) && (enchantment = getEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0 && goodEnchantLevel(enchantment, level) && canEnchant(enchantment, player.getItemInHand())) {
+        } else if(numArgsHelp(2) && (enchantment = getEnchantment(args[0])) != null && (level = parseInt(args[1])) != 0 && goodEnchantLevel(enchantment, level) && isEnchantable(enchantment, player.getItemInHand())) {
             player.getItemInHand().addEnchantment(enchantment, level);
         }
     }

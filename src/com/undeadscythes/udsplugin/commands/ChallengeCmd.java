@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * A player challenges another player to a private staked PVP match.
  * @author UndeadScythes
  */
-public class ChallengeCmd extends CommandValidator {
+public class ChallengeCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

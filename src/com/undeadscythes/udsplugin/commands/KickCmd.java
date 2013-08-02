@@ -7,7 +7,7 @@ import org.apache.commons.lang.*;
  * Kick a player from the server.
  * @author UndeadScythes
  */
-public class KickCmd extends CommandValidator {
+public class KickCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

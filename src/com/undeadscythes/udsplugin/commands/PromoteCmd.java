@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Promote a player by a single rank.
  * @author UndeadScythes
  */
-public class PromoteCmd extends CommandValidator {
+public class PromoteCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;

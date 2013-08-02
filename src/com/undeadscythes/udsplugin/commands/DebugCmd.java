@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
  * Various debugging commands.
  * @author UndeadScythes
  */
-public class DebugCmd extends CommandValidator {
+public class DebugCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(this.numArgsHelp(1)) {

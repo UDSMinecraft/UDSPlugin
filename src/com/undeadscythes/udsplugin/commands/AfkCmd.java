@@ -8,10 +8,10 @@ import org.bukkit.*;
  * Toggles a players AFK mode.
  * @author UndeadScythes
  */
-public class AfkCmd extends CommandValidator {
+public class AfkCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(notPinned() && notNearMobs()) {
+        if(notPinned() && isNotNearMobs()) {
             if(player.toggleAfk()) {
                 Bukkit.broadcastMessage(Color.TEXT + "*" + player.getNick() + " is now afk.");
             } else {

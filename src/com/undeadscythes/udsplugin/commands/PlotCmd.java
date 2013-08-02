@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
  *
  * @author UndeadScythes
  */
-public class PlotCmd extends CommandValidator {
+public class PlotCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(args.length == 0) {

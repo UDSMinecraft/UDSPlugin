@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Teleports a player to their last recorded position.
  * @author UndeadScythes
  */
-public class BackCmd extends CommandValidator {
+public class BackCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         if(!player.quietTeleport(player.getBack())) {

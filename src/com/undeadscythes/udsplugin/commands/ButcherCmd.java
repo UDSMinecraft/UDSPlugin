@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
  * Remove all monsters around the player.
  * @author UndeadScythes
  */
-public class ButcherCmd extends CommandValidator {
+public class ButcherCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         if(maxArgsHelp(1)) {

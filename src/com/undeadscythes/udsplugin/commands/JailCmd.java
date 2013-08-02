@@ -7,7 +7,7 @@ import com.undeadscythes.udsplugin.utilities.*;
  * Jail a player.
  * @author UndeadScythes
  */
-public class JailCmd extends CommandValidator {
+public class JailCmd extends CommandHandler {
     private static int nextCell = 0;
     
     public static void jail(final SaveablePlayer player, final long sentence, final int bail) {

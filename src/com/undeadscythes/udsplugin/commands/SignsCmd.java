@@ -6,7 +6,7 @@ import com.undeadscythes.udsplugin.*;
  * Get a list of special signs the player can place.
  * @author UndeadScythes
  */
-public class SignsCmd extends CommandValidator {
+public class SignsCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         player.sendNormal("Special signs available to you and format (lines 1-4):");

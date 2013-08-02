@@ -7,7 +7,7 @@ import java.util.*;
  * Get help on certain commands.
  * @author UndeadScythes
  */
-public class HelpCmd extends CommandValidator {
+public class HelpCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(maxArgsHelp(2)) {

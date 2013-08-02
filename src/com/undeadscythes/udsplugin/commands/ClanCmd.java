@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
  * Various clan related commands.
  * @author UndeadScythes
  */
-public class ClanCmd extends CommandValidator {
+public class ClanCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         Clan clan;
@@ -96,14 +96,14 @@ public class ClanCmd extends CommandValidator {
                     UDSPlugin.sendBroadcast(player.getNick() + " just created " + args[1] + ".");
                 }
             } else if(subCmd.equals("invite")) {
-                if((target = getMatchingPlayer(args[1])) != null && isOnline(target) && canRequest(target) && (clan = getClan()) != null && hasClanRank(clan, player) && notSelf(target)) {
+                if((target = matchPlayer(args[1])) != null && isOnline(target) && canRequest(target) && (clan = getClan()) != null && hasClanRank(clan, player) && notSelf(target)) {
                     UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.CLAN, clan.getName(), target));
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " has invited you to join " + clan.getName() + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
                 }
             } else if(subCmd.equals("kick")) {
-                if((target = getMatchingPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
+                if((target = matchPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
                     clan.delMember(target);
                     target.setClan(null);
                     if((base = RegionUtils.getRegion(RegionType.BASE, clan.getName() + "base")) != null) {
@@ -114,7 +114,7 @@ public class ClanCmd extends CommandValidator {
                     clan.sendMessage(target.getNick() + " has left the clan.");
                 }
             } else if(subCmd.equals("promote")) {
-                if((target = getMatchingPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
+                if((target = matchPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
                     if(clan.promote(target)) {
                         target.sendNormal("You have been promoted in clan " + clan.getName() + ".");
                         player.sendNormal(target.getNick() + " has been promoted.");
@@ -124,7 +124,7 @@ public class ClanCmd extends CommandValidator {
                     }
                 }
             } else if(subCmd.equals("demote")) {
-                if((target = getMatchingPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
+                if((target = matchPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player) && notSelf(target)) {
                     if(clan.demote(target)) {
                         target.sendNormal("You have been demoted in clan " + clan.getName() + ".");
                         player.sendNormal(target.getNick() + " has been promoted.");
@@ -169,7 +169,7 @@ public class ClanCmd extends CommandValidator {
                     UDSPlugin.sendBroadcast(player.getNick() + " has rebranded their clan as " + args[1] + ".");
                 }
             } else if(subCmd.equals("owner")) {
-                if((clan = getClan()) != null && isLeader(clan) && (target = getMatchingPlayer(args[1])) != null && isInClan(target, clan)) {
+                if((clan = getClan()) != null && isLeader(clan) && (target = matchPlayer(args[1])) != null && isInClan(target, clan)) {
                     clan.changeLeader(target);
                     clan.sendMessage("Your new leader is " + target.getNick());
                     if(target.isOnline()) {

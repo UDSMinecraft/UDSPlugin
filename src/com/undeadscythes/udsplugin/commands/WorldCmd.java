@@ -10,7 +10,7 @@ import org.bukkit.entity.*;
  * Handles various MultiVerse-like functions.
  * @author UndeadScythes
  */
-public class WorldCmd extends CommandValidator {
+public class WorldCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(args.length == 1) {
