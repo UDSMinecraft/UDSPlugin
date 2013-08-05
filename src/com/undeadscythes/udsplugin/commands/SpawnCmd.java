@@ -8,7 +8,7 @@ public class SpawnCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         if(notPinned() && notJailed()) {
-            player.teleport(player.getLocation().getWorld().getSpawnLocation());
+            player().teleport(player().getLocation().getWorld().getSpawnLocation());
         }
     }
 }

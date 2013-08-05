@@ -12,31 +12,31 @@ import org.bukkit.util.*;
 public class PortalCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        if(args.length == 1) {
-            if(subCmd.equals("list")) {
+        if(argsLength() == 1) {
+            if(subCmdEquals("list")) {
                 list();
             } else {
                 subCmdHelp();
             }
-        } else if(args.length == 2) {
-            if(subCmd.equals("set")) {
+        } else if(argsLength() == 2) {
+            if(subCmdEquals("set")) {
                 set(null);
-            } else if(subCmd.equals("remove")) {
+            } else if(subCmdEquals("remove")) {
                 remove();
             } else {
                 subCmdHelp();
             }
-        } else if(args.length == 3) {
-            if(subCmd.equals("dest")) {
+        } else if(argsLength() == 3) {
+            if(subCmdEquals("dest")) {
                 dest();
-            } else if(subCmd.equals("p2p")) {
+            } else if(subCmdEquals("p2p")) {
                 p2p();
-            } else if(subCmd.equals("remove")) {
+            } else if(subCmdEquals("remove")) {
                 remove();
-            } else if(subCmd.equals("exit")) {
+            } else if(subCmdEquals("exit")) {
                 exit();
-            } else if(subCmd.equals("set")) {
-                final Warp warp = warpExists(args[2]);
+            } else if(subCmdEquals("set")) {
+                final Warp warp = warpExists(arg(2));
                 if(warp != null) {
                     set(warp);
                 }
@@ -52,38 +52,38 @@ public class PortalCmd extends CommandHandler {
             list = list.concat(test.getName() + (test.getWarpName() == null ? ", " : ("(" + test.getWarpName() + "), ")));
         }
         if(list.isEmpty()) {
-            player.sendNormal("There are no portals.");
+            player().sendNormal("There are no portals.");
         } else {
-            player.sendNormal("Portals(Warp):");
-            player.sendText(list.substring(0, list.length() - 2));
+            player().sendNormal("Portals(Warp):");
+            player().sendText(list.substring(0, list.length() - 2));
         }
     }
     
     private void exit() {
-        final Portal portal = portalExists(args[1]);
+        final Portal portal = portalExists(arg(1));
         Direction dir;
-        if(portal != null && (dir = isCardinalDirection(args[2])) != null) {
+        if(portal != null && (dir = isCardinalDirection(arg(2))) != null) {
             portal.setExit(dir);
-            player.sendNormal("Portal now points " + dir.toString() + ".");
+            player().sendNormal("Portal now points " + dir.toString() + ".");
         }
     }
     
     private void remove() {
-        final Portal portal = portalExists(args[1]);
+        final Portal portal = portalExists(arg(1));
         if(portal != null) {
             PortalUtils.removePortal(portal);
             replace(portal, true);
-            player.sendNormal("Portal removed.");
+            player().sendNormal("Portal removed.");
         }
     }
         
     private void set(final Warp warp) {
-        final EditSession session = getSession();
-        if(session != null && selectionIs2D(session) && notPortal(args[1]) && noBadLang(args[1])) {
-            final Portal portal = new Portal(args[1], warp, session.getWorld(), session.getV1(), session.getV2());
+        final EditSession session = player().forceSession();
+        if(session != null && selectionIs2D(session) && notPortal(arg(1)) && noBadLang(arg(1))) {
+            final Portal portal = new Portal(arg(1), warp, session.getWorld(), session.getV1(), session.getV2());
             PortalUtils.addPortal(portal);
             replace(portal, false);
-            player.sendNormal("Portal " + portal.getName() + " set.");
+            player().sendNormal("Portal " + portal.getName() + " set.");
         }
     }
     
@@ -109,20 +109,20 @@ public class PortalCmd extends CommandHandler {
     }
             
     private void dest() {
-        final Portal portal = portalExists(args[1]);
-        final Warp target = warpExists(args[2]);
+        final Portal portal = portalExists(arg(1));
+        final Warp target = warpExists(arg(2));
         if(portal != null && target != null) {
             portal.setWarp(target);
-            player.sendNormal(portal.getName() + " now warps to " + target.getName() + ".");
+            player().sendNormal(portal.getName() + " now warps to " + target.getName() + ".");
         }
     }
     
     private void p2p() {
-        final Portal portal = portalExists(args[1]);
-        final Portal target = portalExists(args[2]);
+        final Portal portal = portalExists(arg(1));
+        final Portal target = portalExists(arg(2));
         if(portal != null && target != null) {
             portal.setPortal(target);
-            player.sendNormal(portal.getName() + " now portals to " + target.getName() + ".");
+            player().sendNormal(portal.getName() + " now portals to " + target.getName() + ".");
         }
     }
 }

@@ -1,8 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Color;
-import org.apache.commons.lang.*;
 import org.bukkit.*;
 
 /**
@@ -12,9 +10,9 @@ import org.bukkit.*;
 public class MeCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        final String action = StringUtils.join(args, " ");
-        if(minArgsHelp(1) && noCensor(action)) {
-            Bukkit.broadcastMessage(Color.TEXT + "*" + player.getNick() + " " + action);
+        final String action = argsToMessage();
+        if(minArgsHelp(1) && noBadLang(action)) {
+            Bukkit.broadcastMessage(Color.TEXT + "*" + player().getNick() + " " + action);
         }
     }
 }

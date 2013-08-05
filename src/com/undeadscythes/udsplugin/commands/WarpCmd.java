@@ -13,22 +13,22 @@ public class WarpCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         Warp warp;
-        if(args.length == 0) {
+        if(argsLength() == 0) {
             final Set<String> warps = new TreeSet<String>();
             for(Warp test : WarpUtils.getWarps()) {
-                if(player.hasRank(test.getRank())) {
+                if(player().hasRank(test.getRank())) {
                     warps.add(test.getName() + (test.getPrice() > 0 ? " (" + test.getPrice() + ")" : ""));
                 }
             }
             if(warps.isEmpty()) {
-                player.sendNormal("You don't have access to any warps.");
+                player().sendNormal("You don't have access to any warps.");
             } else {
-                player.sendNormal("Available warps (with prices):");
-                player.sendText(StringUtils.join(warps.toArray(), ", "));
+                player().sendNormal("Available warps (with prices):");
+                player().sendText(StringUtils.join(warps.toArray(), ", "));
             }
-        } else if(numArgsHelp(1) && (warp = warpExists(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
-            player.debit(warp.getPrice());
-            player.teleport(warp.getLocation());
+        } else if(numArgsHelp(1) && (warp = warpExists(arg(0))) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
+            player().debit(warp.getPrice());
+            player().teleport(warp.getLocation());
         }
     }
 }

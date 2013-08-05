@@ -11,12 +11,12 @@ public class TPCmd extends CommandHandler {
     public void playerExecute() {
         SaveablePlayer targetFrom;
         SaveablePlayer targetTo;
-        if(args.length == 1) {
-            if((targetTo = getMatchingPlayer(args[0])) != null && isOnline(targetTo) && notSelf(targetTo)) {
-                player.setBackPoint();
-                player.teleport(targetTo);
+        if(argsLength() == 1) {
+            if((targetTo = matchesPlayer(arg(0))) != null && isOnline(targetTo) && notSelf(targetTo)) {
+                player().setBackPoint();
+                player().teleport(targetTo);
             }
-        } else if(numArgsHelp(2) && (targetFrom = getMatchingPlayer(args[0])) != null && isOnline(targetFrom) && (targetTo = getMatchingPlayer(args[1])) != null && isOnline(targetTo)) {
+        } else if(numArgsHelp(2) && (targetFrom = matchesPlayer(arg(0))) != null && isOnline(targetFrom) && (targetTo = matchesPlayer(arg(1))) != null && isOnline(targetTo)) {
             targetFrom.setBackPoint();
             targetFrom.teleport(targetTo);
         }

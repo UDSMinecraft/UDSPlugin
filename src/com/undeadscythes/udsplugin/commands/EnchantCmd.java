@@ -12,18 +12,18 @@ public class EnchantCmd extends CommandHandler {
     public void playerExecute() {
         int level;
         Enchantment enchantment;
-        if(args.length == 0) {
-            sendPage(1, player);
-        } else if(args.length == 1) {
-            if(args[0].matches("[0-9][0-9]*")) {
-                sendPage(Integer.parseInt(args[0]), player);
+        if(argsLength() == 0) {
+            sendPage(1, player());
+        } else if(argsLength() == 1) {
+            if(arg(0).matches("[0-9][0-9]*")) {
+                sendPage(Integer.parseInt(arg(0)), player());
             } else {
-                if((enchantment = enchantmentExists(args[0])) != null) {
-                    player.getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
+                if((enchantment = enchantmentExists(arg(0))) != null) {
+                    player().getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
                 }
             }
-        } else if(numArgsHelp(2) && (enchantment = enchantmentExists(args[0])) != null && (level = isInteger(args[1])) != 0 && goodEnchantLevel(enchantment, level) && isEnchantable(enchantment, player.getItemInHand())) {
-            player.getItemInHand().addEnchantment(enchantment, level);
+        } else if(numArgsHelp(2) && (enchantment = enchantmentExists(arg(0))) != null && (level = isInteger(arg(1))) != 0 && goodEnchantLevel(enchantment, level) && isEnchantable(enchantment, player().getItemInHand())) {
+            player().getItemInHand().addEnchantment(enchantment, level);
         }
     }
 

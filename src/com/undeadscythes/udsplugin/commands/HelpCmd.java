@@ -11,17 +11,17 @@ public class HelpCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(maxArgsHelp(2)) {
-            if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
+            if(argsLength() == 0 || (argsLength() == 1 && arg(0).matches("[0-9][0-9]*"))) {
                 sendHelpFiles();
-            } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
-                final Usage usage = Usage.getByName(args[0]);
+            } else if(argsLength() == 1 || (argsLength() == 2 && arg(1).matches("[0-9][0-9]*"))) {
+                final Usage usage = Usage.getByName(arg(0));
                 if(usage == null) {
-                    player.sendError("No command exists by that name.");
+                    player().sendError("No command exists by that name.");
                 } else {
                     if(usage.isExtended()) {
                         sendCommandHelp(usage);
                     } else {
-                        player.sendListItem(usage.getUsage(), " - " + usage.getDescription());
+                        player().sendListItem(usage.getUsage(), " - " + usage.getDescription());
                     }
                 }
             }
@@ -31,28 +31,28 @@ public class HelpCmd extends CommandHandler {
     private void sendHelpFiles() {
         final EnumSet<Usage> usages = EnumSet.noneOf(Usage.class);
         for(Usage usage : Usage.values()) {
-            if(player.hasPermission(usage.getPerm()) && !usage.isExtension() && (usage.getPerm().getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(usage.getPerm().getMode()))) {
+            if(player().hasPermission(usage.getPerm()) && !usage.isExtension() && (usage.getPerm().getMode() == null || UDSPlugin.getWorldMode(player().getWorld()).equals(usage.getPerm().getMode()))) {
                 usages.add(usage);
             }
         }
-        if(args.length == 1) {
-            sendPage(Integer.parseInt(args[0]), player, usages, "Help");
+        if(argsLength() == 1) {
+            sendPage(Integer.parseInt(arg(0)), player(), usages, "Help");
         } else {
-            sendPage(1, player, usages, "Help");
+            sendPage(1, player(), usages, "Help");
         }
     }
 
     private void sendCommandHelp(final Usage usage) {
         final EnumSet<Usage> extensions = EnumSet.noneOf(Usage.class);
         for(Usage extension : Usage.values()) {
-            if(player.hasPermission(extension.getPerm()) && extension.isExtension(usage)) {
+            if(player().hasPermission(extension.getPerm()) && extension.isExtension(usage)) {
                 extensions.add(extension);
             }
         }
-        if(args.length == 2) {
-            sendPage(Integer.parseInt(args[1]), player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+        if(argsLength() == 2) {
+            sendPage(Integer.parseInt(arg(1)), player(), extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
         } else {
-            sendPage(1, player, extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+            sendPage(1, player(), extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
         }
     }
 

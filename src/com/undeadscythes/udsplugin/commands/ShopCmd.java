@@ -14,110 +14,110 @@ public class ShopCmd extends CommandHandler {
         Region shop;
         SaveablePlayer target;
         int price;
-        if(args.length == 0) {
+        if(argsLength() == 0) {
             if((shop = ownsAShop()) != null && notJailed() && notPinned()) {
-                player.teleport(shop.getWarp());
+                player().teleport(shop.getWarp());
             }
-        } else if(args.length == 1) {
-            if(subCmd.equals("make")) {
+        } else if(argsLength() == 1) {
+            if(subCmdEquals("make")) {
                 if(hasPerm(Perm.SHOP_ADMIN)) {
-                    player.performCommand("region set " + nextShopName() + " shop");
+                    player().performCommand("region set " + nextShopName() + " shop");
                 }
-            } else if(subCmd.equals("clear")) {
+            } else if(subCmdEquals("clear")) {
                 if((shop = ownsAShop()) != null) {
                     RegionUtils.renameRegion(shop, nextShopName());
                     shop.clearMembers();
                     shop.changeOwner(null);
-                    player.sendNormal("Shop put back up for sale.");
-                    player.credit(Config.SHOP_COST / 2);
+                    player().sendNormal("Shop put back up for sale.");
+                    player().credit(Config.SHOP_COST / 2);
                 }
-            } else if(subCmd.equals("set")) {
+            } else if(subCmdEquals("set")) {
                 if((shop = ownsAShop()) != null) {
-                    shop.setWarp(player.getLocation());
-                    player.sendNormal("Shop warp point set.");
+                    shop.setWarp(player().getLocation());
+                    player().sendNormal("Shop warp point set.");
                 }
-            } else if(subCmd.equals("workers")) {
+            } else if(subCmdEquals("workers")) {
                 String message = "";
                 for(Region otherShop : RegionUtils.getRegions(RegionType.SHOP)) {
-                    if(otherShop.hasMember(player)) {
+                    if(otherShop.hasMember(player())) {
                         message = message.concat(otherShop.getOwner().getNick() + ", ");
                     }
                     if(!message.isEmpty()) {
-                        player.sendNormal("You work for:");
-                        player.sendText(message.substring(0, message.length() - 2));
+                        player().sendNormal("You work for:");
+                        player().sendText(message.substring(0, message.length() - 2));
                     }
                     message = "";
-                    if((shop = RegionUtils.getRegion(RegionType.SHOP, player.getName() + "shop")) != null) {
+                    if((shop = RegionUtils.getRegion(RegionType.SHOP, player().getName() + "shop")) != null) {
                         for(SaveablePlayer member : shop.getMembers()) {
                             message = message.concat(member.getNick() + ", ");
                         }
                     }
                     if(!message.isEmpty()) {
-                        player.sendNormal("Your workers are:");
-                        player.sendText(message.substring(0, message.length() - 2));
+                        player().sendNormal("Your workers are:");
+                        player().sendText(message.substring(0, message.length() - 2));
                     } else {
-                        player.sendNormal("You have no workers.");
+                        player().sendNormal("You have no workers.");
                     }
                 }
-            } else if(subCmd.equals("buy")) {
-                if((shop = getContainingShop()) != null && canAfford(Config.SHOP_COST) && isEmptyShop(shop)) {
-                    player.debit(Config.SHOP_COST);
-                    RegionUtils.renameRegion(shop, player.getName() + "shop");
-                    shop.changeName(player.getName() + "shop");
-                    player.sendNormal("Shop bought.");
+            } else if(subCmdEquals("buy")) {
+                if((shop = isInShop()) != null && canAfford(Config.SHOP_COST) && isEmptyShop(shop)) {
+                    player().debit(Config.SHOP_COST);
+                    RegionUtils.renameRegion(shop, player().getName() + "shop");
+                    shop.changeName(player().getName() + "shop");
+                    player().sendNormal("Shop bought.");
                 }
-            } else if(subCmd.equals("sign")) {
-                player.sendNormal("Correct shop sign format:");
-                player.sendListItem("Line 1 - ", "The word '[shop]' with square brackets.");
-                player.sendListItem("Line 2 - ", "The price of one item.");
-                player.sendListItem("Lines 3 & 4 - ", "Anything else you want to write.");
-                player.sendListItem("Example:", "");
-                player.sendText("[shop]");
-                player.sendText("50");
-                player.sendText("Lovely home");
-                player.sendText("cooked treats!");
-            } else if(subCmd.equals("item")) {
-                final ItemStack item = player.getItemInHand();
-                player.sendNormal(item.getType().name() + " - " + Color.TEXT + item.getTypeId() + ":" + item.getData().getData());
-            } else if("changes".equals(subCmd)) {
-                player.sendNormal("Changes to the shop system:");
-                player.sendText("Shops no longer buy items, to sell items buy your own shop.");
-                player.sendText("You will pay for the items you take when you close the chest.");
-                player.sendText("The chest doesn't know which items are yours so don't put your items in unless you want to pay to get them back.");
-                player.sendText("Shops are not item specific, pay one price for whatever items are in a chest.");
-                player.sendText("Check out /shop sign to see how to format new shop signs.");
-            } else if(subCmd.equals("help")) {
+            } else if(subCmdEquals("sign")) {
+                player().sendNormal("Correct shop sign format:");
+                player().sendListItem("Line 1 - ", "The word '[shop]' with square brackets.");
+                player().sendListItem("Line 2 - ", "The price of one item.");
+                player().sendListItem("Lines 3 & 4 - ", "Anything else you want to write.");
+                player().sendListItem("Example:", "");
+                player().sendText("[shop]");
+                player().sendText("50");
+                player().sendText("Lovely home");
+                player().sendText("cooked treats!");
+            } else if(subCmdEquals("item")) {
+                final ItemStack item = player().getItemInHand();
+                player().sendNormal(item.getType().name() + " - " + Color.TEXT + item.getTypeId() + ":" + item.getData().getData());
+            } else if(subCmdEquals("changes")) {
+                player().sendNormal("Changes to the shop system:");
+                player().sendText("Shops no longer buy items, to sell items buy your own shop.");
+                player().sendText("You will pay for the items you take when you close the chest.");
+                player().sendText("The chest doesn't know which items are yours so don't put your items in unless you want to pay to get them back.");
+                player().sendText("Shops are not item specific, pay one price for whatever items are in a chest.");
+                player().sendText("Check out /shop sign to see how to format new shop signs.");
+            } else if(subCmdEquals("help")) {
                 sendHelp(1);
-            } else if((target = matchesPlayer(args[0])) != null && (shop = ownsAShop(target)) != null && notJailed() && notPinned()) {
-                player.teleport(shop.getWarp());
+            } else if((target = matchesPlayer(arg(0))) != null && (shop = ownsAShop(target)) != null && notJailed() && notPinned()) {
+                player().teleport(shop.getWarp());
             }
-        } else if(args.length == 2) {
-            if(subCmd.equals("hire")) {
-                if((target = matchesPlayer(args[1])) != null && (shop = ownsAShop()) != null) {
+        } else if(argsLength() == 2) {
+            if(subCmdEquals("hire")) {
+                if((target = matchesPlayer(arg(1))) != null && (shop = ownsAShop()) != null) {
                     shop.addMember(target);
-                    player.sendNormal(target.getNick() + " has been added as your worker.");
+                    player().sendNormal(target.getNick() + " has been added as your worker.");
                     if(target.isOnline()) {
-                        target.sendNormal("You have been added as " + player.getNick() + "'s worker.");
+                        target.sendNormal("You have been added as " + player().getNick() + "'s worker.");
                     }
                 }
-            } else if(subCmd.equals("fire")) {
-                if((target = matchesPlayer(args[1])) != null && (shop = ownsAShop()) != null && isWorker(target, shop)) {
+            } else if(subCmdEquals("fire")) {
+                if((target = matchesPlayer(arg(1))) != null && (shop = ownsAShop()) != null && isWorker(target, shop)) {
                     shop.delMember(target);
-                    player.sendNormal(target.getNick() + " is no longer your worker.");
+                    player().sendNormal(target.getNick() + " is no longer your worker.");
                     if(target.isOnline()) {
-                        target.sendNormal("You are no longer " + player.getNick() + "'s worker.");
+                        target.sendNormal("You are no longer " + player().getNick() + "'s worker.");
                     }
                 }
             } else {
                 subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
-            if(subCmd.equals("sell")) {
-                if((ownsAShop()) != null && (target = matchesPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = isInteger(args[2])) != -1) {
-                    player.sendMessage(Message.REQUEST_SENT);
-                    target.sendNormal(player.getNick() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
+            if(subCmdEquals("sell")) {
+                if((ownsAShop()) != null && (target = matchesPlayer(arg(1))) != null && canRequest(target) && isOnline(target) && (price = isInteger(arg(2))) != -1) {
+                    player().sendMessage(Message.REQUEST_SENT);
+                    target.sendNormal(player().getNick() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);
-                    UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.SHOP, price, target));
+                    UDSPlugin.addRequest(target.getName(), new Request(player(), RequestType.SHOP, price, target));
                 }
             } else {
                 subCmdHelp();

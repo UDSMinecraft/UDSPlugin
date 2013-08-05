@@ -6,7 +6,6 @@ import javax.mail.*;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.*;
-import org.apache.commons.lang.*;
 
 
 
@@ -17,8 +16,8 @@ import org.apache.commons.lang.*;
 public class TicketCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        if(args.length == 0) {
-            player.sendError("You cannot send a blank ticket.");
+        if(argsLength() == 0) {
+            player().sendError("You cannot send a blank ticket.");
         } else {
             final String username = Config.GMAIL_ADDRESS;
             final String password = Config.GMAIL_PASSWORD;
@@ -34,15 +33,15 @@ public class TicketCmd extends CommandHandler {
                 MimeMessage message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
                 message.addRecipient(Message.RecipientType.TO, new InternetAddress(username));
-                message.setSubject("New UDS Minecraft Ticket - " + player.getName());
-                message.setText(StringUtils.join(args, " "));
+                message.setSubject("New UDS Minecraft Ticket - " + player().getName());
+                message.setText(argsToMessage());
                 Transport transport = session.getTransport("smtp");
                 transport.connect("smtp.gmail.com", username, password);
                 transport.sendMessage(message, message.getAllRecipients());
                 transport.close();
-                player.sendNormal("Ticket sent.");
+                player().sendNormal("Ticket sent.");
             } catch (MessagingException e) {
-                player.sendError("There was an error sending your ticket.");
+                player().sendError("There was an error sending your ticket.");
             }
         }
     }

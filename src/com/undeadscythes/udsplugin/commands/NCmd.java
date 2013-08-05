@@ -12,10 +12,10 @@ public class NCmd extends CommandHandler {
     public void playerExecute() {
         final Request request = hasRequest();
         if(request != null) {
-            UDSPlugin.removeRequest(player.getName());
+            UDSPlugin.removeRequest(player().getName());
             final SaveablePlayer sender = PlayerUtils.getPlayer(request.getSender().getName());
             if(sender.isOnline()) {
-                sender.sendNormal(player.getNick() + " has denied your request.");
+                sender.sendNormal(player().getNick() + " has denied your request.");
             }
         }
     }

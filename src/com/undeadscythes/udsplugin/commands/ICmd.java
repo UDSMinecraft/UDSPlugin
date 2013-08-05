@@ -12,29 +12,29 @@ public class ICmd extends CommandHandler {
     public final void playerExecute() {
         if(minArgsHelp(1) && maxArgsHelp(2)) {
             ItemStack item;
-            if((item = itemExists(args[0])) != null) {
+            if((item = itemExists(arg(0))) != null) {
                 int amount;
-                if(args.length == 1) {
+                if(argsLength() == 1) {
                     item.setAmount(item.getMaxStackSize());
-                } else if((amount = isInteger(args[1])) != -1) {
+                } else if((amount = isInteger(arg(1))) != -1) {
                     item.setAmount(amount);
                 }
-                if(player.hasPermission(Perm.I_ADMIN)) {
-                    player.getInventory().addItem(item);
-                } else if(player.getVIPSpawns() > 0) {
+                if(player().hasPermission(Perm.I_ADMIN)) {
+                    player().getInventory().addItem(item);
+                } else if(player().getVIPSpawns() > 0) {
                     if(Config.VIP_WHITELIST.contains(item.getType())) {
-                        if(item.getAmount() > player.getVIPSpawns()) {
-                            item.setAmount(player.getVIPSpawns());
+                        if(item.getAmount() > player().getVIPSpawns()) {
+                            item.setAmount(player().getVIPSpawns());
                         }
-                        if(player.useVIPSpawns(item.getAmount()) == 0) {
-                            player.sendNormal("You have just used up your last spawns for today.");
+                        if(player().useVIPSpawns(item.getAmount()) == 0) {
+                            player().sendNormal("You have just used up your last spawns for today.");
                         }
-                        player.getInventory().addItem(item);
+                        player().getInventory().addItem(item);
                     } else {
-                        player.sendError("Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");
+                        player().sendError("Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");
                     }
                 } else {
-                    player.sendError("You are out of spawns for today.");
+                    player().sendError("You are out of spawns for today.");
                 }
             }
         }

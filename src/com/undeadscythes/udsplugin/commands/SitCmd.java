@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
 import org.bukkit.block.*;
 
 /**
@@ -10,7 +9,7 @@ import org.bukkit.block.*;
 public class SitCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        player.sendNormal("Sorry this command is currently unavailable.");
+        player().sendNormal("Sorry this command is currently unavailable.");
 //        if(!player.isInsideVehicle()) {
 //            final Block target = player.getTargetBlock(null, 3);
 //            if((isStairs(target)) && target.getRelative(BlockFace.DOWN).getTypeId() != 0) {

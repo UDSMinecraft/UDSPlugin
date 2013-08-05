@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
+import org.apache.commons.lang.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 
@@ -21,7 +22,7 @@ public abstract class CommandHandler extends Validator implements CommandExecuto
         return console;
     }
     
-    protected final String getSubCmd() {
+    protected final String subCmd() {
         return subCmd;
     }
     
@@ -29,8 +30,20 @@ public abstract class CommandHandler extends Validator implements CommandExecuto
         return subCmd.equalsIgnoreCase(test);
     }
     
-    protected final String getArg(final int index) {
+    protected final String arg(final int index) {
         return args[index];
+    }
+    
+    protected final int argsLength() {
+        return args.length;
+    }
+    
+    protected final String argsToMessage() {
+        return StringUtils.join(args, " ");
+    }
+
+    protected final String argsToMessage(final int skip) {
+        return StringUtils.join(args, " ", skip, args.length - skip);
     }
 
     /**

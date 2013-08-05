@@ -1,6 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
 import org.bukkit.inventory.*;
 
 /**
@@ -10,7 +9,7 @@ import org.bukkit.inventory.*;
 public class StackCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        ItemStack[] items = player.getInventory().getContents();
+        ItemStack[] items = player().getInventory().getContents();
         final int len = items.length;
         boolean affected = false;
         for (int i = 0; i < len; i++) {
@@ -42,7 +41,7 @@ public class StackCmd extends CommandHandler {
             }
         }
         if(affected) {
-            player.getInventory().setContents(items);
+            player().getInventory().setContents(items);
         }
     }
 }

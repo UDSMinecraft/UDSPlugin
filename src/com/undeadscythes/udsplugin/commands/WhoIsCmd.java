@@ -10,8 +10,8 @@ public class WhoIsCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;
-        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null) {
-            player.sendNormal(target.getNick() + " is " + target.getName() + ".");
+        if(numArgsHelp(1) && (target = matchesPlayer(arg(0))) != null) {
+            player().sendNormal(target.getNick() + " is " + target.getName() + ".");
         }
     }
 }

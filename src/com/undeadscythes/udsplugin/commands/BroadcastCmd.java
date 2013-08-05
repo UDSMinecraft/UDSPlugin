@@ -1,7 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.apache.commons.lang.*;
 
 /**
  * Broadcast a server wide message.
@@ -11,7 +10,7 @@ public class BroadcastCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         if(minArgsHelp(1)) {
-            UDSPlugin.sendBroadcast(StringUtils.join(args, " "));
+            UDSPlugin.sendBroadcast(argsToMessage());
         }
     }
 

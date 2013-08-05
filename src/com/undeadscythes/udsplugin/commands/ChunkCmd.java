@@ -13,9 +13,9 @@ public class ChunkCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(numArgsHelp(1)) {
-            if(args[0].equalsIgnoreCase("info")) {
-                final Chunk chunk = player.getLocation().getChunk();
-                final HashMap<Material, Integer> blockDistro = new HashMap<Material, Integer>();
+            if(arg(0).equalsIgnoreCase("info")) {
+                final Chunk chunk = player().getLocation().getChunk();
+                final EnumMap<Material, Integer> blockDistro = new EnumMap<Material, Integer>(Material.class);
                 int blockCount = 0;
                 for(int x = 0; x < 15; x++) {
                     for(int y = 0; y < UDSPlugin.BUILD_LIMIT; y++) {
@@ -32,10 +32,10 @@ public class ChunkCmd extends CommandHandler {
                         }
                     }
                 }
-                player.sendNormal("Chunk contents:");
+                player().sendNormal("Chunk contents:");
                 DecimalFormat df = new DecimalFormat("###.##");
                 for(Map.Entry<Material, Integer> entry : blockDistro.entrySet()) {
-                    player.sendListItem(entry.getKey().toString() + ": " + entry.getValue() + ", " + df.format(((double)entry.getValue() * 100) / (double)blockCount) + "%", "");
+                    player().sendListItem(entry.getKey().toString() + ": " + entry.getValue() + ", " + df.format(((double)entry.getValue() * 100) / (double)blockCount) + "%", "");
                 }
             }
         }

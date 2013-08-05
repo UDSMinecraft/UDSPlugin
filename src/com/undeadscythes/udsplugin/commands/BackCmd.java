@@ -1,7 +1,5 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
-
 /**
  * Teleports a player to their last recorded position.
  * @author UndeadScythes
@@ -9,8 +7,8 @@ import com.undeadscythes.udsplugin.*;
 public class BackCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        if(!player.quietTeleport(player.getBack())) {
-            player.sendError("You can't teleport back at this time.");
+        if(!player().quietTeleport(player().getBack())) {
+            player().sendError("You can't teleport back at this time.");
         }
     }
 

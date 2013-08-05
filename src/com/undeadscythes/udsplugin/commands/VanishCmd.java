@@ -12,33 +12,33 @@ import org.bukkit.entity.*;
 public class VanishCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(args.length == 0) {
-            if(player.toggleHidden()) {
-                PlayerUtils.addHiddenPlayer(player);
+        if(argsLength() == 0) {
+            if(player().toggleHidden()) {
+                PlayerUtils.addHiddenPlayer(player());
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
-                        player.hideFrom(onlinePlayer, true);
-                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has left.");
+                        player().hideFrom(onlinePlayer, true);
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player().getNick() + (player().isInClan() ? " of " + player().getClan().getName() : "") + " has left.");
                     } else {
-                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player.getNick() + " has vanished.");
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player().getNick() + " has vanished.");
                     }
                 }
             } else {
-                PlayerUtils.removeHiddenPlayer(player.getName());
+                PlayerUtils.removeHiddenPlayer(player().getName());
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
-                        player.hideFrom(onlinePlayer, false);
-                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
+                        player().hideFrom(onlinePlayer, false);
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player().getNick() + (player().isInClan() ? " of " + player().getClan().getName() : "") + " has joined.");
                     } else {
-                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player.getNick() + " has reappeared.");
+                        PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player().getNick() + " has reappeared.");
                     }
                 }
             }
         } else if(numArgsHelp(1)) {
-            if("list".equals(subCmd)) {
-                player.sendNormal("Vanished players:");
+            if(subCmdEquals("list")) {
+                player().sendNormal("Vanished players:");
                 for(SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
-                    player.sendText(hiddenPlayer.getNick());
+                    player().sendText(hiddenPlayer.getNick());
                 }
             } else {
                 subCmdHelp();

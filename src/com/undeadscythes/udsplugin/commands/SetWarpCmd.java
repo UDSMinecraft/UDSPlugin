@@ -13,19 +13,19 @@ public class SetWarpCmd extends CommandHandler {
         PlayerRank rank;
         int price;
         final String message = "Warp point set.";
-        if(args.length == 1) {
-            if(notWarp(args[0]) && noBadLang(args[0])) {
-                WarpUtils.addWarp(new Warp(args[0], player.getLocation(), PlayerRank.NEWBIE, 0));
-                player.sendNormal(message);
+        if(argsLength() == 1) {
+            if(notWarp(arg(0)) && noBadLang(arg(0))) {
+                WarpUtils.addWarp(new Warp(arg(0), player().getLocation(), PlayerRank.NEWBIE, 0));
+                player().sendNormal(message);
             }
-        } else if(args.length == 2) {
-            if(notWarp(args[0]) && noBadLang(args[0]) && (rank = rankExists(args[1])) != null) {
-                WarpUtils.addWarp(new Warp(args[0], player.getLocation(), rank, 0));
-                player.sendNormal(message);
+        } else if(argsLength() == 2) {
+            if(notWarp(arg(0)) && noBadLang(arg(0)) && (rank = rankExists(arg(1))) != null) {
+                WarpUtils.addWarp(new Warp(arg(0), player().getLocation(), rank, 0));
+                player().sendNormal(message);
             }
-        } else if(numArgsHelp(3) && notWarp(args[0]) && noBadLang(args[0]) && (rank = rankExists(args[1])) != null && (price = isInteger(args[2])) != -1) {
-            WarpUtils.addWarp(new Warp(args[0], player.getLocation(), rank, price));
-            player.sendNormal(message);
+        } else if(numArgsHelp(3) && notWarp(arg(0)) && noBadLang(arg(0)) && (rank = rankExists(arg(1))) != null && (price = isInteger(arg(2))) != -1) {
+            WarpUtils.addWarp(new Warp(arg(0), player().getLocation(), rank, price));
+            player().sendNormal(message);
         }
     }
 }

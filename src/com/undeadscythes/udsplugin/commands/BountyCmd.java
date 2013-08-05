@@ -15,17 +15,17 @@ public class BountyCmd extends CommandHandler {
         int bounty;
 
         SaveablePlayer target;
-        if(args.length == 0) {
-            sendPage(1, player);
-        } else if(args.length == 1) {
-            final int page = isInteger(args[0]);
+        if(argsLength() == 0) {
+            sendPage(1, player());
+        } else if(argsLength() == 1) {
+            final int page = isInteger(arg(0));
             if(page > -1) {
-                sendPage(page, player);
+                sendPage(page, player());
             }
-        } else if(numArgsHelp(2) && (target = matchesOtherPlayer(args[0])) != null && (bounty = canAfford(args[1])) != -1) {
-            player.debit(bounty);
+        } else if(numArgsHelp(2) && (target = matchesOtherPlayer(arg(0))) != null && (bounty = canAfford(arg(1))) != -1) {
+            player().debit(bounty);
             target.addBounty(bounty);
-            UDSPlugin.sendBroadcast(player.getNick() + " placed a bounty on " + target.getNick() + ".");
+            UDSPlugin.sendBroadcast(player().getNick() + " placed a bounty on " + target.getNick() + ".");
         }
     }
 

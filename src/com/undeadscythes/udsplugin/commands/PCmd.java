@@ -1,7 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.*;
-import org.apache.commons.lang.*;
 
 /**
  * Toggles the private chat channel.
@@ -10,15 +9,15 @@ import org.apache.commons.lang.*;
 public class PCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        if(inChatRoom()) {
-            if(args.length == 0) {
-                if(player.toggleChannel(ChatChannel.PRIVATE)) {
-                    player.sendNormal("You are now talking in .");
+        if(inChatRoom() != null) {
+            if(argsLength() == 0) {
+                if(player().toggleChannel(ChatChannel.PRIVATE)) {
+                    player().sendNormal("You are now talking in .");
                 } else {
-                    player.sendMessage(Message.PUBLIC_CHAT);
+                    player().sendMessage(Message.PUBLIC_CHAT);
                 }
             } else {
-                player.chat(ChatChannel.PRIVATE, StringUtils.join(args, " "));
+                player().chat(ChatChannel.PRIVATE, argsToMessage());
             }
         }
     }

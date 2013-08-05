@@ -10,10 +10,10 @@ public class UnJailCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;
-        if(numArgsHelp(1) && (target = getMatchingPlayer(args[0])) != null && isJailed(target)) {
+        if(numArgsHelp(1) && (target = matchesPlayer(arg(0))) != null && isJailed(target)) {
             target.release();
             target.sendNormal("You have been released early.");
-            player.sendNormal("You have released " + target.getNick() + ".");
+            player().sendNormal("You have released " + target.getNick() + ".");
         }
     }
 }

@@ -32,13 +32,13 @@ public class JailCmd extends CommandHandler {
     public void playerExecute() {
         SaveablePlayer target;
         if(minArgsHelp(1) && maxArgsHelp(3)) {
-            if((target = getMatchingPlayer(args[0])) != null && isOnline(target) && notSelf(target) && notJailed(target)) {
+            if((target = matchesPlayer(arg(0))) != null && isOnline(target) && notSelf(target) && notJailed(target)) {
                 long sentence = 5;
                 int bail = 1000;
-                if(args.length > 1) {
-                    sentence = parseInt(args[1]);
-                    if(args.length > 2) {
-                        bail = parseInt(args[2]);
+                if(argsLength() > 1) {
+                    sentence = isInteger(arg(1));
+                    if(argsLength() > 2) {
+                        bail = isInteger(arg(2));
                     }
                 }
                 if(sentence > -1 && bail > -1) {
