@@ -15,7 +15,7 @@ public class HomeCmd extends CommandHandler {
         SaveablePlayer target;
         int price;
         if(args.length == 0) {
-            if((home = getHome()) != null && notJailed() && notPinned()) {
+            if((home = hasHome()) != null && notJailed() && notPinned()) {
                 player.teleport(home.getWarp());
             }
         } else if(args.length == 1) {
@@ -32,16 +32,16 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmd.equals("clear")) {
-                if((home = getHome()) != null) {
+                if((home = hasHome()) != null) {
                     RegionUtils.removeRegion(home);
                     player.sendNormal("Home protection removed.");
                 }
             } else if(subCmd.equals("power")) {
-                if((home = getHome()) != null) {
+                if((home = hasHome()) != null) {
                     player.sendNormal("Your home " + (home.toggleFlag(RegionFlag.POWER) ? "now" : "no longer") + " has power.");
                 }
             } else if(subCmd.equals("set")) {
-                if((home = getHome()) != null) {
+                if((home = hasHome()) != null) {
                     home.setWarp(player.getLocation());
                     player.sendNormal("Home warp point set.");
                 }
@@ -69,25 +69,25 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmd.equals("lock")) {
-                if((home = getHome()) != null) {
+                if((home = hasHome()) != null) {
                     home.setFlag(RegionFlag.LOCK);
                     player.sendNormal("Your home is now locked.");
                 }
             } else if(subCmd.equals("unlock")) {
-                if((home = getHome()) != null) {
+                if((home = hasHome()) != null) {
                     home.setFlag(RegionFlag.LOCK);
                     home.toggleFlag(RegionFlag.LOCK);
                     player.sendNormal("Your home is now unlocked.");
                 }
             } else if(subCmd.equals("help")) {
                 sendHelp(1);
-            } else if((target = matchPlayer(args[0])) != null && (home = getHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
+            } else if((target = matchesPlayer(args[0])) != null && (home = hasHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
                 player.teleport(home.getWarp());
             }
         } else if(args.length == 2) {
             Direction direction;
             if(subCmd.equals("expand")) {
-                if(hasPerm(Perm.HOME_EXPAND) && (home = getHome()) != null && canAfford(Config.EXPAND_COST) && (direction = getCardinalDirection(args[1])) != null) {
+                if(hasPerm(Perm.HOME_EXPAND) && (home = hasHome()) != null && canAfford(Config.EXPAND_COST) && (direction = isCardinalDirection(args[1])) != null) {
                     home.expand(direction, 1);
                     if(noOverlaps(home)) {
                         player.debit(Config.EXPAND_COST);
@@ -97,13 +97,13 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmd.equals("boot")) {
-                if((home = getHome()) != null && (target = matchPlayer(args[1])) != null && isOnline(target) && isInHome(target, home)) {
+                if((home = hasHome()) != null && (target = matchesPlayer(args[1])) != null && isOnline(target) && isInHome(target, home)) {
                     target.teleport(player.getWorld().getSpawnLocation());
                     target.sendNormal(player.getNick() + " has booted you from their home.");
                     player.sendNormal(target.getNick() + " has been booted.");
                 }
             } else if(subCmd.equals("add")) {
-                if((target = matchPlayer(args[1])) != null && (home = getHome()) != null) {
+                if((target = matchesPlayer(args[1])) != null && (home = hasHome()) != null) {
                     home.addMember(target);
                     player.sendNormal(target.getNick() + " has been added as your room mate.");
                     if(target.isOnline()) {
@@ -111,7 +111,7 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmd.equals("kick")) {
-                if((target = matchPlayer(args[1])) != null && (home = getHome()) != null && isRoomie(target, home)) {
+                if((target = matchesPlayer(args[1])) != null && (home = hasHome()) != null && isRoomie(target, home)) {
                     home.delMember(target);
                     player.sendNormal(target.getNick() + " is no longer your room mate.");
                     if(target.isOnline()) {
@@ -123,7 +123,7 @@ public class HomeCmd extends CommandHandler {
             }
         } else if(numArgsHelp(3)) {
             if(subCmd.equals("sell")) {
-                if((getHome()) != null && (target = matchPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = parseInt(args[2])) != -1) {
+                if((hasHome()) != null && (target = matchesPlayer(args[1])) != null && canRequest(target) && isOnline(target) && (price = isInteger(args[2])) != -1) {
                     player.sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player.getNick() + " wants to sell you their house for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

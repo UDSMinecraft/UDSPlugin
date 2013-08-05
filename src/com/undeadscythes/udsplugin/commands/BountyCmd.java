@@ -18,11 +18,11 @@ public class BountyCmd extends CommandHandler {
         if(args.length == 0) {
             sendPage(1, player);
         } else if(args.length == 1) {
-            final int page = parseInt(args[0]);
+            final int page = isInteger(args[0]);
             if(page > -1) {
                 sendPage(page, player);
             }
-        } else if(numArgsHelp(2) && (target = matchOtherPlayer(args[0])) != null && (bounty = getAffordablePrice(args[1])) != -1) {
+        } else if(numArgsHelp(2) && (target = matchesOtherPlayer(args[0])) != null && (bounty = canAfford(args[1])) != -1) {
             player.debit(bounty);
             target.addBounty(bounty);
             UDSPlugin.sendBroadcast(player.getNick() + " placed a bounty on " + target.getNick() + ".");

@@ -42,7 +42,7 @@ public class WorldCmd extends CommandHandler {
                     player.sendError("That world does not exist.");
                 }
             } else if("create".equals(subCmd)) {
-                if(noCensor(args[1]) && noWorld(args[1])) {
+                if(noBadLang(args[1]) && noWorld(args[1])) {
                     player.sendNormal("Generating spawn area...");
                     Bukkit.createWorld(new WorldCreator(args[1]));
                     UDSPlugin.getData().newWorld(args[1]);
@@ -123,7 +123,7 @@ public class WorldCmd extends CommandHandler {
     }
     
     private void flag(final World world, final String flagName) {
-        final WorldFlag flag = getWorldFlag(flagName);
+        final WorldFlag flag = worldFlagExists(flagName);
         if(flag != null) {
             player.sendNormal(world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }

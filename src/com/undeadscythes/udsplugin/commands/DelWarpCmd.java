@@ -11,7 +11,7 @@ public class DelWarpCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         Warp warp;
-        if(numArgsHelp(1) && (warp = getWarp(args[0])) != null) {
+        if(numArgsHelp(1) && (warp = warpExists(args[0])) != null) {
             WarpUtils.removeWarp(warp);
             player.sendNormal("Warp removed.");
         }

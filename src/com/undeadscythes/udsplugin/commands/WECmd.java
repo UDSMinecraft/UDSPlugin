@@ -34,12 +34,12 @@ public class WECmd extends CommandHandler {
             if(subCmd.equals("set")) {
                 set();
             } else if(subCmd.equals("ext")) {
-                final int range = parseInt(args[1]);
+                final int range = isInteger(args[1]);
                 if(range > -1) {
                     ext(range);
                 }
             } else if(subCmd.equals("drain")) {
-                final int range = parseInt(args[1]);
+                final int range = isInteger(args[1]);
                 if(range > -1) {
                     drain(range);
                 }
@@ -160,7 +160,7 @@ public class WECmd extends CommandHandler {
         if(hasPerm(Perm.WE_SET)) {
             final EditSession session = getSession();
             if(hasTwoPoints(session)) {
-                final ItemStack item = getItem(args[1]);
+                final ItemStack item = itemExists(args[1]);
                 if(item != null) {
                     final Vector v1 = session.getV1();
                     final Vector v2 = session.getV2();
@@ -209,8 +209,8 @@ public class WECmd extends CommandHandler {
                 final Vector v2 = session.getV2();
                 if(session.getVolume() <= Config.EDIT_RANGE) {
                     if(args.length == 3) {
-                        final ItemStack itemFrom = getItem(args[1]);
-                        final ItemStack itemTo = getItem(args[2]);
+                        final ItemStack itemFrom = itemExists(args[1]);
+                        final ItemStack itemTo = itemExists(args[2]);
                         if(itemFrom != null && itemTo != null) {
                             final World world = player.getWorld();
                             final Vector min = Vector.getMinimum(v1, v2);
@@ -240,7 +240,7 @@ public class WECmd extends CommandHandler {
 
     private void move() {
         if(hasPerm(Perm.WE_MOVE)) {
-            final int distance = parseInt(args[2]);
+            final int distance = isInteger(args[2]);
             if(distance > -1) {
                 if(distance <= Config.MOVE_RANGE) {
                     final EditSession session = getSession();
@@ -248,7 +248,7 @@ public class WECmd extends CommandHandler {
                         final Vector v1 = session.getV1();
                         final Vector v2 = session.getV2();
                         if(session.getVolume() <= Config.EDIT_RANGE) {
-                            Direction direction = getDirection(args[1]);
+                            Direction direction = directionExists(args[1]);
                             if(direction != null) {
                                 if(direction == Direction.UP || direction == Direction.EAST || direction == Direction.SOUTH) {
                                     final Vector min = Vector.getMinimum(v1, v2);

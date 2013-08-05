@@ -11,7 +11,7 @@ import org.bukkit.*;
 public class AfkCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(notPinned() && isNotNearMobs()) {
+        if(notPinned() && notNearMobs()) {
             if(player.toggleAfk()) {
                 Bukkit.broadcastMessage(Color.TEXT + "*" + player.getNick() + " is now afk.");
             } else {

@@ -12,11 +12,11 @@ public class ICmd extends CommandHandler {
     public final void playerExecute() {
         if(minArgsHelp(1) && maxArgsHelp(2)) {
             ItemStack item;
-            if((item = getItem(args[0])) != null) {
+            if((item = itemExists(args[0])) != null) {
                 int amount;
                 if(args.length == 1) {
                     item.setAmount(item.getMaxStackSize());
-                } else if((amount = parseInt(args[1])) != -1) {
+                } else if((amount = isInteger(args[1])) != -1) {
                     item.setAmount(amount);
                 }
                 if(player.hasPermission(Perm.I_ADMIN)) {

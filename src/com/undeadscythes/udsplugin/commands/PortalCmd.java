@@ -36,7 +36,7 @@ public class PortalCmd extends CommandHandler {
             } else if(subCmd.equals("exit")) {
                 exit();
             } else if(subCmd.equals("set")) {
-                final Warp warp = getWarp(args[2]);
+                final Warp warp = warpExists(args[2]);
                 if(warp != null) {
                     set(warp);
                 }
@@ -60,16 +60,16 @@ public class PortalCmd extends CommandHandler {
     }
     
     private void exit() {
-        final Portal portal = getPortal(args[1]);
+        final Portal portal = portalExists(args[1]);
         Direction dir;
-        if(portal != null && (dir = getCardinalDirection(args[2])) != null) {
+        if(portal != null && (dir = isCardinalDirection(args[2])) != null) {
             portal.setExit(dir);
             player.sendNormal("Portal now points " + dir.toString() + ".");
         }
     }
     
     private void remove() {
-        final Portal portal = getPortal(args[1]);
+        final Portal portal = portalExists(args[1]);
         if(portal != null) {
             PortalUtils.removePortal(portal);
             replace(portal, true);
@@ -79,7 +79,7 @@ public class PortalCmd extends CommandHandler {
         
     private void set(final Warp warp) {
         final EditSession session = getSession();
-        if(session != null && inLine(session) && notPortal(args[1]) && noCensor(args[1])) {
+        if(session != null && selectionIs2D(session) && notPortal(args[1]) && noBadLang(args[1])) {
             final Portal portal = new Portal(args[1], warp, session.getWorld(), session.getV1(), session.getV2());
             PortalUtils.addPortal(portal);
             replace(portal, false);
@@ -109,8 +109,8 @@ public class PortalCmd extends CommandHandler {
     }
             
     private void dest() {
-        final Portal portal = getPortal(args[1]);
-        final Warp target = getWarp(args[2]);
+        final Portal portal = portalExists(args[1]);
+        final Warp target = warpExists(args[2]);
         if(portal != null && target != null) {
             portal.setWarp(target);
             player.sendNormal(portal.getName() + " now warps to " + target.getName() + ".");
@@ -118,8 +118,8 @@ public class PortalCmd extends CommandHandler {
     }
     
     private void p2p() {
-        final Portal portal = getPortal(args[1]);
-        final Portal target = getPortal(args[2]);
+        final Portal portal = portalExists(args[1]);
+        final Portal target = portalExists(args[2]);
         if(portal != null && target != null) {
             portal.setPortal(target);
             player.sendNormal(portal.getName() + " now portals to " + target.getName() + ".");

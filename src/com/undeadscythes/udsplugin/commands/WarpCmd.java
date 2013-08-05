@@ -26,7 +26,7 @@ public class WarpCmd extends CommandHandler {
                 player.sendNormal("Available warps (with prices):");
                 player.sendText(StringUtils.join(warps.toArray(), ", "));
             }
-        } else if(numArgsHelp(1) && (warp = getWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
+        } else if(numArgsHelp(1) && (warp = warpExists(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
             player.debit(warp.getPrice());
             player.teleport(warp.getLocation());
         }

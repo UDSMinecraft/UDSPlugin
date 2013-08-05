@@ -15,7 +15,7 @@ public class PetCmd extends CommandHandler {
         UUID pet;
         int price;
         if(args.length == 2) {
-            if(args[0].equals("give") && (target = matchPlayer(args[1])) != null && isOnline(target) && (pet = getPet()) != null) {
+            if(args[0].equals("give") && (target = matchesPlayer(args[1])) != null && isOnline(target) && (pet = petSelected()) != null) {
                 for(Entity entity : player.getWorld().getEntities()) {
                     if(entity.getUniqueId().equals(pet)) {
                         target.setPet((Tameable)entity);
@@ -26,7 +26,7 @@ public class PetCmd extends CommandHandler {
                     }
                 }
             }
-        } else if(numArgsHelp(3) && args[0].equals("sell") && (target = matchPlayer(args[1])) != null && isOnline(target) && canRequest(target) && getPet() != null && (price = parseInt(args[2])) != -1) {
+        } else if(numArgsHelp(3) && args[0].equals("sell") && (target = matchesPlayer(args[1])) != null && isOnline(target) && canRequest(target) && petSelected() != null && (price = isInteger(args[2])) != -1) {
             UDSPlugin.addRequest(target.getName(), new Request(player, RequestType.PET, price, target));
             player.sendMessage(Message.REQUEST_SENT);
             target.sendNormal(player.getNick() + " wants to sell their pet to you for " + price + " " + Config.CURRENCIES + ".");

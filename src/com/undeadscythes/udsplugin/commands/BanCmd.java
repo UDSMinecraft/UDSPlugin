@@ -11,7 +11,7 @@ public class BanCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         SaveablePlayer target;
-        if(minArgsHelp(1) && (target = matchOtherPlayer(args[0])) != null) {
+        if(minArgsHelp(1) && (target = matchesOtherPlayer(args[0])) != null) {
             String message = "You have been banned for breaking the rules.";
             if(args.length > 1) {
                 message = StringUtils.join(args, " ", 1, args.length - 1);

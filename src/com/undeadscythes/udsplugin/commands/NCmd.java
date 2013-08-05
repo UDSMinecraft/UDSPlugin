@@ -10,7 +10,7 @@ import com.undeadscythes.udsplugin.utilities.*;
 public class NCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        final Request request = getRequest();
+        final Request request = hasRequest();
         if(request != null) {
             UDSPlugin.removeRequest(player.getName());
             final SaveablePlayer sender = PlayerUtils.getPlayer(request.getSender().getName());

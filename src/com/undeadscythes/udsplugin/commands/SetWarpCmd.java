@@ -14,16 +14,16 @@ public class SetWarpCmd extends CommandHandler {
         int price;
         final String message = "Warp point set.";
         if(args.length == 1) {
-            if(notWarp(args[0]) && noCensor(args[0])) {
+            if(notWarp(args[0]) && noBadLang(args[0])) {
                 WarpUtils.addWarp(new Warp(args[0], player.getLocation(), PlayerRank.NEWBIE, 0));
                 player.sendNormal(message);
             }
         } else if(args.length == 2) {
-            if(notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null) {
+            if(notWarp(args[0]) && noBadLang(args[0]) && (rank = rankExists(args[1])) != null) {
                 WarpUtils.addWarp(new Warp(args[0], player.getLocation(), rank, 0));
                 player.sendNormal(message);
             }
-        } else if(numArgsHelp(3) && notWarp(args[0]) && noCensor(args[0]) && (rank = getRank(args[1])) != null && (price = parseInt(args[2])) != -1) {
+        } else if(numArgsHelp(3) && notWarp(args[0]) && noBadLang(args[0]) && (rank = rankExists(args[1])) != null && (price = isInteger(args[2])) != -1) {
             WarpUtils.addWarp(new Warp(args[0], player.getLocation(), rank, price));
             player.sendNormal(message);
         }

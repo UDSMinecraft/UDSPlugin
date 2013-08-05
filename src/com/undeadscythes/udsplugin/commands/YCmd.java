@@ -13,7 +13,7 @@ public class YCmd extends CommandHandler {
     public final void playerExecute() {
         Request request;
         SaveablePlayer sender;
-        if((request = getRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {
+        if((request = hasRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {
             int price;
             switch (request.getType()) {
                 case TP:

@@ -11,7 +11,7 @@ public class RCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         SaveablePlayer target;
-        if(minArgsHelp(1) && (target = getWhisperer()) != null && isOnline(target)) {
+        if(minArgsHelp(1) && (target = isWhispering()) != null && isOnline(target)) {
             final String message = player.getNick() + " > " + target.getNick() + ": " + StringUtils.join(args, " ");
             player.sendWhisper(message);
             if(target.isAfk()) {
