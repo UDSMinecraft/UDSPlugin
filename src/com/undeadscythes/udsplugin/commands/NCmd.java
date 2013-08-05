@@ -7,15 +7,15 @@ import com.undeadscythes.udsplugin.utilities.*;
  * Deny a request.
  * @author UndeadScythes
  */
-public class NCmd extends CommandValidator {
+public class NCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        final Request request = getRequest();
+        final Request request = hasRequest();
         if(request != null) {
-            UDSPlugin.removeRequest(player.getName());
+            UDSPlugin.removeRequest(player().getName());
             final SaveablePlayer sender = PlayerUtils.getPlayer(request.getSender().getName());
             if(sender.isOnline()) {
-                sender.sendNormal(player.getNick() + " has denied your request.");
+                sender.sendNormal(player().getNick() + " has denied your request.");
             }
         }
     }

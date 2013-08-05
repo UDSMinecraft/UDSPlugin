@@ -8,16 +8,16 @@ import org.bukkit.entity.*;
  * Accept a request sent by another player.
  * @author UndeadScythes
  */
-public class YCmd extends CommandValidator {
+public class YCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         Request request;
         SaveablePlayer sender;
-        if((request = getRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {
+        if((request = hasRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {
             int price;
             switch (request.getType()) {
                 case TP:
-                    sender.teleport(player);
+                    sender.teleport(player());
                     break;
                 case CLAN:
                     clanRequest(ClanUtils.getClan(request.getData()));
@@ -26,8 +26,8 @@ public class YCmd extends CommandValidator {
                     if(canAfford(price = Integer.parseInt(request.getData())) && noHome()) {
                         final Region home = RegionUtils.getRegion(RegionType.HOME, sender.getName() + "home");
                         home.clearMembers();
-                        home.changeOwner(player);
-                        player.debit(price);
+                        home.changeOwner(player());
+                        player().debit(price);
                         sender.credit(price);
                     }
                     break;
@@ -35,23 +35,23 @@ public class YCmd extends CommandValidator {
                     if(canAfford(price = Integer.parseInt(request.getData()))) {
                         for(Entity entity : sender.getWorld().getEntities()) {
                             if(entity.getUniqueId().equals(sender.getSelectedPet())) {
-                                player.debit(price);
+                                player().debit(price);
                                 sender.credit(price);
-                                player.setPet((Tameable)entity);
-                                player.teleportHere(entity);
-                                player.sendNormal("Your bought " + sender.getNick() + "'s pet.");
-                                sender.sendNormal(player.getNick() + " bought your pet.");
+                                player().setPet((Tameable)entity);
+                                player().teleportHere(entity);
+                                player().sendNormal("Your bought " + sender.getNick() + "'s pet.");
+                                sender.sendNormal(player().getNick() + " bought your pet.");
                             }
                         }
                     }
                     break;
                 case PVP:
                     if(canAfford(price = Integer.parseInt(request.getData()))) {
-                        sender.sendNormal(player.getNick() + " accepted your duel, may the best player win.");
-                        player.sendNormal("Duel accepted, may the best player win.");
-                        player.setChallenger(sender);
+                        sender.sendNormal(player().getNick() + " accepted your duel, may the best player win.");
+                        player().sendNormal("Duel accepted, may the best player win.");
+                        player().setChallenger(sender);
                         sender.setChallenger(sender);
-                        player.setWager(price);
+                        player().setWager(price);
                         sender.setWager(price);
                     }
                     break;
@@ -59,25 +59,25 @@ public class YCmd extends CommandValidator {
                     if(canAfford(price = Integer.parseInt(request.getData())) && noShop()) {
                         final Region shop = RegionUtils.getRegion(RegionType.SHOP, sender.getName() + "shop");
                         shop.clearMembers();
-                        shop.changeOwner(player);
-                        player.debit(price);
+                        shop.changeOwner(player());
+                        player().debit(price);
                         sender.credit(price);
                     }
                     break;
                 default:
-                    sender.sendNormal(player.getNick() + " was unable to accept your request.");
+                    sender.sendNormal(player().getNick() + " was unable to accept your request.");
             }
         }
-        UDSPlugin.removeRequest(player.getName());
+        UDSPlugin.removeRequest(player().getName());
     }
 
     private void clanRequest(final Clan clan) {
-        clan.addMember(player);
-        player.setClan(clan);
-        clan.sendMessage(player.getNick() + " has joined the clan.");
+        clan.addMember(player());
+        player().setClan(clan);
+        clan.sendMessage(player().getNick() + " has joined the clan.");
         final Region base = RegionUtils.getRegion(RegionType.BASE, clan.getName() + "base");
         if(base != null) {
-            base.addMember(player);
+            base.addMember(player());
         }
     }
 }
