@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 public class EntityDamage extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final EntityDamageEvent event) {
-        if((event.getEntity() instanceof Player)) {
+        if(event.getEntity() instanceof Player) {
             final SaveablePlayer player = PlayerUtils.getOnlinePlayer(((Player)event.getEntity()).getName());
             if(player.hasGodMode() || player.isAfk() || (event.getCause().equals(DamageCause.DROWNING) && player.hasScuba())) {
                 event.setCancelled(true);

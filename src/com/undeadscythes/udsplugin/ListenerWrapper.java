@@ -111,16 +111,12 @@ public class ListenerWrapper {
      * @return
      */
     public boolean hasFlag(final Location location, final RegionFlag flag) {
-        boolean inRegion = false;
         for(Region region : RegionUtils.getRegions()) {
             if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
-                inRegion = true;
-                if(region.hasFlag(flag)) {
-                    return true;
-                }
+                if(region.hasFlag(flag)) return true;
             }
         }
-        return inRegion;
+        return Config.GLOBAL_FLAGS.get(flag);
     }
 
     /**

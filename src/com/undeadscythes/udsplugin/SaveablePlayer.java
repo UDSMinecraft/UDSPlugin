@@ -544,7 +544,7 @@ public class SaveablePlayer implements Saveable {
      * @return English reading string.
      */
     public final String getVIPTimeString() {
-        return TimeUtils.timeToString(Config.VIP_TIME - System.currentTimeMillis() - getVIPTime());
+        return TimeUtils.timeToString(Config.VIP_TIME - System.currentTimeMillis() + vipTime);
     }
 
     /**

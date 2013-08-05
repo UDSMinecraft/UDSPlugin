@@ -40,7 +40,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
             } else {
                 event.setCancelled(isProtected(holder));
             }
-        } else if(!(holder instanceof Player || holder == null)) {
+        } else if(!(holder instanceof Player || holder instanceof Horse || holder == null)) {
             event.setCancelled(isProtected(holder));
         }
     }

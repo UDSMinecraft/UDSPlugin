@@ -12,12 +12,13 @@ public class VIPCmd extends CommandHandler {
     @Override
     public void playerExecute() {
         if(argsLength() == 0) {
-            if(player().hasPermission(Perm.VIP)) {
-                player().sendNormal("You have " + player().getVIPTimeString()+ " left in VIP.");
+            if(player().hasPermission(Perm.VIP_RANK)) {
+                player().sendNormal("You have " + player().getVIPTimeString() + " left in VIP.");
             } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
                 player().setRank(PlayerRank.VIP);
                 player().setVIPTime(System.currentTimeMillis());
                 player().setVIPSpawns(Config.VIP_SPAWNS);
+                player().debit(Config.VIP_COST);
                 player().sendNormal("Welcome to the elite, enjoy your VIP status.");
             }
         } else if(maxArgsHelp(2)) {
