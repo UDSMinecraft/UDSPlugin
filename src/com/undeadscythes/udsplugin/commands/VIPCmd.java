@@ -8,26 +8,26 @@ import org.bukkit.*;
  * Rent VIP rank and perform other tasks. Sends help on wrong arguments.
  * @author UndeadScythes
  */
-public class VIPCmd extends CommandValidator {
+public class VIPCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        if(args.length == 0) {
-            if(player.hasPermission(Perm.VIP)) {
-                player.sendNormal("You have " + player.getVIPTimeString()+ " left in VIP.");
+        if(argsLength() == 0) {
+            if(player().hasPermission(Perm.VIP)) {
+                player().sendNormal("You have " + player().getVIPTimeString()+ " left in VIP.");
             } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
-                player.setRank(PlayerRank.VIP);
-                player.setVIPTime(System.currentTimeMillis());
-                player.setVIPSpawns(Config.VIP_SPAWNS);
-                player.sendNormal("Welcome to the elite, enjoy your VIP status.");
+                player().setRank(PlayerRank.VIP);
+                player().setVIPTime(System.currentTimeMillis());
+                player().setVIPSpawns(Config.VIP_SPAWNS);
+                player().sendNormal("Welcome to the elite, enjoy your VIP status.");
             }
         } else if(maxArgsHelp(2)) {
-            if(subCmd.equals("spawns")) {
-                if(args.length != 2) {
-                    sendPage(1, player);
+            if(subCmdEquals("spawns")) {
+                if(argsLength() != 2) {
+                    sendPage(1, player());
                 } else {
-                    final int page = parseInt(args[1]);
+                    final int page = isInteger(arg(1));
                     if(page != -1) {
-                        sendPage(page, player);
+                        sendPage(page, player());
                     }
                 }
             } else {

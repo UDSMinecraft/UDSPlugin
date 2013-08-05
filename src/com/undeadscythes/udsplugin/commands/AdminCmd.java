@@ -1,15 +1,13 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.*;
-
 /**
  * Allows players to use /admin help.
  * @author UndeadScythes
  */
-public class AdminCmd extends CommandValidator {
+public class AdminCmd extends CommandHandler {
     @Override
     public void playerExecute() {
-        if(args.length == 0) {
+        if(argsLength() == 0) {
             sendHelp(1);
         } else {
             subCmdHelp();
