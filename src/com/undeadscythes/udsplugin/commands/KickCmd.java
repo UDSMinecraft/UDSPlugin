@@ -4,13 +4,14 @@ import com.undeadscythes.udsplugin.*;
 
 /**
  * Kick a player from the server.
+ * 
  * @author UndeadScythes
  */
 public class KickCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
-        if(minArgsHelp(1) && (target = matchesPlayer(arg(0))) != null && isOnline(target)) {
+        if(minArgsHelp(1) && (target = matchOnlinePlayer(arg(0))) != null) {
             if(!target.hasPermission(Perm.UNKICKABLE)) {
                 String message = "You have been kicked for breaking the rules.";
                 if(argsLength() >= 2) {

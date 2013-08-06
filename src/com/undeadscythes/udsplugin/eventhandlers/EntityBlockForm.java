@@ -6,12 +6,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * When an entity forms a block.
+ * Fired when an entity forms a block.
+ * 
  * @author UndeadScythes
  */
 public class EntityBlockForm extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final EntityBlockFormEvent event) {
+    public final void onEvent(final EntityBlockFormEvent event) {
         if(event.getEntity() instanceof Snowman && !hasFlag(event.getNewState().getLocation(), RegionFlag.SNOW)) {
             event.setCancelled(true);
         }

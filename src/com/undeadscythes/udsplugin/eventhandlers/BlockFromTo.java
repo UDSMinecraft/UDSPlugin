@@ -6,12 +6,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * When a block moves from on location to another.
+ * Fired when a block moves from one location to another.
+ * 
  * @author UndeadScythes
  */
 public class BlockFromTo extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final BlockFromToEvent event) {
+    public final void onEvent(final BlockFromToEvent event) {
         final List<Region> regions = regionsHere(event.getToBlock().getLocation());
         if(!regions.isEmpty() && !regionsContain(regions, event.getBlock().getLocation())) {
             event.setCancelled(true);

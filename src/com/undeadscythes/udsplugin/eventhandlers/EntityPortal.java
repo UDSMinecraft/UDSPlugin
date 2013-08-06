@@ -6,12 +6,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * When an entity enters a portal.
+ * Fired when an entity teleports via a portal.
+ * 
  * @author UndeadScythes
  */
 public class EntityPortal extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final EntityPortalEvent event) {
+    public final void onEvent(final EntityPortalEvent event) {
         final Entity entity = event.getEntity();
         final Portal portal = findPortal(entity.getLocation());
         if(portal != null) {

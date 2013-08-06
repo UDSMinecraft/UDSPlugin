@@ -5,6 +5,7 @@ import org.bukkit.util.*;
 
 /**
  * Geometrical directions.
+ * 
  * @author UndeadScythes
  */
 public enum Direction {
@@ -19,10 +20,10 @@ public enum Direction {
     UP(0, 0, true, new Vector(0, 1, 0)),
     DOWN(0, 0, true, new Vector(0, -1, 0));
 
-    private double min;
-    private double max;
-    private boolean cardinal;
-    private Vector vector;
+    protected final double min;
+    protected final double max;
+    private final boolean cardinal;
+    private final Vector vector;
 
     private Direction(final double min, final double max, final boolean cardinal, final Vector vector) {
         this.min = min;
@@ -31,19 +32,10 @@ public enum Direction {
         this.vector = vector;
     }
 
-    /**
-     * Get the camera yaw associated with this direction.
-     * @return Camera yaw
-     */
-    public float getYaw() {
+    public final float getYaw() {
         return (float)((this.max + this.min) / 2 + 180) % 360;
     }
 
-    /**
-     * Get a compass direction by name.
-     * @param string The name of the direction.
-     * @return The direction or <code>null</code> if there are no matches.
-     */
     public static Direction getByName(final String string) {
         for(Direction test : values()) {
             if(test.name().equals(string.toUpperCase())) {
@@ -53,11 +45,6 @@ public enum Direction {
         return null;
     }
 
-    /**
-     * Get the direction of the camera.
-     * @param location The location of the camera.
-     * @return The direction of the camera or <code>null</code> if there is an error.
-     */
     public static Direction valueOf(final Location location) {
         float yaw = (location.getYaw() + 180) % 360;
         if(yaw < -22.5) {
@@ -68,27 +55,19 @@ public enum Direction {
                 return test;
             }
         }
-        return null; //This should never happen.
+        return null; //TODO: Check meh! This should never happen.
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return name().toLowerCase().replace("_", " ");
     }
 
-    /**
-     * Check if the direction is a cardinal compass bearing.
-     * @return <code>true</code> if the direction is a cardinal, <code>false</code> otherwise.
-     */
-    public boolean isCardinal() {
+    public final boolean isCardinal() {
         return cardinal;
     }
 
-    /**
-     *
-     * @return
-     */
-    public Vector toVector() {
+    public final Vector toVector() {
         return vector;
     }
 }

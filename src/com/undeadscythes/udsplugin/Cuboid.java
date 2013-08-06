@@ -4,7 +4,8 @@ import org.bukkit.*;
 import org.bukkit.util.*;
 
 /**
- *
+ * A cuboid space marked by two vectors.
+ * 
  * @author UndeadScythes
  */
 public abstract class Cuboid {
@@ -50,19 +51,11 @@ public abstract class Cuboid {
         v2 = vector;
     }
     
-    /**
-     * Change this cuboid's defining points.
-     * @param v1 New v1.
-     * @param v2 New v2.
-     */
     public final void setPoints(final Vector v1, final Vector v2) {
         setV1(v1);
         setV2(v2);
     }
     
-    /**
-     * Expand the selection as far as possible vertically.
-     */
     public final void vert() {
         v1.setY(0);
         v2.setY(world.getMaxHeight());
@@ -76,11 +69,6 @@ public abstract class Cuboid {
         this.world = world;
     }
     
-    /**
-     * Checks if this region overlaps another cuboid.
-     * @param cuboid Cuboid to check.
-     * @return <code>true</code> if this cuboid overlaps with the other.
-     */
     public final boolean hasOverlap(final Cuboid cuboid) {
         return !(getV1().getX() > cuboid.getV2().getX()
                 || getV2().getX() < cuboid.getV1().getX()
@@ -133,11 +121,6 @@ public abstract class Cuboid {
         volume = 0;
     }
     
-    /**
-     * Expand this cuboid in some direction.
-     * @param direction Direction to expand.
-     * @param distance Distance to expand.
-     */
     public final void expand(final Direction direction, final int distance) {
         if(direction.equals(Direction.WEST)) {
             v1.subtract(new Vector(distance, 0, 0));
@@ -154,11 +137,6 @@ public abstract class Cuboid {
         }
     }
     
-    /**
-     * Expand this cuboid in some direction.
-     * @param direction Direction to contract.
-     * @param distance Distance to contract.
-     */
     public final void contract(final Direction direction, final int distance) {
         if(direction.equals(Direction.EAST)) {
             v1.add(new Vector(distance, 0, 0));

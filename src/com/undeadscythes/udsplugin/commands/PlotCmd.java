@@ -8,7 +8,8 @@ import org.bukkit.*;
 import org.bukkit.util.Vector;
 
 /**
- *
+ * Handles the various creative plot tools.
+ * 
  * @author UndeadScythes
  */
 public class PlotCmd extends CommandHandler {

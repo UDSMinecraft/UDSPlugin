@@ -6,7 +6,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * When a player respawns.
+ * Fired when a player respawns.
+ * 
  * @author UndeadScythes
  */
 public class PlayerRespawn extends ListenerWrapper implements Listener {

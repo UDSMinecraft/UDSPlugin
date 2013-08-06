@@ -1,29 +1,25 @@
 package com.undeadscythes.udsplugin.utilities;
 
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.commands.*;
 import java.io.*;
 import java.util.*;
 
 /**
- *
+ * Utility class for handling manipulations with {@link Clan} objects.
+ * 
  * @author UndeadScythes
  */
 public class ClanUtils {
-    /**
-     * File name of clan file.
-     */
-    public static final String PATH = "clans.csv";
+    private static final String FILENAME = "clans.csv";
+    private static final SaveableHashMap<Clan> CLANS = new SaveableHashMap<Clan>();
     
-    private static SaveableHashMap<Clan> CLANS = new SaveableHashMap<Clan>();
-    
-    public static void saveClans(final File path) throws IOException {
-        CLANS.save(path + File.separator + PATH);
+    public static void saveClans(final File parent) throws IOException {
+        CLANS.save(parent + File.separator + FILENAME);
     }
     
-    public static void loadClans(final File path) throws IOException {
+    public static void loadClans(final File parent) throws IOException {
         try {
-            final BufferedReader file = new BufferedReader(new FileReader(path + File.separator + PATH));
+            final BufferedReader file = new BufferedReader(new FileReader(parent + File.separator + FILENAME));
             String nextLine;
             while((nextLine = file.readLine()) != null) {
                 final Clan clan = new Clan(nextLine);
@@ -38,10 +34,6 @@ public class ClanUtils {
         return CLANS.size();
     }
     
-    /**
-     * Grab and cast the clans map.
-     * @return Clans map.
-     */
     public static Collection<Clan> getClans() {
         return CLANS.values();
     }
@@ -62,8 +54,8 @@ public class ClanUtils {
         return CLANS.containsKey(name);
     }
     
-    public static List<Clan> getSortedClans(final Comparator<Clan> comp) {
-        return CLANS.getSortedValues(comp);
+    public static List<Clan> getSortedClans(final Comparator<Clan> comparator) {
+        return CLANS.getSortedValues(comparator);
     }
     
     private ClanUtils() {}

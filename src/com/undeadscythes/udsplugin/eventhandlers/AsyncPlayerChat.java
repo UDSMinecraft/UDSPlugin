@@ -10,12 +10,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * When a player chats in game.
+ * Fired when a player chats in game.
+ * 
  * @author UndeadScythes
  */
 public class AsyncPlayerChat implements Listener {
     @EventHandler
-    public void onEvent(final AsyncPlayerChatEvent event) throws IOException {
+    public final void onEvent(final AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
         final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         final String logMessage = player.getNick() + ": " + event.getMessage();

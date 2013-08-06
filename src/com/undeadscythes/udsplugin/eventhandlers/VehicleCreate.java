@@ -1,19 +1,21 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.timers.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.vehicle.*;
 
 /**
- * When a vehicle is destroyed.
+ * Fired when a vehicle is created.
+ * 
  * @author UndeadScythes
  */
 public class VehicleCreate extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final VehicleCreateEvent event) {
+    public final void onEvent(final VehicleCreateEvent event) {
         if(event.getVehicle() instanceof Minecart) {
-            EntityTracker.addMinecart((Minecart)event.getVehicle(), null);
+            MinecartCheck.addMinecart((Minecart)event.getVehicle(), null);
         }
     }
 }

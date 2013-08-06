@@ -7,7 +7,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * A portal is created by an entity.
+ * Fired when a portal is created by an entity.
+ * 
  * @author UndeadScythes
  */
 public class EntityCreatePortal extends ListenerWrapper implements Listener {

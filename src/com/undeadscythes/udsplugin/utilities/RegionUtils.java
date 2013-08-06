@@ -5,29 +5,30 @@ import java.io.*;
 import java.util.*;
 
 /**
- *
+ * Utility class for handling manipulation of {@link Region} objects.
+ * 
  * @author UndeadScythes
  */
 public class RegionUtils {
-    private static final String PATH = "regions.csv";
-    private static EnumMap<RegionType, SaveableHashMap<Region>> REGIONS = new EnumMap<RegionType, SaveableHashMap<Region>>(RegionType.class);
+    private static final String FILENAME = "regions.csv";
+    private static final EnumMap<RegionType, SaveableHashMap<Region>> REGIONS = new EnumMap<RegionType, SaveableHashMap<Region>>(RegionType.class);
 
-    public static void saveRegions(final File path) throws IOException {
+    public static void saveRegions(final File parent) throws IOException {
         final SaveableHashMap<Region> regions = new SaveableHashMap<Region>();
         for(final SaveableHashMap<Region> map : REGIONS.values()) {
             for(final Region region : map.values()) {
                 regions.put(region.getName(), region);
             }
         }
-        regions.save(path + File.separator + PATH);
+        regions.save(parent + File.separator + FILENAME);
     }
     
-    public static void loadRegions(final File path) throws IOException {
+    public static void loadRegions(final File parent) throws IOException {
         for(final RegionType type : RegionType.values()) {
             REGIONS.put(type, new SaveableHashMap<Region>());
         }
         try {
-            final BufferedReader file = new BufferedReader(new FileReader(path + File.separator + PATH));
+            final BufferedReader file = new BufferedReader(new FileReader(parent + File.separator + FILENAME));
             String nextLine;
             while((nextLine = file.readLine()) != null) {
                 final Region region = new Region(nextLine);
@@ -45,11 +46,6 @@ public class RegionUtils {
         return size;
     }
     
-    /**
-     * Grab the regions list of the corresponding type.
-     * @param type Region type.
-     * @return The corresponding list.
-     */
     public static Collection<Region> getRegions(final RegionType type) {
         if(type == null) {
             return null;
@@ -83,10 +79,10 @@ public class RegionUtils {
         return regions;
     }
     
-    public static void renameRegion(final Region region, final String name) {
+    public static void renameRegion(final Region region, final String newName) {
         REGIONS.get(region.getType()).remove(region.getName());
-        region.rename(name);
-        REGIONS.get(region.getType()).put(name, region);
+        region.rename(newName);
+        REGIONS.get(region.getType()).put(newName, region);
     }
     
     public static void addRegion(final Region region) {
@@ -96,7 +92,6 @@ public class RegionUtils {
     public static void removeRegion(final Region region) {
         REGIONS.get(region.getType()).remove(region.getName());
     }
-    
     
     public static void removeRegion(final RegionType type, final String name) {
         REGIONS.get(type).remove(name);
@@ -118,31 +113,14 @@ public class RegionUtils {
         return getRegion(name) != null;
     }
     
-    public static List<Region> getSortedRegions(final RegionType type, final Comparator<Region> comp) {
-        return REGIONS.get(type).getSortedValues(comp);
+    public static List<Region> getSortedRegions(final RegionType type, final Comparator<Region> comparator) {
+        return REGIONS.get(type).getSortedValues(comparator);
     }
     
-    public static void changeType(final Region region, final RegionType type) {
+    public static void changeType(final Region region, final RegionType newType) {
         REGIONS.get(region.getType()).remove(region.getName());
-        region.setType(type);
-        REGIONS.get(type).put(region.getName(), region);
-    }
-    
-    public static org.bukkit.util.Vector floor(final org.bukkit.util.Vector v) {
-        return new org.bukkit.util.Vector(v.getBlockX(), v.getBlockY(), v.getBlockZ());
-    }
-    
-    /**
-     * Helper function to build a new block position from a string.
-     * @param string String containing coded block position.
-     * @return The corresponding new block position.
-     */
-    public static org.bukkit.util.Vector getBlockPos(final String string) {
-        final String[] split = string.replace("(", "").replace(")", "").split(",");
-        final double x = Double.parseDouble(split[0]);
-        final double y = Double.parseDouble(split[1]);
-        final double z = Double.parseDouble(split[2]);
-        return new org.bukkit.util.Vector(x, y, z);
+        region.setType(newType);
+        REGIONS.get(newType).put(region.getName(), region);
     }
     
     private RegionUtils() {}

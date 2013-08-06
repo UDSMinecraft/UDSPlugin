@@ -7,12 +7,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * Physics check on a block.
+ * Fired when a physics check is called on a block.
+ * 
  * @author UndeadScythes
  */
 public class BlockPhysics extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final BlockPhysicsEvent event) {
+    public final void onEvent(final BlockPhysicsEvent event) {
         final Block block = event.getBlock();
         if(isInQuarry(block.getLocation())) {
             event.setCancelled(true);

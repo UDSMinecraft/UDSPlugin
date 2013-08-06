@@ -4,12 +4,13 @@ import com.undeadscythes.udsplugin.*;
 
 /**
  * Toggles the admin chat channel.
+ * 
  * @author UndeadScythes
  */
 public class CCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
-        if(argsLength() == 0 && isInClan() != null) {
+    public final void playerExecute() {
+        if(argsLength() == 0 && getClan() != null) {
             if(player().toggleChannel(ChatChannel.CLAN)) {
                 player().sendNormal("You are now talking in clan chat.");
             } else {

@@ -6,6 +6,7 @@ import org.bukkit.material.*;
 
 /**
  * Give a player a spawn map.
+ * 
  * @author UndeadScythes
  */
 public class MapCmd extends CommandHandler {

@@ -6,14 +6,15 @@ import org.bukkit.inventory.*;
 
 /**
  * Send another player a gift.
+ * 
  * @author UndeadScythes
  */
 public class GiftCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
-        if(minArgsHelp(1) && (target = matchesPlayer(arg(0))) != null) {
-            if(isHoldingItem() != null) {
+        if(minArgsHelp(1) && (target = matchPlayer(arg(0))) != null) {
+            if(getItemInHand() != null) {
                 final ItemStack gift = player().getItemInHand().clone();
                 String message = "[Gifting Service] You have recieved a free gift!";
                 if(argsLength() > 1) {

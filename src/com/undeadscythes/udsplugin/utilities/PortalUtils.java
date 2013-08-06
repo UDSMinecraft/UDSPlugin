@@ -5,24 +5,21 @@ import java.io.*;
 import java.util.*;
 
 /**
- *
+ * Utility class for handling manipulation of {@link Portal} objects.
+ * 
  * @author UndeadScythes
  */
 public class PortalUtils {
-    /**
-     * File name of portal file.
-     */
-    public static final String PATH = "portals.csv";
-
-    private static SaveableHashMap<Portal> PORTALS = new SaveableHashMap<Portal>();
+    private static final String FILENAME = "portals.csv";
+    private static final SaveableHashMap<Portal> PORTALS = new SaveableHashMap<Portal>();
     
-    public static void savePortals(final File path) throws IOException {
-        PORTALS.save(path + File.separator + PATH);
+    public static void savePortals(final File parent) throws IOException {
+        PORTALS.save(parent + File.separator + FILENAME);
     }
     
-    public static void loadPortals(final File path) throws IOException {
+    public static void loadPortals(final File parent) throws IOException {
         try {
-            final BufferedReader file = new BufferedReader(new FileReader(path + File.separator + PATH));
+            final BufferedReader file = new BufferedReader(new FileReader(parent + File.separator + FILENAME));
             String nextLine;
             while((nextLine = file.readLine()) != null) {
                 PORTALS.put(nextLine.split("\t")[0], new Portal(nextLine));

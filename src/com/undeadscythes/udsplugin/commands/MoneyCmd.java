@@ -8,6 +8,7 @@ import java.util.*;
 
 /**
  * Various money handling commands.
+ * 
  * @author UndeadScythes
  */
 public class MoneyCmd extends CommandHandler {
@@ -43,23 +44,23 @@ public class MoneyCmd extends CommandHandler {
                 }
             } else if(subCmdEquals("help")) {
                 sendHelp(1);
-            } else if((target = matchesPlayer(arg(0))) != null && notSelf(target) && hasPerm(Perm.MONEY_OTHER)) {
+            } else if((target = matchPlayer(arg(0))) != null && notSelf(target) && hasPerm(Perm.MONEY_OTHER)) {
                 player().sendNormal(target.getNick() + " has " + target.getMoney() + " " + Config.CURRENCIES + ".");
             }
         } else if(numArgsHelp(3)) {
             int amount;
             if(subCmdEquals("set")) {
-                if(hasPerm(Perm.MONEY_ADMIN) && (target = matchesPlayer(arg(1))) != null && (amount = isInteger(arg(2))) != -1) {
+                if(hasPerm(Perm.MONEY_ADMIN) && (target = matchPlayer(arg(1))) != null && (amount = getInteger(arg(2))) != -1) {
                     target.setMoney(amount);
                     player().sendNormal(target.getNick() + "'s account has been set to " + amount + " " + Config.CURRENCIES + ".");
                 }
             } else if(subCmdEquals("grant")) {
-                if(hasPerm(Perm.MONEY_ADMIN) && (target = matchesPlayer(arg(1))) != null && (amount = isInteger(arg(2))) != -1) {
+                if(hasPerm(Perm.MONEY_ADMIN) && (target = matchPlayer(arg(1))) != null && (amount = getInteger(arg(2))) != -1) {
                     target.credit(amount);
                     player().sendNormal(target.getNick() + "'s account has been credited " + amount + " " + Config.CURRENCIES + ".");
                 }
             } else if(subCmdEquals("pay")) {
-                if((target = matchesPlayer(arg(1))) != null && (amount = isInteger(arg(2))) != -1 && canAfford(amount) && notSelf(target)) {
+                if((target = matchPlayer(arg(1))) != null && (amount = getInteger(arg(2))) != -1 && canAfford(amount) && notSelf(target)) {
                     target.credit(amount);
                     player().debit(amount);
                     player().sendNormal(amount + " " + Config.CURRENCIES + " have been sent to " + target.getNick() + ".");

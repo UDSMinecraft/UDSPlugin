@@ -5,12 +5,13 @@ import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
 /**
- * Rent VIP rank and perform other tasks. Sends help on wrong arguments.
+ * Rent VIP rank and perform other tasks.
+ * 
  * @author UndeadScythes
  */
 public class VIPCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(argsLength() == 0) {
             if(player().hasPermission(Perm.VIP_RANK)) {
                 player().sendNormal("You have " + player().getVIPTimeString() + " left in VIP.");
@@ -26,7 +27,7 @@ public class VIPCmd extends CommandHandler {
                 if(argsLength() != 2) {
                     sendPage(1, player());
                 } else {
-                    final int page = isInteger(arg(1));
+                    final int page = getInteger(arg(1));
                     if(page != -1) {
                         sendPage(page, player());
                     }

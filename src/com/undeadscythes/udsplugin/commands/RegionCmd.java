@@ -5,6 +5,7 @@ import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Region related commands.
+ * 
  * @author UndeadScythes
  */
 public class RegionCmd extends CommandHandler {
@@ -74,7 +75,7 @@ public class RegionCmd extends CommandHandler {
     private void changeType() {
         final Region region;
         final RegionType type;
-        if((region = regionExists(arg(1))) != null && ((type = regionTypeExists(arg(2)))) != null) {
+        if((region = getRegion(arg(1))) != null && ((type = getRegionType(arg(2)))) != null) {
             RegionUtils.changeType(region, type);
             player().sendNormal("Region " + region.getName() + " set to type " + type.toString() + ".");
         }
@@ -93,7 +94,7 @@ public class RegionCmd extends CommandHandler {
         Direction direction;
         Region region;
         int distance;
-        if((region = regionExists(arg(1))) != null && (direction = isCardinalDirection(arg(3))) != null && (distance = isInteger(arg(2))) > -1) {
+        if((region = getRegion(arg(1))) != null && (direction = getCardinalDirection(arg(3))) != null && (distance = getInteger(arg(2))) > -1) {
             region.contract(direction, distance);
             player().sendNormal("Region has been contracted.");
         }
@@ -103,7 +104,7 @@ public class RegionCmd extends CommandHandler {
         Direction direction;
         Region region;
         int distance;
-        if((region = regionExists(arg(1))) != null && (direction = isCardinalDirection(arg(3))) != null && (distance = isInteger(arg(2))) > -1) {
+        if((region = getRegion(arg(1))) != null && (direction = getCardinalDirection(arg(3))) != null && (distance = getInteger(arg(2))) > -1) {
             region.expand(direction, distance);
             player().sendNormal("Region has been expanded.");
         }
@@ -118,8 +119,8 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void list(final String type) {
-        if(regionTypeExists(type) != null) {
-            list(regionTypeExists(type));
+        if(getRegionType(type) != null) {
+            list(getRegionType(type));
         }
     }
     
@@ -147,15 +148,15 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void flag() {
-        final Region region = regionExists(arg(1));
-        final RegionFlag flag = regionFlagExists(arg(2));
+        final Region region = getRegion(arg(1));
+        final RegionFlag flag = getRegionFlag(arg(2));
         if(region != null && flag != null) {
             player().sendNormal(region.getName() + " flag " + flag.toString() + " now set to " + region.toggleFlag(flag) + ".");
         }
     }
 
     private void del() {
-        final Region region = regionExists(arg(1));
+        final Region region = getRegion(arg(1));
         if(region != null) {
             RegionUtils.removeRegion(region);
             player().sendNormal("Region deleted.");
@@ -163,14 +164,14 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void tp() {
-        final Region region = regionExists(arg(1));
+        final Region region = getRegion(arg(1));
         if(region != null) {
             player().teleport(region.getWarp());
         }
     }
 
     private void info() {
-        final Region region = regionExists(arg(1));
+        final Region region = getRegion(arg(1));
         if(region != null) {
             region.sendInfo(player());
         }
@@ -178,7 +179,7 @@ public class RegionCmd extends CommandHandler {
 
     private void reset() {
         final EditSession session = player().forceSession();
-        final Region region = regionExists(arg(1));
+        final Region region = getRegion(arg(1));
         if(session != null && hasTwoPoints(session) && region != null) {
             region.setPoints(session.getV1(), session.getV2());
             player().sendNormal("Region reset with new points.");
@@ -186,7 +187,7 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void select() {
-        final Region region = regionExists(arg(1));
+        final Region region = getRegion(arg(1));
         if(region != null) {
             final EditSession session = player().forceSession();
             session.setPoints(region.getV1(), region.getV2());
@@ -196,8 +197,8 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void set(final String type) {
-        if(regionTypeExists(type) != null) {
-            set(regionTypeExists(type));
+        if(getRegionType(type) != null) {
+            set(getRegionType(type));
         }
     }
     
@@ -211,8 +212,8 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void addMember() {
-        final Region region = regionExists(arg(1));
-        final SaveablePlayer target = matchesPlayer(arg(2));
+        final Region region = getRegion(arg(1));
+        final SaveablePlayer target = matchPlayer(arg(2));
         if(region != null && target != null) {
             region.addMember(target);
             player().sendNormal(target.getNick() + " add to region " + region.getName() + ".");
@@ -220,8 +221,8 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void delMember() {
-        final Region region = regionExists(arg(1));
-        final SaveablePlayer target = matchesPlayer(arg(2));
+        final Region region = getRegion(arg(1));
+        final SaveablePlayer target = matchPlayer(arg(2));
         if(region != null && target != null) {
             region.delMember(target);
             player().sendNormal(target.getNick() + " removed from region " + region.getName() + ".");
@@ -229,8 +230,8 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void owner() {
-        final Region region = regionExists(arg(1));
-        final SaveablePlayer target = matchesPlayer(arg(2));
+        final Region region = getRegion(arg(1));
+        final SaveablePlayer target = matchPlayer(arg(2));
         if(region != null && target != null) {
             region.changeOwner(target);
             player().sendNormal(target.getNick() + " made owner of region " + region.getName() + ".");
@@ -238,8 +239,8 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void changeRank() {
-        final Region region = regionExists(arg(1));
-        final PlayerRank rank = rankExists(arg(2));
+        final Region region = getRegion(arg(1));
+        final PlayerRank rank = getRank(arg(2));
         if(region != null && rank != null) {
             region.setRank(rank);
             player().sendNormal(region.getName() + " now owned by " + rank.name() + ".");
@@ -247,7 +248,7 @@ public class RegionCmd extends CommandHandler {
     }
 
     private void rename() {
-        final Region region = regionExists(arg(1));
+        final Region region = getRegion(arg(1));
         if(region != null && noBadLang(arg(1)) && noRegionExists(arg(2))) {
             final String oldName = region.getName();
             RegionUtils.renameRegion(region, arg(2));

@@ -6,7 +6,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * A block melts.
+ * Fired when a player picks up an item.
+ * 
  * @author UndeadScythes
  */
 public class PlayerPickupItem extends ListenerWrapper implements Listener {

@@ -4,13 +4,14 @@ import org.bukkit.block.*;
 
 /**
  * Lets a player 'sit' on stair blocks.
+ * 
  * @author UndeadScythes
  */
 public class SitCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         player().sendNormal("Sorry this command is currently unavailable.");
-//        if(!player.isInsideVehicle()) {
+//        if(!player.isInsideVehicle()) { //TODO: Fix the sit command!
 //            final Block target = player.getTargetBlock(null, 3);
 //            if((isStairs(target)) && target.getRelative(BlockFace.DOWN).getTypeId() != 0) {
 //                //final Item seat = player.getWorld().dropItemNaturally(target.getLocation(), new ItemStack(Material.SNOW_BALL));

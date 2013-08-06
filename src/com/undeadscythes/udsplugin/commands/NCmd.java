@@ -5,12 +5,13 @@ import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Deny a request.
+ * 
  * @author UndeadScythes
  */
 public class NCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
-        final Request request = hasRequest();
+    public final void playerExecute() {
+        final Request request = getRequest();
         if(request != null) {
             UDSPlugin.removeRequest(player().getName());
             final SaveablePlayer sender = PlayerUtils.getPlayer(request.getSender().getName());

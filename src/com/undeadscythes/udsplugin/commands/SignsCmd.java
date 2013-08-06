@@ -4,11 +4,12 @@ import com.undeadscythes.udsplugin.*;
 
 /**
  * Get a list of special signs the player can place.
+ * 
  * @author UndeadScythes
  */
 public class SignsCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         player().sendNormal("Special signs available to you and format (lines 1-4):");
         if(player().hasPermission(Perm.SIGN_CHECKPOINT)) {
             player().sendListItem("Checkpoint - ", "1: [checkpoint], 2-4: Anything");

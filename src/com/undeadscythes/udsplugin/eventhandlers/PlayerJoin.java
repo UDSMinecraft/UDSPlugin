@@ -10,15 +10,16 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 
 /**
- * When a player logs onto the server.
+ * Fired when a player joins the server.
+ * 
  * @author UndeadScythes
  */
 public class PlayerJoin implements Listener {
     @EventHandler
-    public void onEvent(final PlayerJoinEvent event) {
+    public final void onEvent(final PlayerJoinEvent event) {
         final String playerName = event.getPlayer().getName();
         SaveablePlayer player;
-        if(PlayerUtils.existingPlayer(playerName)) {
+        if(PlayerUtils.playerExists(playerName)) {
             player = PlayerUtils.getPlayer(playerName);
             player.wrapPlayer(event.getPlayer());
             PlayerUtils.addOnlinePlayer(player);

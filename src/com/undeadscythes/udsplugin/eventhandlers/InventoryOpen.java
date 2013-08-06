@@ -17,39 +17,38 @@ import org.bukkit.inventory.*;
  * not have Perm.BYPASS the action is stopped. If the inventory is a shop then
  * the player is put in 'shopping mode'. If the inventory is the players pack
  * then nothing happens.
+ * 
  * @author UndeadScythes
  */
 public class InventoryOpen extends ListenerWrapper implements Listener {
-    private SaveablePlayer player;
-
     @EventHandler
     public final void onEvent(final InventoryOpenEvent event) {
         final InventoryHolder holder = event.getInventory().getHolder();
-        player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
         if(holder instanceof DoubleChest) {
             if(isShop(((DoubleChest)holder).getLeftSide())) {
                 startShopping(((Chest)((DoubleChest)holder).getLeftSide()).getLocation(), player);
             } else if(isShop(((DoubleChest)holder).getRightSide())) {
                 startShopping(((Chest)((DoubleChest)holder).getRightSide()).getLocation(), player);
             } else {
-                event.setCancelled(isProtected(((DoubleChest)holder).getLeftSide()) || isProtected(((DoubleChest)holder).getRightSide()));
+                event.setCancelled(isProtected(((DoubleChest)holder).getLeftSide(), player) || isProtected(((DoubleChest)holder).getRightSide(), player));
             }
         } else if(holder instanceof Chest) {
             if(isShop(holder)) {
                 startShopping(((Chest)holder).getLocation(), player);
             } else {
-                event.setCancelled(isProtected(holder));
+                event.setCancelled(isProtected(holder, player));
             }
         } else if(!(holder instanceof Player || holder instanceof Horse || holder == null)) {
-            event.setCancelled(isProtected(holder));
+            event.setCancelled(isProtected(holder, player));
         }
     }
 
     private void startShopping(final Location shop, final SaveablePlayer shopper) {
         if(!shopper.canBuildHere(shop)) {
-            player.setShopping(true);
-            player.getShoppingList().clear();
-            player.setShop(shop);
+            shopper.setShopping(true);
+            shopper.getShoppingList().clear();
+            shopper.setShop(shop);
         }
     }
 
@@ -62,7 +61,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
         }
     }
 
-    private boolean isProtected(final InventoryHolder holder) {
+    private boolean isProtected(final InventoryHolder holder, final SaveablePlayer player) {
         if(!player.canBuildHere(((BlockState)holder).getBlock().getLocation())) {
             if(player.hasPermission(Perm.BYPASS)) {
                 player.sendNormal("Protection bypassed.");

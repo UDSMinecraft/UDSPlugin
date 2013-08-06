@@ -5,7 +5,8 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 
 /**
- *
+ * A YAML configuration file with various accessors.
+ * 
  * @author UndeadScythes
  */
 public class YamlConfig {
@@ -41,7 +42,7 @@ public class YamlConfig {
         }
     }
     
-    public FileConfiguration get() {
+    public final FileConfiguration getConfig() {
         if(loaded) {
             return config;
         }

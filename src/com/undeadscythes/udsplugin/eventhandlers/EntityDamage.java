@@ -8,7 +8,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 /**
- * When an entity is damaged.
+ * Fired when an entity is damaged.
+ * 
  * @author UndeadScythes
  */
 public class EntityDamage extends ListenerWrapper implements Listener {

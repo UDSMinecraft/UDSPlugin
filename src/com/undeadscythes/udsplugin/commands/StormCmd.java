@@ -4,11 +4,12 @@ import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Start a storm in the world.
+ * 
  * @author UndeadScythes
  */
 public class StormCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         int duration;
         if(argsLength() == 0) {
             player().getWorld().setStorm(true);
@@ -16,11 +17,11 @@ public class StormCmd extends CommandHandler {
             player().getWorld().setWeatherDuration(6000);
             player().getWorld().setThunderDuration(6000);
             player().sendNormal("5 minutes thunder storm on the way.");
-        } else if(numArgsHelp(1) && (duration = isInteger(arg(0))) != -1) {
+        } else if(numArgsHelp(1) && (duration = getInteger(arg(0))) != -1) {
             player().getWorld().setStorm(true);
             player().getWorld().setThundering(true);
-            player().getWorld().setWeatherDuration((int)(duration * TimeUtils.MINUTE / TimeUtils.TICKS));
-            player().getWorld().setThunderDuration((int)(duration * TimeUtils.MINUTE / TimeUtils.TICKS));
+            player().getWorld().setWeatherDuration((int)(duration * TimeUtils.MINUTE * TimeUtils.TICK));
+            player().getWorld().setThunderDuration((int)(duration * TimeUtils.MINUTE * TimeUtils.TICK));
             player().sendNormal(duration + " minutes thunder storm on the way.");
         }
     }

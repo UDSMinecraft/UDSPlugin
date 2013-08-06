@@ -10,7 +10,8 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 
 /**
- * When a player closes an inventory.
+ * Fired when a player closes an inventory.
+ * 
  * @author UndeadScythes
  */
 public class InventoryClose extends ListenerWrapper implements Listener {
@@ -59,7 +60,7 @@ public class InventoryClose extends ListenerWrapper implements Listener {
     private int getPrice(final Block block) {
         final Sign sign = (Sign)block.getRelative(BlockFace.UP).getState();
         if(sign.getLine(1).equals(Color.SIGN + "Shop")) {                               //
-            return Integer.parseInt(sign.getLine(3).split(":")[0].replace("B ", ""));   // Update hack fix
+            return Integer.parseInt(sign.getLine(3).split(":")[0].replace("B ", ""));   // TODO: Update hack fix (fix me plox)
         }                                                                               //
         return Integer.parseInt(sign.getLine(1));
     }

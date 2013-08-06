@@ -4,15 +4,16 @@ import com.undeadscythes.udsplugin.*;
 
 /**
  * Get statistics on a player.
+ * 
  * @author UndeadScythes
  */
 public class StatsCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
         if(argsLength() == 0) {
             sendStats(player());
-        } else if(numArgsHelp(1) && (target = matchesPlayer(arg(0))) != null) {
+        } else if(numArgsHelp(1) && (target = matchPlayer(arg(0))) != null) {
             sendStats(target);
         }
     }

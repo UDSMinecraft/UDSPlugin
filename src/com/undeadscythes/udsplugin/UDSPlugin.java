@@ -37,7 +37,7 @@ public class UDSPlugin extends JavaPlugin {
     private static AfkCheck afkCheck = new AfkCheck();
     private static AutoSave autoSave = new AutoSave();
     private static DragonRespawn dragonRespawn = new DragonRespawn();
-    private static MinecartChecks minecartChecks = new MinecartChecks();
+    private static MinecartCheck minecartChecks = new MinecartCheck();
     private static PlayerChecks playerChecks = new PlayerChecks();
     private static QuarryRefill quarryRefill = new QuarryRefill();
     private static RequestTimeOut requestTimeOut = new RequestTimeOut();
@@ -122,7 +122,7 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     public static boolean checkWorldFlag(final World world, final WorldFlag flag) {
-        FileConfiguration flags = worldFlags.get();
+        FileConfiguration flags = worldFlags.getConfig();
         final String path = world.getName() + "." + flag.name();
         if(flags.contains(path)) {
             return flags.getBoolean(path);
@@ -134,18 +134,18 @@ public class UDSPlugin extends JavaPlugin {
 
     public static boolean toggleWorldFlag(final World world, final WorldFlag flag) {
         final boolean after = !checkWorldFlag(world, flag);
-        worldFlags.get().set(world.getName() + "." + flag.name(), after);
+        worldFlags.getConfig().set(world.getName() + "." + flag.name(), after);
         return after;
     }
 
     public static void changeWorldMode(final World world, final GameMode mode) {
-        worldFlags.get().set(world.getName() + ".mode", mode.getValue());
+        worldFlags.getConfig().set(world.getName() + ".mode", mode.getValue());
     }
 
     public static GameMode getWorldMode(final World world) {
         final String path = world.getName() + ".mode";
-        if(worldFlags.get().contains(path)) {
-            return GameMode.getByValue(worldFlags.get().getInt(path));
+        if(worldFlags.getConfig().contains(path)) {
+            return GameMode.getByValue(worldFlags.getConfig().getInt(path));
         }
         changeWorldMode(world, GameMode.SURVIVAL);
         return GameMode.SURVIVAL;

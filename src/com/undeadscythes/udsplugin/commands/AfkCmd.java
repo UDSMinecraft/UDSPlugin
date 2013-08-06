@@ -5,6 +5,7 @@ import org.bukkit.*;
 
 /**
  * Toggles a players AFK mode.
+ * 
  * @author UndeadScythes
  */
 public class AfkCmd extends CommandHandler {
