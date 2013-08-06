@@ -14,7 +14,7 @@ public class KickCmd extends CommandHandler {
         if(minArgsHelp(1) && (target = matchOnlinePlayer(arg(0))) != null) {
             if(!target.hasPermission(Perm.UNKICKABLE)) {
                 String message = "You have been kicked for breaking the rules.";
-                if(argsLength() >= 2) {
+                if(argsLength() > 1) {
                     message = argsToMessage(1);
                 }
                 target.getWorld().strikeLightningEffect(target.getLocation());

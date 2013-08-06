@@ -42,9 +42,9 @@ public class Region extends Cuboid implements Saveable {
     public Region(final String record) throws IOException {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        setV1(RegionUtils.getBlockPos(recordSplit[1]));
-        setV2(RegionUtils.getBlockPos(recordSplit[2]));
-        warp = SaveableLocation.parseLocation(recordSplit[3]);
+        setV1(VectorUtils.getVector(recordSplit[1]));
+        setV2(VectorUtils.getVector(recordSplit[2]));
+        warp = LocationUtils.parseLocation(recordSplit[3]);
         setWorld(warp.getWorld());
         owner = PlayerUtils.getPlayer(recordSplit[4]);
         members = new HashSet<SaveablePlayer>(0);
@@ -69,7 +69,7 @@ public class Region extends Cuboid implements Saveable {
         record.add(name);
         record.add(getV1String());
         record.add(getV2String());
-        record.add(SaveableLocation.getString(warp));
+        record.add(LocationUtils.getString(warp));
         record.add(owner == null ? "" : owner.getName());
         final ArrayList<String> memberList = new ArrayList<String>(0);
         for(SaveablePlayer member : members) {
@@ -98,10 +98,6 @@ public class Region extends Cuboid implements Saveable {
 
     public final void setType(final RegionType type) {
         this.type = type;
-    }
-
-    public final void changeName(final String newName) {
-        name = newName;
     }
 
     public final String getOwnerName() {
@@ -194,16 +190,12 @@ public class Region extends Cuboid implements Saveable {
         this.name = name;
     }
 
-    private final boolean contains(final World world, final double x, final double y, final double z) {
-        return warp.getWorld().equals(world) && x > getV1().getX() && x < getV2().getX() + 1 && z > getV1().getZ() && z < getV2().getZ() + 1 && y > getV1().getY() && y < getV2().getY() + 1;
-    }
-
     public final RegionType getType() {
         return type;
     }
 
     public final Location getWarp() {
-        return Warp.findSafePlace(warp);
+        return LocationUtils.findSafePlace(warp);
     }
 
     public final boolean hasMember(final SaveablePlayer player) {
