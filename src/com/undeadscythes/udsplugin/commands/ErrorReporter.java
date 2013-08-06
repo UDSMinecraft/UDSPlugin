@@ -668,6 +668,18 @@ public abstract class ErrorReporter {
         }
     }
 
+    protected final int canAfford(final String string) {
+        final int cost = getInteger(string);
+        if(cost > - 1) {
+            if(player.canAfford(cost)) {
+                return cost;
+            } else {
+                player.sendError("You do not have enough money to do that.");
+            }
+        }
+        return -1;
+    }
+
     protected final boolean notSelf(final SaveablePlayer target) {
         if(target.equals(player)) {
             player.sendError("You cannot use that command on yourself.");

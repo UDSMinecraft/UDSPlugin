@@ -32,7 +32,7 @@ public class PlayerChecks implements Runnable {
         final int distanceSq = Math.abs((int)Math.pow(player.getLocation().getBlockX(), 2) + (int)Math.pow(player.getLocation().getBlockZ(), 2));
         if(distanceSq - Config.WORLD_BORDER_SQRD > 100) {
             final double ratio = Config.WORLD_BORDER_SQRD / distanceSq;
-            player.move(Warp.findSafePlace(player.getLocation().clone().multiply(ratio)));
+            player.move(LocationUtils.findSafePlace(player.getLocation().clone().multiply(ratio)));
             player.sendNormal("You have reached the edge of the currently explorable world.");
         }
     }
