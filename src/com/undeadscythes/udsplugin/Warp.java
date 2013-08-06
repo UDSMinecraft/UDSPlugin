@@ -26,7 +26,7 @@ public class Warp implements Saveable {
     public Warp(final String record) {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        location = SaveableLocation.parseLocation(recordSplit[1]);
+        location = LocationUtils.parseLocation(recordSplit[1]);
         rank = PlayerRank.getByName(recordSplit[2]);
         price = Integer.parseInt(recordSplit[3]);
     }
@@ -35,7 +35,7 @@ public class Warp implements Saveable {
     public final String getRecord() {
         final ArrayList<String> record = new ArrayList<String>(4);
         record.add(name);
-        record.add(SaveableLocation.getString(location));
+        record.add(LocationUtils.getString(location));
         record.add(rank.toString());
         record.add(Integer.toString(price));
         return StringUtils.join(record, "\t");

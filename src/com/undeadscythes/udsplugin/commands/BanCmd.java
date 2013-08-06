@@ -16,7 +16,7 @@ public class BanCmd extends CommandHandler {
             if(argsLength() > 1) {
                 message = argsToMessage(1);
             }
-            if(isOnline(target)) {
+            if(target.isOnline()) {
                 target.getWorld().strikeLightningEffect(target.getLocation());
                 target.kickPlayer(message);
             }

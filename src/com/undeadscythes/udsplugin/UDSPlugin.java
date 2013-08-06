@@ -237,7 +237,7 @@ public class UDSPlugin extends JavaPlugin {
         getLogger().info("Recipes added.");
         Censor.initCensor();
         getLogger().info("Censor online.");
-        EntityTracker.findMinecarts();
+        MinecartCheck.findMinecarts();
         getLogger().info("Tracking minecarts.");
         final String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
         getLogger().info(message); // Looks a bit like the Sims loading screen right?

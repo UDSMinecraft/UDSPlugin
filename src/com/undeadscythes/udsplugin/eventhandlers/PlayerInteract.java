@@ -178,14 +178,14 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
             final Block block = los.get(1);
             if(block.getType().isSolid()) {
                 final Location location = block.getRelative(los.get(0).getFace(block)).getLocation();
-                player.move(Warp.findSafePlace(location));
+                player.move(LocationUtils.findSafePlace(location));
             } else {
                 player.sendError("No block in range.");
             }
         } else {
             final Block block = player.getTargetBlock(UDSPlugin.TRANSPARENT_BLOCKS, Config.COMPASS_RANGE);
             if(block.getType().isSolid()) {
-                player.move(Warp.findSafePlace(block.getLocation()));
+                player.move(LocationUtils.findSafePlace(block.getLocation()));
             } else {
                 player.sendError("No block in range.");
             }

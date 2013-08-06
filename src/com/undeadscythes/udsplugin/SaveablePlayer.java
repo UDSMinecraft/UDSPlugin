@@ -8,6 +8,7 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 import org.bukkit.scoreboard.*;
+import org.bukkit.util.Vector;
 
 /**
  * An extension of Minecraft players adding various fields and methods.
@@ -56,7 +57,7 @@ public class SaveablePlayer implements Saveable {
     private boolean pvp = false;
     private int kills = 0;
     private long pvpTime = 0;
-    private ArrayList<Float> lastView = new ArrayList<Float>(2);
+    private Vector lastVector;
     private Location shop;
     private final LinkedList<Long> lastLogins = new LinkedList<Long>();
 
@@ -108,23 +109,19 @@ public class SaveablePlayer implements Saveable {
         this.player = player;
         player.setDisplayName(nick);
         player.setPlayerListName(nick);
-        lastView.add(0, player.getLocation().getPitch());
-        lastView.add(1, player.getLocation().getYaw());
+        lastVector = player.getLocation().toVector();
     }
 
     public final void addTime(final long time) {
         timeLogged += time;
     }
     
-    public final ArrayList<Float> getLastView() {
-        final ArrayList<Float> view = new ArrayList<Float>(2);
-        view.addAll(lastView);
-        return view;
+    public final Vector getLastVector() {
+        return lastVector;
     }
     
-    public final void setLastVector(final ArrayList<Float> view) {
-        lastView.clear();
-        lastView.addAll(view);
+    public final void setLastVector(final Vector vector) {
+        lastVector = vector;
     }
     
     public final void addKill() {
