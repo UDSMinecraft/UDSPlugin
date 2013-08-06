@@ -1,40 +1,18 @@
 package com.undeadscythes.udsplugin.utilities;
 
 /**
- *
+ * Utility class for handling manipulation of long variables representing time.
+ * 
  * @author UndeadScythe
  */
 public class TimeUtils {
-    /**
-     * Number to divide to convert milliseconds to ticks.
-     */
-    public static final long TICKS = 50;
-    /**
-     * The number of milliseconds in a week.
-     */
-    public static final long WEEK = 604800000;
-    /**
-     * The number of milliseconds in a day.
-     */
-    public static final long DAY = 86400000;
-    /**
-     * The number of milliseconds in an hour.
-     */
-    public static final long HOUR = 3600000;
-    /**
-     * The number of milliseconds in a minute.
-     */
-    public static final long MINUTE = 60000;
-    /**
-     * The number of milliseconds in a second.
-     */
-    public static final long SECOND = 1000;
+    public static final long TICK = 50;
+    public static final long SECOND = TICK * 20;
+    public static final long MINUTE = SECOND * 60;
+    public static final long HOUR = MINUTE * 60;
+    public static final long DAY = HOUR * 24;
+    public static final long WEEK = DAY * 7;
     
-    /**
-     *
-     * @param time
-     * @return
-     */
     public static String timeToString(final long time) {
         long timeRemaining = time;
         String timeString = "";

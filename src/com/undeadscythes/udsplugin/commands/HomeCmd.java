@@ -6,21 +6,22 @@ import org.bukkit.util.*;
 
 /**
  * Home region related commands.
+ * 
  * @author UndeadScythes
  */
 public class HomeCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         Region home;
         SaveablePlayer target;
         int price;
         if(argsLength() == 0) {
-            if((home = hasHome()) != null && notJailed() && notPinned()) {
+            if((home = getHome()) != null && notJailed() && notPinned()) {
                 player().teleport(home.getWarp());
             }
         } else if(argsLength() == 1) {
             if(subCmdEquals("make")) {
-                if(canAfford(Config.HOME_COST) && noHome()) {
+                if(canAfford(Config.HOME_COST) && hasNoHome()) {
                     final Vector min = player().getLocation().add(-10, -12, -10).toVector();
                     final Vector max = player().getLocation().add(10, 28, 10).toVector();
                     home = new Region(player().getName() + "home", min, max, player().getLocation(), player(), "", RegionType.HOME);
@@ -32,16 +33,16 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("clear")) {
-                if((home = hasHome()) != null) {
+                if((home = getHome()) != null) {
                     RegionUtils.removeRegion(home);
                     player().sendNormal("Home protection removed.");
                 }
             } else if(subCmdEquals("power")) {
-                if((home = hasHome()) != null) {
+                if((home = getHome()) != null) {
                     player().sendNormal("Your home " + (home.toggleFlag(RegionFlag.POWER) ? "now" : "no longer") + " has power.");
                 }
             } else if(subCmdEquals("set")) {
-                if((home = hasHome()) != null) {
+                if((home = getHome()) != null) {
                     home.setWarp(player().getLocation());
                     player().sendNormal("Home warp point set.");
                 }
@@ -69,25 +70,25 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("lock")) {
-                if((home = hasHome()) != null) {
+                if((home = getHome()) != null) {
                     home.setFlag(RegionFlag.LOCK);
                     player().sendNormal("Your home is now locked.");
                 }
             } else if(subCmdEquals("unlock")) {
-                if((home = hasHome()) != null) {
+                if((home = getHome()) != null) {
                     home.setFlag(RegionFlag.LOCK);
                     home.toggleFlag(RegionFlag.LOCK);
                     player().sendNormal("Your home is now unlocked.");
                 }
             } else if(subCmdEquals("help")) {
                 sendHelp(1);
-            } else if((target = matchesPlayer(arg(0))) != null && (home = hasHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
+            } else if((target = matchPlayer(arg(0))) != null && (home = getHome(target)) != null && (isRoomie(home) || hasPerm(Perm.HOME_OTHER)) && notJailed() && notPinned()) {
                 player().teleport(home.getWarp());
             }
         } else if(argsLength() == 2) {
             Direction direction;
             if(subCmdEquals("expand")) {
-                if(hasPerm(Perm.HOME_EXPAND) && (home = hasHome()) != null && canAfford(Config.EXPAND_COST) && (direction = isCardinalDirection(arg(1))) != null) {
+                if(hasPerm(Perm.HOME_EXPAND) && (home = getHome()) != null && canAfford(Config.EXPAND_COST) && (direction = getCardinalDirection(arg(1))) != null) {
                     home.expand(direction, 1);
                     if(noOverlaps(home)) {
                         player().debit(Config.EXPAND_COST);
@@ -97,13 +98,13 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("boot")) {
-                if((home = hasHome()) != null && (target = matchesPlayer(arg(1))) != null && isOnline(target) && isInHome(target, home)) {
+                if((home = getHome()) != null && (target = matchOnlinePlayer(arg(1))) != null  && isInHome(target, home)) {
                     target.teleport(player().getWorld().getSpawnLocation());
                     target.sendNormal(player().getNick() + " has booted you from their home.");
                     player().sendNormal(target.getNick() + " has been booted.");
                 }
             } else if(subCmdEquals("add")) {
-                if((target = matchesPlayer(arg(1))) != null && (home = hasHome()) != null) {
+                if((target = matchPlayer(arg(1))) != null && (home = getHome()) != null) {
                     home.addMember(target);
                     player().sendNormal(target.getNick() + " has been added as your room mate.");
                     if(target.isOnline()) {
@@ -111,7 +112,7 @@ public class HomeCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("kick")) {
-                if((target = matchesPlayer(arg(1))) != null && (home = hasHome()) != null && isRoomie(target, home)) {
+                if((target = matchPlayer(arg(1))) != null && (home = getHome()) != null && isRoomie(target, home)) {
                     home.delMember(target);
                     player().sendNormal(target.getNick() + " is no longer your room mate.");
                     if(target.isOnline()) {
@@ -123,7 +124,7 @@ public class HomeCmd extends CommandHandler {
             }
         } else if(numArgsHelp(3)) {
             if(subCmdEquals("sell")) {
-                if((hasHome()) != null && (target = matchesPlayer(arg(1))) != null && canRequest(target) && isOnline(target) && (price = isInteger(arg(2))) != -1) {
+                if((getHome()) != null && (target = matchOnlinePlayer(arg(1))) != null && canRequest(target) && (price = getInteger(arg(2))) != -1) {
                     player().sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player().getNick() + " wants to sell you their house for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

@@ -4,6 +4,7 @@ import org.bukkit.*;
 
 /**
  * Permissions to use within UDSPlugin.
+ * 
  * @author UndeadScythes
  */
 public enum Perm {
@@ -150,9 +151,9 @@ public enum Perm {
     XP(PlayerRank.MOD),
     Y(PlayerRank.NEWBIE);
 
-    public PlayerRank rank;
-    private boolean hereditary;
-    private GameMode mode;
+    public final PlayerRank rank;
+    private final boolean hereditary;
+    private final GameMode mode;
 
     private Perm(final PlayerRank rank, final boolean isHereditary, final GameMode mode) {
         this.rank = rank;
@@ -172,23 +173,15 @@ public enum Perm {
         this(rank, true, mode);
     }
 
-    /**
-     * Get the rank assigned to the permission.
-     * @return
-     */
-    public PlayerRank getRank() {
+    public final PlayerRank getRank() {
         return rank;
     }
 
-    /**
-     * Check if a permission is hereditary.
-     * @return
-     */
-    public boolean isHereditary() {
+    public final boolean isHereditary() {
         return hereditary;
     }
     
-    public GameMode getMode() {
+    public final GameMode getMode() {
         return mode;
     }
 }

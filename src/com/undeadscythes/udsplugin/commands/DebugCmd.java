@@ -4,6 +4,7 @@ import org.bukkit.entity.*;
 
 /**
  * Various debugging commands.
+ * 
  * @author UndeadScythes
  */
 public class DebugCmd extends CommandHandler {

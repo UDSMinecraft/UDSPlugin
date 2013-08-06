@@ -2,18 +2,22 @@ package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.timers.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
+import org.bukkit.material.*;
 import org.bukkit.util.Vector;
 
 /**
- * When a player interacts with a block.
+ * Fired when a player interacts with the world.
+ * 
  * @author UndeadScythes
  */
 public class PlayerInteract extends ListenerWrapper implements Listener {
@@ -25,85 +29,81 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         switch(event.getAction()) {
             case LEFT_CLICK_AIR:
                 if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
-                    compassTo(player);
+                    compassTeleport(player, false);
                     event.setCancelled(true);
                 }
                 break;
             case LEFT_CLICK_BLOCK:
                 if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
-                    compassTo(player);
+                    compassTeleport(player, false);
                     event.setCancelled(true);
                 } else if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
-                    wand1(player, block);
+                    setPoint1(player, block);
                     event.setCancelled(true);
                 } else if((block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) && !player.isSneaking()) {
-                    sign(player, (Sign)block.getState());
+                    signPunch(player, (Sign)block.getState());
                 } else {
-                    event.setCancelled(lockCheck(block, player));
+                    event.setCancelled(blockLocked(block, player));
                 }
                 break;
             case RIGHT_CLICK_AIR:
                 if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
-                    paperComplex(player, player.getLocation());
+                    sendRegionInfo(player, player.getLocation(), true);
                     event.setCancelled(true);
                 } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
-                    paperSimple(player, player.getLocation());
+                    sendRegionInfo(player, player.getLocation(), false);
                     event.setCancelled(true);
                 } else if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
-                    compassThru(player);
+                    compassTeleport(player, true);
                     event.setCancelled(true);
                 } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
-                    powertool(player);
+                    activatePowertool(player);
                     event.setCancelled(true);
                 } else {
-                    event.setCancelled(expCheck(player));
+                    event.setCancelled(expBlocked(player));
                 }
                 break;
             case RIGHT_CLICK_BLOCK:
                 if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
-                    wand2(player, block);
+                    setPoint2(player, block);
                     event.setCancelled(true);
                 } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
-                    paperComplex(player, block.getLocation());
+                    sendRegionInfo(player, block.getLocation(), true);
                     event.setCancelled(true);
                 } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
-                    paperSimple(player, block.getLocation());
+                    sendRegionInfo(player, block.getLocation(), false);
                     event.setCancelled(true);
                 } else if(inHand == Material.COMPASS) {
-                    compassThru(player);
+                    compassTeleport(player, true);
                     event.setCancelled(true);
                 } else if(inHand == Material.MONSTER_EGG && block.getType() == Material.MOB_SPAWNER) {
                     setMobSpawner(block, player);
                     event.setCancelled(true);
                 } else if(block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
-                    sign(player, (Sign)block.getState());
+                    signPunch(player, (Sign)block.getState());
                     event.setCancelled(true);
                 } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
-                    powertool(player);
+                    activatePowertool(player);
                     event.setCancelled(true);
                 } else if(inHand == Material.MINECART && UDSPlugin.isRail(block.getType())) {
-                    minecart(player, block.getLocation());
+                    minecartPlaced(player, block.getLocation());
                     player.setItemInHand(new ItemStack(Material.AIR));
                     event.setCancelled(true);
                 } else {
-                    event.setCancelled(lockCheck(block, player) || bonemealCheck(block, player) || expCheck(player));
+                    event.setCancelled(blockLocked(block, player) || bonemealBlocked(block, player) || expBlocked(player));
                 }
                 break;
             case PHYSICAL:
-                event.setCancelled(lockCheck(block, player));
+                event.setCancelled(blockLocked(block, player));
                 break;
         }
     }
 
-    /**
-     * Powertool events.
-     * @param player Player using a powertool.
-     */
-    private void powertool(final SaveablePlayer player) {
+    private void activatePowertool(final SaveablePlayer player) {
         player.performCommand(player.getPowertool());
     }
     
-    private boolean expCheck(final SaveablePlayer player) {
+    private boolean expBlocked(final SaveablePlayer player) {
         if(UDSPlugin.getWorldMode(player.getWorld()).equals(GameMode.CREATIVE)) {
             if(player.getItemInHand().getType().equals(Material.EXP_BOTTLE) || player.getItemInHand().getType().equals(Material.ENDER_CHEST)) {
                 return true;
@@ -112,23 +112,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         return false;
     }
 
-    /**
-     * Check before applying bonemeal effects.
-     * @param block Block clicked.
-     * @param player Player using bonemeal.
-     * @return
-     */
-    private boolean bonemealCheck(final Block block, final SaveablePlayer player) {
+    private boolean bonemealBlocked(final Block block, final SaveablePlayer player) {
         return player.getItemInHand().getType() == Material.INK_SACK && player.getItemInHand().getData().getData() == (byte)15 && !player.canBuildHere(block.getLocation());
     }
 
-    /**
-     * Check if a region is locked.
-     * @param block Block the player is clicking.
-     * @param player Player who is interacting.
-     * @return
-     */
-    private boolean lockCheck(final Block block, final SaveablePlayer player) {
+    private boolean blockLocked(final Block block, final SaveablePlayer player) {
         final Material material = block.getType();
         if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
             final Location location = block.getLocation();
@@ -155,26 +143,15 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         return false;
     }
 
-    /**
-     * Check to change mob spawner type.
-     * @param block Block the was clicked.
-     * @param player Player who clicked.
-     */
-    @SuppressWarnings("deprecation")
     private void setMobSpawner(final Block block, final SaveablePlayer player) {
-        final byte itemData = player.getItemInHand().getData().getData();
-        player.setItemInHand(new ItemStack(Material.MONSTER_EGG, player.getItemInHand().getAmount() - 1, (short)0, itemData));
-        ((CreatureSpawner)block.getState()).setSpawnedType(EntityType.fromId(itemData));
+        final byte data = player.getItemInHand().getData().getData();
+        final MaterialData material = new MaterialData(Material.MONSTER_EGG, data);
+        player.setItemInHand(material.toItemStack(player.getItemInHand().getAmount() - 1));
+        ((CreatureSpawner)block.getState()).setSpawnedType(EntityType.fromId(data));
         player.sendNormal("Spawner set.");
     }
 
-    /**
-     * Check if wand was used.
-     * @param player Player using wand.
-     * @param block Block clicked.
-     * @return <code>true</code> if event needs to be cancelled.
-     */
-    private void wand1(final SaveablePlayer player, final Block block) {
+    private void setPoint1(final SaveablePlayer player, final Block block) {
         final EditSession session = player.forceSession();
         session.setPoint1(block.getLocation());
         player.sendNormal("Point 1 set.");
@@ -183,12 +160,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    /**
-     *
-     * @param player
-     * @param block
-     */
-    private void wand2(final SaveablePlayer player, final Block block) {
+    private void setPoint2(final SaveablePlayer player, final Block block) {
         final EditSession session = player.forceSession();
         session.setPoint2(block.getLocation());
         player.sendNormal("Point 2 set.");
@@ -197,83 +169,60 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    /**
-     * Check if player is using a compass.
-     * @param player Player using compass.
-     */
-    private void compassTo(final SaveablePlayer player) {
-        final Block block = player.getTargetBlock(UDSPlugin.TRANSPARENT_BLOCKS, Config.COMPASS_RANGE);
-        if(block.getType().isSolid()) {
-            player.move(Warp.findSafePlace(block.getLocation()));
+    private void compassTeleport(final SaveablePlayer player, final boolean phase) {
+        if(phase) {
+            final List<Block> los = player.getLastTwoTargetBlocks(UDSPlugin.TRANSPARENT_BLOCKS, Config.COMPASS_RANGE);
+            if(los.size() == 1) {
+                return;
+            }
+            final Block block = los.get(1);
+            if(block.getType().isSolid()) {
+                final Location location = block.getRelative(los.get(0).getFace(block)).getLocation();
+                player.move(LocationUtils.findSafePlace(location));
+            } else {
+                player.sendError("No block in range.");
+            }
         } else {
-            player.sendError("No block in range.");
+            final Block block = player.getTargetBlock(UDSPlugin.TRANSPARENT_BLOCKS, Config.COMPASS_RANGE);
+            if(block.getType().isSolid()) {
+                player.move(LocationUtils.findSafePlace(block.getLocation()));
+            } else {
+                player.sendError("No block in range.");
+            }
         }
     }
 
-    /**
-     *
-     * @param player
-     */
-    private void compassThru(final SaveablePlayer player) {
-        final List<Block> los = player.getLastTwoTargetBlocks(UDSPlugin.TRANSPARENT_BLOCKS, Config.COMPASS_RANGE);
-        if(los.size() == 1) {
-            return;
-        }
-        final Block block = los.get(1);
-        if(block.getType().isSolid()) {
-            final Location location = block.getRelative(los.get(0).getFace(block)).getLocation();
-            player.move(Warp.findSafePlace(location));
-        } else {
-            player.sendError("No block in range.");
-        }
-    }
-
-    /**
-     * Check if player is using paper.
-     * @param player Player using paper.
-     * @param location Location of block clicked.
-     */
-    private void paperSimple(final SaveablePlayer player, final Location location) {
-        if(regionsHere(location).isEmpty()) {
-            player.sendNormal("No regions here.");
-        } else {
+    private void sendRegionInfo(final SaveablePlayer player, final Location location, final boolean verbose) {
+        if(verbose) {
             final List<Region> testRegions = regionsHere(location);
-            for(Region region : testRegions) {
-                if(region.getOwner() == null) {
-                    player.sendNormal("This area is protected.");
-                } else if(region.getOwner().equals(player)) {
-                    player.sendNormal("You own this block.");
-                } else if(region.getMembers().contains(player)) {
-                    player.sendNormal("Your room mate owns this block.");
-                } else {
-                    player.sendNormal("Somebody else owns this block.");
+            if(testRegions.isEmpty()) {
+                player.sendNormal("No regions here.");
+            } else {
+                for(Region region : testRegions) {
+                    region.sendInfo(player);
+                }
+            }
+        } else {
+            if(regionsHere(location).isEmpty()) {
+                player.sendNormal("No regions here.");
+            } else {
+                final List<Region> testRegions = regionsHere(location);
+                for(Region region : testRegions) {
+                    if(region.getOwner() == null) {
+                        player.sendNormal("This area is protected.");
+                    } else if(region.getOwner().equals(player)) {
+                        player.sendNormal("You own this block.");
+                    } else if(region.getMembers().contains(player)) {
+                        player.sendNormal("Your room mate owns this block.");
+                    } else {
+                        player.sendNormal("Somebody else owns this block.");
+                    }
                 }
             }
         }
     }
 
-    /**
-     *
-     * @param player
-     * @param location
-     */
-    private void paperComplex(final SaveablePlayer player, final Location location) {
-        final List<Region> testRegions = regionsHere(location);
-        if(testRegions.isEmpty()) {
-            player.sendNormal("No regions here.");
-        } else {
-            for(Region region : testRegions) {
-                region.sendInfo(player);
-            }
-        }
-    }
-
-    /**
-     * Check if player clicked a sign.
-     * @param player Player using a sign.
-     * @param sign Sign clicked.
-     */
-    private void sign(final SaveablePlayer player, final Sign sign) {
+    private void signPunch(final SaveablePlayer player, final Sign sign) {
         final String cantDoThat = "You can't do that.";
         if(sign.getLine(0).equals(Color.SIGN + "[CHECKPOINT]")) {
             if(player.hasPermission(Perm.CHECK)) {
@@ -285,7 +234,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         } else if(sign.getLine(0).equals(Color.SIGN + "[MINECART]")) {
             if(player.hasPermission(Perm.MINECART)) {
                 final Location location = sign.getBlock().getLocation();
-                if(EntityTracker.minecartNear(location)) {
+                if(MinecartCheck.minecartNear(location)) {
                     player.sendNormal("There is a minecart already at the station.");
                 } else {
                     player.getWorld().spawnEntity(location.clone().add(0.5, -1, 0.5), EntityType.MINECART);
@@ -353,12 +302,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    /**
-     *
-     * @param player
-     * @param location
-     */
-    private void minecart(final SaveablePlayer player, final Location location) {
-        EntityTracker.tagMinecart(player, location);
+    private void minecartPlaced(final SaveablePlayer player, final Location location) {
+        MinecartCheck.tagMinecart(player, location);
     }
 }

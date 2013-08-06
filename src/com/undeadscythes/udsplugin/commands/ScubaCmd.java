@@ -5,11 +5,12 @@ import org.bukkit.inventory.*;
 
 /**
  * Don your scuba gear.
+ * 
  * @author UndeadScythes
  */
 public class ScubaCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(player().getInventory().getHelmet() == null) {
             if(player().getItemInHand().getType() == Material.GLASS) {
                 player().getInventory().setHelmet(new ItemStack(Material.GLASS));

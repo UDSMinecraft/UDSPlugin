@@ -6,6 +6,7 @@ import org.bukkit.entity.*;
 
 /**
  * Perform actions with pets.
+ * 
  * @author UndeadScythes
  */
 public class PetCmd extends CommandHandler {
@@ -15,7 +16,7 @@ public class PetCmd extends CommandHandler {
         UUID pet;
         int price;
         if(argsLength() == 2) {
-            if(arg(0).equals("give") && (target = matchesPlayer(arg(1))) != null && isOnline(target) && (pet = petSelected()) != null) {
+            if(arg(0).equals("give") && (target = matchOnlinePlayer(arg(1))) != null && (pet = getPetId()) != null) {
                 for(Entity entity : player().getWorld().getEntities()) {
                     if(entity.getUniqueId().equals(pet)) {
                         target.setPet((Tameable)entity);
@@ -26,7 +27,7 @@ public class PetCmd extends CommandHandler {
                     }
                 }
             }
-        } else if(numArgsHelp(3) && arg(0).equals("sell") && (target = matchesPlayer(arg(1))) != null && isOnline(target) && canRequest(target) && petSelected() != null && (price = isInteger(arg(2))) != -1) {
+        } else if(numArgsHelp(3) && arg(0).equals("sell") && (target = matchOnlinePlayer(arg(1))) != null && canRequest(target) && getPetId() != null && (price = getInteger(arg(2))) != -1) {
             UDSPlugin.addRequest(target.getName(), new Request(player(), RequestType.PET, price, target));
             player().sendMessage(Message.REQUEST_SENT);
             target.sendNormal(player().getNick() + " wants to sell their pet to you for " + price + " " + Config.CURRENCIES + ".");

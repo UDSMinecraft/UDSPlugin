@@ -10,10 +10,11 @@ import org.bukkit.event.block.*;
 import org.bukkit.util.Vector;
 
 /**
- * Event fired a piston extends.
+ * Fired when a piston extends.
  * Checks that the piston involved in this event does not push a block across a
  * region boundary into another region. The correct {@link RegionFlag} will
  * allow a region to have its boundaries ignored in this particular check.
+ * 
  * @author UndeadScythes
  */
 public class BlockPistonExtend extends ListenerWrapper implements Listener {

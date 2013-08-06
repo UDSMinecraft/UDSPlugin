@@ -6,12 +6,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * When a player leaves the server.
+ * Fired when a player leaves the server.
+ * 
  * @author UndeadScythes
  */
 public class PlayerQuit implements Listener {
     @EventHandler
-    public void onEvent(final PlayerQuitEvent event) {
+    public final void onEvent(final PlayerQuitEvent event) {
         final String name = event.getPlayer().getName();
         final SaveablePlayer player = PlayerUtils.getOnlinePlayer(name);
         final long time = player.getLastPlayed();

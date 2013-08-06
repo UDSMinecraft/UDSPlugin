@@ -7,7 +7,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * When a player interacts with an entity.
+ * Fired when a player interacts with an entity.
+ * 
  * @author UndeadScythes
  */
 public class PlayerInteractEntity extends ListenerWrapper implements Listener {

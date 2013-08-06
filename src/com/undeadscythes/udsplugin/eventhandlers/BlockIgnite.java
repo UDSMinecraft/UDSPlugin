@@ -7,12 +7,13 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 
 /**
- * A block sets on fire.
+ * Fired when a block sets on fire.
+ * 
  * @author UndeadScythes
  */
 public class BlockIgnite extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final BlockIgniteEvent event) {
+    public final void onEvent(final BlockIgniteEvent event) {
         if((event.getCause().equals(IgniteCause.FLINT_AND_STEEL) || event.getCause().equals(IgniteCause.FIREBALL))) {
             final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
             if(!player.canBuildHere(event.getBlock().getLocation())) {

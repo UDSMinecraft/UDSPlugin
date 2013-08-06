@@ -9,6 +9,7 @@ import org.bukkit.util.Vector;
 
 /**
  * A nether portal that goes elsewhere.
+ * 
  * @author UndeadScythes
  */
 public class Portal implements Saveable {
@@ -24,10 +25,11 @@ public class Portal implements Saveable {
         this.name = name;
         this.warp = warp;
         this.world = world;
-        this.min = RegionUtils.floor(Vector.getMinimum(v1, v2));
-        this.max = RegionUtils.floor(Vector.getMaximum(v1, v2));
+        this.min = VectorUtils.getFlooredVector(Vector.getMinimum(v1, v2));
+        this.max = VectorUtils.getFlooredVector(Vector.getMaximum(v1, v2));
     }
     
+    @SuppressWarnings("fallthrough")
     public Portal(final String record) {
         final String[] recordSplit = record.split("\t");
         switch (recordSplit.length) {
@@ -38,8 +40,8 @@ public class Portal implements Saveable {
                 warp = WarpUtils.getWarp(recordSplit[1]);
                 portalLink = recordSplit[2];
                 world = Bukkit.getWorld(recordSplit[3]);
-                min = RegionUtils.getBlockPos(recordSplit[4]);
-                max = RegionUtils.getBlockPos(recordSplit[5]);
+                min = VectorUtils.getVector(recordSplit[4]);
+                max = VectorUtils.getVector(recordSplit[5]);
         }
     }
 
@@ -104,7 +106,7 @@ public class Portal implements Saveable {
             if(portal != null) {
                 final Vector half = portal.getV2().clone().subtract(portal.getV1()).multiply(0.5);
                 final Location mid = portal.getV1().clone().add(half).add(new Vector(0.5, 0, 0.5)).toLocation(portal.getWorld());
-                final Location to = Warp.findFloor(mid);
+                final Location to = LocationUtils.findFloor(mid);
                 to.setYaw(portal.getYaw());
                 player.teleport(to);
                 player.setFlying(false);
@@ -119,7 +121,7 @@ public class Portal implements Saveable {
             if(portal != null) {
                 final Vector half = portal.getV2().clone().subtract(portal.getV1()).multiply(0.5);
                 final Location mid = portal.getV1().clone().add(half).add(new Vector(0.5, 0, 0.5)).toLocation(portal.getWorld());
-                entity.teleport(Warp.findFloor(mid));
+                entity.teleport(LocationUtils.findFloor(mid));
             }
         } else {
             entity.teleport(warp.getLocation());
@@ -141,7 +143,7 @@ public class Portal implements Saveable {
     }
     
     public final void linkPortal() {
-        if(!portalLink.equals("")) {
+        if(!portalLink.isEmpty()) {
             setPortal(PortalUtils.getPortal(portalLink));
         }
     }

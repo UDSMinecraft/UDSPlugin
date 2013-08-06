@@ -5,22 +5,15 @@ import java.io.*;
 import java.util.logging.*;
 
 /**
- * Threaded class to run scheduled functions for maintenance.
+ * Scheduled task to save configuration and object data.
+ * 
  * @author UndeadScythes
  */
 public class AutoSave implements Runnable {
-    /**
-     * Initiates the timer.
-     * @param plugin The UDSPlugin.
-     * @param interval The interval between passes.
-     */
     public AutoSave() {}
 
-    /**
-     * The function that will be used on each schedule.
-     */
     @Override
-    public void run() {
+    public final void run() {
         try {
             UDSPlugin.saveFiles();
         } catch (IOException ex) {

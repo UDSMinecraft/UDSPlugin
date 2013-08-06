@@ -7,7 +7,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * When a piston retracts.
+ * Fired when a piston retracts.
+ * 
  * @author UndeadScythes
  */
 public class BlockPistonRetract extends ListenerWrapper implements Listener {

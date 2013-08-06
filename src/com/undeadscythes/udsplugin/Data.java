@@ -8,13 +8,13 @@ import org.bukkit.configuration.file.*;
 
 /**
  * Custom configuration yaml for settings designed to be changed in-game.
+ * 
  * @author UndeadScythes
  */
 public class Data {
     private FileConfiguration dataConfig = null;
     private final File dataFile = new File("plugins/UDSPlugin/data.yml");;
     private final UDSPlugin plugin;
-
     private Location spawn;
     private long enderDeath;
     private long lastDaily;
@@ -24,7 +24,7 @@ public class Data {
         this.plugin = plugin;
     }
 
-    public void reloadData() {
+    public final void reloadData() {
         dataConfig = YamlConfiguration.loadConfiguration(dataFile);
         final InputStream defaultStream = plugin.getResource("data.yml");
         if(defaultStream != null) {
@@ -37,14 +37,14 @@ public class Data {
         worlds = dataConfig.getStringList("worlds");
     }
 
-    public FileConfiguration getData() {
+    public final FileConfiguration getData() {
         if(dataConfig == null) {
             this.reloadData();
         }
         return dataConfig;
     }
 
-    public void saveData() {
+    public final void saveData() {
         if(dataConfig == null || dataFile == null) {
             return;
         }
@@ -55,13 +55,13 @@ public class Data {
         }
     }
 
-    public void saveDefaultData() {
+    public final void saveDefaultData() {
         if(!dataFile.exists()) {
             this.plugin.saveResource("data.yml", false);
         }
     }
 
-    public void setSpawn(final Location location) {
+    public final void setSpawn(final Location location) {
         spawn = location;
         dataConfig.set("spawn.world", location.getWorld().getName());
         dataConfig.set("spawn.x", location.getX());
@@ -71,33 +71,33 @@ public class Data {
         dataConfig.set("spawn.yaw", location.getYaw());
     }
 
-    public Location getSpawn() {
+    public final Location getSpawn() {
         return spawn;
     }
 
-    public void setLastEnderDeath(final long lastDeath) {
+    public final void setLastEnderDeath(final long lastDeath) {
         enderDeath = lastDeath;
         dataConfig.set("ender-death", enderDeath);
     }
 
-    public void setLastDaily() {
+    public final void setLastDaily() {
         lastDaily = System.currentTimeMillis();
         dataConfig.set("last-daily", lastDaily);
     }
 
-    public long getLastEnderDeath() {
+    public final long getLastEnderDeath() {
         return enderDeath;
     }
 
-    public long getLastDaily() {
+    public final long getLastDaily() {
         return lastDaily;
     }
 
-    public List<String> getWorlds() {
-        return worlds;
+    public final List<String> getWorlds() {
+        return worlds; //TODO: Fix me!
     }
 
-    public void newWorld(final String world) {
+    public final void newWorld(final String world) {
         worlds.add(world);
         dataConfig.set("worlds", worlds);
     }

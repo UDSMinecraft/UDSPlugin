@@ -10,12 +10,13 @@ import javax.mail.internet.*;
 
 
 /**
- * Toggles the admin chat channel.
+ * Submit a ticket to the email address supplied in the config.
+ * 
  * @author UndeadScythes
  */
 public class TicketCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(argsLength() == 0) {
             player().sendError("You cannot send a blank ticket.");
         } else {

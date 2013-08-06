@@ -4,11 +4,12 @@ import com.undeadscythes.udsplugin.*;
 
 /**
  * Set up a private chat room.
+ * 
  * @author UndeadScythes
  */
 public class PrivateCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(numArgsHelp(1)) {
             final ChatRoom chatRoom = UDSPlugin.getChatRoom(arg(0));
             if(chatRoom == null) {

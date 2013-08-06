@@ -11,6 +11,7 @@ import org.bukkit.inventory.*;
  * Fired when a player clicks in an inventory window.
  * If the player is in 'shopping mode' then we edit their shopping list
  * accordingly.
+ * 
  * @author UndeadScythes
  */
 public class InventoryClick extends ListenerWrapper implements Listener {

@@ -1,12 +1,12 @@
 package com.undeadscythes.udsplugin;
 
 import org.bukkit.*;
-import org.bukkit.block.*;
 import org.bukkit.util.*;
 
 
 /**
  * A clone of an area of blocks in a world.
+ * 
  * @author UndeadScythes
  */
 public class BlockBox extends Cuboid {
@@ -20,13 +20,6 @@ public class BlockBox extends Cuboid {
     final private int pz;
     final private MiniBlock[][][] blocks;
 
-    /**
-     *
-     * @param world
-     * @param v1
-     * @param v2
-     * @param pov
-     */
     public BlockBox(final World world, final Vector v1, final Vector v2, final Vector pov) {
         setWorld(world);
         setV1(Vector.getMinimum(v1, v2));
@@ -49,32 +42,18 @@ public class BlockBox extends Cuboid {
         offset = getV1().clone().subtract(blockify(pov));
     }
 
-    /**
-     *
-     * @param vector
-     * @return
-     */
-    private final Vector blockify(final Vector vector) {
+    private Vector blockify(final Vector vector) {
         return new Vector(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
     }
 
-    /**
-     *
-     * @param world
-     * @param place
-     * @return
-     */
-    public BlockBox offset(final World world, final Vector place) {
+    public final BlockBox offset(final World world, final Vector place) {
         final Vector min = blockify(place).add(offset);
         final BlockBox undo = new BlockBox(world, min, min.clone().add(diagonal), blockify(place));
         place(world, min);
         return undo;
     }
 
-    /**
-     *
-     */
-    public void revert() {
+    public final void revert() {
         for(int x = 0; x < dx; x++) {
             for(int y = 0; y < dy; y++) {
                 for(int z= 0; z < dz; z++) {
@@ -84,13 +63,7 @@ public class BlockBox extends Cuboid {
         }
     }
 
-    /**
-     *
-     * @param world
-     * @param place
-     * @return
-     */
-    public BlockBox place(final World world, final Vector place) {
+    public final BlockBox place(final World world, final Vector place) {
         final BlockBox undo = new BlockBox(world, place, place.clone().add(diagonal), new Vector());
         final int nx = place.getBlockX();
         final int ny = place.getBlockY();
@@ -103,18 +76,5 @@ public class BlockBox extends Cuboid {
             }
         }
         return undo;
-    }
-}
-class MiniBlock {
-    private final int type;
-    private final byte data;
-
-    public MiniBlock(final Block block) {
-        type = block.getTypeId();
-        data = block.getData();
-    }
-
-    public void replace(final Block block) {
-        block.setTypeIdAndData(type, data, true);
     }
 }

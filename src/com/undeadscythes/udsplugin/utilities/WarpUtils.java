@@ -5,28 +5,25 @@ import java.io.*;
 import java.util.*;
 
 /**
- *
+ * Utility class for handling manipulation of {@link Warp} objects.
+ * 
  * @author UndeadScythes
  */
 public class WarpUtils {
-    /**
-     * File name of warp file.
-     */
-    public static final String PATH = "warps.csv";
-
-    private static SaveableHashMap<Warp> WARPS = new SaveableHashMap<Warp>();
+    private static final String FILENAME = "warps.csv";
+    private static final SaveableHashMap<Warp> WARPS = new SaveableHashMap<Warp>();
 
     public static int numWarps() {
         return WARPS.size();
     }
     
-    public static void saveWarps(final File path) throws IOException {
-        WARPS.save(path + File.separator + PATH);
+    public static void saveWarps(final File parent) throws IOException {
+        WARPS.save(parent + File.separator + FILENAME);
     }
     
-    public static void loadWarps(final File path) throws IOException {
+    public static void loadWarps(final File parent) throws IOException {
         try {
-            final BufferedReader file = new BufferedReader(new FileReader(path + File.separator + PATH));
+            final BufferedReader file = new BufferedReader(new FileReader(parent + File.separator + FILENAME));
             String nextLine;
             while((nextLine = file.readLine()) != null) {
                 WARPS.put(nextLine.split("\t")[0], new Warp(nextLine));
@@ -35,10 +32,6 @@ public class WarpUtils {
         } catch (FileNotFoundException ex) {}
     }
     
-    /**
-     * Grab and cast the warps map.
-     * @return Warps map.
-     */
     public static Collection<Warp> getWarps() {
         return WARPS.values();
     }
@@ -47,8 +40,8 @@ public class WarpUtils {
         return WARPS.get(name);
     }
     
-    public static Warp matchWarp(final String name) {
-        return WARPS.matchKey(name);
+    public static Warp matchWarp(final String partial) {
+        return WARPS.matchKey(partial);
     }
     
     public static void addWarp(final Warp warp) {

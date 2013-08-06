@@ -6,6 +6,7 @@ import org.bukkit.inventory.*;
 
 /**
  * A purchasable kit of items.
+ * 
  * @author UndeadScythes
  */
 public class Kit {
@@ -14,13 +15,6 @@ public class Kit {
     private final List<ItemStack> items;
     private final PlayerRank rank;
 
-    /**
-     * Initialise a brand new kit.
-     * @param name Name of kit.
-     * @param price Price of kit.
-     * @param items Items contained in kit.
-     * @param rank Rank required to purchase kit.
-     */
     public Kit(final String name, final int price, final List<ItemStack> items, final PlayerRank rank) {
         this.name = name;
         this.price = price;
@@ -28,35 +22,19 @@ public class Kit {
         this.rank = rank;
     }
 
-    /**
-     * Get the name of this kit.
-     * @return The name of the kit.
-     */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    /**
-     * Get the price of this kit.
-     * @return The price of this kit.
-     */
-    public int getPrice() {
+    public final int getPrice() {
         return price;
     }
 
-    /**
-     * Get the rank required to purchase this kit.
-     * @return Player rank of kit.
-     */
-    public PlayerRank getRank() {
+    public final PlayerRank getRank() {
         return rank;
     }
 
-    /**
-     * Get the items contained in this kit.
-     * @return Kit items.
-     */
-    public List<ItemStack> getItems() {
+    public final List<ItemStack> getItems() {
         return items;
     }
 }

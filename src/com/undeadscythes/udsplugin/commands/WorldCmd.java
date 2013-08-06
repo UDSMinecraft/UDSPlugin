@@ -7,7 +7,8 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 
 /**
- * Handles various MultiVerse-like functions.
+ * Handles the various multi-world operations.
+ * 
  * @author UndeadScythes
  */
 public class WorldCmd extends CommandHandler {
@@ -29,7 +30,7 @@ public class WorldCmd extends CommandHandler {
                     player().sendError("Could not set spawn location.");
                 }
             } else if(subCmdEquals("info")) {
-                info(player().getWorld());
+                sendInfo(player().getWorld());
             } else {
                 subCmdHelp();
             }
@@ -42,7 +43,7 @@ public class WorldCmd extends CommandHandler {
                     player().sendError("That world does not exist.");
                 }
             } else if(subCmdEquals("create")) {
-                if(noBadLang(arg(1)) && noWorld(arg(1))) {
+                if(noBadLang(arg(1)) && noWorldExists(arg(1))) {
                     player().sendNormal("Generating spawn area...");
                     Bukkit.createWorld(new WorldCreator(arg(1)));
                     UDSPlugin.getData().newWorld(arg(1));
@@ -80,12 +81,12 @@ public class WorldCmd extends CommandHandler {
             } else if(subCmdEquals("info")) {
                 final World world = getWorld(arg(1));
                 if(world != null) {
-                    info(world);
+                    sendInfo(world);
                 }
             } else if(subCmdEquals("flag")) {
-                flag(player().getWorld(), arg(1));
+                setFlag(player().getWorld(), arg(1));
             } else if(subCmdEquals("mode")) {
-                mode(player().getWorld(), arg(1));
+                setMode(player().getWorld(), arg(1));
             } else {
                 subCmdHelp();
             }
@@ -93,12 +94,12 @@ public class WorldCmd extends CommandHandler {
             if(subCmdEquals("flag")) {
                 final World world = getWorld(arg(1));
                 if(world != null) {
-                    flag(world, arg(2));
+                    setFlag(world, arg(2));
                 }
             } else if(subCmdEquals("mode")) {
                 final World world = getWorld(arg(1));
                 if(world != null) {
-                    mode(world, arg(2));
+                    setMode(world, arg(2));
                 }
             } else {
                 subCmdHelp();
@@ -106,7 +107,7 @@ public class WorldCmd extends CommandHandler {
         }
     }
     
-    private void info(final World world) {
+    private void sendInfo(final World world) {
         player().sendNormal("World " + world.getName() + " info:");
         player().sendText("Game mode: " + UDSPlugin.getWorldMode(world).toString().toLowerCase());
         String flagString = "";
@@ -122,15 +123,15 @@ public class WorldCmd extends CommandHandler {
         }
     }
     
-    private void flag(final World world, final String flagName) {
-        final WorldFlag flag = worldFlagExists(flagName);
+    private void setFlag(final World world, final String flagName) {
+        final WorldFlag flag = getWorldFlag(flagName);
         if(flag != null) {
             player().sendNormal(world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }
     }
     
-    private void mode(final World world, final String modeName) {
-        final GameMode mode = getMode(modeName);
+    private void setMode(final World world, final String modeName) {
+        final GameMode mode = getGameMode(modeName);
         if(mode != null) {
             UDSPlugin.changeWorldMode(world, mode);
             player().sendNormal(world.getName() + " game mode now set to " + mode.toString() + ".");
@@ -150,8 +151,8 @@ public class WorldCmd extends CommandHandler {
         return file.delete();
     }
 
-    private boolean noWorld(final String world) {
-        if(Bukkit.getWorld(world) != null) {
+    private boolean noWorldExists(final String name) {
+        if(Bukkit.getWorld(name) != null) {
             player().sendError("A world already exists with that name.");
             return false;
         } else {
@@ -167,7 +168,7 @@ public class WorldCmd extends CommandHandler {
         return world;
     }
     
-    private GameMode getMode(final String name) {
+    private GameMode getGameMode(final String name) {
         GameMode mode = null;
         for(GameMode test : GameMode.values()) {
             if(test.toString().equals(name.toUpperCase())) {

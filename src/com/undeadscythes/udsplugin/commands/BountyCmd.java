@@ -7,22 +7,23 @@ import java.util.*;
 
 /**
  * Place and check bounties on players.
+ * 
  * @author UndeadScythes
  */
 public class BountyCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         int bounty;
 
         SaveablePlayer target;
         if(argsLength() == 0) {
             sendPage(1, player());
         } else if(argsLength() == 1) {
-            final int page = isInteger(arg(0));
+            final int page = getInteger(arg(0));
             if(page > -1) {
                 sendPage(page, player());
             }
-        } else if(numArgsHelp(2) && (target = matchesOtherPlayer(arg(0))) != null && (bounty = canAfford(arg(1))) != -1) {
+        } else if(numArgsHelp(2) && (target = matchOtherPlayer(arg(0))) != null && (bounty = canAfford(arg(1))) != -1) {
             player().debit(bounty);
             target.addBounty(bounty);
             UDSPlugin.sendBroadcast(player().getNick() + " placed a bounty on " + target.getNick() + ".");

@@ -8,15 +8,16 @@ import org.bukkit.util.Vector;
 
 /**
  * City related commands.
+ * 
  * @author UndeadScythes
  */
 public class CityCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         Region city;
         if(argsLength() == 1) {
             if(subCmdEquals("set")) {
-                if((city = isInCity()).getType() == RegionType.CITY && ownsCity(city.getName()) != null) {
+                if((city = getCurrentCity()).getType() == RegionType.CITY && getCity(city.getName()) != null) {
                     city.setWarp(player().getLocation());
                     player().sendNormal("City spawn point set.");
                 }
@@ -42,7 +43,7 @@ public class CityCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("leave")) {
-                if((city = matchesCity(arg(1))) != null && notMayor(city)) {
+                if((city = matchCity(arg(1))) != null && notMayor(city)) {
                     if(city.delMember(player())) {
                         player().sendNormal("You have left " + city.getName() + ".");
                     } else {
@@ -50,15 +51,15 @@ public class CityCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("warp")) {
-                if((city = matchesCity(arg(1))) != null && notJailed() && notPinned()) {
+                if((city = matchCity(arg(1))) != null && notJailed() && notPinned()) {
                     player().quietTeleport(city.getWarp());
                 }
             } else if(subCmdEquals("list")) {
-                if((page = isInteger(arg(1))) != -1) {
+                if((page = getInteger(arg(1))) != -1) {
                     sendPage(page, player());
                 }
             } else if(subCmdEquals("clear")) {
-                if((city = ownsCity(arg(1))) != null) {
+                if((city = getCity(arg(1))) != null) {
                     RegionUtils.removeRegion(city);
                     UDSPlugin.sendBroadcast(city.getName() + " has been abandoned.");
                 }
@@ -68,7 +69,7 @@ public class CityCmd extends CommandHandler {
         } else if(numArgsHelp(3)) {
             SaveablePlayer target;
             if(subCmdEquals("invite")) {
-                if((city = ownsCity(arg(1))) != null && (target = matchesPlayer(arg(2))) != null) {
+                if((city = getCity(arg(1))) != null && (target = matchPlayer(arg(2))) != null) {
                     if(city.addMember(target)) {
                         player().sendNormal(target.getNick() + " was added as a citizen of " + city.getName() + ".");
                         target.sendNormal("You have been added as a citizen of " + city.getName());
@@ -77,7 +78,7 @@ public class CityCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("banish")) {
-                if((city = ownsCity(arg(1))) != null && (target = matchesPlayer(arg(2))) != null) {
+                if((city = getCity(arg(1))) != null && (target = matchPlayer(arg(2))) != null) {
                     if(city.delMember(target)) {
                         player().sendNormal(target.getNick() + " has been banished from " + city.getName() + ".");
                         target.sendNormal("You have been banished from " + city.getName() + ".");
@@ -87,7 +88,7 @@ public class CityCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("mayor")) {
-                if((city = ownsCity(arg(1))) != null && (target = matchesPlayer(arg(2))) != null) {
+                if((city = getCity(arg(1))) != null && (target = matchPlayer(arg(2))) != null) {
                     city.addMember(city.getOwner());
                     city.delMember(target);
                     city.changeOwner(target);

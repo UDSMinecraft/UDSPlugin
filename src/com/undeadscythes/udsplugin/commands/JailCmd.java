@@ -5,6 +5,7 @@ import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * Jail a player.
+ * 
  * @author UndeadScythes
  */
 public class JailCmd extends CommandHandler {
@@ -29,16 +30,16 @@ public class JailCmd extends CommandHandler {
     }
     
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
         if(minArgsHelp(1) && maxArgsHelp(3)) {
-            if((target = matchesPlayer(arg(0))) != null && isOnline(target) && notSelf(target) && notJailed(target)) {
+            if((target = matchOnlinePlayer(arg(0))) != null && notSelf(target) && notJailed(target)) {
                 long sentence = 5;
                 int bail = 1000;
                 if(argsLength() > 1) {
-                    sentence = isInteger(arg(1));
+                    sentence = getInteger(arg(1));
                     if(argsLength() > 2) {
-                        bail = isInteger(arg(2));
+                        bail = getInteger(arg(2));
                     }
                 }
                 if(sentence > -1 && bail > -1) {

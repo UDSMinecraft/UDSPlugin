@@ -3,12 +3,13 @@ package com.undeadscythes.udsplugin.commands;
 import org.bukkit.*;
 
 /**
- * Give a description of the players surroundings.
+ * Gives a description of the players surroundings.
+ * 
  * @author UndeadScythes
  */
 public class WhereCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         final Location playerLocation = player().getLocation();
         final Location spawnLocation = player().getWorld().getSpawnLocation();
         final int distance = (int)playerLocation.distance(spawnLocation);

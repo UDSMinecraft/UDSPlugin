@@ -6,12 +6,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.vehicle.*;
 
 /**
- * When a vehicle collides with an entity.
+ * Fire when a vehicle collides with an entity.
+ * 
  * @author UndeadScythes
  */
 public class VehicleEntityCollision extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final VehicleEntityCollisionEvent event) {
+    public final void onEvent(final VehicleEntityCollisionEvent event) {
         final Vehicle vehicle = event.getVehicle();
         if(vehicle instanceof Minecart) {
             final Minecart cart = (Minecart)vehicle;

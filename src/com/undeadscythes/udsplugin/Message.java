@@ -2,6 +2,7 @@ package com.undeadscythes.udsplugin;
 
 /**
  * Messages commonly used in the plugin.
+ * 
  * @author UndeadScythes
  */
 public class Message {

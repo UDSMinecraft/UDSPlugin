@@ -8,12 +8,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Triggered when a player teleports.
+ * Fired when a player teleports.
+ * 
  * @author UndeadScythes
  */
 public class PlayerTeleport extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final PlayerTeleportEvent event) {
+    public final void onEvent(final PlayerTeleportEvent event) {
         final World from = event.getFrom().getWorld();
         final World to = event.getTo().getWorld();
         if(from == null || to == null) {

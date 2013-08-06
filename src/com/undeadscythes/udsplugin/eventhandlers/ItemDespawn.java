@@ -8,12 +8,13 @@ import org.bukkit.event.entity.*;
 import org.bukkit.inventory.*;
 
 /**
- * An item despawns.
+ * Fired when an item despawns.
+ * 
  * @author UndeadScythes
  */
 public class ItemDespawn extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final ItemDespawnEvent event) {
+    public final void onEvent(final ItemDespawnEvent event) {
         final ItemStack item = event.getEntity().getItemStack();
         if(item.getType().equals(Material.SAPLING)) {
             final Location location = event.getLocation();

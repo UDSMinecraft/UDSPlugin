@@ -5,6 +5,7 @@ import org.bukkit.inventory.*;
 
 /**
  * Spawn items into the players inventory.
+ * 
  * @author UndeadScythes
  */
 public class ICmd extends CommandHandler {
@@ -12,11 +13,11 @@ public class ICmd extends CommandHandler {
     public final void playerExecute() {
         if(minArgsHelp(1) && maxArgsHelp(2)) {
             ItemStack item;
-            if((item = itemExists(arg(0))) != null) {
+            if((item = getItem(arg(0))) != null) {
                 int amount;
                 if(argsLength() == 1) {
                     item.setAmount(item.getMaxStackSize());
-                } else if((amount = isInteger(arg(1))) != -1) {
+                } else if((amount = getInteger(arg(1))) != -1) {
                     item.setAmount(amount);
                 }
                 if(player().hasPermission(Perm.I_ADMIN)) {
