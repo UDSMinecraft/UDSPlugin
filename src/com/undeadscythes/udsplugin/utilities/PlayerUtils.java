@@ -5,27 +5,22 @@ import java.io.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.configuration.file.*;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 
 /**
- *
+ * Utility class for handling manipulations with {@link SaveablePlayer} objects.
+ * 
  * @author UndeadScythes
  */
 public class PlayerUtils {
-    /**
-     * File name of player file.
-     */
-    private static final String PATH = "players.csv";
-    private static SaveableHashMap<SaveablePlayer> PLAYERS = new SaveableHashMap<SaveablePlayer>();
+    private static final String FILENAME = "players.csv";
+    private static final SaveableHashMap<SaveablePlayer> PLAYERS = new SaveableHashMap<SaveablePlayer>();
     private static final SaveableHashMap<SaveablePlayer> HIDDEN_PLAYERS = new SaveableHashMap<SaveablePlayer>();
     private static final SaveableHashMap<SaveablePlayer> ONLINE_PLAYERS = new SaveableHashMap<SaveablePlayer>();
     private static final SaveableHashMap<SaveablePlayer> VIPS = new SaveableHashMap<SaveablePlayer>();
-    private static final HashMap<World, YamlConfig> inventories = new HashMap<World, YamlConfig>(3);
+    private static final HashMap<World, YamlConfig> INVENTORIES = new HashMap<World, YamlConfig>(3);
 
-    /**
-     * Grab and cast the players map.
-     * @return Players map.
-     */
     public static Collection<SaveablePlayer> getPlayers() {
         return PLAYERS.values();
     }
@@ -34,8 +29,8 @@ public class PlayerUtils {
         return PLAYERS.get(name);
     }
     
-    public static List<SaveablePlayer> getSortedPlayers(final Comparator<SaveablePlayer> comp) {
-        return PLAYERS.getSortedValues(comp);
+    public static List<SaveablePlayer> getSortedPlayers(final Comparator<SaveablePlayer> comparator) {
+        return PLAYERS.getSortedValues(comparator);
     }
     
     public static SaveablePlayer matchPlayer(final String partial) {
@@ -46,7 +41,7 @@ public class PlayerUtils {
         PLAYERS.put(player.getName(), player);
     }
     
-    public static boolean existingPlayer(final String name) {
+    public static boolean playerExists(final String name) {
         return PLAYERS.containsKey(name);
     }
     
@@ -54,18 +49,10 @@ public class PlayerUtils {
         return PLAYERS.size();
     }
 
-    /**
-     * Grab the VIPs map.
-     * @return VIPs map.
-     */
     public static Collection<SaveablePlayer> getVips() {
         return VIPS.values();
     }
 
-    /**
-     * Grab the hidden players map.
-     * @return Hidden players map.
-     */
     public static Collection<SaveablePlayer> getHiddenPlayers() {
         return HIDDEN_PLAYERS.values();
     }
@@ -78,16 +65,16 @@ public class PlayerUtils {
         HIDDEN_PLAYERS.remove(name);
     }
 
-    /**
-     * Grab the online players map.
-     * @return Online players map.
-     */
     public static Collection<SaveablePlayer> getOnlinePlayers() {
         return ONLINE_PLAYERS.values();
     }
     
     public static SaveablePlayer getOnlinePlayer(final String name) {
         return ONLINE_PLAYERS.get(name);
+    }
+    
+    public static SaveablePlayer getOnlinePlayer(final Player player) {
+        return ONLINE_PLAYERS.get(player.getName());
     }
     
     public static SaveablePlayer matchOnlinePlayer(final String partial) {
@@ -102,16 +89,16 @@ public class PlayerUtils {
         return ONLINE_PLAYERS.remove(name);
     }
     
-    public static void savePlayers(final File path) throws IOException {
-        PLAYERS.save(path + File.separator + PATH);
-        for(final YamlConfig config : inventories.values()) {
+    public static void savePlayers(final File parent) throws IOException {
+        PLAYERS.save(parent + File.separator + FILENAME);
+        for(final YamlConfig config : INVENTORIES.values()) {
             config.save();
         }
     }
     
-    public static void loadPlayers(final File path) throws IOException {
+    public static void loadPlayers(final File parent) throws IOException {
         try {
-            final BufferedReader file = new BufferedReader(new FileReader(path + File.separator + PATH));
+            final BufferedReader file = new BufferedReader(new FileReader(parent + File.separator + FILENAME));
             String nextLine;
             while((nextLine = file.readLine()) != null) {
                 final SaveablePlayer player = new SaveablePlayer(nextLine);
@@ -123,26 +110,24 @@ public class PlayerUtils {
             file.close();
         } catch (FileNotFoundException ex) {}
         for(final World world : Bukkit.getWorlds()) {
-            inventories.put(world, new YamlConfig(UDSPlugin.DATA_PATH + "/inventories/" + world.getName() + ".yml"));
-            inventories.get(world).load();
+            INVENTORIES.put(world, new YamlConfig(UDSPlugin.DATA_PATH + "/inventories/" + world.getName() + ".yml"));
+            INVENTORIES.get(world).load();
         }
     }
     
     public static void saveInventory(final SaveablePlayer player, final World world) {
-        final FileConfiguration config = inventories.get(world).get();
+        final FileConfiguration config = INVENTORIES.get(world).getConfig();
         config.set(player.getName() + ".inventory", player.getInventory().getContents());
         config.set(player.getName() + ".armor", player.getInventory().getArmorContents());
     }
     
-    @SuppressWarnings("unchecked")
     public static void loadInventory(final SaveablePlayer player, final World world) {
-        final FileConfiguration config = inventories.get(world).get();
+        final FileConfiguration config = INVENTORIES.get(world).getConfig();
         if(config.contains(player.getName() + ".inventory") && config.contains(player.getName() + ".armor")) {
             player.getInventory().setContents((ItemStack[])config.get(player.getName() + ".inventory"));
             player.getInventory().setArmorContents((ItemStack[])config.get(player.getName() + ".armor"));
-        } else if(config.contains(player.getName()) && config.contains(player.getName() + "-armor")) {  // TODO: Phase out use of this type.
-            player.getInventory().setContents((ItemStack[])((ArrayList)config.get(player.getName())).toArray(new ItemStack[0]));
-            player.getInventory().setArmorContents((ItemStack[])((ArrayList)config.get(player.getName() + "-armor")).toArray(new ItemStack[0]));
+        } else {
+            player.getInventory().clear(-1, -1);
         }
     }
     
@@ -154,7 +139,7 @@ public class PlayerUtils {
         loadInventory(player, player.getWorld());
     }
     
-    public static int numActives() {
+    public static int numActivePlayers() {
         int count = 0;
         for(final SaveablePlayer player : PLAYERS.values()) {
             count += player.isActive() ? 1 : 0;

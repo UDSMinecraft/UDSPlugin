@@ -1,16 +1,18 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.timers;
 
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 
 /**
- * Tracking entities and various properties.
+ * Scheduled task for tracking {@link org.bukkit.entity.Minecart} entities.
+ * 
  * @author UndeadScythes
  */
-public class EntityTracker {
-    private static final Set<OwnedMinecart> MINECARTS = new HashSet<OwnedMinecart>(0);
+public class MinecartCheck implements Runnable {
+    private static final HashSet<OwnedMinecart> MINECARTS = new HashSet<OwnedMinecart>(0);
 
     public static boolean minecartNear(final Location location) {
         for(OwnedMinecart minecart : MINECARTS) {
@@ -32,13 +34,13 @@ public class EntityTracker {
     }
 
     public static void tagMinecart(final SaveablePlayer player, final Location location) {
-        EntityTracker.addMinecart(location.getWorld().spawn(location.clone().add(0.5, 0.5, 0.5), Minecart.class), player);
+        addMinecart(location.getWorld().spawn(location.clone().add(0.5, 0.5, 0.5), Minecart.class), player);
     }
 
     public static void checkMinecarts() {
         for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
             final OwnedMinecart minecart = i.next();
-            if(minecart.isEmpty() && minecart.age(100) > Config.MINECART_TTL / TimeUtils.TICKS) {
+            if(minecart.isEmpty() && minecart.age(100) > Config.MINECART_TTL * TimeUtils.TICK) {
                 minecart.remove();
                 i.remove();
             }
@@ -46,7 +48,8 @@ public class EntityTracker {
     }
 
     public static void minecartRemoved(final UUID id) {
-        for(final Iterator<OwnedMinecart> i = MINECARTS.iterator(); i.hasNext();) {
+        final Iterator<OwnedMinecart> i = MINECARTS.iterator();
+        while(i.hasNext()) {
             final OwnedMinecart minecart = i.next();
             if(minecart.getUUID().equals(id)) {
                 i.remove();
@@ -73,5 +76,8 @@ public class EntityTracker {
         }
     }
 
-    private EntityTracker() {}
+    @Override
+    public final void run() {
+        checkMinecarts();
+    }
 }

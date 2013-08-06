@@ -6,16 +6,17 @@ import org.bukkit.inventory.*;
 
 /**
  * Shop related commands.
+ * 
  * @author UndeadScythes
  */
 public class ShopCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         Region shop;
         SaveablePlayer target;
         int price;
         if(argsLength() == 0) {
-            if((shop = ownsAShop()) != null && notJailed() && notPinned()) {
+            if((shop = getShop()) != null && notJailed() && notPinned()) {
                 player().teleport(shop.getWarp());
             }
         } else if(argsLength() == 1) {
@@ -24,7 +25,7 @@ public class ShopCmd extends CommandHandler {
                     player().performCommand("region set " + nextShopName() + " shop");
                 }
             } else if(subCmdEquals("clear")) {
-                if((shop = ownsAShop()) != null) {
+                if((shop = getShop()) != null) {
                     RegionUtils.renameRegion(shop, nextShopName());
                     shop.clearMembers();
                     shop.changeOwner(null);
@@ -32,7 +33,7 @@ public class ShopCmd extends CommandHandler {
                     player().credit(Config.SHOP_COST / 2);
                 }
             } else if(subCmdEquals("set")) {
-                if((shop = ownsAShop()) != null) {
+                if((shop = getShop()) != null) {
                     shop.setWarp(player().getLocation());
                     player().sendNormal("Shop warp point set.");
                 }
@@ -60,7 +61,7 @@ public class ShopCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("buy")) {
-                if((shop = isInShop()) != null && canAfford(Config.SHOP_COST) && isEmptyShop(shop)) {
+                if((shop = getCurrentShop()) != null && canAfford(Config.SHOP_COST) && isEmptyShop(shop)) {
                     player().debit(Config.SHOP_COST);
                     RegionUtils.renameRegion(shop, player().getName() + "shop");
                     shop.changeName(player().getName() + "shop");
@@ -88,12 +89,12 @@ public class ShopCmd extends CommandHandler {
                 player().sendText("Check out /shop sign to see how to format new shop signs.");
             } else if(subCmdEquals("help")) {
                 sendHelp(1);
-            } else if((target = matchesPlayer(arg(0))) != null && (shop = ownsAShop(target)) != null && notJailed() && notPinned()) {
+            } else if((target = matchPlayer(arg(0))) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {
                 player().teleport(shop.getWarp());
             }
         } else if(argsLength() == 2) {
             if(subCmdEquals("hire")) {
-                if((target = matchesPlayer(arg(1))) != null && (shop = ownsAShop()) != null) {
+                if((target = matchPlayer(arg(1))) != null && (shop = getShop()) != null) {
                     shop.addMember(target);
                     player().sendNormal(target.getNick() + " has been added as your worker.");
                     if(target.isOnline()) {
@@ -101,7 +102,7 @@ public class ShopCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("fire")) {
-                if((target = matchesPlayer(arg(1))) != null && (shop = ownsAShop()) != null && isWorker(target, shop)) {
+                if((target = matchPlayer(arg(1))) != null && (shop = getShop()) != null && isWorker(target, shop)) {
                     shop.delMember(target);
                     player().sendNormal(target.getNick() + " is no longer your worker.");
                     if(target.isOnline()) {
@@ -113,7 +114,7 @@ public class ShopCmd extends CommandHandler {
             }
         } else if(numArgsHelp(3)) {
             if(subCmdEquals("sell")) {
-                if((ownsAShop()) != null && (target = matchesPlayer(arg(1))) != null && canRequest(target) && isOnline(target) && (price = isInteger(arg(2))) != -1) {
+                if((getShop()) != null && (target = matchOnlinePlayer(arg(1))) != null && canRequest(target) && (price = getInteger(arg(2))) != -1) {
                     player().sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player().getNick() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

@@ -11,6 +11,7 @@ import org.bukkit.inventory.*;
 
 /**
  * Fired when an entity dies.
+ * 
  * @author UndeadScythes
  */
 public class EntityDeath extends ListenerWrapper implements Listener {

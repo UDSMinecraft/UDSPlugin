@@ -1,7 +1,8 @@
 package com.undeadscythes.udsplugin;
 
 /**
- *
+ * Ranks for players within clans.
+ * 
  * @author UndeadScythes
  */
 public enum ClanRank {
@@ -15,14 +16,14 @@ public enum ClanRank {
         this.rank = rank;
     }
 
-    public ClanRank next() {
+    public final ClanRank next() {
         if(this.equals(ClanRank.CAPTAIN) || this.equals(ClanRank.LEADER)) {
             return this;
         }
         return getByRank(this.rank + 1);
     }
 
-    public ClanRank prev() {
+    public final ClanRank prev() {
         if(this.equals(ClanRank.RECRUIT)) {
             return this;
         }
@@ -43,7 +44,7 @@ public enum ClanRank {
     }
     
     @Override
-    public String toString() {
+    public final String toString() {
         return name().toLowerCase();
     }
 }

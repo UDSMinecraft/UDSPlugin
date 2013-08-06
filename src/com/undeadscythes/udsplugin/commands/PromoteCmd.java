@@ -4,13 +4,14 @@ import com.undeadscythes.udsplugin.*;
 
 /**
  * Promote a player by a single rank.
+ * 
  * @author UndeadScythes
  */
 public class PromoteCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
-        if(numArgsHelp(1) && (target = matchesPlayer(arg(0))) != null && notSelf(target)) {
+        if(numArgsHelp(1) && (target = matchPlayer(arg(0))) != null && notSelf(target)) {
             PlayerRank rank;
             if(player().outRanks(target) && (rank = target.promote()) != null) {
                 player().sendNormal(target.getNick() + " has been promoted to " + rank.toString() + ".");

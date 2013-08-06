@@ -5,6 +5,7 @@ import java.util.*;
 
 /**
  * Get help on certain commands.
+ * 
  * @author UndeadScythes
  */
 public class HelpCmd extends CommandHandler {

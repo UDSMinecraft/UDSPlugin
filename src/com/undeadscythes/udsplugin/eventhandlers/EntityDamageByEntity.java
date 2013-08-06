@@ -7,7 +7,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * When one entity damages another.
+ * Fired when one entity damages another.
+ * 
  * @author UndeadScythes
  */
 public class EntityDamageByEntity extends ListenerWrapper implements Listener {

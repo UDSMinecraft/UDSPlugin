@@ -7,12 +7,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * When an entity interacts with a block.
+ * Fired when an entity interacts with the world.
+ * 
  * @author UndeadScythes
  */
 public class EntityInteract extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final EntityInteractEvent event) {
+    public final void onEvent(final EntityInteractEvent event) {
         final Block block = event.getBlock();
         event.setCancelled(hasFlag(block.getLocation(), RegionFlag.PROTECTION) && block.getType() == Material.SOIL);
     }

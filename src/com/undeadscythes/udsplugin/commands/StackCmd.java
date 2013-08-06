@@ -4,11 +4,12 @@ import org.bukkit.inventory.*;
 
 /**
  * Stack the items in the players inventory.
+ * 
  * @author UndeadScythes
  */
 public class StackCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         ItemStack[] items = player().getInventory().getContents();
         final int len = items.length;
         boolean affected = false;

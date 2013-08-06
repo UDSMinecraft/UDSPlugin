@@ -5,7 +5,8 @@ import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.entity.*;
 
 /**
- * Accept a request sent by another player.
+ * Allows a player to accept a request sent by another player.
+ * 
  * @author UndeadScythes
  */
 public class YCmd extends CommandHandler {
@@ -13,7 +14,7 @@ public class YCmd extends CommandHandler {
     public final void playerExecute() {
         Request request;
         SaveablePlayer sender;
-        if((request = hasRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {
+        if((request = getRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {
             int price;
             switch (request.getType()) {
                 case TP:
@@ -23,7 +24,7 @@ public class YCmd extends CommandHandler {
                     clanRequest(ClanUtils.getClan(request.getData()));
                     break;
                 case HOME:
-                    if(canAfford(price = Integer.parseInt(request.getData())) && noHome()) {
+                    if(canAfford(price = Integer.parseInt(request.getData())) && hasNoHome()) {
                         final Region home = RegionUtils.getRegion(RegionType.HOME, sender.getName() + "home");
                         home.clearMembers();
                         home.changeOwner(player());
@@ -56,7 +57,7 @@ public class YCmd extends CommandHandler {
                     }
                     break;
                 case SHOP:
-                    if(canAfford(price = Integer.parseInt(request.getData())) && noShop()) {
+                    if(canAfford(price = Integer.parseInt(request.getData())) && hasNoShop()) {
                         final Region shop = RegionUtils.getRegion(RegionType.SHOP, sender.getName() + "shop");
                         shop.clearMembers();
                         shop.changeOwner(player());

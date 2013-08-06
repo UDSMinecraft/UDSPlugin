@@ -8,12 +8,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.hanging.*;
 
 /**
- * When a painting gets broken.
+ * Fired when a painting or item frame gets broken.
+ * 
  * @author UndeadScythes
  */
 public class HangingBreak extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final HangingBreakByEntityEvent event) {
+    public final void onEvent(final HangingBreakByEntityEvent event) {
         final Entity remover = event.getRemover();
         final Location location = event.getEntity().getLocation();
         if(getAbsoluteEntity(remover) instanceof Player) {

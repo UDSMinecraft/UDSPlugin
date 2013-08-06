@@ -1,9 +1,8 @@
 package com.undeadscythes.udsplugin;
 
-import org.apache.commons.lang.*;
-
 /**
  * Region type.
+ * 
  * @author UndeadScythes
  */
 public enum RegionType {
@@ -16,14 +15,9 @@ public enum RegionType {
     CITY,
     PLOT;
 
-    /**
-        * Get a region type by name.
-        * @param string Name of region type.
-        * @return The region type or <code>null</code> if there was no match.
-        */
     public static RegionType getByName(final String string) {
         if(string.equalsIgnoreCase("normal")) {     //
-            return GENERIC;                         // Update hack fix
+            return GENERIC;                         // TODO: Fix me - Update hack fix
         }                                           //
         for(RegionType type : values()) {
             if(type.name().equals(string.toUpperCase())) {
@@ -34,7 +28,7 @@ public enum RegionType {
     }
 
     @Override
-    public String toString() {
-        return StringUtils.capitalize(name().toLowerCase());
+    public final String toString() {
+        return name().toLowerCase();
     }
 }

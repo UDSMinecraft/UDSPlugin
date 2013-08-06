@@ -4,28 +4,17 @@ import org.bukkit.*;
 
 /**
  * An extension of the base world class adding various WE-like methods.
+ * 
  * @author UndeadScythes
  */
 public class EditableWorld {
     private final World base;
 
-    /**
-     * Wrap an existing world with these lovely extra methods.
-     * @param world World to wrap.
-     */
     public EditableWorld(final World world) {
         base = world;
     }
 
-    /**
-     * Build a tower of blocks in the world with an optinoal topper.
-     * @param x X coordinate of tower.
-     * @param z Z coordinate of tower.
-     * @param height Height of tower.
-     * @param material Material to make the main tower out of.
-     * @param topper Block to place on top, <code>null</code> if none required.
-     */
-    public void buildTower(final int x, final int z, final int height, final Material material, final Material topper) {
+    public final void buildTower(final int x, final int z, final int height, final Material material, final Material topper) {
         final int y = base.getHighestBlockYAt(x, z);
         final int maxY = y + height;
         int i;
@@ -37,16 +26,7 @@ public class EditableWorld {
         }
     }
 
-    /**
-     * Place a line of blocks with optional toppers. Either dX or dZ should be 0 to indicate direction.
-     * @param x X coordinate of line.
-     * @param z Z coordinate of line.
-     * @param dX Length of line in X axis.
-     * @param dZ Length of line in Z axis.
-     * @param material Material to make line out of.
-     * @param topper Optional topper to place on top of the line, <code>null</code> if not required.
-     */
-    public void buildLine(final int x, final int z, final int dX, final int dZ, final Material material, final Material topper) {
+    public final void buildLine(final int x, final int z, final int dX, final int dZ, final Material material, final Material topper) {
         if(dX == 0) {
             final int maxZ = z + dZ;
             for(int i = z; i <= maxZ; i++) {

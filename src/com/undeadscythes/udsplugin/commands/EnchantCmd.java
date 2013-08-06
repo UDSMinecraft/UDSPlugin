@@ -5,11 +5,12 @@ import org.bukkit.enchantments.*;
 
 /**
  * Enchant an item.
+ * 
  * @author UndeadScythes
  */
 public class EnchantCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         int level;
         Enchantment enchantment;
         if(argsLength() == 0) {
@@ -18,11 +19,11 @@ public class EnchantCmd extends CommandHandler {
             if(arg(0).matches("[0-9][0-9]*")) {
                 sendPage(Integer.parseInt(arg(0)), player());
             } else {
-                if((enchantment = enchantmentExists(arg(0))) != null) {
+                if((enchantment = getEnchantment(arg(0))) != null) {
                     player().getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
                 }
             }
-        } else if(numArgsHelp(2) && (enchantment = enchantmentExists(arg(0))) != null && (level = isInteger(arg(1))) != 0 && goodEnchantLevel(enchantment, level) && isEnchantable(enchantment, player().getItemInHand())) {
+        } else if(numArgsHelp(2) && (enchantment = getEnchantment(arg(0))) != null && (level = getInteger(arg(1))) != 0 && goodEnchantLevel(enchantment, level) && isEnchantable(enchantment, player().getItemInHand())) {
             player().getItemInHand().addEnchantment(enchantment, level);
         }
     }

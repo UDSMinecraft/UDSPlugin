@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.*;
 
 /**
  * Fired when a player dies.
+ * 
  * @author UndeadScythes
  */
 public class PlayerDeath extends ListenerWrapper implements Listener {

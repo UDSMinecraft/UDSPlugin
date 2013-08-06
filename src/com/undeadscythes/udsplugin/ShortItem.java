@@ -2,9 +2,11 @@ package com.undeadscythes.udsplugin;
 
 import org.bukkit.*;
 import org.bukkit.inventory.*;
+import org.bukkit.material.*;
 
 /**
  * Items with shortened names.
+ * 
  * @author UndeadScythes
  */
 public enum ShortItem {
@@ -61,11 +63,6 @@ public enum ShortItem {
         this.data = (byte)data;
     }
 
-    /**
-     * Get an item by its shortened name.
-     * @param name Name of item.
-     * @return The item or <code>null</code> if there was no match.
-     */
     public static ShortItem getByName(final String name) {
         for(ShortItem item : values()) {
             if(item.name().equals(name.toUpperCase())) {
@@ -76,26 +73,17 @@ public enum ShortItem {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return name().toLowerCase();
     }
 
-    /**
-     * Get an item stack of this item.
-     * @return Item stack.
-     */
-    @SuppressWarnings("deprecation")
-    public ItemStack toItemStack() {
-        return new ItemStack(material, 1, (short)0, data);
+    public final ItemStack toItemStack() {
+        final MaterialData item = new MaterialData(material, data);
+        return item.toItemStack(1);
     }
 
-    /**
-     * Get an item stack with a certain amount of this item.
-     * @param amount Item stack.
-     * @return
-     */
-    @SuppressWarnings("deprecation")
-    public ItemStack toItemStack(final int amount) {
-        return new ItemStack(material, amount, (short)0, data);
+    public final ItemStack toItemStack(final int amount) {
+        final MaterialData item = new MaterialData(material, data);
+        return item.toItemStack(amount);
     }
 }

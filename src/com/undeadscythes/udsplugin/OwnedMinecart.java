@@ -7,6 +7,7 @@ import org.bukkit.inventory.*;
 
 /**
  * A minecart owned by a player.
+ * 
  * @author UndeadScythes
  */
 public class OwnedMinecart {

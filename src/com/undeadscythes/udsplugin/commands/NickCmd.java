@@ -4,11 +4,12 @@ import com.undeadscythes.udsplugin.*;
 
 /**
  * Change a players nickname.
+ * 
  * @author UndeadScythes
  */
 public class NickCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         SaveablePlayer target;
         if(argsLength() == 1) {
             if(noBadLang(arg(0))) {
@@ -19,7 +20,7 @@ public class NickCmd extends CommandHandler {
                     player().sendError("Your nickname must be a shortened version of your Minecraft name.");
                 }
             }
-        } else if(numArgsHelp(2) && hasPerm(Perm.NICK_OTHER) && (target = matchesPlayer(arg(0))) != null && noBadLang(arg(1))) {
+        } else if(numArgsHelp(2) && hasPerm(Perm.NICK_OTHER) && (target = matchPlayer(arg(0))) != null && noBadLang(arg(1))) {
             target.setDisplayName(arg(1));
             player().sendNormal(target.getName() + "'s nickname has been changed to " + arg(1) + ".");
             target.sendNormal("Your nickname has been changed to " + arg(1) + ".");

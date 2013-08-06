@@ -7,11 +7,12 @@ import org.bukkit.*;
 
 /**
  * Displays a list of online players.
+ * 
  * @author UndeadScythes
  */
 public class WhoCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         final EnumMap<PlayerRank, String> lists = new EnumMap<PlayerRank, String>(PlayerRank.class);
         for(PlayerRank rank : PlayerRank.values()) {
             lists.put(rank, "");

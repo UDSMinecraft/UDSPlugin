@@ -6,6 +6,7 @@ import org.bukkit.*;
 
 /**
  * Server related commands.
+ * 
  * @author UndeadScythes
  */
 public class ServerCmd extends CommandHandler {
@@ -24,7 +25,7 @@ public class ServerCmd extends CommandHandler {
                 player().sendNormal("Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");           
             } else if(subCmdEquals("players")) {   
                 player().sendNormal("There have been " + PlayerUtils.numPlayers() + " unique visitors.");
-                player().sendNormal("There are " + PlayerUtils.numActives() + " active players.");
+                player().sendNormal("There are " + PlayerUtils.numActivePlayers() + " active players.");
             } else if(subCmdEquals("setspawn")) {
                 final Location location = player().getLocation();
                 player().getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ());

@@ -10,14 +10,10 @@ import org.bukkit.util.Vector;
 
 /**
  * Provides checks for listeners.
+ * 
  * @author UndeadScythes
  */
-public class ListenerWrapper {
-    /**
-     *
-     * @param item
-     * @return
-     */
+public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
     public static ItemStack findItem(final String item) {
         ItemStack itemStack;
         if(item.contains(":")) {
@@ -55,11 +51,6 @@ public class ListenerWrapper {
         return itemStack;
     }
 
-    /**
-     *
-     * @param lines
-     * @return
-     */
     public static boolean isShopSign(final String[] lines) {
         if(lines[0].equals(Color.SIGN + "[SHOP]")) {
             return true;
@@ -69,7 +60,7 @@ public class ListenerWrapper {
         final String priceLine = lines[3];                                                          //
         return (shopLine.equalsIgnoreCase(Color.SIGN + "shop")                                      //
                 || shopLine.equalsIgnoreCase("shop"))                                               //
-            && ((PlayerUtils.getPlayer(ownerLine.replace(Color.SIGN.toString(), "")) != null   // Update hack fix
+            && ((PlayerUtils.getPlayer(ownerLine.replace(Color.SIGN.toString(), "")) != null   // Update hack fix TODO: FIX MEH!
                 || "".equals(ownerLine)                                                             //
                 || (Color.SIGN + "server").equalsIgnoreCase(ownerLine)))                            //
             && findItem(lines[2]) != null                                                           //
@@ -78,12 +69,7 @@ public class ListenerWrapper {
             && priceLine.split(":")[1].replace(" S", "").matches("[0-9][0-9]*");                    //
     }
 
-    /**
-     *
-     * @param location
-     * @return
-     */
-    public SaveablePlayer findShopOwner(final Location location) {
+    public final SaveablePlayer findShopOwner(final Location location) {
         for(Region shop : RegionUtils.getRegions(RegionType.SHOP)) {
             if(location.toVector().isInAABB(shop.getV1(), shop.getV2())) {
                 return shop.getOwner();
@@ -92,25 +78,14 @@ public class ListenerWrapper {
         return null;
     }
 
-    /**
-     *
-     * @param entity
-     * @return
-     */
-    public Entity getAbsoluteEntity(final Entity entity) {
+    public final Entity getAbsoluteEntity(final Entity entity) {
         if(entity instanceof Arrow) {
             return ((Arrow)entity).getShooter();
         }
         return entity;
     }
 
-    /**
-     *
-     * @param location
-     * @param flag
-     * @return
-     */
-    public boolean hasFlag(final Location location, final RegionFlag flag) {
+    public final boolean hasFlag(final Location location, final RegionFlag flag) {
         for(Region region : RegionUtils.getRegions()) {
             if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 if(region.hasFlag(flag)) return true;
@@ -119,12 +94,7 @@ public class ListenerWrapper {
         return Config.GLOBAL_FLAGS.get(flag);
     }
 
-    /**
-     *
-     * @param location
-     * @return
-     */
-    public List<Region> regionsHere(final Location location) {
+    public final List<Region> regionsHere(final Location location) {
         final List<Region> regions = new ArrayList<Region>(0);
         final Vector vector = location.toVector();
         for(Region region : RegionUtils.getRegions()) {
@@ -135,13 +105,7 @@ public class ListenerWrapper {
         return regions;
     }
 
-    /**
-     *
-     * @param regions
-     * @param location
-     * @return
-     */
-    public boolean regionsContain(final List<Region> regions, final Location location) {
+    public final boolean regionsContain(final List<Region> regions, final Location location) {
         for(Region region : regions) {
             if(regionContains(region, location)) {
                 return true;
@@ -150,22 +114,11 @@ public class ListenerWrapper {
         return false;
     }
 
-    /**
-     *
-     * @param region
-     * @param location
-     * @return
-     */
     private boolean regionContains(final Region region, final Location location) {
         return region != null && location.toVector().isInAABB(region.getV1(), region.getV2());
     }
 
-    /**
-     *
-     * @param location
-     * @return
-     */
-    public boolean isInQuarry(final Location location) {
+    public final boolean isInQuarry(final Location location) {
         for(Region quarry : RegionUtils.getRegions(RegionType.QUARRY)) {
             if(location.toVector().isInAABB(quarry.getV1(), quarry.getV2())) {
                 return true;
@@ -174,12 +127,6 @@ public class ListenerWrapper {
         return false;
     }
 
-    /**
-     * Used for pistons.
-     * @param regionsA
-     * @param regionsB
-     * @return
-     */
     public final boolean crossesBoundary(final List<Region> regionsA, final List<Region> regionsB) {
         for(Region regionA : regionsA) {
             if(!regionA.hasFlag(RegionFlag.PISTON)) {

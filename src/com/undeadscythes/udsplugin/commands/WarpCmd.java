@@ -7,11 +7,12 @@ import org.apache.commons.lang.*;
 
 /**
  * Use warp points.
+ * 
  * @author UndeadScythes
  */
 public class WarpCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         Warp warp;
         if(argsLength() == 0) {
             final Set<String> warps = new TreeSet<String>();
@@ -26,7 +27,7 @@ public class WarpCmd extends CommandHandler {
                 player().sendNormal("Available warps (with prices):");
                 player().sendText(StringUtils.join(warps.toArray(), ", "));
             }
-        } else if(numArgsHelp(1) && (warp = warpExists(arg(0))) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
+        } else if(numArgsHelp(1) && (warp = matchWarp(arg(0))) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
             player().debit(warp.getPrice());
             player().teleport(warp.getLocation());
         }

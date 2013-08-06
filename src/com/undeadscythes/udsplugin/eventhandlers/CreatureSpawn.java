@@ -5,7 +5,8 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * A creature spawns.
+ * Fired when a creature spawns.
+ * 
  * @author UndeadScythes
  */
 public class CreatureSpawn extends ListenerWrapper implements Listener {

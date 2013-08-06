@@ -3,12 +3,13 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.utilities.*;
 
 /**
- *
+ * Allows a player to toggle whether or not they can engage in PvP.
+ * 
  * @author UndeadScythes
  */
 public class PvpCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(!player().hasPvp()) {
             player().togglePvp();
             player().sendNormal("PvP has been enabled, you can't turn it off for 5 minutes.");

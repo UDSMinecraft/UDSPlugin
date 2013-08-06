@@ -6,7 +6,8 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 
 /**
- * Toggles the admin chat channel.
+ * Vanishes a player.
+ * 
  * @author UndeadScythes
  */
 public class VanishCmd extends CommandHandler {

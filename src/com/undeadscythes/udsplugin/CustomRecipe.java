@@ -6,6 +6,7 @@ import org.bukkit.material.*;
 
 /**
  * Custom recipes to be loaded on server start up.
+ * 
  * @author UndeadScythes
  */
 public enum CustomRecipe {
@@ -126,10 +127,6 @@ public enum CustomRecipe {
         this(true, out, (byte)0, row1, null, null, ing1, null, null, 1);
     }
     
-    /**
-     * Get the Recipe belonging to this enum.
-     * @return Recipe
-     */
     public final Recipe getRecipe() {
         return recipe;
     }

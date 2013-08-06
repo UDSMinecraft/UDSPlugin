@@ -5,6 +5,7 @@ import org.bukkit.inventory.*;
 
 /**
  * Spawns the player a kit.
+ * 
  * @author UndeadScythes
  */
 public class KitCmd extends CommandHandler {

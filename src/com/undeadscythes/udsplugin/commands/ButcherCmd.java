@@ -5,11 +5,12 @@ import org.bukkit.entity.*;
 
 /**
  * Remove all monsters around the player.
+ * 
  * @author UndeadScythes
  */
 public class ButcherCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public final void playerExecute() {
         if(maxArgsHelp(1)) {
             boolean all = false;
             if(argsLength() == 1 && (arg(0).equals("a") || arg(0).equals("all"))) {

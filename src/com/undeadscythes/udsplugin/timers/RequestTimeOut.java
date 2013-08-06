@@ -4,20 +4,15 @@ import com.undeadscythes.udsplugin.*;
 import java.util.*;
 
 /**
- * Threaded class to run scheduled functions for maintenance.
+ * Scheduled task to remove player requests when they timeout.
+ * 
  * @author UndeadScythes
  */
 public class RequestTimeOut implements Runnable {
-    /**
-     * Initiates the timer.
-     */
     public RequestTimeOut() {}
 
-    /**
-     * The function that will be used on each schedule.
-     */
     @Override
-    public void run() {
+    public final void run() {
         for(final Iterator<Map.Entry<String, Request>> i = UDSPlugin.getRequestIterator(); i.hasNext();) {
             final Request request = i.next().getValue();
             if(request.getTime() + Config.REQUEST_TTL < System.currentTimeMillis()) {

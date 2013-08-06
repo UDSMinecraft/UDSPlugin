@@ -9,7 +9,8 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 
 /**
- *
+ * Collection of values taken from the plugin's configuration file.
+ * 
  * @author UndeadScythes
  */
 public class Config {

@@ -3,7 +3,9 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Toggles the admin chat channel.
+ * Toggles the {@link ChatChannel#ADMIN} chat channel and allows players to
+ * talk in this channel.
+ * 
  * @author UndeadScythes
  */
 public class ACmd extends CommandHandler {

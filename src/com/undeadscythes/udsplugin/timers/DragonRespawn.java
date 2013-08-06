@@ -6,20 +6,15 @@ import org.bukkit.block.*;
 import org.bukkit.entity.*;
 
 /**
- * Threaded class to run scheduled functions for maintenance.
+ * Scheduled task that allows the Ender Dragon to respawn after a certain time.
+ * 
  * @author UndeadScythes
  */
 public class DragonRespawn implements Runnable {
-    /**
-     * Initiates the timer.
-     */
     public DragonRespawn() {}
 
-    /**
-     * The function that will be used on each schedule.
-     */
     @Override
-    public void run() {
+    public final void run() {
         if(UDSPlugin.getData().getLastEnderDeath() > -1 && UDSPlugin.getData().getLastEnderDeath() + Config.DRAGON_RESPAWN < System.currentTimeMillis()) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {

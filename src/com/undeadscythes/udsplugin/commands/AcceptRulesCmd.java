@@ -3,10 +3,10 @@ package com.undeadscythes.udsplugin.commands;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
-
-
 /**
- * Lets a player get build rights and promotes them to member.
+ * Allows a player to promote themselves from {@link PlayerRank#NEWBIE} to
+ * {@link PlayerRank#MEMBER} using in game currency.
+ * 
  * @author UndeadScythes
  */
 public class AcceptRulesCmd extends CommandHandler {
