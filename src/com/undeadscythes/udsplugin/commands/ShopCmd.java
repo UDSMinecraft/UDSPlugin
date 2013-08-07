@@ -64,7 +64,7 @@ public class ShopCmd extends CommandHandler {
                 if((shop = getCurrentShop()) != null && canAfford(Config.SHOP_COST) && isEmptyShop(shop)) {
                     player().debit(Config.SHOP_COST);
                     RegionUtils.renameRegion(shop, player().getName() + "shop");
-                    shop.changeName(player().getName() + "shop");
+                    shop.changeOwner(player());
                     player().sendNormal("Shop bought.");
                 }
             } else if(subCmdEquals("sign")) {

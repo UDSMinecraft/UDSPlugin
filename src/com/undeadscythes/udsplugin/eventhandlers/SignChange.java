@@ -12,14 +12,17 @@ import org.bukkit.event.block.*;
  * @author UndeadScythes
  */
 public class SignChange extends ListenerWrapper implements Listener {
+    private SaveablePlayer player;
+    private Block block;
+    
     @EventHandler
     public final void onEvent(final SignChangeEvent event) {
         final String line0 = event.getLine(0);
         final String line1 = event.getLine(1);
         final String line2 = event.getLine(2);
-        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
-        final Block block = event.getBlock();
-        if(line0.equalsIgnoreCase("[shop]") && checkPerm(player, block, Perm.SHOP_SIGN)) {
+        player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+        block = event.getBlock();
+        if(line0.equalsIgnoreCase("[shop]") && checkPerm(Perm.SHOP_SIGN) && (player.hasPerm(Perm.SHOP_ANYWHERE) || checkShop())) {
             if(line1.matches(UDSPlugin.INT_REGEX)) {
                 event.setLine(0, Color.SIGN + "[SHOP]");
             } else {
@@ -27,31 +30,31 @@ public class SignChange extends ListenerWrapper implements Listener {
                 player.sendError("The second line must contain a number.");
                 block.breakNaturally();
             }
-        } else if(line0.equalsIgnoreCase("[checkpoint]") && checkPerm(player, block, Perm.SIGN_CHECKPOINT)) {
+        } else if(line0.equalsIgnoreCase("[checkpoint]") && checkPerm(Perm.SIGN_CHECKPOINT)) {
             event.setLine(0, Color.SIGN + "[CHECKPOINT]");
-        } else if(line0.equalsIgnoreCase("[minecart]") && checkPerm(player, block, Perm.SIGN_MINECART)) {
+        } else if(line0.equalsIgnoreCase("[minecart]") && checkPerm(Perm.SIGN_MINECART)) {
             event.setLine(0, Color.SIGN + "[MINECART]");
-        } else if(line0.equalsIgnoreCase("[prize]") && checkPerm(player, block, Perm.SIGN_PRIZE)) {
+        } else if(line0.equalsIgnoreCase("[prize]") && checkPerm(Perm.SIGN_PRIZE)) {
             if(findItem(line1) != null && line2.matches(UDSPlugin.INT_REGEX)) {
                 event.setLine(0, Color.SIGN + "[PRIZE]");
             } else {
-                badFormat(player, block);
+                badFormat();
             }
-        } else if(line0.equalsIgnoreCase("[item]") && checkPerm(player, block, Perm.SIGN_ITEM)) {
+        } else if(line0.equalsIgnoreCase("[item]") && checkPerm(Perm.SIGN_ITEM)) {
             if(findItem(line1) != null && line2.matches(UDSPlugin.INT_REGEX)) {
                 event.setLine(0, Color.SIGN + "[ITEM]");
             } else {
-                badFormat(player, block);
+                badFormat();
             }
-        } else if(line0.equalsIgnoreCase("[warp]") && checkPerm(player, block, Perm.SIGN_WARP)) {
+        } else if(line0.equalsIgnoreCase("[warp]") && checkPerm(Perm.SIGN_WARP)) {
             event.setLine(0, Color.SIGN + "[WARP]");
-        } else if(line0.equalsIgnoreCase("[spleef]") && checkPerm(player, block, Perm.SIGN_SPLEEF)) {
+        } else if(line0.equalsIgnoreCase("[spleef]") && checkPerm(Perm.SIGN_SPLEEF)) {
             event.setLine(0, Color.SIGN + "[SPLEEF]");
         }
     }
 
-    private boolean checkPerm(final SaveablePlayer player, final Block block, final Perm perm) {
-        if(!player.hasPermission(perm)) {
+    private boolean checkPerm(final Perm perm) {
+        if(!player.hasPerm(perm)) {
             block.breakNaturally();
             player.sendError("You do not have permission to place this sign.");
             return false;
@@ -59,8 +62,18 @@ public class SignChange extends ListenerWrapper implements Listener {
         return true;
     }
 
-    private void badFormat(final SaveablePlayer player, final Block block) {
+    private void badFormat() {
         block.breakNaturally();
         player.sendError("You have not written this sign correctly.");
+    }
+    
+    private boolean checkShop() {
+        for(final Region region : RegionUtils.getRegionsHere(block.getLocation())) {
+            if(region.getType().equals(RegionType.SHOP)) {
+                return true;
+            }
+        }
+        player.sendError("You must place this in a shop.");
+        return false;
     }
 }

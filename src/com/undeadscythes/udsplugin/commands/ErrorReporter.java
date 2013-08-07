@@ -334,7 +334,7 @@ public abstract class ErrorReporter {
     }
     
     protected final boolean hasPerm(final Perm perm) {
-        if(player.hasPermission(perm) || player.isOp()) {
+        if(player.hasPerm(perm) || player.isOp()) {
             if(perm.getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(perm.getMode())) {
                 return true;
             } else {
@@ -704,6 +704,14 @@ public abstract class ErrorReporter {
             player.sendError("The number you entered was invalid.");
             return -1;
         }
+    }
+    
+    protected final boolean canGift(final SaveablePlayer target) {
+        if(target.isShopping()) {
+            player.sendError("You cannot gift this player at this time.");
+            return false;
+        }
+        return true;
     }
 }
 

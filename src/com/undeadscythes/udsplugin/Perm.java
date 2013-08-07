@@ -98,6 +98,7 @@ public enum Perm {
     SHAREDINV(PlayerRank.MOD),
     SHOP(PlayerRank.MEMBER, GameMode.SURVIVAL),
     SHOP_ADMIN(PlayerRank.ADMIN, GameMode.SURVIVAL),
+    SHOP_ANYWHERE(PlayerRank.ADMIN, GameMode.SURVIVAL),
     SHOP_SERVER(PlayerRank.MOD, GameMode.SURVIVAL),
     SHOP_SIGN(PlayerRank.MEMBER, GameMode.SURVIVAL),
     SIGNS(PlayerRank.MOD),

@@ -46,9 +46,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
 
     private void startShopping(final Location shop, final SaveablePlayer shopper) {
         if(!shopper.canBuildHere(shop)) {
-            shopper.setShopping(true);
-            shopper.getShoppingList().clear();
-            shopper.setShop(shop);
+            ShopUtils.addShopper(shopper, shop);
         }
     }
 
@@ -63,7 +61,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
 
     private boolean isProtected(final InventoryHolder holder, final SaveablePlayer player) {
         if(!player.canBuildHere(((BlockState)holder).getBlock().getLocation())) {
-            if(player.hasPermission(Perm.BYPASS)) {
+            if(player.hasPerm(Perm.BYPASS)) {
                 player.sendNormal("Protection bypassed.");
             } else {
                 player.sendError("You do not have access to this block.");

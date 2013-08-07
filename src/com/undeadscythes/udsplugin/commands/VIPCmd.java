@@ -13,7 +13,7 @@ public class VIPCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(argsLength() == 0) {
-            if(player().hasPermission(Perm.VIP_RANK)) {
+            if(player().hasPerm(Perm.VIP_RANK)) {
                 player().sendNormal("You have " + player().getVIPTimeString() + " left in VIP.");
             } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
                 player().setRank(PlayerRank.VIP);

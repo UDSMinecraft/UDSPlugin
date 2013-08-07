@@ -17,7 +17,7 @@ public class VanishCmd extends CommandHandler {
             if(player().toggleHidden()) {
                 PlayerUtils.addHiddenPlayer(player());
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
+                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPerm(Perm.VANISH)) {
                         player().hideFrom(onlinePlayer, true);
                         PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player().getNick() + (player().isInClan() ? " of " + player().getClan().getName() : "") + " has left.");
                     } else {
@@ -27,7 +27,7 @@ public class VanishCmd extends CommandHandler {
             } else {
                 PlayerUtils.removeHiddenPlayer(player().getName());
                 for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
+                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPerm(Perm.VANISH)) {
                         player().hideFrom(onlinePlayer, false);
                         PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendBroadcast(player().getNick() + (player().isInClan() ? " of " + player().getClan().getName() : "") + " has joined.");
                     } else {

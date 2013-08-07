@@ -49,7 +49,7 @@ public class AsyncPlayerChat implements Listener {
         } else if(player.getChannel() == ChatChannel.ADMIN) {
             final String message = PlayerRank.ADMIN.getColor() + "[ADMIN] " + player.getNick() + ": " + event.getMessage();
             for(SaveablePlayer target : PlayerUtils.getOnlinePlayers()) {
-                if(target.hasPermission(Perm.ADMINCHAT)) {
+                if(target.hasPerm(Perm.ADMINCHAT)) {
                     target.sendMessage(message);
                 }
             }

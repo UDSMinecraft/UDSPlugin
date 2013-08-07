@@ -51,7 +51,6 @@ public class SaveablePlayer implements Saveable {
     private PlayerRank rank = PlayerRank.NEWBIE;
     private ItemStack[] inventoryCopy = null;
     private ItemStack[] armorCopy = null;
-    private final Inventory shoppingCart = Bukkit.createInventory(null, 36);
     private final LinkedList<Long> lastChatTimes = new LinkedList<Long>();
     private final Set<SaveablePlayer> ignoredPlayers = new HashSet<SaveablePlayer>(0);
     private boolean pvp = false;
@@ -258,10 +257,6 @@ public class SaveablePlayer implements Saveable {
 
     public final void setPowertoolID(final int ID) {
         powertoolId = ID;
-    }
-
-    public final Inventory getShoppingList() {
-        return shoppingCart;
     }
 
     public final void setPowertool(final String cmd) {
@@ -649,7 +644,7 @@ public class SaveablePlayer implements Saveable {
     }
 
     public final boolean canAfford(final int price) {
-        return money >= price || hasPermission(Perm.MIDAS);
+        return money >= price || hasPerm(Perm.MIDAS);
     }
 
     public final void setWager(final int wager) {
@@ -713,7 +708,7 @@ public class SaveablePlayer implements Saveable {
         }
     }
 
-    public final boolean hasPermission(final Perm perm) {
+    public final boolean hasPerm(final Perm perm) {
         if(perm.isHereditary()) {
             return perm.getRank().compareTo(rank) <= 0;
         } else {

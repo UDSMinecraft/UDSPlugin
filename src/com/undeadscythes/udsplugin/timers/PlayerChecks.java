@@ -51,7 +51,7 @@ public class PlayerChecks implements Runnable {
     }
     
     private void vipStatus(final SaveablePlayer player) {
-        if(player.hasPermission(Perm.VIP_RANK) && player.getVIPTime() + Config.VIP_TIME < System.currentTimeMillis()) {
+        if(player.hasPerm(Perm.VIP_RANK) && player.getVIPTime() + Config.VIP_TIME < System.currentTimeMillis()) {
             player.setVIPTime(0);
             player.setRank(PlayerRank.MEMBER);
             player.sendNormal("Your time as a VIP has come to an end.");
