@@ -36,7 +36,10 @@ public class InventoryClose extends ListenerWrapper implements Listener {
                 if(shopper.canAfford(totalDue)) {
                     shopper.sendNormal("You spent " + totalDue + " " + Config.CURRENCIES + ".");
                     shopper.debit(totalDue);
-                    findShopOwner(block.getLocation()).credit(totalDue);
+                    final SaveablePlayer player = findShopOwner(block.getLocation());
+                    if(player != null) {
+                        player.credit(totalDue);
+                    }
                 } else {
                     shopper.sendError("You do not have enough money to buy these items.");
                     for(ItemStack item : shoppingList) {
