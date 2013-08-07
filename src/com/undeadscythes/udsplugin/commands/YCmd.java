@@ -28,6 +28,7 @@ public class YCmd extends CommandHandler {
                         final Region home = RegionUtils.getRegion(RegionType.HOME, sender.getName() + "home");
                         home.clearMembers();
                         home.changeOwner(player());
+                        RegionUtils.renameRegion(home, player().getName() + "home");
                         player().debit(price);
                         sender.credit(price);
                     }
