@@ -45,15 +45,15 @@ public class PlayerJoin implements Listener {
             player.kickPlayer("The server is currently in lockdown please check back later.");
         } else {
             player.sendNormal(Config.WELCOME_MSG);
-            if(player.hasPermission(Perm.NEWBIEMSG)) {
+            if(player.hasPerm(Perm.NEWBIEMSG)) {
                 player.sendNormal("Kill monsters or trade with players to earn " + Config.BUILD_COST + " credits then type /acceptrules in chat.");
-            } else if(player.hasPermission(Perm.ADMINMSG)) {
+            } else if(player.hasPerm(Perm.ADMINMSG)) {
                 player.sendMessage(Config.WELCOME_ADMIN);
             }
             player.newLogin(System.currentTimeMillis());
             if(player.isHidden()) {
                 for(final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPermission(Perm.VANISH)) {
+                    if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPerm(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, true);
                     } else {
                         PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).sendWhisper(player.getNick() + " has joined.");
@@ -63,7 +63,7 @@ public class PlayerJoin implements Listener {
             } else {
                 event.setJoinMessage(Color.CONNECTION + player.getNick() + (player.isInClan() ? " of " + player.getClan().getName() : "") + " has joined.");
             }
-            if(!player.hasPermission(Perm.VANISH)) {
+            if(!player.hasPerm(Perm.VANISH)) {
                 for(final SaveablePlayer hiddenPlayer : PlayerUtils.getHiddenPlayers()) {
                     hiddenPlayer.hideFrom(event.getPlayer(), true);
                 }

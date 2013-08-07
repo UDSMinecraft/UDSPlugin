@@ -22,7 +22,7 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
                 event.setRespawnLocation(player.getWorld().getSpawnLocation());
             }
         }
-        if(player.hasPermission(Perm.BACK_ON_DEATH)) {
+        if(player.hasPerm(Perm.BACK_ON_DEATH)) {
             player.sendNormal("Use /back to return to where you died.");
         }
         PlayerUtils.loadInventory(player);

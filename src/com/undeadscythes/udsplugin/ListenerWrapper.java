@@ -94,17 +94,6 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         return Config.GLOBAL_FLAGS.get(flag);
     }
 
-    public final List<Region> regionsHere(final Location location) {
-        final List<Region> regions = new ArrayList<Region>(0);
-        final Vector vector = location.toVector();
-        for(Region region : RegionUtils.getRegions()) {
-            if(location.getWorld().equals(region.getWorld()) && vector.isInAABB(region.getV1(), region.getV2())) {
-                regions.add(region);
-            }
-        }
-        return regions;
-    }
-
     public final boolean regionsContain(final List<Region> regions, final Location location) {
         for(Region region : regions) {
             if(regionContains(region, location)) {

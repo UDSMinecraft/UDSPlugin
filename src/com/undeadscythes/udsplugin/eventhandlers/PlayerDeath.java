@@ -20,7 +20,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
         final SaveablePlayer victim = PlayerUtils.getOnlinePlayer(event.getEntity().getName());
         final String victimName = victim.getName();
         event.setDeathMessage(event.getDeathMessage().replace(victimName, victim.getNick()));
-        if(victim.hasPermission(Perm.BACK_ON_DEATH)) {
+        if(victim.hasPerm(Perm.BACK_ON_DEATH)) {
             victim.setBackPoint(victim.getLocation());
         }
         if(victim.getKiller() != null) {
@@ -92,7 +92,7 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
     
     private void dropHead(final SaveablePlayer victim) {
         final Random rng = new Random();
-        if(rng.nextDouble() < Config.SKULL || victim.hasPermission(Perm.HEADDROP)) {
+        if(rng.nextDouble() < Config.SKULL || victim.hasPerm(Perm.HEADDROP)) {
             final ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short)SkullType.PLAYER.ordinal());
             final SkullMeta meta = (SkullMeta)skull.getItemMeta();
             meta.setOwner(victim.getName());

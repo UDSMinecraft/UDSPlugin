@@ -14,8 +14,7 @@ public enum PlayerRank {
     WARDEN(ChatColor.AQUA, 2),
     MOD(ChatColor.DARK_AQUA, 3),
     ADMIN(ChatColor.YELLOW, 4),
-    OWNER(ChatColor.GOLD, 5),
-    NONE(null, 5);
+    OWNER(ChatColor.GOLD, 5);
 
     private final ChatColor color;
     private final int ranking;

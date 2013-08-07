@@ -78,7 +78,7 @@ public class PlotCmd extends CommandHandler {
     
     private void remove(final String plotName) {
         Region plot;
-        if(player().hasPermission(Perm.PLOT_REMOVE)) {
+        if(player().hasPerm(Perm.PLOT_REMOVE)) {
             plot = plotExists(plotName);
         } else {
             plot = ownsPlot(plotName);
@@ -123,7 +123,7 @@ public class PlotCmd extends CommandHandler {
     }
     
     private boolean numPlots() {
-        if(nextPlot() > 4 && !player().hasPermission(Perm.PLOT_MANY)) { // Limit hardcoded for speed right now
+        if(nextPlot() > 4 && !player().hasPerm(Perm.PLOT_MANY)) { // Limit hardcoded for speed right now
             player().sendError("You have reached the maximum number of plots you can own.");
             return false;
         }

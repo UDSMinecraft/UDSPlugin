@@ -6,16 +6,15 @@ import java.util.*;
 /**
  * A LinkedHashMap whose contents can be matched with partials.
  * 
- * @param <T> 
+ * @param <V> the type of the values stored in this map.
  * @author UndeadScythes
  */
-public class SaveableHashMap<T extends Saveable> extends HashMap<String, T> {
-    private static final long serialVersionUID = 1L;
-
-    public final List<T> getKeyMatches(final String partial) {
+@SuppressWarnings("serial")
+public class SaveableHashMap<V extends Saveable> extends HashMap<String, V> {
+    public final List<V> getKeyMatches(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        final ArrayList<T> matches = new ArrayList<T>(1);
-        for(Map.Entry<String, T> entry : super.entrySet()) {
+        final ArrayList<V> matches = new ArrayList<V>(1);
+        for(Map.Entry<String, V> entry : super.entrySet()) {
             if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 matches.add(entry.getValue());
             }
@@ -23,9 +22,9 @@ public class SaveableHashMap<T extends Saveable> extends HashMap<String, T> {
         return matches;
     }
 
-    public final T matchKey(final String partial) {
+    public final V matchKey(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        for(Map.Entry<String, T> entry : super.entrySet()) {
+        for(Map.Entry<String, V> entry : super.entrySet()) {
             if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 return entry.getValue();
             }
@@ -35,15 +34,15 @@ public class SaveableHashMap<T extends Saveable> extends HashMap<String, T> {
     }
 
     @Override
-    public final T put(final String key, final T object) {
+    public final V put(final String key, final V object) {
         return super.put(key.toLowerCase(), object);
     }
 
-    public final T get(final String key) {
+    public final V get(final String key) {
         return super.get(key.toLowerCase());
     }
 
-    public final T remove(final String key) {
+    public final V remove(final String key) {
         return super.remove(key.toLowerCase());
     }
 
@@ -51,13 +50,13 @@ public class SaveableHashMap<T extends Saveable> extends HashMap<String, T> {
         return super.containsKey(key.toLowerCase());
     }
 
-    public final List<T> getSortedValues(final Comparator<T> comp) {
-        final ArrayList<T> values = new ArrayList<T>(this.values());
+    public final List<V> getSortedValues(final Comparator<V> comp) {
+        final ArrayList<V> values = new ArrayList<V>(this.values());
         Collections.sort(values, comp);
         return values;
     }
 
-    public final void replace(final String oldKey, final String newKey, final T object) {
+    public final void replace(final String oldKey, final String newKey, final V object) {
         remove(oldKey);
         put(newKey, object);
     }
