@@ -3,6 +3,7 @@ package com.undeadscythes.udsplugin.utilities;
 import com.undeadscythes.udsplugin.*;
 import java.io.*;
 import java.util.*;
+import org.bukkit.*;
 
 /**
  * Utility class for handling manipulation of {@link Region} objects.
@@ -122,6 +123,19 @@ public class RegionUtils {
         region.setType(newType);
         REGIONS.get(newType).put(region.getName(), region);
     }
+    
+    public static List<Region> getRegionsHere(final Location location) {
+        final List<Region> regions = new ArrayList<Region>(0);
+        final org.bukkit.util.Vector vector = location.toVector();
+        for(Region region : RegionUtils.getRegions()) {
+            if(location.getWorld().equals(region.getWorld()) && vector.isInAABB(region.getV1(), region.getV2())) {
+                regions.add(region);
+            }
+        }
+        return regions;
+    }
+
+
     
     private RegionUtils() {}
 }

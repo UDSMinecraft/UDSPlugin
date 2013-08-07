@@ -12,19 +12,17 @@ import org.bukkit.inventory.*;
 public class GiftCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        SaveablePlayer target;
-        if(minArgsHelp(1) && (target = matchPlayer(arg(0))) != null) {
-            if(getItemInHand() != null) {
-                final ItemStack gift = player().getItemInHand().clone();
-                String message = "[Gifting Service] You have recieved a free gift!";
-                if(argsLength() > 1) {
-                    message = "[Gifting Service] ".concat(argsToMessage(1));
-                }
-                target.sendNormal(message);
-                target.giveAndDrop(gift);
-                player().setItemInHand(new ItemStack(Material.AIR));
-                player().sendNormal("Gift sent.");
+        final SaveablePlayer target;
+        final ItemStack gift;
+        if(minArgsHelp(1) && (target = matchPlayer(arg(0))) != null && canGift(target) && (gift = getItemInHand().clone()) != null) {
+            String message = "[Gifting Service] You have recieved a free gift!";
+            if(argsLength() > 1) {
+                message = "[Gifting Service] ".concat(argsToMessage(1));
             }
+            target.sendNormal(message);
+            target.giveAndDrop(gift);
+            player().setItemInHand(new ItemStack(Material.AIR));
+            player().sendNormal("Gift sent.");
         }
     }
 }

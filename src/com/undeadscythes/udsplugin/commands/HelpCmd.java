@@ -32,7 +32,7 @@ public class HelpCmd extends CommandHandler {
     private void sendHelpFiles() {
         final EnumSet<Usage> usages = EnumSet.noneOf(Usage.class);
         for(Usage usage : Usage.values()) {
-            if(player().hasPermission(usage.getPerm()) && !usage.isExtension() && (usage.getPerm().getMode() == null || UDSPlugin.getWorldMode(player().getWorld()).equals(usage.getPerm().getMode()))) {
+            if(player().hasPerm(usage.getPerm()) && !usage.isExtension() && (usage.getPerm().getMode() == null || UDSPlugin.getWorldMode(player().getWorld()).equals(usage.getPerm().getMode()))) {
                 usages.add(usage);
             }
         }
@@ -46,7 +46,7 @@ public class HelpCmd extends CommandHandler {
     private void sendCommandHelp(final Usage usage) {
         final EnumSet<Usage> extensions = EnumSet.noneOf(Usage.class);
         for(Usage extension : Usage.values()) {
-            if(player().hasPermission(extension.getPerm()) && extension.isExtension(usage)) {
+            if(player().hasPerm(extension.getPerm()) && extension.isExtension(usage)) {
                 extensions.add(extension);
             }
         }

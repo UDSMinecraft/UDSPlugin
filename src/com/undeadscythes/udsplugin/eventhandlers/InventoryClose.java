@@ -3,6 +3,7 @@ package com.undeadscythes.udsplugin.eventhandlers;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
+import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
@@ -21,20 +22,16 @@ public class InventoryClose extends ListenerWrapper implements Listener {
         if(shopper.isShopping()) {
             final ItemStack handItem = event.getView().getCursor();
             if(!handItem.getType().equals(Material.AIR)) {
-                if(shopper.isBuying()) {
-                    event.getInventory().addItem(handItem);
-                    event.getView().setCursor(new ItemStack(Material.AIR));
-                }
+                event.getInventory().addItem(handItem);
+                event.getView().setCursor(new ItemStack(Material.AIR));
             }
             final Block block = ((BlockState)event.getInventory().getHolder()).getBlock();
-            final int price = getPrice(block);
-            final ItemStack[] shoppingList = shopper.getShoppingList().getContents();
+            final ArrayList<ItemStack> shoppingList = ShopUtils.compareCarts(shopper);
             int totalDue = 0;
-            for(ItemStack item : shoppingList) {
-                if(item != null) {
-                    totalDue += item.getAmount() * price;
-                }
+            for(final ItemStack item : shoppingList) {
+                totalDue += item.getAmount();
             }
+            totalDue *= getPrice(block);
             if(totalDue > 0) {
                 if(shopper.canAfford(totalDue)) {
                     shopper.sendNormal("You spent " + totalDue + " " + Config.CURRENCIES + ".");
@@ -42,18 +39,15 @@ public class InventoryClose extends ListenerWrapper implements Listener {
                     findShopOwner(block.getLocation()).credit(totalDue);
                 } else {
                     shopper.sendError("You do not have enough money to buy these items.");
-                    Inventory shop = event.getInventory();
-                    Inventory cart = shopper.getInventory();
                     for(ItemStack item : shoppingList) {
                         if(item != null) {
-                            shop.addItem(item);
-                            cart.removeItem(item);
+                            event.getInventory().addItem(item);
+                            shopper.getInventory().removeItem(item);
                         }
                     }
                 }
             }
-            shopper.setShopping(false);
-            shopper.getShoppingList().clear();
+            ShopUtils.removeShopper(shopper);
         }
     }
 

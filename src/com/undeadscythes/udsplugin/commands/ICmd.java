@@ -20,7 +20,7 @@ public class ICmd extends CommandHandler {
                 } else if((amount = getInteger(arg(1))) != -1) {
                     item.setAmount(amount);
                 }
-                if(player().hasPermission(Perm.I_ADMIN)) {
+                if(player().hasPerm(Perm.I_ADMIN)) {
                     player().getInventory().addItem(item);
                 } else if(player().getVIPSpawns() > 0) {
                     if(Config.VIP_WHITELIST.contains(item.getType())) {

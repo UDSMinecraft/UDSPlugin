@@ -12,7 +12,7 @@ public class KickCmd extends CommandHandler {
     public final void playerExecute() {
         SaveablePlayer target;
         if(minArgsHelp(1) && (target = matchOnlinePlayer(arg(0))) != null) {
-            if(!target.hasPermission(Perm.UNKICKABLE)) {
+            if(!target.hasPerm(Perm.UNKICKABLE)) {
                 String message = "You have been kicked for breaking the rules.";
                 if(argsLength() > 1) {
                     message = argsToMessage(1);

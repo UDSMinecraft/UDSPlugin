@@ -13,8 +13,7 @@ import org.bukkit.event.player.*;
 public class PlayerPickupItem extends ListenerWrapper implements Listener {
     @EventHandler
     public final void onEvent(final PlayerPickupItemEvent event) {
-        if(PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).isHidden()) {
-            event.setCancelled(true);
-        }
+        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer());
+        event.setCancelled(player.isHidden() || player.isShopping());
     }
 }

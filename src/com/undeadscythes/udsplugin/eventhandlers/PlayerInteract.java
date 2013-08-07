@@ -28,16 +28,16 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         final Block block = event.getClickedBlock();
         switch(event.getAction()) {
             case LEFT_CLICK_AIR:
-                if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
+                if(inHand == Material.COMPASS && player.hasPerm(Perm.COMPASS)) {
                     compassTeleport(player, false);
                     event.setCancelled(true);
                 }
                 break;
             case LEFT_CLICK_BLOCK:
-                if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
+                if(inHand == Material.COMPASS && player.hasPerm(Perm.COMPASS)) {
                     compassTeleport(player, false);
                     event.setCancelled(true);
-                } else if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
+                } else if(inHand == Material.STICK && player.hasPerm(Perm.WAND)) {
                     setPoint1(player, block);
                     event.setCancelled(true);
                 } else if((block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) && !player.isSneaking()) {
@@ -47,13 +47,13 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 }
                 break;
             case RIGHT_CLICK_AIR:
-                if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
+                if(inHand == Material.PAPER && player.hasPerm(Perm.PAPER_COMPLEX)) {
                     sendRegionInfo(player, player.getLocation(), true);
                     event.setCancelled(true);
-                } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
+                } else if(inHand == Material.PAPER && player.hasPerm(Perm.PAPER_SIMPLE)) {
                     sendRegionInfo(player, player.getLocation(), false);
                     event.setCancelled(true);
-                } else if(inHand == Material.COMPASS && player.hasPermission(Perm.COMPASS)) {
+                } else if(inHand == Material.COMPASS && player.hasPerm(Perm.COMPASS)) {
                     compassTeleport(player, true);
                     event.setCancelled(true);
                 } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
@@ -64,13 +64,13 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 }
                 break;
             case RIGHT_CLICK_BLOCK:
-                if(inHand == Material.STICK && player.hasPermission(Perm.WAND)) {
+                if(inHand == Material.STICK && player.hasPerm(Perm.WAND)) {
                     setPoint2(player, block);
                     event.setCancelled(true);
-                } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_COMPLEX)) {
+                } else if(inHand == Material.PAPER && player.hasPerm(Perm.PAPER_COMPLEX)) {
                     sendRegionInfo(player, block.getLocation(), true);
                     event.setCancelled(true);
-                } else if(inHand == Material.PAPER && player.hasPermission(Perm.PAPER_SIMPLE)) {
+                } else if(inHand == Material.PAPER && player.hasPerm(Perm.PAPER_SIMPLE)) {
                     sendRegionInfo(player, block.getLocation(), false);
                     event.setCancelled(true);
                 } else if(inHand == Material.COMPASS) {
@@ -121,7 +121,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
             final Location location = block.getLocation();
             if(!player.canBuildHere(location) && hasFlag(location, RegionFlag.LOCK)) {
-                if(player.hasPermission(Perm.BYPASS)) {
+                if(player.hasPerm(Perm.BYPASS)) {
                     player.sendNormal("Protection bypassed.");
                 } else {
                     player.sendError("You can't do that here.");
@@ -194,7 +194,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
 
     private void sendRegionInfo(final SaveablePlayer player, final Location location, final boolean verbose) {
         if(verbose) {
-            final List<Region> testRegions = regionsHere(location);
+            final List<Region> testRegions = RegionUtils.getRegionsHere(location);
             if(testRegions.isEmpty()) {
                 player.sendNormal("No regions here.");
             } else {
@@ -203,10 +203,10 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 }
             }
         } else {
-            if(regionsHere(location).isEmpty()) {
+            if(RegionUtils.getRegionsHere(location).isEmpty()) {
                 player.sendNormal("No regions here.");
             } else {
-                final List<Region> testRegions = regionsHere(location);
+                final List<Region> testRegions = RegionUtils.getRegionsHere(location);
                 for(Region region : testRegions) {
                     if(region.getOwner() == null) {
                         player.sendNormal("This area is protected.");
@@ -225,14 +225,14 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     private void signPunch(final SaveablePlayer player, final Sign sign) {
         final String cantDoThat = "You can't do that.";
         if(sign.getLine(0).equals(Color.SIGN + "[CHECKPOINT]")) {
-            if(player.hasPermission(Perm.CHECK)) {
+            if(player.hasPerm(Perm.CHECK)) {
                 player.setCheckPoint(player.getLocation());
                 player.sendNormal("Checkpoint set. Use /check to return here. Good luck.");
             } else {
                 player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[MINECART]")) {
-            if(player.hasPermission(Perm.MINECART)) {
+            if(player.hasPerm(Perm.MINECART)) {
                 final Location location = sign.getBlock().getLocation();
                 if(MinecartCheck.minecartNear(location)) {
                     player.sendNormal("There is a minecart already at the station.");
@@ -243,7 +243,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[PRIZE]")) {
-            if(player.hasPermission(Perm.PRIZE)) {
+            if(player.hasPerm(Perm.PRIZE)) {
                 if(player.hasClaimedPrize()) {
                     player.claimPrize();
                     final ItemStack item = findItem(sign.getLine(1));
@@ -256,7 +256,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[ITEM]")) {
-            if(player.hasPermission(Perm.ITEM)) {
+            if(player.hasPerm(Perm.ITEM)) {
                     final ItemStack item = findItem(sign.getLine(1));
                     final int owned = player.countItems(item);
                     if(owned < Integer.parseInt(sign.getLine(2))) {
@@ -269,7 +269,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[WARP]")) {
-            if(player.hasPermission(Perm.WARP)) {
+            if(player.hasPerm(Perm.WARP)) {
                 final Warp warp = WarpUtils.getWarp(sign.getLine(1));
                 if(warp == null) {
                     player.sendError("This warp cannot be found.");
@@ -280,7 +280,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 player.sendError(cantDoThat);
             }
         } else if(sign.getLine(0).equals(Color.SIGN + "[SPLEEF]")) {
-            if(player.hasPermission(Perm.SPLEEF)) {
+            if(player.hasPerm(Perm.SPLEEF)) {
                 final Region region = RegionUtils.getRegion(RegionType.ARENA, sign.getLine(1));
                 if(region == null) {
                     player.sendError("No region exists to refresh.");
