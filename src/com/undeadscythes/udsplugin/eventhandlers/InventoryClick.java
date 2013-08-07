@@ -27,8 +27,6 @@ public class InventoryClick extends ListenerWrapper implements Listener {
                 event.setResult(Event.Result.DENY);
                 event.getInventory().addItem(item);
                 event.setCursor(new ItemStack(Material.AIR));
-            } else if(event.getSlot() != -999 && !event.getCurrentItem().getType().equals(Material.AIR)) {
-                event.setResult(Event.Result.DENY);
             } else if(item.getType().equals(Material.AIR)) {
                 if(event.getRawSlot() == event.getSlot()) {
                     shopper.setBuying(true);

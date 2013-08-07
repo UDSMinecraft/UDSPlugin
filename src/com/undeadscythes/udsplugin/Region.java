@@ -21,7 +21,7 @@ public class Region extends Cuboid implements Saveable {
     private String data;
     private EnumSet<RegionFlag> flags = EnumSet.noneOf(RegionFlag.class);
     private RegionType type;
-    private PlayerRank rank = PlayerRank.NONE;
+    private PlayerRank rank;
 
     public Region(final String name, final Vector v1, final Vector v2, final Location warp, final SaveablePlayer owner, final String data, final RegionType type) {
         this.name = name;
@@ -70,7 +70,7 @@ public class Region extends Cuboid implements Saveable {
         record.add(getV1String());
         record.add(getV2String());
         record.add(LocationUtils.getString(warp));
-        record.add(owner == null ? "" : owner.getName());
+        record.add(owner == null ? "null" : owner.getName());
         final ArrayList<String> memberList = new ArrayList<String>(0);
         for(SaveablePlayer member : members) {
             memberList.add(member.getName());
@@ -79,7 +79,7 @@ public class Region extends Cuboid implements Saveable {
         record.add(data);
         record.add(StringUtils.join(flags.toArray(), ","));
         record.add(type.toString());
-        record.add(rank.toString());
+        record.add(rank == null ? "null" : rank.toString());
         return StringUtils.join(record.toArray(), "\t");
     }
 
@@ -118,7 +118,7 @@ public class Region extends Cuboid implements Saveable {
 
     public final void sendInfo(final SaveablePlayer player) {
         player.sendNormal("Region " + name + " info:");
-        player.sendText("Owner:" + (owner == null ? "" : " " + owner.getName()) + (rank.equals(PlayerRank.NONE) ? "" : " " + rank.toString() + "+"));
+        player.sendText("Owner:" + (owner == null ? "" : " " + owner.getName()) + (rank == null ? "" : " " + rank.toString() + "+"));
         player.sendText("Members: " + getMemberList());
         player.sendText("Type: " + type.toString());
         if(flags.isEmpty()) {
