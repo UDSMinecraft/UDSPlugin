@@ -12,7 +12,7 @@ import org.bukkit.util.Vector;
 
 /**
  * An extension of Minecraft players adding various fields and methods.
- * 
+ *
  * @author UndeadScythes
  */
 public class SaveablePlayer implements Saveable {
@@ -114,27 +114,27 @@ public class SaveablePlayer implements Saveable {
     public final void addTime(final long time) {
         timeLogged += time;
     }
-    
+
     public final Vector getLastVector() {
         return lastVector;
     }
-    
+
     public final void setLastVector(final Vector vector) {
         lastVector = vector;
     }
-    
+
     public final void addKill() {
         kills++;
         player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME).getScore(player).setScore(kills);
         pvpTime = System.currentTimeMillis();
     }
-    
+
     public final void removeKill() {
         kills--;
         player.getScoreboard().getObjective(DisplaySlot.BELOW_NAME).getScore(player).setScore(kills);
         pvpTime = System.currentTimeMillis();
     }
-    
+
     public final int getTotalExp() {
         return player.getTotalExperience();
     }
@@ -179,7 +179,7 @@ public class SaveablePlayer implements Saveable {
     public final boolean isBuying() {
         return isBuying;
     }
-    
+
     public final boolean hasPvp() {
         return pvp;
     }
@@ -197,11 +197,11 @@ public class SaveablePlayer implements Saveable {
         }
         return false;
     }
-    
+
     public final Location getShop() {
         return shop;
     }
-    
+
     public final void setShop(final Location shop) {
         this.shop = shop;
     }
@@ -405,7 +405,7 @@ public class SaveablePlayer implements Saveable {
     public final void release() {
         timeJailed = 0;
         jailSentence = 0;
-        if(!quietTeleport(WarpUtils.getWarp("jailout")) && !quietTeleport(UDSPlugin.getData().getSpawn())) {
+        if(!quietTeleport(WarpUtils.getWarp("jailout")) && !quietTeleport(getWorld().getSpawnLocation())) {
             player.teleport(player.getWorld().getSpawnLocation());
         }
     }
@@ -542,7 +542,7 @@ public class SaveablePlayer implements Saveable {
     public final boolean hasRank(final PlayerRank rank) {
         return this.rank.compareTo(rank) >= 0;
     }
-    
+
     public final boolean isRank(final PlayerRank rank) {
         return this.rank.equals(rank);
     }
@@ -671,7 +671,7 @@ public class SaveablePlayer implements Saveable {
         isAfk ^= true;
         return isAfk;
     }
-    
+
     public final void sendWhisper(final String message) {
         sendMessage(Color.WHISPER + message);
     }
@@ -729,31 +729,31 @@ public class SaveablePlayer implements Saveable {
             player.sendMessage(message);
         }
     }
-    
+
     public final void sendPrivate(final String message) {
         sendMessage(Color.PRIVATE + message);
     }
-    
+
     public final void sendNormal(final String message) {
         sendMessage(Color.MESSAGE + message);
     }
-    
+
     public final void sendError(final String message) {
         sendMessage(Color.ERROR + message);
     }
-    
+
     public final void sendClan(final String message) {
         sendMessage(Color.CLAN + message);
     }
-    
+
     public final void sendBroadcast(final String message) {
         sendMessage(Color.BROADCAST + message);
     }
-    
+
     public final void sendListItem(final String item, final String message) {
         sendMessage(Color.ITEM + item + Color.TEXT + message);
     }
-    
+
     public final void sendText(final String message) {
         sendMessage(Color.TEXT + message);
     }
@@ -916,27 +916,27 @@ public class SaveablePlayer implements Saveable {
     public final Entity getVehicle() {
         return player == null ? null : player.getVehicle();
     }
-    
+
     public final ChatColor getRankColor() {
         return rank.getColor();
     }
-    
+
     public final boolean outRanks(final SaveablePlayer player) {
         return !player.hasRank(rank);
     }
-    
+
     public final String getRankName() {
         return rank.name();
     }
-    
+
     public final boolean sameRank(final SaveablePlayer player) {
         return player.isRank(rank);
     }
-    
+
     public final PlayerRank getRank() {
         return rank;
     }
-    
+
     public final void togglePvp() {
         pvp ^= true;
         if(pvp) {
@@ -954,19 +954,19 @@ public class SaveablePlayer implements Saveable {
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
     }
-    
+
     public final int getKills() {
         return kills;
     }
-    
+
     public final long getPvpTime() {
         return pvpTime;
     }
     public final void newLogin(final long time) {
         lastLogins.add(time);
-        while(lastLogins.size() > 2) {   
+        while(lastLogins.size() > 2) {
             lastLogins.remove();
-        }       
+        }
     }
     public final boolean isActive() {
         return lastLogins.size() == 2 && System.currentTimeMillis() - TimeUtils.WEEK < lastLogins.get(1);
