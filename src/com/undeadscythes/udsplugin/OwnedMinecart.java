@@ -7,7 +7,7 @@ import org.bukkit.inventory.*;
 
 /**
  * A minecart owned by a player.
- * 
+ *
  * @author UndeadScythes
  */
 public class OwnedMinecart {
@@ -24,7 +24,7 @@ public class OwnedMinecart {
     }
 
     public final boolean near(final Location location) {
-        return minecart.getLocation().distance(location) < 2;
+        return minecart.getWorld().equals(location.getWorld()) && minecart.getLocation().distance(location) < 2;
     }
 
     public final int age(final int ticks) {
