@@ -142,6 +142,24 @@ public class UDSPlugin extends JavaPlugin {
         worldFlags.getConfig().set(world.getName() + ".mode", mode.getValue());
     }
 
+    public static void setWorldSpawn(final Location location) {
+        worldFlags.getConfig().set(location.getWorld().getName() + ".spawn.x", location.getX());
+        worldFlags.getConfig().set(location.getWorld().getName() + ".spawn.y", location.getY());
+        worldFlags.getConfig().set(location.getWorld().getName() + ".spawn.z", location.getZ());
+        worldFlags.getConfig().set(location.getWorld().getName() + ".spawn.pitch", location.getPitch());
+        worldFlags.getConfig().set(location.getWorld().getName() + ".spawn.yaw", location.getYaw());
+    }
+
+    public static Location getWorldSpawn(final World world) {
+        Location spawn;
+        if(worldFlags.getConfig().contains(world.getName() + ".spawn")) {
+            spawn = new Location(world, worldFlags.getConfig().getDouble(world.getName() + ".spawn.x"), worldFlags.getConfig().getDouble(world.getName() + ".spawn.y"), worldFlags.getConfig().getDouble(world.getName() + ".spawn.z"), (float)worldFlags.getConfig().getDouble(world.getName() + ".spawn.yaw"), (float)worldFlags.getConfig().getDouble(world.getName() + ".spawn.pitch"));
+        } else {
+            spawn = world.getSpawnLocation();
+        }
+        return spawn;
+    }
+
     public static GameMode getWorldMode(final World world) {
         final String path = world.getName() + ".mode";
         if(worldFlags.getConfig().contains(path)) {

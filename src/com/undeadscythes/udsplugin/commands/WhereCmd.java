@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
 /**
@@ -11,7 +12,7 @@ public class WhereCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         final Location location = player().getLocation();
-        final Location spawn = player().getWorld().getSpawnLocation();
+        final Location spawn = UDSPlugin.getWorldSpawn(player().getWorld());
         String message = "You are " + (int)location.distance(spawn) + " blocks from spawn in world " + location.getWorld().getName() + ",";
         if(location.getBlockY() < 64) {
             message = message.concat(" " + (64 - location.getBlockY()) + " blocks below sea level");
