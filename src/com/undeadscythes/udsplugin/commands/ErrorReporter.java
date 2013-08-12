@@ -76,8 +76,9 @@ public abstract class ErrorReporter {
         return flag;
     }
     
-    protected final WorldFlag getWorldFlag(final String name) {
-        final WorldFlag flag = WorldFlag.getByName(name);
+    protected final Flag getWorldFlag(final String name) {
+        Flag flag = WorldFlag.getByName(name);
+        if(flag == null) flag = RegionFlag.getByName(name);
         if(flag == null) player.sendError("That is not a valid world flag.");
         return flag;
     }

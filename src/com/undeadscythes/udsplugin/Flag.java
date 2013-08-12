@@ -5,4 +5,7 @@ package com.undeadscythes.udsplugin;
  * 
  * @author UndeadScythes
  */
-public interface Flag {}
+public interface Flag {
+    public String name();
+    public boolean isDefaulted();
+}
