@@ -27,6 +27,8 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
             final SaveablePlayer killer = PlayerUtils.getOnlinePlayer(victim.getKiller().getName());
             if(killer != null) {
                 pvp(killer, victim);
+            } else {
+                event.setDeathMessage(event.getDeathMessage().replace(" by ", " by a "));
             }
         }
         dropItems(victim);
