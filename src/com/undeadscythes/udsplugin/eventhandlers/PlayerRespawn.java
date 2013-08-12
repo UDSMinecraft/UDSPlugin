@@ -7,7 +7,7 @@ import org.bukkit.event.player.*;
 
 /**
  * Fired when a player respawns.
- * 
+ *
  * @author UndeadScythes
  */
 public class PlayerRespawn extends ListenerWrapper implements Listener {
@@ -19,7 +19,7 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
             if(home != null && home.getWorld().equals(player.getWorld())) {
                 event.setRespawnLocation(LocationUtils.findSafePlace(home.getWarp()));
             } else {
-                event.setRespawnLocation(player.getWorld().getSpawnLocation());
+                event.setRespawnLocation(UDSPlugin.getWorldSpawn(player.getWorld()));
             }
         }
         if(player.hasPerm(Perm.BACK_ON_DEATH)) {

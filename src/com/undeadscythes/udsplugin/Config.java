@@ -126,6 +126,7 @@ public class Config {
         CURRENCY = config.getString("currency.singular");
         MAIN_WORLD = config.getString("world-name");
         WELCOME_GIFT = Material.getMaterial(config.getString("welcome.gift"));
+        if(WELCOME_GIFT == null) WELCOME_GIFT = Material.EMERALD;
         SERVER_RULES = config.getStringList("server-rules");
         PISTON_POWER = config.getDouble("piston-power");
         SHARES = config.getStringList("inventory-shares");

@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 /**
  * Provides checks for listeners.
- * 
+ *
  * @author UndeadScythes
  */
 public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
@@ -86,12 +86,14 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
     }
 
     public final boolean hasFlag(final Location location, final RegionFlag flag) {
+        boolean openSpace = true;
         for(Region region : RegionUtils.getRegions()) {
             if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
                 if(region.hasFlag(flag)) return true;
+                openSpace = false;
             }
         }
-        return Config.GLOBAL_FLAGS.get(flag);
+        return openSpace && UDSPlugin.checkWorldFlag(location.getWorld(), flag);
     }
 
     public final boolean regionsContain(final List<Region> regions, final Location location) {
@@ -128,7 +130,7 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         }
         return false;
     }
-    
+
     public final Portal findPortal(final Location location) {
         for(Portal portal : PortalUtils.getPortals()) {
             if(location.toVector().isInAABB(portal.getV1().clone().add(new Vector(-1.5, -1.5, -1.5)), portal.getV2().clone().add(new Vector(1.5, 1.5, 1.5)))) {

@@ -11,7 +11,7 @@ import org.bukkit.inventory.*;
 
 /**
  * Fired when a player joins the server.
- * 
+ *
  * @author UndeadScythes
  */
 public class PlayerJoin implements Listener {
@@ -52,6 +52,7 @@ public class PlayerJoin implements Listener {
             }
             player.newLogin(System.currentTimeMillis());
             if(player.isHidden()) {
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "dynmap hide " + player.getName());
                 for(final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if(!PlayerUtils.getOnlinePlayer(onlinePlayer.getName()).hasPerm(Perm.VANISH)) {
                         player.hideFrom(onlinePlayer, true);

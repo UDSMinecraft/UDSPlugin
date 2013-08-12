@@ -6,7 +6,7 @@ import org.bukkit.util.*;
 
 /**
  * Home region related commands.
- * 
+ *
  * @author UndeadScythes
  */
 public class HomeCmd extends CommandHandler {
@@ -99,7 +99,7 @@ public class HomeCmd extends CommandHandler {
                 }
             } else if(subCmdEquals("boot")) {
                 if((home = getHome()) != null && (target = matchOnlinePlayer(arg(1))) != null  && isInHome(target, home)) {
-                    target.teleport(player().getWorld().getSpawnLocation());
+                    target.teleport(UDSPlugin.getWorldSpawn(player().getWorld()));
                     target.sendNormal(player().getNick() + " has booted you from their home.");
                     player().sendNormal(target.getNick() + " has been booted.");
                 }
