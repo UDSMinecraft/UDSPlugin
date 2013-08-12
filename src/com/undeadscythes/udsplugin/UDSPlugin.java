@@ -121,7 +121,7 @@ public class UDSPlugin extends JavaPlugin {
         return plugin.getDescription().getVersion();
     }
 
-    public static boolean checkWorldFlag(final World world, final WorldFlag flag) {
+    public static boolean checkWorldFlag(final World world, final Flag flag) {
         FileConfiguration flags = worldFlags.getConfig();
         final String path = world.getName() + "." + flag.name();
         if(flags.contains(path)) {
@@ -132,7 +132,7 @@ public class UDSPlugin extends JavaPlugin {
         return def;
     }
 
-    public static boolean toggleWorldFlag(final World world, final WorldFlag flag) {
+    public static boolean toggleWorldFlag(final World world, final Flag flag) {
         final boolean after = !checkWorldFlag(world, flag);
         worldFlags.getConfig().set(world.getName() + "." + flag.name(), after);
         return after;
