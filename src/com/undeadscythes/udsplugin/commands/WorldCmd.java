@@ -8,7 +8,7 @@ import org.bukkit.entity.*;
 
 /**
  * Handles the various multi-world operations.
- * 
+ *
  * @author UndeadScythes
  */
 public class WorldCmd extends CommandHandler {
@@ -23,12 +23,8 @@ public class WorldCmd extends CommandHandler {
                 }
                 player().sendText(worldList.substring(2));
             } else if(subCmdEquals("setspawn")) {
-                final Location location = player().getLocation();
-                if(player().getWorld().setSpawnLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ())) {
-                    player().sendNormal("Spawn location of world " + player().getWorld().getName() + " set.");
-                } else {
-                    player().sendError("Could not set spawn location.");
-                }
+                UDSPlugin.setWorldSpawn(player().getLocation());
+                player().sendNormal("Spawn location of world " + player().getWorld().getName() + " set.");
             } else if(subCmdEquals("info")) {
                 sendInfo(player().getWorld());
             } else {
@@ -38,7 +34,7 @@ public class WorldCmd extends CommandHandler {
             if(subCmdEquals("tp")) {
                 final World world = Bukkit.getWorld(arg(1));
                 if(world != null) {
-                    player().teleport(world.getSpawnLocation());
+                    player().teleport(UDSPlugin.getWorldSpawn(player().getWorld()));
                 } else {
                     player().sendError("That world does not exist.");
                 }
@@ -106,7 +102,7 @@ public class WorldCmd extends CommandHandler {
             }
         }
     }
-    
+
     private void sendInfo(final World world) {
         player().sendNormal("World " + world.getName() + " info:");
         player().sendText("Game mode: " + UDSPlugin.getWorldMode(world).toString().toLowerCase());
@@ -127,14 +123,14 @@ public class WorldCmd extends CommandHandler {
             player().sendText("Flags: " + flagString.substring(0, flagString.length() - 2));
         }
     }
-    
+
     private void setFlag(final World world, final String flagName) {
         final Flag flag = getWorldFlag(flagName);
         if(flag != null) {
             player().sendNormal(world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }
     }
-    
+
     private void setMode(final World world, final String modeName) {
         final GameMode mode = getGameMode(modeName);
         if(mode != null) {
@@ -172,7 +168,7 @@ public class WorldCmd extends CommandHandler {
         }
         return world;
     }
-    
+
     private GameMode getGameMode(final String name) {
         GameMode mode = null;
         for(GameMode test : GameMode.values()) {

@@ -2,17 +2,17 @@ package com.undeadscythes.udsplugin.utilities;
 
 /**
  * Utility class for handling manipulation of long variables representing time.
- * 
+ *
  * @author UndeadScythe
  */
 public class TimeUtils {
     public static final long TICK = 50;
-    public static final long SECOND = TICK * 20;
+    public static final long SECOND = 1000;
     public static final long MINUTE = SECOND * 60;
     public static final long HOUR = MINUTE * 60;
     public static final long DAY = HOUR * 24;
     public static final long WEEK = DAY * 7;
-    
+
     public static String timeToString(final long time) {
         long timeRemaining = time;
         String timeString = "";
