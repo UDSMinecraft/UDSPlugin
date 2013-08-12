@@ -16,6 +16,7 @@ public enum WorldFlag implements Flag {
         this.defaulted = defaulted;
     }
 
+    @Override
     public final boolean isDefaulted() {
         return defaulted;
     }
