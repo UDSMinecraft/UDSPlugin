@@ -67,10 +67,10 @@ public class PlotCmd extends CommandHandler {
             } while(RegionUtils.getRegion(RegionType.PLOT, name) != null);
             final Region plot = new Region(name, v1, v2, player().getLocation(), player(), "", RegionType.PLOT);
             RegionUtils.addRegion(plot);
-            square(v1.clone().subtract(new Vector(3, 0, 3)), v2.clone().add(new Vector(4, 0, 4)), Material.QUARTZ_BLOCK);
-            square(v1.clone().subtract(new Vector(1, 0, 1)), v2.clone().add(new Vector(2, 0, 2)), Material.NETHER_BRICK);
-            square(v1.clone(), v2.clone().add(new Vector(1, 0 ,1)), Material.GRASS);
-            player().sendNormal("Region claimed.");
+            square(v1.clone().subtract(new Vector(3, 0, 3)), v2.clone().add(new Vector(4, 0, 4)), 3, Material.QUARTZ_BLOCK);
+            square(v1.clone().subtract(new Vector(1, 0, 1)), v2.clone().add(new Vector(2, 0, 2)), 3, Material.NETHER_BRICK);
+            square(v1.clone(), v2.clone().add(new Vector(1, 0 ,1)), 3, Material.GRASS);
+            player().sendNormal("Plot claimed.");
         } else {
             player().sendError("This plot has already been claimed.");
         }
@@ -84,16 +84,27 @@ public class PlotCmd extends CommandHandler {
             plot = ownsPlot(plotName);
         }
         if(plot != null) {
+            final Vector v1 = plot.getV1();
+            final Vector v2 = plot.getV2().clone().add(new Vector(1, 0, 1));
+            int y = UDSPlugin.BUILD_LIMIT;
+            while(y > 3) {
+                square(v1, v2, y--, Material.AIR);
+            }
+            square(v1, v2, y--, Material.GRAVEL);
+            while(y > 0) {
+                square(v1, v2, y--, Material.DIRT);
+            }
+            square(v1, v2, 0, Material.BEDROCK);
             RegionUtils.removeRegion(plot);
             player().sendNormal(plot.getName() + " removed.");
         }
     }
     
-    private void square(final Vector v1, final Vector v2, final Material m) {
+    private void square(final Vector v1, final Vector v2, final int y, final Material m) {
         final World world = player().getWorld();
         for(int x = v1.getBlockX(); x < v2.getBlockX(); x++) {
             for(int z = v1.getBlockZ(); z < v2.getBlockZ(); z++) {
-                world.getBlockAt(x, 3, z).setType(m);
+                world.getBlockAt(x, y, z).setType(m);
             }
         }
     }
