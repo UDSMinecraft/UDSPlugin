@@ -162,19 +162,19 @@ public class UDSPlugin extends JavaPlugin {
     public static boolean isHostileMob(final EntityType mob) {
         return HOSTILE_MOBS.contains(mob);
     }
-    
+
     public static boolean isWater(final Material type) {
         return WATER.contains(type);
     }
-    
+
     public static void addRequest(final String name, final Request request) {
         REQUESTS.put(name, request);
     }
-    
+
     public static ChatRoom getChatRoom(final String name) {
         return CHAT_ROOMS.get(name);
     }
-    
+
     public static void addChatRoom(final String name, final ChatRoom chatRoom) {
         CHAT_ROOMS.put(name, chatRoom);
     }
@@ -182,7 +182,7 @@ public class UDSPlugin extends JavaPlugin {
     public static void removeRequest(final String name) {
         REQUESTS.remove(name);
     }
-    
+
     public static UDSPlugin getPlugin() {
         return plugin;
     }
@@ -220,14 +220,14 @@ public class UDSPlugin extends JavaPlugin {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
         final BukkitScheduler sched = Bukkit.getScheduler();
-        sched.scheduleSyncRepeatingTask(this, afkCheck, 300000, 300000);
-        sched.scheduleSyncRepeatingTask(this, autoSave, 18000, 18000);
-        sched.scheduleSyncRepeatingTask(this, dragonRespawn, 6000, 36000);
-        sched.scheduleSyncRepeatingTask(this, minecartChecks, 400, 400);
-        sched.scheduleSyncRepeatingTask(this, playerChecks, 100, 100);
-        sched.scheduleSyncRepeatingTask(this, quarryRefill, 1656000, 1656000);
-        sched.scheduleSyncRepeatingTask(this, requestTimeOut, 200, 200);
-        sched.scheduleSyncRepeatingTask(this, vipSpawns, 1656000, 1656000);
+        sched.scheduleSyncRepeatingTask(this, afkCheck, TimeUtils.MINUTE * 5 / TimeUtils.TICK, TimeUtils.MINUTE * 5 / TimeUtils.TICK);
+        sched.scheduleSyncRepeatingTask(this, autoSave, TimeUtils.MINUTE * 15 / TimeUtils.TICK, TimeUtils.MINUTE * 15 / TimeUtils.TICK);
+        sched.scheduleSyncRepeatingTask(this, dragonRespawn, TimeUtils.MINUTE / TimeUtils.TICK, TimeUtils.HOUR / TimeUtils.TICK);
+        sched.scheduleSyncRepeatingTask(this, minecartChecks, TimeUtils.MINUTE / TimeUtils.TICK, TimeUtils.SECOND * 5 / TimeUtils.TICK);
+        sched.scheduleSyncRepeatingTask(this, playerChecks, TimeUtils.MINUTE / TimeUtils.TICK, TimeUtils.SECOND * 5 / TimeUtils.TICK);
+        sched.scheduleSyncRepeatingTask(this, quarryRefill, TimeUtils.HOUR / TimeUtils.TICK, TimeUtils.DAY / TimeUtils.TICK);
+        sched.scheduleSyncRepeatingTask(this, requestTimeOut, TimeUtils.MINUTE / TimeUtils.TICK, TimeUtils.SECOND * 15 / TimeUtils.TICK);
+        sched.scheduleSyncRepeatingTask(this, vipSpawns, TimeUtils.HOUR / TimeUtils.TICK, TimeUtils.DAY / TimeUtils.TICK);
         getLogger().info("Timers started.");
         setCommandExecutors();
         getLogger().info("Commands registered.");
