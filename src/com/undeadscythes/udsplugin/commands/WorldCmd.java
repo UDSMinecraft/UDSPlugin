@@ -116,6 +116,11 @@ public class WorldCmd extends CommandHandler {
                 flagString = flagString.concat(test.toString() + ", ");
             }
         }
+        for(RegionFlag test : RegionFlag.values()) {
+            if(UDSPlugin.checkWorldFlag(world, test)) {
+                flagString = flagString.concat(test.toString() + ", ");
+            }
+        }
         if("".equals(flagString)) {
             player().sendText("No flags.");
         } else {
@@ -124,7 +129,7 @@ public class WorldCmd extends CommandHandler {
     }
     
     private void setFlag(final World world, final String flagName) {
-        final WorldFlag flag = getWorldFlag(flagName);
+        final Flag flag = getWorldFlag(flagName);
         if(flag != null) {
             player().sendNormal(world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }
