@@ -34,7 +34,7 @@ public class WorldCmd extends CommandHandler {
             if(subCmdEquals("tp")) {
                 final World world = Bukkit.getWorld(arg(1));
                 if(world != null) {
-                    player().teleport(UDSPlugin.getWorldSpawn(player().getWorld()));
+                    player().teleport(UDSPlugin.getWorldSpawn(world));
                 } else {
                     player().sendError("That world does not exist.");
                 }
