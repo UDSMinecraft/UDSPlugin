@@ -91,7 +91,7 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
                 if(region.hasFlag(flag)) return true;
             }
         }
-        return Config.GLOBAL_FLAGS.get(flag);
+        return UDSPlugin.checkWorldFlag(location.getWorld(), flag);
     }
 
     public final boolean regionsContain(final List<Region> regions, final Location location) {
