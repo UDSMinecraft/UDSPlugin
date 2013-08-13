@@ -2,11 +2,12 @@ package com.undeadscythes.udsplugin.commands;
 
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
 /**
  * Rent VIP rank and perform other tasks.
- * 
+ *
  * @author UndeadScythes
  */
 public class VIPCmd extends CommandHandler {
@@ -31,6 +32,14 @@ public class VIPCmd extends CommandHandler {
                     if(page != -1) {
                         sendPage(page, player());
                     }
+                }
+            } else if(player().hasPerm(Perm.VIP_FOR_LIFE)) {
+                SaveablePlayer target;
+                if((target = matchPlayer(arg(0))) != null) {
+                    target.setRank(PlayerRank.VIP);
+                    target.setVipForLife(true);
+                    target.sendNormal("You have been granted VIP for life.");
+                    player().sendNormal(target.getNick() + " has been granted VIP for life.");
                 }
             } else {
                 subCmdHelp();
