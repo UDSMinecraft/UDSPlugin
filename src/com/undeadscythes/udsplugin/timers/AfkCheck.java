@@ -16,6 +16,7 @@ public class AfkCheck implements Runnable {
         Iterator<SaveablePlayer> i = PlayerUtils.getOnlinePlayers().iterator();
         while(i.hasNext()) {
             SaveablePlayer player = i.next();
+            if(player.hasPerm(Perm.UNKICKABLE)) continue;
             final Vector vector = VectorUtils.getFlooredVector(player.getLocation().toVector());
             if(vector.isInSphere(player.getLastVector(), 1)) {
                 player.kickPlayer("You have been kicked for idling.");
