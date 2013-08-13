@@ -59,6 +59,7 @@ public class SaveablePlayer implements Saveable {
     private Vector lastVector;
     private Location shop;
     private final LinkedList<Long> lastLogins = new LinkedList<Long>();
+    private boolean vipForLife = false;
 
     public SaveablePlayer(final Player player) {
         this.player = player;
@@ -109,6 +110,14 @@ public class SaveablePlayer implements Saveable {
         player.setDisplayName(nick);
         player.setPlayerListName(nick);
         lastVector = player.getLocation().toVector();
+    }
+
+    public void setVipForLife(boolean setting) {
+        vipForLife = setting;
+    }
+
+    public boolean isVipForLife() {
+        return vipForLife;
     }
 
     public final void addTime(final long time) {
