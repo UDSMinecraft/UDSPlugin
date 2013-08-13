@@ -4,7 +4,7 @@ import org.bukkit.*;
 
 /**
  * Permissions to use within UDSPlugin.
- * 
+ *
  * @author UndeadScythes
  */
 public enum Perm {
@@ -126,6 +126,7 @@ public enum Perm {
     UNKICKABLE(PlayerRank.MOD),
     VANISH(PlayerRank.MOD),
     VIP(PlayerRank.MEMBER),
+    VIP_FOR_LIFE(PlayerRank.ADMIN),
     VIP_RANK(PlayerRank.VIP, false),
     VIP_BUY(PlayerRank.MEMBER, false),
     WAND(PlayerRank.MEMBER),
@@ -165,11 +166,11 @@ public enum Perm {
     private Perm(final PlayerRank rank) {
         this(rank, true, null);
     }
-    
+
     private Perm(final PlayerRank rank, final boolean hereditary) {
         this(rank, hereditary, null);
     }
-    
+
     private Perm(final PlayerRank rank, final GameMode mode) {
         this(rank, true, mode);
     }
@@ -181,7 +182,7 @@ public enum Perm {
     public final boolean isHereditary() {
         return hereditary;
     }
-    
+
     public final GameMode getMode() {
         return mode;
     }
