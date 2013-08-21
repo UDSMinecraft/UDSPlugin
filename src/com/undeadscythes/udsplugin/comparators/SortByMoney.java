@@ -8,9 +8,9 @@ import java.util.*;
  * 
  * @author UndeadScythe
  */
-public class SortByMoney implements Comparator<SaveablePlayer> {
+public class SortByMoney implements Comparator<Member> {
     @Override
-    public final int compare(final SaveablePlayer player1, final SaveablePlayer player2) {
+    public final int compare(final Member player1, final Member player2) {
         return player2.getMoney() - player1.getMoney();
     }
 }

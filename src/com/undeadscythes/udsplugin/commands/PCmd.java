@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -11,7 +12,7 @@ public class PCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(getChatRoom() != null) {
-            if(argsLength() == 0) {
+            if(args.length == 0) {
                 if(player().toggleChannel(ChatChannel.PRIVATE)) {
                     player().sendNormal("You are now talking in .");
                 } else {

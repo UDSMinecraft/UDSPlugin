@@ -3,8 +3,6 @@ package com.undeadscythes.udsplugin;
 import org.bukkit.*;
 
 /**
- * A player rank granting permission.
- * 
  * @author UndeadScythes
  */
 public enum PlayerRank {
@@ -17,14 +15,14 @@ public enum PlayerRank {
     OWNER(ChatColor.GOLD, 5);
 
     private final ChatColor color;
-    private final int ranking;
+    protected final int ranking;
 
     PlayerRank(final ChatColor color, final int rank) {
         this.color = color;
         this.ranking = rank;
     }
 
-    public final ChatColor getColor() {
+    public ChatColor getColor() {
         return color;
     }
 
@@ -55,7 +53,7 @@ public enum PlayerRank {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return name().toLowerCase();
     }
 }

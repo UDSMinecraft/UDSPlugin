@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsmeta.*;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.timers.*;
+import com.undeadscythes.udsplugin.timers.MinecartCheck;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -16,14 +17,12 @@ import org.bukkit.material.*;
 import org.bukkit.util.Vector;
 
 /**
- * Fired when a player interacts with the world.
- * 
  * @author UndeadScythes
  */
 public class PlayerInteract extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final PlayerInteractEvent event) {
-        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+    public void onEvent(final PlayerInteractEvent event) {
+        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
         final Material inHand = player.getItemInHand().getType();
         final Block block = event.getClickedBlock();
         switch(event.getAction()) {
@@ -56,11 +55,15 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 } else if(inHand == Material.COMPASS && player.hasPerm(Perm.COMPASS)) {
                     compassTeleport(player, true);
                     event.setCancelled(true);
-                } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
-                    activatePowertool(player);
-                    event.setCancelled(true);
                 } else {
-                    event.setCancelled(expBlocked(player));
+                    try {
+                        if(inHand.getId() == player.getPowertoolID()) {
+                            activatePowertool(player);
+                            event.setCancelled(true);
+                        }
+                    } catch (NoMetadataSetException ex) {
+                        event.setCancelled(expBlocked(player));
+                    }
                 }
                 break;
             case RIGHT_CLICK_BLOCK:
@@ -82,15 +85,19 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 } else if(block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST) {
                     signPunch(player, (Sign)block.getState());
                     event.setCancelled(true);
-                } else if(!"".equals(player.getPowertool()) && inHand.getId() == player.getPowertoolID()) {
-                    activatePowertool(player);
-                    event.setCancelled(true);
                 } else if(inHand == Material.MINECART && UDSPlugin.isRail(block.getType())) {
                     minecartPlaced(player, block.getLocation());
                     player.setItemInHand(new ItemStack(Material.AIR));
                     event.setCancelled(true);
                 } else {
-                    event.setCancelled(blockLocked(block, player) || bonemealBlocked(block, player) || expBlocked(player));
+                    try {
+                        if(inHand.getId() == player.getPowertoolID()) {
+                            activatePowertool(player);
+                            event.setCancelled(true);
+                        }
+                    } catch (NoMetadataSetException ex) {
+                        event.setCancelled(blockLocked(block, player) || bonemealBlocked(block, player) || expBlocked(player));
+                    }
                 }
                 break;
             case PHYSICAL:
@@ -99,11 +106,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    private void activatePowertool(final SaveablePlayer player) {
+    private void activatePowertool(final Member player) {
         player.performCommand(player.getPowertool());
     }
-    
-    private boolean expBlocked(final SaveablePlayer player) {
+
+    private boolean expBlocked(final Member player) {
         if(UDSPlugin.getWorldMode(player.getWorld()).equals(GameMode.CREATIVE)) {
             if(player.getItemInHand().getType().equals(Material.EXP_BOTTLE) || player.getItemInHand().getType().equals(Material.ENDER_CHEST)) {
                 return true;
@@ -112,11 +119,11 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         return false;
     }
 
-    private boolean bonemealBlocked(final Block block, final SaveablePlayer player) {
+    private boolean bonemealBlocked(final Block block, final Member player) {
         return player.getItemInHand().getType() == Material.INK_SACK && player.getItemInHand().getData().getData() == (byte)15 && !player.canBuildHere(block.getLocation());
     }
 
-    private boolean blockLocked(final Block block, final SaveablePlayer player) {
+    private boolean blockLocked(final Block block, final Member player) {
         final Material material = block.getType();
         if(material == Material.WOODEN_DOOR || material == Material.IRON_DOOR_BLOCK || material == Material.TRAP_DOOR || material == Material.FENCE_GATE) {
             final Location location = block.getLocation();
@@ -143,7 +150,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         return false;
     }
 
-    private void setMobSpawner(final Block block, final SaveablePlayer player) {
+    private void setMobSpawner(final Block block, final Member player) {
         final byte data = player.getItemInHand().getData().getData();
         final MaterialData material = new MaterialData(Material.MONSTER_EGG, data);
         player.setItemInHand(material.toItemStack(player.getItemInHand().getAmount() - 1));
@@ -151,7 +158,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         player.sendNormal("Spawner set.");
     }
 
-    private void setPoint1(final SaveablePlayer player, final Block block) {
+    private void setPoint1(final Member player, final Block block) {
         final EditSession session = player.forceSession();
         session.setPoint1(block.getLocation());
         player.sendNormal("Point 1 set.");
@@ -160,7 +167,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    private void setPoint2(final SaveablePlayer player, final Block block) {
+    private void setPoint2(final Member player, final Block block) {
         final EditSession session = player.forceSession();
         session.setPoint2(block.getLocation());
         player.sendNormal("Point 2 set.");
@@ -169,7 +176,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    private void compassTeleport(final SaveablePlayer player, final boolean phase) {
+    private void compassTeleport(final Member player, final boolean phase) {
         if(phase) {
             final List<Block> los = player.getLastTwoTargetBlocks(UDSPlugin.TRANSPARENT_BLOCKS, Config.COMPASS_RANGE);
             if(los.size() == 1) {
@@ -192,7 +199,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    private void sendRegionInfo(final SaveablePlayer player, final Location location, final boolean verbose) {
+    private void sendRegionInfo(final Member player, final Location location, final boolean verbose) {
         if(verbose) {
             final List<Region> testRegions = RegionUtils.getRegionsHere(location);
             if(testRegions.isEmpty()) {
@@ -222,7 +229,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    private void signPunch(final SaveablePlayer player, final Sign sign) {
+    private void signPunch(final Member player, final Sign sign) {
         final String cantDoThat = "You can't do that.";
         if(sign.getLine(0).equals(Color.SIGN + "[CHECKPOINT]")) {
             if(player.hasPerm(Perm.CHECK)) {
@@ -302,7 +309,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
         }
     }
 
-    private void minecartPlaced(final SaveablePlayer player, final Location location) {
+    private void minecartPlaced(final Member player, final Location location) {
         MinecartCheck.tagMinecart(player, location);
     }
 }

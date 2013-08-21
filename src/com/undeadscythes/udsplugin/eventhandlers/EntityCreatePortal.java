@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.ListenerWrapper;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.event.*;

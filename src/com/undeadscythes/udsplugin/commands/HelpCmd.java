@@ -1,21 +1,20 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
 
 /**
- * Get help on certain commands.
- * 
  * @author UndeadScythes
  */
 public class HelpCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(maxArgsHelp(2)) {
-            if(argsLength() == 0 || (argsLength() == 1 && arg(0).matches("[0-9][0-9]*"))) {
+            if(args.length == 0 || (args.length == 1 && args[0].matches("[0-9][0-9]*"))) {
                 sendHelpFiles();
-            } else if(argsLength() == 1 || (argsLength() == 2 && arg(1).matches("[0-9][0-9]*"))) {
-                final Usage usage = Usage.getByName(arg(0));
+            } else if(args.length == 1 || (args.length == 2 && args[1].matches("[0-9][0-9]*"))) {
+                final Usage usage = Usage.getByName(args[0]);
                 if(usage == null) {
                     player().sendError("No command exists by that name.");
                 } else {
@@ -36,8 +35,8 @@ public class HelpCmd extends CommandHandler {
                 usages.add(usage);
             }
         }
-        if(argsLength() == 1) {
-            sendPage(Integer.parseInt(arg(0)), player(), usages, "Help");
+        if(args.length == 1) {
+            sendPage(Integer.parseInt(args[0]), player(), usages, "Help");
         } else {
             sendPage(1, player(), usages, "Help");
         }
@@ -50,14 +49,14 @@ public class HelpCmd extends CommandHandler {
                 extensions.add(extension);
             }
         }
-        if(argsLength() == 2) {
-            sendPage(Integer.parseInt(arg(1)), player(), extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
+        if(args.length == 2) {
+            sendPage(Integer.parseInt(args[1]), player(), extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
         } else {
             sendPage(1, player(), extensions, usage.cmd().replaceFirst("[a-z]", usage.cmd().substring(0, 1).toUpperCase()) + " Help");
         }
     }
 
-    private void sendPage(final int page, final SaveablePlayer player, final Set<Usage> list, final String title) {
+    private void sendPage(final int page, final Member player, final Set<Usage> list, final String title) {
         final int pages = (list.size() + 8) / 9;
         if(pages == 0) {
             player.sendNormal("There is no help available.");
@@ -77,7 +76,7 @@ public class HelpCmd extends CommandHandler {
             }
         }
     }
-    
+
     private enum Usage {
         HELP(Perm.HELP, "/help [page or command]", "Show these help pages."),
         TICKET(Perm.TICKET, "/ticket <message>", "Submit a suggestion or a bug report."),
@@ -346,14 +345,14 @@ public class HelpCmd extends CommandHandler {
         private Usage(final Perm perm, final String usage, final String description) {
             this(perm, usage, description, false, null);
         }
-        
+
         private Usage(final Perm perm, final String usage, final String description, final boolean extended) {
             this(perm, usage, description, extended, null);
         }
         private Usage(final Perm perm, final String usage, final String description, final Usage extension) {
             this(perm, usage, description, false, extension);
         }
-        
+
         private Usage(final Perm perm, final String usage, final String description, final boolean extended, final Usage extension) {
             this.perm = perm;
             this.usage = usage;
@@ -361,7 +360,7 @@ public class HelpCmd extends CommandHandler {
             this.extension = extension;
             this.extended = extended;
         }
-        
+
         public static Usage getByName(final String name) {
             for(Usage use : values()) {
                 if(use.name().equalsIgnoreCase(name)) {
@@ -420,7 +419,7 @@ public class HelpCmd extends CommandHandler {
         public boolean isExtension() {
             return extension != null;
         }
-        
+
         public boolean isExtension(final Usage usage) {
             return extension == usage;
         }

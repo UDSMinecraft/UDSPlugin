@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+
 /**
  * Make it sunny in the players world.
  * 

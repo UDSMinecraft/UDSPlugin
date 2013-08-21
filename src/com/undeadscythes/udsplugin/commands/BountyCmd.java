@@ -1,29 +1,28 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.comparators.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 
 /**
- * Place and check bounties on players.
- * 
  * @author UndeadScythes
  */
 public class BountyCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         int bounty;
 
-        SaveablePlayer target;
-        if(argsLength() == 0) {
+        Member target;
+        if(args.length == 0) {
             sendPage(1, player());
-        } else if(argsLength() == 1) {
-            final int page = getInteger(arg(0));
+        } else if(args.length == 1) {
+            final int page = getInteger(args[0]);
             if(page > -1) {
                 sendPage(page, player());
             }
-        } else if(numArgsHelp(2) && (target = matchOtherPlayer(arg(0))) != null && (bounty = canAfford(arg(1))) != -1) {
+        } else if(numArgsHelp(2) && (target = matchOtherPlayer(args[0])) != null && (bounty = canAfford(args[1])) != -1) {
             player().debit(bounty);
             target.addBounty(bounty);
             UDSPlugin.sendBroadcast(player().getNick() + " placed a bounty on " + target.getNick() + ".");
@@ -35,10 +34,10 @@ public class BountyCmd extends CommandHandler {
      * @param page Page to send.
      * @param player Player to send page to.
      */
-    private void sendPage(final int page, final SaveablePlayer player) {
-        final List<SaveablePlayer> bounties = new ArrayList<SaveablePlayer>(0);
-        final List<SaveablePlayer> sortedPlayers = PlayerUtils.getSortedPlayers(new SortByBounty());
-        for(SaveablePlayer test : sortedPlayers) {
+    private void sendPage(final int page, final Member player) {
+        final List<Member> bounties = new ArrayList<Member>(0);
+        final List<Member> sortedPlayers = PlayerUtils.getSortedPlayers(new SortByBounty());
+        for(Member test : sortedPlayers) {
             if(test.getBounty() > 0) {
                 bounties.add(test);
             }
@@ -52,7 +51,7 @@ public class BountyCmd extends CommandHandler {
             player.sendNormal("--- Current Bounties " + (pages > 1 ? "Page " + page + "/" + pages + " " : "") + "---");
             int posted = 0;
             int skipped = 1;
-            for(SaveablePlayer bounty : bounties) {
+            for(Member bounty : bounties) {
                 if(skipped > (page - 1) * 9 && posted < 9) {
                     player.sendListItem(bounty.getNick() + "'s reward: ", bounty.getBounty() + " " + Config.CURRENCIES);
                     posted++;

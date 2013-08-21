@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.timers.*;
+import com.undeadscythes.udsplugin.timers.MinecartCheck;
+import com.undeadscythes.udsplugin.ListenerWrapper;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;

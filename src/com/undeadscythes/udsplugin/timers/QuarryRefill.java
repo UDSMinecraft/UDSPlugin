@@ -1,6 +1,8 @@
 package com.undeadscythes.udsplugin.timers;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.RegionType;
+import com.undeadscythes.udsplugin.UDSPlugin;
+import com.undeadscythes.udsplugin.Region;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.block.*;

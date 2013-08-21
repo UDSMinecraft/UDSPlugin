@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsmeta.*;
 import com.undeadscythes.udsplugin.Color;
-import com.undeadscythes.udsplugin.commands.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.commands.JailCmd;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import org.bukkit.*;
@@ -10,15 +11,13 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Fired when a player chats in game.
- * 
  * @author UndeadScythes
  */
 public class AsyncPlayerChat implements Listener {
     @EventHandler
-    public final void onEvent(final AsyncPlayerChatEvent event) throws IOException {
+    public void onEvent(final AsyncPlayerChatEvent event) throws IOException {
         event.setCancelled(true);
-        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
         final String logMessage = player.getNick() + ": " + event.getMessage();
         Bukkit.getLogger().info(logMessage);
         if(!player.newChat()) {
@@ -41,30 +40,34 @@ public class AsyncPlayerChat implements Listener {
                     JailCmd.jail(player, 1, 1);
                 }
             }
-            for(SaveablePlayer target : PlayerUtils.getOnlinePlayers()) {
+            for(Member target : PlayerUtils.getOnlinePlayers()) {
                 if(!target.isIgnoringPlayer(player)) {
                     target.sendMessage(message);
                 }
             }
         } else if(player.getChannel() == ChatChannel.ADMIN) {
             final String message = PlayerRank.ADMIN.getColor() + "[ADMIN] " + player.getNick() + ": " + event.getMessage();
-            for(SaveablePlayer target : PlayerUtils.getOnlinePlayers()) {
+            for(Member target : PlayerUtils.getOnlinePlayers()) {
                 if(target.hasPerm(Perm.ADMINCHAT)) {
                     target.sendMessage(message);
                 }
             }
         } else if(player.getChannel() == ChatChannel.CLAN) {
-            final Clan clan = player.getClan();
-            final String message = "[" + clan.getName() + "] " + player.getNick() + ": " + event.getMessage();
-            for(SaveablePlayer target : clan.getOnlineMembers()) {
-                target.sendClan(message);
-            }
+            try {
+                final Clan clan = player.getClan();
+                final String message = "[" + clan.getName() + "] " + player.getNick() + ": " + event.getMessage();
+                for(Member target : clan.getMembers()) {
+                    target.sendClan(message);
+                }
+            } catch (NoMetadataSetException ex) {}
         } else if(player.getChannel() == ChatChannel.PRIVATE) {
-            final ChatRoom chatRoom = player.getChatRoom();
-            final String message = "[" + chatRoom.getName() + "] " + player.getNick() + ": " + event.getMessage();
-            for(SaveablePlayer target : chatRoom.getOnlineMembers()) {
-                target.sendPrivate(message);
-            }
+            try {
+                final ChatRoom chatRoom = player.getChatRoom();
+                final String message = "[" + chatRoom.getName() + "] " + player.getNick() + ": " + event.getMessage();
+                for(Member target : chatRoom.getMembers()) {
+                    target.sendPrivate(message);
+                }
+            } catch (NoMetadataSetException ex) {}
         }
     }
 }

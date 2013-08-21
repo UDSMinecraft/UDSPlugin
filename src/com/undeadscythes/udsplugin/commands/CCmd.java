@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -10,7 +11,7 @@ import com.undeadscythes.udsplugin.*;
 public class CCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(argsLength() == 0 && getClan() != null) {
+        if(args.length == 0 && getClan() != null) {
             if(player().toggleChannel(ChatChannel.CLAN)) {
                 player().sendNormal("You are now talking in clan chat.");
             } else {

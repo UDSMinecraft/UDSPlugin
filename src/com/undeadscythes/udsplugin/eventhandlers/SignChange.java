@@ -7,20 +7,18 @@ import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
 /**
- * Fired when a player finishes editing text after placing a sign.
- * 
  * @author UndeadScythes
  */
 public class SignChange extends ListenerWrapper implements Listener {
-    private SaveablePlayer player;
+    private Member player;
     private Block block;
-    
+
     @EventHandler
-    public final void onEvent(final SignChangeEvent event) {
+    public void onEvent(final SignChangeEvent event) {
         final String line0 = event.getLine(0);
         final String line1 = event.getLine(1);
         final String line2 = event.getLine(2);
-        player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+        player = PlayerUtils.getOnlinePlayer(event.getPlayer());
         block = event.getBlock();
         if(line0.equalsIgnoreCase("[shop]") && checkPerm(Perm.SHOP_SIGN) && (player.hasPerm(Perm.SHOP_ANYWHERE) || checkShop())) {
             if(line1.matches(UDSPlugin.INT_REGEX)) {
@@ -66,7 +64,7 @@ public class SignChange extends ListenerWrapper implements Listener {
         block.breakNaturally();
         player.sendError("You have not written this sign correctly.");
     }
-    
+
     private boolean checkShop() {
         for(final Region region : RegionUtils.getRegionsHere(block.getLocation())) {
             if(region.getType().equals(RegionType.SHOP)) {

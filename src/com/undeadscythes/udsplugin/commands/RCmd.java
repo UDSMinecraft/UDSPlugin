@@ -1,16 +1,15 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Return a private message from another player.
- * 
  * @author UndeadScythes
  */
 public class RCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
-        SaveablePlayer target;
+    public void playerExecute() {
+        Member target;
         if(minArgsHelp(1) && (target = getWhisperer()) != null && matchOnlinePlayer(target.getName()) != null) {
             final String message = player().getNick() + " > " + target.getNick() + ": " + argsToMessage();
             player().sendWhisper(message);

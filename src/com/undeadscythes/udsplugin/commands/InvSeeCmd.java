@@ -1,17 +1,16 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Spy a players inventory.
- * 
  * @author UndeadScythes
  */
 public class InvSeeCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
-        SaveablePlayer target;
-        if(argsLength() == 0) {
+    public void playerExecute() {
+        Member target;
+        if(args.length == 0) {
             if(player().getInventoryCopy() == null) {
                 player().sendError("You have no saved inventory.");
             } else {
@@ -19,7 +18,7 @@ public class InvSeeCmd extends CommandHandler {
                 player().loadArmor();
                 player().sendNormal("Your inventory has been restored.");
             }
-        } else if(numArgsHelp(1) && (target = matchOnlinePlayer(arg(0))) != null && notSelf(target)) {
+        } else if(numArgsHelp(1) && (target = matchOnlinePlayer(args[0])) != null && notSelf(target)) {
             if(player().getInventoryCopy() == null) {
                 player().saveInventory();
                 player().saveArmor();

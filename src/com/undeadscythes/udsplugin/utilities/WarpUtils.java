@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.utilities;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.SaveableHashMap;
+import com.undeadscythes.udsplugin.Warp;
 import java.io.*;
 import java.util.*;
 

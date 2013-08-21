@@ -1,25 +1,24 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.inventory.*;
 
 /**
- * Shop related commands.
- * 
  * @author UndeadScythes
  */
 public class ShopCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         Region shop;
-        SaveablePlayer target;
+        Member target;
         int price;
-        if(argsLength() == 0) {
+        if(args.length == 0) {
             if((shop = getShop()) != null && notJailed() && notPinned()) {
                 player().teleport(shop.getWarp());
             }
-        } else if(argsLength() == 1) {
+        } else if(args.length == 1) {
             if(subCmdEquals("make")) {
                 if(hasPerm(Perm.SHOP_ADMIN)) {
                     player().performCommand("region set " + nextShopName() + " shop");
@@ -49,7 +48,7 @@ public class ShopCmd extends CommandHandler {
                     }
                     message = "";
                     if((shop = RegionUtils.getRegion(RegionType.SHOP, player().getName() + "shop")) != null) {
-                        for(SaveablePlayer member : shop.getMembers()) {
+                        for(Member member : shop.getMembers()) {
                             message = message.concat(member.getNick() + ", ");
                         }
                     }
@@ -89,12 +88,12 @@ public class ShopCmd extends CommandHandler {
                 player().sendText("Check out /shop sign to see how to format new shop signs.");
             } else if(subCmdEquals("help")) {
                 sendHelp(1);
-            } else if((target = matchPlayer(arg(0))) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {
+            } else if((target = matchOnlinePlayer(args[0])) != null && (shop = getShop(target)) != null && notJailed() && notPinned()) {
                 player().teleport(shop.getWarp());
             }
-        } else if(argsLength() == 2) {
+        } else if(args.length == 2) {
             if(subCmdEquals("hire")) {
-                if((target = matchPlayer(arg(1))) != null && (shop = getShop()) != null) {
+                if((target = matchOnlinePlayer(args[1])) != null && (shop = getShop()) != null) {
                     shop.addMember(target);
                     player().sendNormal(target.getNick() + " has been added as your worker.");
                     if(target.isOnline()) {
@@ -102,7 +101,7 @@ public class ShopCmd extends CommandHandler {
                     }
                 }
             } else if(subCmdEquals("fire")) {
-                if((target = matchPlayer(arg(1))) != null && (shop = getShop()) != null && isWorker(target, shop)) {
+                if((target = matchOnlinePlayer(args[1])) != null && (shop = getShop()) != null && isWorker(target, shop)) {
                     shop.delMember(target);
                     player().sendNormal(target.getNick() + " is no longer your worker.");
                     if(target.isOnline()) {
@@ -114,7 +113,7 @@ public class ShopCmd extends CommandHandler {
             }
         } else if(numArgsHelp(3)) {
             if(subCmdEquals("sell")) {
-                if((getShop()) != null && (target = matchOnlinePlayer(arg(1))) != null && canRequest(target) && (price = getInteger(arg(2))) != -1) {
+                if((getShop()) != null && (target = matchOnlinePlayer(args[1])) != null && canRequest(target) && (price = getInteger(args[2])) != -1) {
                     player().sendMessage(Message.REQUEST_SENT);
                     target.sendNormal(player().getNick() + " wants to sell you their shop for " + price + " " + Config.CURRENCIES + ".");
                     target.sendMessage(Message.REQUEST_Y_N);

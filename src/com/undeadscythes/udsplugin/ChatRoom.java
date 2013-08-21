@@ -1,55 +1,55 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.exceptions.*;
+import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 
 /**
- * A private chat room on the server.
- * 
  * @author UndeadScythes
  */
 public class ChatRoom {
     private final String name;
-    private final HashSet<SaveablePlayer> members;
+    private final HashSet<Member> members;
 
-    public ChatRoom (final SaveablePlayer player, final String name) {
+    public ChatRoom (final Member player, final String name) {
         this.name = name;
-        members = new HashSet<SaveablePlayer>(Arrays.asList(player));
+        members = new HashSet<Member>(Arrays.asList(player));
     }
 
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
-    public final Set<SaveablePlayer> getOnlineMembers() {
-        final HashSet<SaveablePlayer> onlineMembers = new HashSet<SaveablePlayer>(members.size());
-        for(SaveablePlayer member : members) {
-            if(member.isOnline()) {
-                onlineMembers.add(member);
-            }
+    public Set<Member> getMembers() {
+        final HashSet<Member> Members = new HashSet<Member>(members.size());
+        for(Member member : members) {
+            try {
+                Members.add(PlayerUtils.getOnlinePlayer(member));
+            } catch (PlayerNotOnlineException ex) {}
         }
-        return onlineMembers;
+        return Members;
 
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return name;
     }
 
-    public final void addMember(final SaveablePlayer player) {
+    public void addMember(final Member player) {
         members.add(player);
     }
 
-    public final boolean isMember(final SaveablePlayer player) {
+    public boolean isMember(final Member player) {
         return members.contains(player);
     }
 
-    public final void delMember(final SaveablePlayer player) {
+    public void delMember(final Member player) {
         members.remove(player);
     }
 
-    public final void sendMessage(final String message) {
-        for(SaveablePlayer member : getOnlineMembers()) {
+    public void sendMessage(final String message) {
+        for(Member member : getMembers()) {
             member.sendPrivate("[" + name + "] " + message);
         }
     }

@@ -6,7 +6,7 @@ import org.bukkit.util.*;
 
 /**
  * A clone of an area of blocks in a world.
- * 
+ *
  * @author UndeadScythes
  */
 public class BlockBox extends Cuboid {

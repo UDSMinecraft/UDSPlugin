@@ -1,6 +1,7 @@
-package com.undeadscythes.udsplugin.commands;
+package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -10,104 +11,104 @@ import org.bukkit.inventory.*;
 import org.bukkit.material.*;
 
 /**
- * This class can perform various tests and will report errors to a player.
- * In general the methods supplied by this class will return an object as
- * verification that such an object exists or <code>null</code> if no such
- * object can be found.
- * 
  * @author UndeadScythes
  */
-public abstract class ErrorReporter {
-    private SaveablePlayer player;
+public abstract class Validator {
+    private Member player;
 
-    protected final SaveablePlayer player() {
+    protected Member player() {
         return player;
     }
-    
-    protected final void setPlayer(final SaveablePlayer player) {
+
+    protected void setPlayer(final Member player) {
         this.player = player;
     }
-    
-    protected final PlayerRank getRank(final String name) {
+
+    protected PlayerRank getRank(final String name) {
         final PlayerRank rank = PlayerRank.getByName(name);
         if(rank == null) player.sendError("You have not entered a valid rank.");
         return rank;
     }
-    
-    protected final UUID getPetId() {
-        final UUID pet = player.getSelectedPet();
-        if(pet == null) player.sendError("Right click a pet while sneaking to select it first.");
-        return pet;
+
+    protected UUID getPetId() {
+        try {
+            return player.getSelectedPet();
+        } catch (NoMetadataSetException ex) {
+            player.sendError("Right click a pet while sneaking to select it first.");
+            return null;
+        }
     }
 
-    protected final Region getShop() {
+    protected Region getShop() {
         final Region shop = RegionUtils.getRegion(RegionType.SHOP, player.getName() + "shop");
         if(shop == null) player.sendError("You do not own a shop.");
         return shop;
     }
 
-    protected final Region getShop(final SaveablePlayer target) {
+    protected Region getShop(final Member target) {
         final Region shop = RegionUtils.getRegion(RegionType.SHOP, target.getName() + "shop");
         if(shop == null) player.sendError("That player does not own a shop.");
         return shop;
     }
 
-    protected final SaveablePlayer getWhisperer() {
-        final SaveablePlayer target = player.getWhisperer();
-        if(target == null) player.sendError("There is no one to send this message to.");
-        return target;
+    protected Member getWhisperer() {
+        try {
+            return PlayerUtils.getOnlinePlayer(player.getWhisperer());
+        } catch (NoMetadataSetException ex) {} catch (PlayerNotOnlineException ex) {}
+        player.sendError("There is no one to send this message to.");
+        return null;
     }
 
-    protected final Region getRegion(final String name) {
+    protected Region getRegion(final String name) {
         final Region region = RegionUtils.getRegion(name);
         if(region == null) player.sendError("No region exists by that name.");
         return region;
     }
-    
-    protected final Portal getPortal(final String name) {
+
+    protected Portal getPortal(final String name) {
         final Portal portal = PortalUtils.getPortal(name);
         if(portal == null) player.sendError("No portal exists by that name.");
         return portal;
     }
 
-    protected final RegionFlag getRegionFlag(final String name) {
+    protected RegionFlag getRegionFlag(final String name) {
         final RegionFlag flag = RegionFlag.getByName(name);
         if(flag == null) player.sendError("That is not a valid region flag.");
         return flag;
     }
-    
-    protected final Flag getWorldFlag(final String name) {
+
+    protected Flag getWorldFlag(final String name) {
         Flag flag = WorldFlag.getByName(name);
         if(flag == null) flag = RegionFlag.getByName(name);
         if(flag == null) player.sendError("That is not a valid world flag.");
         return flag;
     }
 
-    protected final RegionType getRegionType(final String name) {
+    protected RegionType getRegionType(final String name) {
         final RegionType type = RegionType.getByName(name);
         if(type == null) player.sendError("That is not a valid region type.");
         return type;
     }
 
-    protected final Request getRequest() {
+    protected Request getRequest() {
         final Request request = UDSPlugin.getRequest(player);
         if(request == null) player.sendError("You have no pending requests.");
         return request;
     }
 
-    protected final Region getHome() {
+    protected Region getHome() {
         final Region home = RegionUtils.getRegion(RegionType.HOME, player.getName() + "home");
         if(home == null) player.sendError("You do not have a home.");
         return home;
     }
 
-    protected final Direction getDirection(final String name) {
+    protected Direction getDirection(final String name) {
         final Direction direction = Direction.getByName(name);
         if(direction == null) player.sendError("That is not a valid direction.");
         return direction;
     }
 
-    protected final Direction getCardinalDirection(final String name) {
+    protected Direction getCardinalDirection(final String name) {
         final Direction direction = getDirection(name);
         if(direction == null) return null;
         if(direction.isCardinal()) return direction;
@@ -115,7 +116,7 @@ public abstract class ErrorReporter {
         return null;
     }
 
-    protected final Clan getClan(final String name) {
+    protected Clan getClan(final String name) {
         final Clan clan = ClanUtils.getClan(name);
         if(clan == null) {
             player.sendError("That clan does not exist.");
@@ -123,15 +124,16 @@ public abstract class ErrorReporter {
         return clan;
     }
 
-    protected final Clan getClan() {
-        final Clan clan = player.getClan();
-        if(clan == null) {
+    protected Clan getClan() {
+        try {
+            return player.getClan();
+        } catch (NoMetadataSetException ex) {
             player.sendError("You are not in a clan.");
+            return null;
         }
-        return clan;
     }
 
-    protected final Region getClanBase(final Clan clan) {
+    protected Region getClanBase(final Clan clan) {
         final Region region = RegionUtils.getRegion(RegionType.BASE, clan.getName() + "base");
         if(region == null) {
             player.sendError("Your clan does not have a base.");
@@ -139,8 +141,8 @@ public abstract class ErrorReporter {
         return region;
     }
 
-    protected final SaveablePlayer matchOtherPlayer(final String name) {
-        final SaveablePlayer target = matchPlayer(name);
+    protected Member matchOtherPlayer(final String name) {
+        final Member target = matchPlayer(name);
         if(target != null && notSelf(target)) {
             return target;
         } else {
@@ -148,7 +150,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final ItemStack getItem(final String name) {
+    protected ItemStack getItem(final String name) {
         Material material;
         String matString = name.toUpperCase();
         byte data = 0;
@@ -180,7 +182,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final Enchantment getEnchantment(final String name) {
+    protected Enchantment getEnchantment(final String name) {
         final Enchantment enchantment = Enchantment.getByName(name.toUpperCase());
         if(enchantment == null) {
             player.sendError("That is not a valid enchantment.");
@@ -190,23 +192,25 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final Region getCurrentCity() {
-        final Region region = player.getCurrentRegion(RegionType.CITY);
-        if(region == null) {
+    protected Region getCurrentCity() {
+        try {
+            return player.getCurrentRegion(RegionType.CITY);
+        } catch (NoRegionFoundException ex) {
             player.sendError("You are not in a city.");
+            return null;
         }
-        return region;
     }
 
-    protected final Region getCurrentShop() {
-        final Region shop = player.getCurrentRegion(RegionType.SHOP);
-        if(shop == null) {
+    protected Region getCurrentShop() {
+        try {
+            return player.getCurrentRegion(RegionType.SHOP);
+        } catch (NoRegionFoundException ex) {
             player.sendError("You must be stood inside a shop to buy it.");
+            return null;
         }
-        return shop;
     }
 
-    protected final Region getHome(final SaveablePlayer target) {
+    protected Region getHome(final Member target) {
         final Region home = RegionUtils.getRegion(RegionType.HOME, target.getName() + "home");
         if(home == null) {
             player.sendError("That player does not have a home.");
@@ -214,7 +218,7 @@ public abstract class ErrorReporter {
         return home;
     }
 
-    protected final Region matchCity(final String cityName) {
+    protected Region matchCity(final String cityName) {
         final Region city = RegionUtils.matchRegion(RegionType.CITY, cityName);
         if(city == null) {
             player.sendError("No city exists by that name.");
@@ -222,7 +226,7 @@ public abstract class ErrorReporter {
         return city;
     }
 
-    protected final Region getCity(final String cityName) {
+    protected Region getCity(final String cityName) {
         final Region city = matchCity(cityName);
         if(city != null && !city.isOwnedBy(player)) {
             player.sendError("You are not the mayor of that city.");
@@ -231,8 +235,8 @@ public abstract class ErrorReporter {
         return city;
     }
 
-    protected final SaveablePlayer matchOtherOnlinePlayer(final String name) {
-        final SaveablePlayer target = matchOnlinePlayer(name);
+    protected Member matchOtherOnlinePlayer(final String name) {
+        final Member target = matchOnlinePlayer(name);
         if(target != null && notSelf(target)) {
             return target;
         } else {
@@ -240,13 +244,14 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final SaveablePlayer matchPlayer(final String partial) {
+    protected Member matchPlayer(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        SaveablePlayer target = PlayerUtils.getOnlinePlayer(lowPartial);
-        if(target != null) {
+        Member target;
+        try {
+            target = PlayerUtils.getOnlinePlayer(lowPartial);
             return target;
-        } else {
-            for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
+        } catch (PlayerNotOnlineException ex) {
+            for(Member test : PlayerUtils.getOnlinePlayers()) {
                 if(test.getNick().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
@@ -255,7 +260,7 @@ public abstract class ErrorReporter {
             if(target != null) {
                 return target;
             } else {
-                for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
+                for(Member test : PlayerUtils.getOnlinePlayers()) {
                     if(test.getNick().toLowerCase().contains(lowPartial)) {
                         return test;
                     }
@@ -264,7 +269,7 @@ public abstract class ErrorReporter {
                 if(target != null) {
                     return target;
                 } else {
-                    for(SaveablePlayer test : PlayerUtils.getPlayers()) {
+                    for(Member test : PlayerUtils.getPlayers()) {
                         if(test.getNick().equalsIgnoreCase(lowPartial)) {
                             return test;
                         }
@@ -273,7 +278,7 @@ public abstract class ErrorReporter {
                     if(target != null) {
                         return target;
                     } else {
-                        for(SaveablePlayer test : PlayerUtils.getPlayers()) {
+                        for(Member test : PlayerUtils.getPlayers()) {
                             if(test.getNick().toLowerCase().contains(lowPartial)) {
                                 return test;
                             }
@@ -286,13 +291,13 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final SaveablePlayer matchOnlinePlayer(final String partial) {
+    protected Member matchOnlinePlayer(final String partial) {
         final String lowPartial = partial.toLowerCase();
-        SaveablePlayer target = PlayerUtils.getOnlinePlayer(lowPartial);
-        if(target!= null) {
-            return target;
-        } else {
-            for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
+        Member target;
+        try {
+            return PlayerUtils.getOnlinePlayer(lowPartial);
+        } catch (PlayerNotOnlineException ex) {
+            for(Member test : PlayerUtils.getOnlinePlayers()) {
                 if(test.getNick().equalsIgnoreCase(lowPartial)) {
                     return test;
                 }
@@ -301,7 +306,7 @@ public abstract class ErrorReporter {
             if(target != null) {
                 return target;
             } else {
-                for(SaveablePlayer test : PlayerUtils.getOnlinePlayers()) {
+                for(Member test : PlayerUtils.getOnlinePlayers()) {
                     if(test.getNick().contains(lowPartial)) {
                         return test;
                     }
@@ -312,7 +317,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final Warp matchWarp(final String partial) {
+    protected Warp matchWarp(final String partial) {
         Warp warp = WarpUtils.getWarp(partial);
         if(warp != null) {
             return warp;
@@ -327,14 +332,14 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final ItemStack getItemInHand() {
+    protected ItemStack getItemInHand() {
         final ItemStack item = player.getItemInHand();
         if(!item.getType().equals(Material.AIR)) return item;
         player.sendError("You need an item in your hand.");
         return null;
     }
-    
-    protected final boolean hasPerm(final Perm perm) {
+
+    protected boolean hasPerm(final Perm perm) {
         if(player.hasPerm(perm) || player.isOp()) {
             if(perm.getMode() == null || UDSPlugin.getWorldMode(player.getWorld()).equals(perm.getMode())) {
                 return true;
@@ -346,8 +351,8 @@ public abstract class ErrorReporter {
         }
         return false;
     }
-    
-    protected final boolean notIgnoredBy(final SaveablePlayer target) {
+
+    protected boolean notIgnoredBy(final Member target) {
         if(target.isIgnoringPlayer(player)) {
             player.sendError("This player can't be reached at this time.");
             return false;
@@ -356,7 +361,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean canRequestTo(final SaveablePlayer target) {
+    protected boolean canRequestTo(final Member target) {
         if(UDSPlugin.getRequest(target) != null) {
             player.sendError("That player already has a request pending.");
             return false;
@@ -364,7 +369,7 @@ public abstract class ErrorReporter {
         return true;
     }
 
-    protected final boolean notJailed(final SaveablePlayer target) { //TODO: Rename this method to be of the form 'PLAYER' can/is whatever 'TARGET'
+    protected boolean notJailed(final Member target) { //TODO: Rename this method to be of the form 'PLAYER' can/is whatever 'TARGET'
         if(target.isJailed()) {
             player.sendError("You cannot do this while that player is in jail.");
             return false;
@@ -373,7 +378,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean notJailed() {
+    protected boolean notJailed() {
         if(player.isJailed()) {
             player.sendError("You cannot do this while you are in jail.");
             return false;
@@ -382,16 +387,17 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean notPinned() {
-        if(player.getLastDamageCaused() + Config.PVP_TIME < System.currentTimeMillis()) {
-            return true;
-        } else {
-            player.sendError("You can't do that at this time.");
-            return false;
-        }
+    protected boolean notPinned() {
+        try {
+            if(player.getLastDamageCaused() + Config.PVP_TIME >= System.currentTimeMillis()) {
+                player.sendError("You can't do that at this time.");
+                return false;
+            }
+        } catch (NoMetadataSetException ex) {}
+        return true;
     }
 
-    protected final boolean noClanExists(final String name) {
+    protected boolean noClanExists(final String name) {
         if(ClanUtils.clanExists(name)) {
             player.sendError("A clan already exists with that name.");
             return false;
@@ -400,7 +406,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean noWarpExists(final String warpName) {
+    protected boolean noWarpExists(final String warpName) {
         if(WarpUtils.getWarp(warpName) == null) {
             return true;
         } else {
@@ -409,7 +415,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isJailed() {
+    protected boolean isJailed() {
         if(player.isJailed()) {
             return true;
         } else {
@@ -418,7 +424,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isJailed(final SaveablePlayer target) {
+    protected boolean isJailed(final Member target) {
         if(target.isJailed()) {
             return true;
         } else {
@@ -427,7 +433,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean hasRank(final PlayerRank rank) {
+    protected boolean hasRank(final PlayerRank rank) {
         if(player.hasRank(rank)) {
             return true;
         } else {
@@ -436,7 +442,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isRoomie(final Region home) {
+    protected boolean isRoomie(final Region home) {
         if(home.hasMember(player)) {
             return true;
         } else {
@@ -445,7 +451,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isWorker(final SaveablePlayer target, final Region shop) {
+    protected boolean isWorker(final Member target, final Region shop) {
         if(shop.hasMember(target)) {
             return true;
         } else {
@@ -454,7 +460,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isClanLeader(final Clan clan) {
+    protected boolean isClanLeader(final Clan clan) {
         if(clan.getLeader().equals(player)) {
             return true;
         } else {
@@ -463,13 +469,13 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isEnchantable(final Enchantment enchantment, final ItemStack item) {
+    protected boolean isEnchantable(final Enchantment enchantment, final ItemStack item) {
         if(enchantment.canEnchantItem(item)) return true;
         player.sendError("You cannot use that enchantment on that item.");
         return false;
     }
 
-    protected final boolean notNearMobs() {
+    protected boolean notNearMobs() {
         final List<Entity> entities = player.getNearbyEntities(10, 3, 10);
         for(Entity entity : entities) {
             if(UDSPlugin.isHostileMob(entity.getType())) {
@@ -480,40 +486,42 @@ public abstract class ErrorReporter {
         return true;
     }
 
-    protected final boolean notAfk(final SaveablePlayer target) {
+    protected boolean notAfk(final Member target) {
         if(!target.isAfk()) return true;
         player.sendNormal("That player is currently AFK.");
         return false;
     }
 
-    protected final boolean canRequest(final SaveablePlayer target) {
+    protected boolean canRequest(final Member target) {
         return canRequestTo(target) && notIgnoredBy(target) && notAfk(target);
     }
 
-    protected final boolean canTeleport() {
+    protected boolean canTeleport() {
         return notPinned() && notJailed();
     }
 
-    protected final boolean hasUndo(EditSession session) {
+    protected boolean hasUndo(EditSession session) {
         if(session.hasUndo()) return true;
         player.sendError("You have nothing to undo.");
         return false;
     }
 
-    protected final boolean goodEnchantLevel(final Enchantment enchantment, final int level) {
+    protected boolean goodEnchantLevel(final Enchantment enchantment, final int level) {
         if(level <= enchantment.getMaxLevel()) return true;
         player.sendError("The level you have chosen is too high.");
         return false;
     }
 
-    protected final ChatRoom getChatRoom() {
-        final ChatRoom chatRoom = player.getChatRoom();
-        if(chatRoom != null) return chatRoom;
-        player.sendError("You are not in any private chat rooms.");
-        return null;
+    protected ChatRoom getChatRoom() {
+        try {
+            return player.getChatRoom();
+        } catch (NoMetadataSetException ex) {
+            player.sendError("You are not in any private chat rooms.");
+            return null;
+        }
     }
 
-    protected final boolean hasTwoPoints(final EditSession session) {
+    protected boolean hasTwoPoints(final EditSession session) {
         if(session.getV1() == null || session.getV2() == null) {
             player.sendError("You need to select two points.");
             return false;
@@ -521,49 +529,51 @@ public abstract class ErrorReporter {
         return true;
     }
 
-    protected final boolean hasNoShop() {
+    protected boolean hasNoShop() {
         if(!RegionUtils.regionExists(RegionType.SHOP, player.getName() + "shop")) return true;
         player.sendError("You already own a shop.");
         return false;
     }
 
-    protected final boolean isBanned(final SaveablePlayer target) {
+    protected boolean isBanned(final Member target) {
         if(target.isBanned()) return true;
         player.sendError("That player is not banned.");
         return false;
     }
 
-    protected final boolean hasNoHome() {
+    protected boolean hasNoHome() {
         if(!RegionUtils.regionExists(RegionType.HOME, player.getName() + "home")) return true;
         player.sendError("You already have a home.");
         return false;
     }
 
-    protected final boolean hasNoBase(final Clan clan) {
+    protected boolean hasNoBase(final Clan clan) {
         if(!RegionUtils.regionExists(RegionType.BASE, clan.getName() + "base")) return true;
         player.sendError("Your clan already has a base.");
         return false;
     }
 
-    protected final boolean hasNoClan() {
-        if(player.getClan() == null) {
-            return true;
-        } else {
+    protected boolean hasNoClan() {
+        try {
+            player.getClan();
             player.sendError("You are already in a clan.");
             return false;
-        }
-    }
-
-    protected final boolean isInClan(final SaveablePlayer player, final Clan clan) {
-        if(player.getClan().equals(clan)) {
+        } catch (NoMetadataSetException ex) {
             return true;
-        } else {
-            player.sendError("That player is not in your clan.");
-            return false;
         }
     }
 
-    protected final boolean noBadLang(final String string) {
+    protected boolean isInClan(final Member target, final Clan clan) {
+        try {
+            if(target.getClan().equals(clan)) {
+                return true;
+            }
+        } catch (NoMetadataSetException ex) {}
+        player.sendError("That player is not in your clan.");
+        return false;
+    }
+
+    protected boolean noBadLang(final String string) {
         if(Censor.noCensor(string)) {
             return true;
         } else {
@@ -572,7 +582,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isEmptyShop(final Region shop) {
+    protected boolean isEmptyShop(final Region shop) {
         if(shop.getOwner() == null) {
             return true;
         } else {
@@ -581,7 +591,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isRoomie(final SaveablePlayer target, final Region home) {
+    protected boolean isRoomie(final Member target, final Region home) {
         if(home.hasMember(target)) {
             return true;
         } else {
@@ -590,7 +600,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean isInHome(final SaveablePlayer target, final Region home) {
+    protected boolean isInHome(final Member target, final Region home) {
         if(target.getLocation().toVector().isInAABB(home.getV1(), home.getV2())) {
             return true;
         } else {
@@ -599,7 +609,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean noRegionExists(final String name) {
+    protected boolean noRegionExists(final String name) {
         if(RegionUtils.regionExists(name)) {
             player.sendError("A protected final area already exists with that name.");
             return false;
@@ -608,7 +618,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean notMayor(final Region city) {
+    protected boolean notMayor(final Region city) {
         if(city.isOwnedBy(player)) {
             player.sendError("You cannot do that while you are the mayor.");
             return false;
@@ -617,7 +627,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean noOverlaps(final Region region) {
+    protected boolean noOverlaps(final Region region) {
         for(Region test : RegionUtils.getRegions()) {
             if(test != region && test.hasOverlap(region)) {
                 player.sendError("You cannot do that here, you are too close to another protected final area.");
@@ -627,7 +637,7 @@ public abstract class ErrorReporter {
         return true;
     }
 
-    protected final boolean notDueling(final SaveablePlayer target) {
+    protected boolean notDueling(final Member target) {
         if(target.isDuelling()) {
             player.sendNormal("That player is already dueling someone else.");
             return false;
@@ -636,7 +646,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final boolean selectionIs2D(final EditSession session) {
+    protected boolean selectionIs2D(final EditSession session) {
         if(hasTwoPoints(session)) {
             final int x = session.getV1().getBlockX() - session.getV2().getBlockX();
             final int y = session.getV1().getBlockY() - session.getV2().getBlockY();
@@ -651,8 +661,8 @@ public abstract class ErrorReporter {
             return false;
         }
     }
-    
-    protected final boolean outRanks(final SaveablePlayer target) {
+
+    protected boolean outRanks(final Member target) {
         if(!player.outRanks(target)) {
             player.sendMessage("You do not out rank this player.");
             return false;
@@ -660,7 +670,7 @@ public abstract class ErrorReporter {
         return true;
     }
 
-    protected final boolean canAfford(final int cost) {
+    protected boolean canAfford(final int cost) {
         if(player.canAfford(cost)) {
             return true;
         } else {
@@ -669,7 +679,7 @@ public abstract class ErrorReporter {
         }
     }
 
-    protected final int canAfford(final String string) {
+    protected int canAfford(final String string) {
         final int cost = getInteger(string);
         if(cost > - 1) {
             if(player.canAfford(cost)) {
@@ -681,7 +691,7 @@ public abstract class ErrorReporter {
         return -1;
     }
 
-    protected final boolean notSelf(final SaveablePlayer target) {
+    protected boolean notSelf(final Member target) {
         if(target.equals(player)) {
             player.sendError("You cannot use that command on yourself.");
             return false;
@@ -689,16 +699,16 @@ public abstract class ErrorReporter {
             return true;
         }
     }
-    
-    protected final boolean noPortalExists(final String name) {
+
+    protected boolean noPortalExists(final String name) {
         if(PortalUtils.portalExists(name)) {
             player.sendError("A portal already exists with that name.");
             return false;
         }
         return true;
     }
-    
-    protected final int getInteger(final String number) {
+
+    protected int getInteger(final String number) {
         if(number.matches(UDSPlugin.INT_REGEX)) {
             return Integer.parseInt(number);
         } else {
@@ -706,8 +716,8 @@ public abstract class ErrorReporter {
             return -1;
         }
     }
-    
-    protected final boolean canGift(final SaveablePlayer target) {
+
+    protected boolean canGift(final Member target) {
         if(target.isShopping()) {
             player.sendError("You cannot gift this player at this time.");
             return false;

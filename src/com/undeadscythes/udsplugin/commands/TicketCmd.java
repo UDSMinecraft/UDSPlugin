@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
 import javax.mail.*;
@@ -17,7 +18,7 @@ import javax.mail.internet.*;
 public class TicketCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(argsLength() == 0) {
+        if(args.length == 0) {
             player().sendError("You cannot send a blank ticket.");
         } else {
             final String username = Config.GMAIL_ADDRESS;

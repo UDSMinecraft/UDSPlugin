@@ -6,19 +6,19 @@ import org.bukkit.configuration.file.*;
 
 /**
  * A YAML configuration file with various accessors.
- * 
+ *
  * @author UndeadScythes
  */
 public class YamlConfig {
     private FileConfiguration config = null;
     private final File file;
     private boolean loaded = false;
-    
+
     public YamlConfig(final String path) {
         file = new File(path);
     }
-    
-    public final void load() {
+
+    public void load() {
         if(!file.exists()) {
             file.getParentFile().mkdirs();
             try {
@@ -30,8 +30,8 @@ public class YamlConfig {
         config = YamlConfiguration.loadConfiguration(file);
         loaded = true;
     }
-    
-    public final void save() {
+
+    public void save() {
         if(!loaded) {
             return;
         }
@@ -41,8 +41,8 @@ public class YamlConfig {
             Bukkit.getLogger().info("Could not save config file " + file.getName() + ".");
         }
     }
-    
-    public final FileConfiguration getConfig() {
+
+    public FileConfiguration getConfig() {
         if(loaded) {
             return config;
         }

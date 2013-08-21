@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+
 /**
  * Switches the current world to sunset.
  * 

@@ -23,7 +23,7 @@ public class MinecartCheck implements Runnable {
         return false;
     }
 
-    public static void addMinecart(final Minecart minecart, final SaveablePlayer owner) {
+    public static void addMinecart(final Minecart minecart, final Member owner) {
         for(OwnedMinecart listed : MINECARTS) {
             if(listed.getUUID().equals(minecart.getUniqueId())) {
                 listed.setOwner(owner);
@@ -33,7 +33,7 @@ public class MinecartCheck implements Runnable {
         MINECARTS.add(new OwnedMinecart(minecart, owner));
     }
 
-    public static void tagMinecart(final SaveablePlayer player, final Location location) {
+    public static void tagMinecart(final Member player, final Location location) {
         addMinecart(location.getWorld().spawn(location.clone().add(0.5, 0.5, 0.5), Minecart.class), player);
     }
 

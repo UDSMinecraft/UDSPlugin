@@ -1,18 +1,17 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
 /**
- * Jail a player.
- *
  * @author UndeadScythes
  */
 public class JailCmd extends CommandHandler {
     private static int nextCell = 0;
 
-    public static boolean jail(final SaveablePlayer player, final long sentence, final int bail) {
+    public static boolean jail(final Member player, final long sentence, final int bail) {
         if(player != null) {
             Location location = player.getLocation().clone();
             if(player.quietTeleport(WarpUtils.getWarp("jail" + nextCell))) {
@@ -33,16 +32,16 @@ public class JailCmd extends CommandHandler {
     }
 
     @Override
-    public final void playerExecute() {
-        SaveablePlayer target;
+    public void playerExecute() {
+        Member target;
         if(minArgsHelp(1) && maxArgsHelp(3)) {
-            if((target = matchOnlinePlayer(arg(0))) != null && notSelf(target) && notJailed(target)) {
+            if((target = matchOnlinePlayer(args[0])) != null && notSelf(target) && notJailed(target)) {
                 long sentence = 5;
                 int bail = 1000;
-                if(argsLength() > 1) {
-                    sentence = getInteger(arg(1));
-                    if(argsLength() > 2) {
-                        bail = getInteger(arg(2));
+                if(args.length > 1) {
+                    sentence = getInteger(args[1]);
+                    if(args.length > 2) {
+                        bail = getInteger(args[2]);
                     }
                 }
                 if(sentence > -1 && bail > -1) {

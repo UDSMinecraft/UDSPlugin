@@ -6,14 +6,12 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 
 /**
- * Fired when a player shears a sheep.
- * 
  * @author UndeadScythes
  */
 public class PlayerShearEntity extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final PlayerShearEntityEvent event) {
-        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+    public void onEvent(final PlayerShearEntityEvent event) {
+        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
         if(!player.canBuildHere(event.getEntity().getLocation())) {
             event.setCancelled(true);
             player.sendError("You cannot shear this animal.");

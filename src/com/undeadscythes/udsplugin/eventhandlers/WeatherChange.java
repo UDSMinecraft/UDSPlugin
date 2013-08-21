@@ -1,6 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.WorldFlag;
+import com.undeadscythes.udsplugin.UDSPlugin;
 import org.bukkit.event.*;
 import org.bukkit.event.weather.*;
 

@@ -1,24 +1,25 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.comparators.SortByKDR;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.text.*;
 import java.util.*;
 import org.bukkit.util.Vector;
 
 /**
- * Various clan related commands.
- * 
  * @author UndeadScythes
  */
 public class ClanCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         Clan clan;
         Region base;
-        SaveablePlayer target;
-        if(argsLength() == 1) {
+        Member offlinePlayer;
+        Member onlinePlayer;
+        if(args.length == 1) {
             if(subCmdEquals("base")) {
                 if((clan = getClan()) != null && (base = getClanBase(clan)) != null && notJailed() && notPinned()) {
                     player().teleport(base.getWarp());
@@ -47,7 +48,7 @@ public class ClanCmd extends CommandHandler {
                     boolean empty = true;
                     for(final ClanRank rank : ClanRank.values()) {
                         String members = "";
-                        for(SaveablePlayer member : clan.getRankMembers(rank)) {
+                        for(Member member : clan.getRankMembers(rank)) {
                             if(!member.equals(player())) {
                                 members = members.concat(member.getNick() + ", ");
                             }
@@ -69,7 +70,7 @@ public class ClanCmd extends CommandHandler {
                     UDSPlugin.sendBroadcast(clan.getName() + " has been disbanded.");
                     ClanUtils.removeClan(clan);
                     clan.sendMessage("Your clan has been disbanded.");
-                    for(SaveablePlayer member : clan.getMembers()) {
+                    for(Member member : clan.getMembers()) {
                         member.setClan(null);
                     }
                     RegionUtils.removeRegion(RegionType.BASE, clan.getName() + "base");
@@ -89,55 +90,61 @@ public class ClanCmd extends CommandHandler {
         } else if(numArgsHelp(2)) {
             int page;
             if(subCmdEquals("new")) {
-                if(hasNoClan() && canAfford(Config.CLAN_COST) && noBadLang(arg(1)) && noClanExists(arg(1))) {
+                if(hasNoClan() && canAfford(Config.CLAN_COST) && noBadLang(args[1]) && noClanExists(args[1])) {
                     player().debit(Config.CLAN_COST);
-                    clan = new Clan(arg(1), player());
+                    clan = new Clan(args[1], player());
                     player().setClan(clan);
                     ClanUtils.addClan(clan);
-                    UDSPlugin.sendBroadcast(player().getNick() + " just created " + arg(1) + ".");
+                    UDSPlugin.sendBroadcast(player().getNick() + " just created " + args[1] + ".");
                 }
             } else if(subCmdEquals("invite")) {
-                if((target = matchOnlinePlayer(arg(1))) != null && canRequest(target) && (clan = getClan()) != null && hasClanRank(clan, player()) && notSelf(target)) {
-                    UDSPlugin.addRequest(target.getName(), new Request(player(), RequestType.CLAN, clan.getName(), target));
+                if((onlinePlayer = matchOnlinePlayer(args[1])) != null && canRequest(onlinePlayer) && (clan = getClan()) != null && hasClanRank(clan, player()) && notSelf(onlinePlayer)) {
+                    UDSPlugin.addRequest(onlinePlayer.getName(), new Request(player(), RequestType.CLAN, clan.getName(), onlinePlayer));
                     player().sendMessage(Message.REQUEST_SENT);
-                    target.sendNormal(player().getNick() + " has invited you to join " + clan.getName() + ".");
-                    target.sendMessage(Message.REQUEST_Y_N);
+                    onlinePlayer.sendNormal(player().getNick() + " has invited you to join " + clan.getName() + ".");
+                    onlinePlayer.sendMessage(Message.REQUEST_Y_N);
                 }
             } else if(subCmdEquals("kick")) {
-                if((target = matchPlayer(arg(1))) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player()) && notSelf(target)) {
-                    clan.delMember(target);
-                    target.setClan(null);
+                if((offlinePlayer = matchPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(offlinePlayer, clan) && hasClanRank(clan, player()) && notSelf(offlinePlayer)) {
+                    clan.delMember(offlinePlayer);
+                    offlinePlayer.setClan(null);
                     if((base = RegionUtils.getRegion(RegionType.BASE, clan.getName() + "base")) != null) {
-                        base.delMember(target);
+                        base.delMember(offlinePlayer);
                     }
-                    target.sendNormal(player().getNick() + " has kicked you out of " + clan.getName() + ".");
-                    player().sendNormal(target.getNick() + " has been kicked out of your clan.");
-                    clan.sendMessage(target.getNick() + " has left the clan.");
+                    try {
+                        PlayerUtils.getOnlinePlayer(offlinePlayer).sendNormal(player().getNick() + " has kicked you out of " + clan.getName() + ".");
+                    } catch (PlayerNotOnlineException ex) {}
+                    player().sendNormal(offlinePlayer.getNick() + " has been kicked out of your clan.");
+                    clan.sendMessage(offlinePlayer.getNick() + " has left the clan.");
                 }
             } else if(subCmdEquals("promote")) {
-                if((target = matchPlayer(arg(1))) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player()) && notSelf(target)) {
-                    if(clan.promote(target)) {
-                        target.sendNormal("You have been promoted in clan " + clan.getName() + ".");
-                        player().sendNormal(target.getNick() + " has been promoted.");
-                        clan.sendMessage(target.getNick() + " has been promoted.");
+                if((offlinePlayer = matchPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(offlinePlayer, clan) && hasClanRank(clan, player()) && notSelf(offlinePlayer)) {
+                    if(clan.promote(offlinePlayer)) {
+                        try {
+                            PlayerUtils.getOnlinePlayer(offlinePlayer).sendNormal("You have been promoted in clan " + clan.getName() + ".");
+                        } catch (PlayerNotOnlineException ex) {}
+                        player().sendNormal(offlinePlayer.getNick() + " has been promoted.");
+                        clan.sendMessage(offlinePlayer.getNick() + " has been promoted.");
                     } else {
                         player().sendError("That player cannot be promoted any further.");
                     }
                 }
             } else if(subCmdEquals("demote")) {
-                if((target = matchPlayer(arg(1))) != null && (clan = getClan()) != null && isInClan(target, clan) && hasClanRank(clan, player()) && notSelf(target)) {
-                    if(clan.demote(target)) {
-                        target.sendNormal("You have been demoted in clan " + clan.getName() + ".");
-                        player().sendNormal(target.getNick() + " has been promoted.");
-                        clan.sendMessage(target.getNick() + " has been demoted.");
+                if((offlinePlayer = matchPlayer(args[1])) != null && (clan = getClan()) != null && isInClan(offlinePlayer, clan) && hasClanRank(clan, player()) && notSelf(offlinePlayer)) {
+                    if(clan.demote(offlinePlayer)) {
+                        try {
+                            PlayerUtils.getOnlinePlayer(offlinePlayer).sendNormal("You have been demoted in clan " + clan.getName() + ".");
+                        } catch (PlayerNotOnlineException ex) {}
+                        player().sendNormal(offlinePlayer.getNick() + " has been promoted.");
+                        clan.sendMessage(offlinePlayer.getNick() + " has been demoted.");
                     } else {
                         player().sendError("That player cannot be demoted any further.");
                     }
                 }
             } else if(subCmdEquals("members")) {
-                if((clan = getClan(arg(1))) != null) {
+                if((clan = getClan(args[1])) != null) {
                     String members = "";
-                    for(SaveablePlayer member : clan.getMembers()) {
+                    for(Member member : clan.getMembers()) {
                         members = members.concat(member.getNick() + ", ");
                     }
                     player().sendNormal(clan.getName() + "'s leader is " + clan.getLeader().getNick() + ".");
@@ -145,11 +152,11 @@ public class ClanCmd extends CommandHandler {
                     player().sendText(members.substring(0, members.length() - 2));
                 }
             } else if(subCmdEquals("list")) {
-                if((page = getInteger(arg(1))) != -1) {
+                if((page = getInteger(args[1])) != -1) {
                     sendPage(page, player());
                 }
             } else if(subCmdEquals("stats")) {
-                if((clan = getClan(arg(1))) != null) {
+                if((clan = getClan(args[1])) != null) {
                     final DecimalFormat decimalFormat = new DecimalFormat("#.##");
                     player().sendNormal(clan.getName() + "'s stats:");
                     player().sendListItem("Members: ", "" + clan.getMembers().size());
@@ -158,29 +165,29 @@ public class ClanCmd extends CommandHandler {
                     player().sendListItem("KDR: ", "" + decimalFormat.format(clan.getRatio()));
                 }
             } else if(subCmdEquals("rename")) {
-                if((clan = getClan()) != null && isClanLeader(clan) && noBadLang(arg(1)) && noClanExists(arg(1)) && canAfford(Config.CLAN_COST)) {
+                if((clan = getClan()) != null && isClanLeader(clan) && noBadLang(args[1]) && noClanExists(args[1]) && canAfford(Config.CLAN_COST)) {
                     player().debit(Config.CLAN_COST);
                     ClanUtils.removeClan(clan);
                     if((base = RegionUtils.getRegion(RegionType.BASE, clan.getName() + "base")) != null) {
-                        RegionUtils.renameRegion(base, arg(1) + "base");
+                        RegionUtils.renameRegion(base, args[1] + "base");
                     }
-                    clan.rename(arg(1));
+                    clan.rename(args[1]);
                     ClanUtils.addClan(clan);
-                    clan.sendMessage("Your clan has been renamed " + arg(1) + ".");
-                    UDSPlugin.sendBroadcast(player().getNick() + " has rebranded their clan as " + arg(1) + ".");
+                    clan.sendMessage("Your clan has been renamed " + args[1] + ".");
+                    UDSPlugin.sendBroadcast(player().getNick() + " has rebranded their clan as " + args[1] + ".");
                 }
             } else if(subCmdEquals("owner")) {
-                if((clan = getClan()) != null && isClanLeader(clan) && (target = matchPlayer(arg(1))) != null && isInClan(target, clan)) {
-                    clan.changeLeader(target);
-                    clan.sendMessage("Your new leader is " + target.getNick());
-                    if(target.isOnline()) {
-                        target.sendNormal("You are the new leader of " + clan.getName());
-                    }
+                if((clan = getClan()) != null && isClanLeader(clan) && (offlinePlayer = matchPlayer(args[1])) != null && isInClan(offlinePlayer, clan)) {
+                    clan.changeLeader(offlinePlayer);
+                    clan.sendMessage("Your new leader is " + offlinePlayer.getNick());
+                    try {
+                        PlayerUtils.getOnlinePlayer(offlinePlayer).sendNormal("You are the new leader of " + clan.getName());
+                    } catch (PlayerNotOnlineException ex) {}
                     player().sendNormal("You have resigned as leader of " + clan.getName());
                 }
             } else if(subCmdEquals("base")) {
                 if((clan = getClan()) != null && isClanLeader(clan)) {
-                    if(arg(1).equals("make")) {
+                    if(args[1].equals("make")) {
                         if(hasNoBase(clan) && canAfford(Config.BASE_COST)) {
                             final Vector min = player().getLocation().add(-25, 0, -25).toVector().setY(20);
                             final Vector max = player().getLocation().add(25, 0, 25).toVector().setY(220);
@@ -191,17 +198,17 @@ public class ClanCmd extends CommandHandler {
                                 base.placeMoreMarkers();
                                 base.placeTowers();
                                 clan.sendMessage("Your clan base has just been set up. Use /clan base to teleport to it.");
-                                for(SaveablePlayer member : clan.getMembers()) {
+                                for(Member member : clan.getMembers()) {
                                     base.addMember(member);
                                 }
                             }
                         }
-                    } else if(arg(1).equals("clear")) {
+                    } else if(args[1].equals("clear")) {
                         if((base = getClanBase(clan)) != null) {
                             RegionUtils.removeRegion(base);
                             clan.sendMessage("Your clan base has been removed.");
                         }
-                    } else if(arg(1).equals("set")) {
+                    } else if(args[1].equals("set")) {
                         if((base = getClanBase(clan)) != null) {
                             base.setWarp(player().getLocation());
                             player().sendNormal("Clan base warp point set.");
@@ -216,7 +223,7 @@ public class ClanCmd extends CommandHandler {
         }
     }
 
-    private void sendPage(int page, SaveablePlayer player) {
+    private void sendPage(int page, Member player) {
         final List<Clan> clans = ClanUtils.getSortedClans(new SortByKDR());
         final int pages = (clans.size() + 8) / 9;
         if(pages == 0) {
@@ -238,8 +245,8 @@ public class ClanCmd extends CommandHandler {
             }
         }
     }
-    
-    private boolean hasClanRank(final Clan clan, final SaveablePlayer player) {
+
+    private boolean hasClanRank(final Clan clan, final Member player) {
         if(!clan.hasClanRank(player)) {
             player.sendError("You are not high enough rank in the clan to do this.");
             return false;

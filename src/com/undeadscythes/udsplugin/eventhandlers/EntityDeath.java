@@ -10,13 +10,11 @@ import org.bukkit.event.entity.*;
 import org.bukkit.inventory.*;
 
 /**
- * Fired when an entity dies.
- * 
  * @author UndeadScythes
  */
 public class EntityDeath extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final EntityDeathEvent event) {
+    public void onEvent(final EntityDeathEvent event) {
         final Entity victim = event.getEntity();
         final EntityDamageEvent cause = victim.getLastDamageCause();
         if(!(cause instanceof EntityDamageByEntityEvent)) {
@@ -28,16 +26,16 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         } else if(victim instanceof Wither) {
             witherKill(killer, event.getEntity().getLocation());
         } else if(killer instanceof Player) {
-            payReward(PlayerUtils.getOnlinePlayer(((Player)killer).getName()), victim);
+            payReward(PlayerUtils.getOnlinePlayer((Player)killer), victim);
         } else if(killer instanceof Tameable) {
             final Tameable pet = (Tameable)killer;
             if(pet.isTamed()) {
-                payReward(PlayerUtils.getOnlinePlayer(((Player)pet.getOwner()).getName()), victim);
+                payReward(PlayerUtils.getOnlinePlayer((Player)(pet.getOwner())), victim);
             }
         }
     }
 
-    private void payReward(final SaveablePlayer player, final Entity victim) {
+    private void payReward(final Member player, final Entity victim) {
         if(player.getGameMode() == GameMode.CREATIVE || player.hasGodMode()) {
             return;
         }
@@ -64,15 +62,15 @@ public class EntityDeath extends ListenerWrapper implements Listener {
     private void enderKill(final Entity killer, final Location location) {
         UDSPlugin.getData().setLastEnderDeath(System.currentTimeMillis());
         if(killer instanceof Player) {
-            final SaveablePlayer player = PlayerUtils.getPlayer(((Player)killer).getName());
+            final Member player = PlayerUtils.getOnlinePlayer((Player)killer);
             UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Ender Dragon!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
-        final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>(1);
+        final List<Member> killers = new ArrayList<Member>(1);
         for(Player endPlayer : players) {
-            PlayerUtils.getPlayer(endPlayer.getName()).sendNormal("You can use commands such as /spawn to return to the overworld.");
+            PlayerUtils.getOnlinePlayer(endPlayer).sendNormal("You can use commands such as /spawn to return to the overworld.");
             if(endPlayer.getLocation().distance(location) < 100) {
-                SaveablePlayer endKiller = PlayerUtils.getPlayer((endPlayer).getName());
+                Member endKiller = PlayerUtils.getOnlinePlayer(endPlayer);
                 if(endKiller.getGameMode().equals(GameMode.SURVIVAL) && !endKiller.hasGodMode()) {
                     killers.add(endKiller);
                 }
@@ -81,24 +79,24 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         if(!killers.isEmpty()) {
             final int split = ((Config.MOB_REWARDS.get(EntityType.ENDER_DRAGON) / killers.size()) / 2) + 1;
             final Random generator = new Random();
-            for(SaveablePlayer endKiller : killers) {
+            for(Member endKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 endKiller.credit(reward);
-                PlayerUtils.getPlayer(endKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? Config.CURRENCY : Config.CURRENCIES) + ".");
+                endKiller.sendNormal("You picked up " + reward + " " + (reward == 1 ? Config.CURRENCY : Config.CURRENCIES) + ".");
             }
         }
     }
 
     private void witherKill(final Entity killer, final Location location) {
         if(killer instanceof Player) {
-            final SaveablePlayer player = PlayerUtils.getPlayer(((Player)killer).getName());
+            final Member player = PlayerUtils.getOnlinePlayer((Player)killer);
             UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Wither!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
-        final List<SaveablePlayer> killers = new ArrayList<SaveablePlayer>(1);
+        final List<Member> killers = new ArrayList<Member>(1);
         for(Player witherPlayer : players) {
             if(witherPlayer.getLocation().distance(location) < 100) {
-                SaveablePlayer witherKiller = PlayerUtils.getPlayer((witherPlayer).getName());
+                Member witherKiller = PlayerUtils.getOnlinePlayer(witherPlayer);
                 if(witherKiller.getGameMode().equals(GameMode.SURVIVAL) && !witherKiller.hasGodMode()) {
                     killers.add(witherKiller);
                 }
@@ -107,10 +105,10 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         if(!killers.isEmpty()) {
             final int split = ((Config.MOB_REWARDS.get(EntityType.WITHER) / killers.size()) / 2) + 1;
             final Random generator = new Random();
-            for(SaveablePlayer witherKiller : killers) {
+            for(Member witherKiller : killers) {
                 final int reward = generator.nextInt(split) + split;
                 witherKiller.credit(reward);
-                PlayerUtils.getPlayer(witherKiller.getName()).sendNormal("You picked up " + reward + " " + (reward == 1 ? Config.CURRENCY : Config.CURRENCIES) + ".");
+                witherKiller.sendNormal("You picked up " + reward + " " + (reward == 1 ? Config.CURRENCY : Config.CURRENCIES) + ".");
             }
         }
     }

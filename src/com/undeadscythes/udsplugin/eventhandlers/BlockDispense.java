@@ -1,6 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.UDSPlugin;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.block.*;

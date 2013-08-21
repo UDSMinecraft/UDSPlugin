@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+
 /**
  * Set the world the players is in to night.
  * 

@@ -69,7 +69,7 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
             && priceLine.split(":")[1].replace(" S", "").matches("[0-9][0-9]*");                    //
     }
 
-    public final SaveablePlayer findShopOwner(final Location location) {
+    public final Member findShopOwner(final Location location) {
         for(Region shop : RegionUtils.getRegions(RegionType.SHOP)) {
             if(location.toVector().isInAABB(shop.getV1(), shop.getV2())) {
                 return shop.getOwner();

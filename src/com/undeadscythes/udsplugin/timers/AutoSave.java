@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.timers;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.UDSPlugin;
 import java.io.*;
 import java.util.logging.*;
 

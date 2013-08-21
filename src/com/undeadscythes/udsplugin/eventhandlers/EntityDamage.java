@@ -1,22 +1,23 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsmeta.*;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
+import java.util.logging.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 /**
- * Fired when an entity is damaged.
- * 
  * @author UndeadScythes
  */
 public class EntityDamage extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final EntityDamageEvent event) {
+    public void onEvent(final EntityDamageEvent event) {
         if(event.getEntity() instanceof Player) {
-            final SaveablePlayer player = PlayerUtils.getOnlinePlayer(((Player)event.getEntity()).getName());
+            final Member player = PlayerUtils.getOnlinePlayer((Player)event.getEntity());
             if(player.hasGodMode() || player.isAfk() || (event.getCause().equals(DamageCause.DROWNING) && player.hasScuba())) {
                 event.setCancelled(true);
             }
@@ -36,15 +37,21 @@ public class EntityDamage extends ListenerWrapper implements Listener {
             event.setCancelled(true);
         }
     }
-    
-    private void challengeLoss(final SaveablePlayer loser) {
-        final SaveablePlayer winner = loser.getChallenger();
-        winner.credit(2 * winner.getWager());
-        winner.endChallenge();
-        winner.sendNormal("You won the challenge.");
-        winner.setHealth(winner.getMaxHealth());
-        loser.endChallenge();
-        loser.sendNormal("You lost the challenge.");
-        loser.setHealth(loser.getMaxHealth());
+
+    private void challengeLoss(final Member loser) {
+        final Member winner;
+        try {
+            winner = loser.getChallenger();
+            winner.credit(2 * winner.getWager());
+            winner.endChallenge();
+            loser.endChallenge();
+            loser.sendNormal("You lost the challenge.");
+            try {
+                PlayerUtils.getOnlinePlayer(winner).sendNormal("You won the challenge.");
+                PlayerUtils.getOnlinePlayer(winner).setHealth(PlayerUtils.getOnlinePlayer(winner).getMaxHealth());
+            } catch (PlayerNotOnlineException ex) {}
+        } catch (NoMetadataSetException ex) {
+            Logger.getLogger(EntityDamage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

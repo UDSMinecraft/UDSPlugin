@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+
 /**
  * Pay bail to get out of prison early.
  * 

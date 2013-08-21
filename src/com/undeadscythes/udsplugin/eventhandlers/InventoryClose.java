@@ -6,19 +6,18 @@ import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 
 /**
- * Fired when a player closes an inventory.
- * 
  * @author UndeadScythes
  */
 public class InventoryClose extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final InventoryCloseEvent event) {
-        final SaveablePlayer shopper = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+    public void onEvent(final InventoryCloseEvent event) {
+        final Member shopper = PlayerUtils.getOnlinePlayer((Player)event.getPlayer());
         if(shopper.isShopping()) {
             final ItemStack handItem = event.getView().getCursor();
             if(!handItem.getType().equals(Material.AIR)) {
@@ -36,7 +35,7 @@ public class InventoryClose extends ListenerWrapper implements Listener {
                 if(shopper.canAfford(totalDue)) {
                     shopper.sendNormal("You spent " + totalDue + " " + Config.CURRENCIES + ".");
                     shopper.debit(totalDue);
-                    final SaveablePlayer player = findShopOwner(block.getLocation());
+                    final Member player = findShopOwner(block.getLocation());
                     if(player != null) {
                         player.credit(totalDue);
                     }

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 
@@ -14,18 +15,18 @@ public class SetWarpCmd extends CommandHandler {
         PlayerRank rank;
         int price;
         final String message = "Warp point set.";
-        if(argsLength() == 1) {
-            if(noWarpExists(arg(0)) && noBadLang(arg(0))) {
-                WarpUtils.addWarp(new Warp(arg(0), player().getLocation(), PlayerRank.NEWBIE, 0));
+        if(args.length == 1) {
+            if(noWarpExists(args[0]) && noBadLang(args[0])) {
+                WarpUtils.addWarp(new Warp(args[0], player().getLocation(), PlayerRank.NEWBIE, 0));
                 player().sendNormal(message);
             }
-        } else if(argsLength() == 2) {
-            if(noWarpExists(arg(0)) && noBadLang(arg(0)) && (rank = getRank(arg(1))) != null) {
-                WarpUtils.addWarp(new Warp(arg(0), player().getLocation(), rank, 0));
+        } else if(args.length == 2) {
+            if(noWarpExists(args[0]) && noBadLang(args[0]) && (rank = getRank(args[1])) != null) {
+                WarpUtils.addWarp(new Warp(args[0], player().getLocation(), rank, 0));
                 player().sendNormal(message);
             }
-        } else if(numArgsHelp(3) && noWarpExists(arg(0)) && noBadLang(arg(0)) && (rank = getRank(arg(1))) != null && (price = getInteger(arg(2))) != -1) {
-            WarpUtils.addWarp(new Warp(arg(0), player().getLocation(), rank, price));
+        } else if(numArgsHelp(3) && noWarpExists(args[0]) && noBadLang(args[0]) && (rank = getRank(args[1])) != null && (price = getInteger(args[2])) != -1) {
+            WarpUtils.addWarp(new Warp(args[0], player().getLocation(), rank, price));
             player().sendNormal(message);
         }
     }

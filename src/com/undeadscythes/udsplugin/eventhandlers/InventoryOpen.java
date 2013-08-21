@@ -12,19 +12,13 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 
 /**
- * Fired when a player opens an inventory window.
- * If the inventory is protected and the player does not have access and does
- * not have Perm.BYPASS the action is stopped. If the inventory is a shop then
- * the player is put in 'shopping mode'. If the inventory is the players pack
- * then nothing happens.
- * 
  * @author UndeadScythes
  */
 public class InventoryOpen extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final InventoryOpenEvent event) {
+    public void onEvent(final InventoryOpenEvent event) {
         final InventoryHolder holder = event.getInventory().getHolder();
-        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+        final Member player = PlayerUtils.getOnlinePlayer((Player)event.getPlayer());
         if(holder instanceof DoubleChest) {
             if(isShop(((DoubleChest)holder).getLeftSide())) {
                 startShopping(((Chest)((DoubleChest)holder).getLeftSide()).getLocation(), player);
@@ -44,7 +38,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
         }
     }
 
-    private void startShopping(final Location shop, final SaveablePlayer shopper) {
+    private void startShopping(final Location shop, final Member shopper) {
         if(!shopper.canBuildHere(shop)) {
             ShopUtils.addShopper(shopper, shop);
         }
@@ -59,7 +53,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
         }
     }
 
-    private boolean isProtected(final InventoryHolder holder, final SaveablePlayer player) {
+    private boolean isProtected(final InventoryHolder holder, final Member player) {
         if(!player.canBuildHere(((BlockState)holder).getBlock().getLocation())) {
             if(player.hasPerm(Perm.BYPASS)) {
                 player.sendNormal("Protection bypassed.");

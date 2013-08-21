@@ -11,16 +11,14 @@ import org.bukkit.event.block.*;
 import org.bukkit.inventory.*;
 
 /**
- * Fired when a player breaks a block.
- * 
  * @author UndeadScythes
  */
 public class BlockBreak implements Listener {
     private static final List<String> SPECIAL_SIGNS = new ArrayList<String>(Arrays.asList(Color.SIGN + "[CHECKPOINT]", Color.SIGN + "[MINECART]", Color.SIGN + "[PRIZE]", Color.SIGN + "[ITEM]", Color.SIGN + "[WARP]", Color.SIGN + "[SPLEEF]"));
 
     @EventHandler
-    public final void onEvent(final BlockBreakEvent event) {
-        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+    public void onEvent(final BlockBreakEvent event) {
+        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
         if(player.isJailed()) {
             event.setCancelled(true);
         } else if(!player.canBuildHere(event.getBlock().getLocation())) {
@@ -57,7 +55,7 @@ public class BlockBreak implements Listener {
         return false;
     }
 
-    private void chopTree(final SaveablePlayer player, final Block block) {
+    private void chopTree(final Member player, final Block block) {
         Block blockUp = block.getRelative(BlockFace.UP);
         while(blockUp.getType().equals(Material.LOG) && player.canBuildHere(blockUp.getLocation()) && single(blockUp)) {
             blockUp.breakNaturally();

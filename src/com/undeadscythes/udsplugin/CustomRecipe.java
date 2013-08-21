@@ -6,7 +6,7 @@ import org.bukkit.material.*;
 
 /**
  * Custom recipes to be loaded on server start up.
- * 
+ *
  * @author UndeadScythes
  */
 public enum CustomRecipe {
@@ -22,31 +22,31 @@ public enum CustomRecipe {
     CIRCLE_STONE(Material.SMOOTH_BRICK, 3, "AAA", "A A", "AAA", Material.SMOOTH_BRICK, 8),
     SNOW_LAYER(Material.SNOW, "AAA", Material.SNOW_BALL),
     CREEPER_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.SULPHUR),
-    SKELETON_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.BONE),
-    SPIDER_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.SPIDER_EYE),
-    ZOMBIE_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.ROTTEN_FLESH),
-    SLIME_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.SLIME_BALL),
-    GHAST_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.GHAST_TEAR),
-    PIG_ZOMBIE_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.GOLD_NUGGET),
-    ENDERMAN_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.ENDER_PEARL),
-    CAVE_SPIDER_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.STRING),
-    SILVERFISH_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.STONE),
-    BLAZE_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.BLAZE_ROD),
-    MAGMACUBE_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.MAGMA_CREAM),
-    PIG_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.PORK),
-    SHEEP_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.WOOL),
-    COW_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.LEATHER),
-    CHICKEN_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.FEATHER),
-    SQUID_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.INK_SACK),
-    WOLF_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.WHEAT),
-    MOOSHROOM_EGG1(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.RED_MUSHROOM),
-    MOOSHROOM_EGG2(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.BROWN_MUSHROOM),
-    VILLAGER_EGG(Material.MONSTER_EGG, 50, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.RED_ROSE),
+    SKELETON_EGG(Material.MONSTER_EGG, 51, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.BONE),
+    SPIDER_EGG(Material.MONSTER_EGG, 52, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.SPIDER_EYE),
+    ZOMBIE_EGG(Material.MONSTER_EGG, 54, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.ROTTEN_FLESH),
+    SLIME_EGG(Material.MONSTER_EGG, 55, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.SLIME_BALL),
+    GHAST_EGG(Material.MONSTER_EGG, 56, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.GHAST_TEAR),
+    PIG_ZOMBIE_EGG(Material.MONSTER_EGG, 57, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.GOLD_NUGGET),
+    ENDERMAN_EGG(Material.MONSTER_EGG, 58, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.ENDER_PEARL),
+    CAVE_SPIDER_EGG(Material.MONSTER_EGG, 59, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.STRING),
+    SILVERFISH_EGG(Material.MONSTER_EGG, 60, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.STONE),
+    BLAZE_EGG(Material.MONSTER_EGG, 61, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.BLAZE_ROD),
+    MAGMACUBE_EGG(Material.MONSTER_EGG, 62, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.MAGMA_CREAM),
+    PIG_EGG(Material.MONSTER_EGG, 90, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.PORK),
+    SHEEP_EGG(Material.MONSTER_EGG, 91, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.WOOL),
+    COW_EGG(Material.MONSTER_EGG, 92, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.LEATHER),
+    CHICKEN_EGG(Material.MONSTER_EGG, 93, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.FEATHER),
+    SQUID_EGG(Material.MONSTER_EGG, 94, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.INK_SACK),
+    WOLF_EGG(Material.MONSTER_EGG, 95, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.WHEAT),
+    MOOSHROOM_EGG1(Material.MONSTER_EGG, 96, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.RED_MUSHROOM),
+    MOOSHROOM_EGG2(Material.MONSTER_EGG, 96, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.BROWN_MUSHROOM),
+    VILLAGER_EGG(Material.MONSTER_EGG, 78, "AAA", "ABA", "AAA", Material.GOLD_BLOCK, Material.RED_ROSE),
     WEB_BLOCK(Material.WEB, "AAA", "A A", "AAA", Material.STRING),
     SADDLE(Material.SADDLE, "AAA", " B ", "C C", Material.LEATHER, Material.IRON_INGOT, Material.DIAMOND);
-    
+
     final private Recipe recipe;
-    
+
     @SuppressWarnings("fallthrough")
     private CustomRecipe(final boolean shaped, final Material out, final byte data, final String row1, final String row2, final String row3, final Material ing1, final Material ing2, final Material ing3, final int num) {
         final MaterialData item = new MaterialData(out, data);
@@ -84,29 +84,29 @@ public enum CustomRecipe {
                     break;
             }
         }
-        
+
     }
-    
+
     private CustomRecipe(final Material out, final int data, final String row1, final String row2, final String row3, final Material ing1, final Material ing2) {
         this(true, out, (byte)data, row1, row2, row3, ing1, ing2, null, 1);
     }
- 
+
     private CustomRecipe(final Material out, final int data, final String row1, final String row2, final String row3, final Material ing1, final int num) {
         this(true, out, (byte)data, row1, row2, row3, ing1, null, null, num);
     }
- 
+
     private CustomRecipe(final Material out, final int data, final Material ing1, final Material ing2) {
         this(false, out, (byte)data, null, null, null, ing1, ing2, null, 1);
     }
- 
+
     private CustomRecipe(final Material out, final String row1, final String row2, final String row3, final Material ing1, final Material ing2, final Material ing3) {
         this(true, out, (byte)0, row1, row2, row3, ing1, ing2, ing3, 1);
     }
-    
+
     private CustomRecipe(final Material out, final String row1, final String row2, final String row3, final Material ing1, final int num) {
         this(true, out, (byte)0, row1, row2, row3, ing1, null, null, num);
     }
-    
+
     private CustomRecipe(final Material out, final String row1, final String row2, final String row3, final Material ing1, final Material ing2) {
         this(true, out, (byte)0, row1, row2, row3, ing1, ing2, null, 1);
     }
@@ -114,19 +114,19 @@ public enum CustomRecipe {
     private CustomRecipe(final Material out, final String row1, final String row2, final Material ing1, final Material ing2) {
         this(true, out, (byte)0, row1, row2, null, ing1, ing2, null, 1);
     }
-    
+
     private CustomRecipe(final Material out, final String row1, final String row2, final String row3, final Material ing1) {
         this(true, out, (byte)0, row1, row2, row3, ing1, null, null, 1);
     }
-    
+
     private CustomRecipe(final Material out, final String row1, final String row2, final Material ing1) {
         this(true, out, (byte)0, row1, row2, null, ing1, null, null, 1);
     }
-    
+
     private CustomRecipe(final Material out, final String row1, final Material ing1) {
         this(true, out, (byte)0, row1, null, null, ing1, null, null, 1);
     }
-    
+
     public final Recipe getRecipe() {
         return recipe;
     }

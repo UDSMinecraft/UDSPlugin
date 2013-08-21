@@ -1,14 +1,17 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsmeta.*;
+
 /**
- * Teleport to a previously saved checkpoint.
- * 
  * @author UndeadScythes
  */
 public class CheckCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
-        if(!player().quietTeleport(player().getCheckPoint())) {
+    public void playerExecute() {
+        try {
+            player().quietTeleport(player().getCheckPoint());
+        } catch (NoMetadataSetException ex) {
             player().sendError("You do not currently have a checkpoint set.");
         }
     }

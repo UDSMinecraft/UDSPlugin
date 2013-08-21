@@ -1,19 +1,19 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsmeta.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.entity.*;
 
 /**
- * Allows a player to accept a request sent by another player.
- * 
  * @author UndeadScythes
  */
 public class YCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         Request request;
-        SaveablePlayer sender;
+        Member sender;
         if((request = getRequest()) != null && (sender = request.getSender()) != null && sender.isOnline()) {
             int price;
             switch (request.getType()) {
@@ -36,13 +36,17 @@ public class YCmd extends CommandHandler {
                 case PET:
                     if(canAfford(price = Integer.parseInt(request.getData()))) {
                         for(Entity entity : sender.getWorld().getEntities()) {
-                            if(entity.getUniqueId().equals(sender.getSelectedPet())) {
-                                player().debit(price);
-                                sender.credit(price);
-                                player().setPet((Tameable)entity);
-                                player().teleportHere(entity);
-                                player().sendNormal("Your bought " + sender.getNick() + "'s pet.");
-                                sender.sendNormal(player().getNick() + " bought your pet.");
+                            try {
+                                if(entity.getUniqueId().equals(sender.getSelectedPet())) {
+                                    player().debit(price);
+                                    sender.credit(price);
+                                    player().setPet((Tameable)entity);
+                                    player().teleportHere(entity);
+                                    player().sendNormal("Your bought " + sender.getNick() + "'s pet.");
+                                    sender.sendNormal(player().getNick() + " bought your pet.");
+                                }
+                            } catch (NoMetadataSetException ex) {
+                                player().sendError(sender.getNick() + " is no longer selling their pet.");
                             }
                         }
                     }

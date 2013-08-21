@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.utilities;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.UDSPlugin;
 import org.bukkit.*;
 import org.bukkit.block.*;
 

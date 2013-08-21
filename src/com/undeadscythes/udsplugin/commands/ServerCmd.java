@@ -1,20 +1,19 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
 /**
- * Server related commands.
- * 
  * @author UndeadScythes
  */
 public class ServerCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(numArgsHelp(1)) {
             if(subCmdEquals("stop")) {
-                for(SaveablePlayer target : PlayerUtils.getOnlinePlayers()) {
+                for(Member target : PlayerUtils.getOnlinePlayers()) {
                     target.kickPlayer("Server is shutting down.");
                 }
                 Bukkit.shutdown();
@@ -22,8 +21,8 @@ public class ServerCmd extends CommandHandler {
                 Config.reload();
                 player().sendNormal("Configuration file reloaded.");
             } else if(subCmdEquals("info")) {
-                player().sendNormal("Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");           
-            } else if(subCmdEquals("players")) {   
+                player().sendNormal("Server is running UDSPlugin version " + UDSPlugin.getVersion() + ".");
+            } else if(subCmdEquals("players")) {
                 player().sendNormal("There have been " + PlayerUtils.numPlayers() + " unique visitors.");
                 player().sendNormal("There are " + PlayerUtils.numActivePlayers() + " active players.");
             } else if(subCmdEquals("setspawn")) {

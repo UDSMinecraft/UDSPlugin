@@ -1,6 +1,8 @@
 package com.undeadscythes.udsplugin.utilities;
 
-import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.RegionType;
+import com.undeadscythes.udsplugin.SaveableHashMap;
+import com.undeadscythes.udsplugin.Region;
 import java.io.*;
 import java.util.*;
 import org.bukkit.*;

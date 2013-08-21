@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -10,8 +11,8 @@ import com.undeadscythes.udsplugin.*;
 public class IgnoreCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        SaveablePlayer target;
-        if(numArgsHelp(1) && (target = matchPlayer(arg(0))) != null && notSelf(target) && !target.hasPerm(Perm.UNAVOIDABLE)) {
+        Member target;
+        if(numArgsHelp(1) && (target = matchPlayer(args[0])) != null && notSelf(target) && !target.hasPerm(Perm.UNAVOIDABLE)) {
             if(player().ignorePlayer(target)) {
                 player().sendNormal("You are now ignoring " + target.getNick() + ".");
             } else {

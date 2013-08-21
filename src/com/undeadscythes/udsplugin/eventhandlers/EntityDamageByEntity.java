@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsmeta.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.entity.*;
@@ -7,32 +8,34 @@ import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
 
 /**
- * Fired when one entity damages another.
- * 
  * @author UndeadScythes
  */
 public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final EntityDamageByEntityEvent event) {
+    public void onEvent(final EntityDamageByEntityEvent event) {
         final Entity attacker = getAbsoluteEntity(event.getDamager());
         final Entity defender = event.getEntity();
         if(attacker instanceof Player && defender instanceof Player) {
-            event.setCancelled(pvp(PlayerUtils.getOnlinePlayer(((Player)attacker).getName()), PlayerUtils.getOnlinePlayer(((Player)defender).getName())));
+            event.setCancelled(pvp(PlayerUtils.getOnlinePlayer((Player)attacker), PlayerUtils.getOnlinePlayer((Player)defender)));
         } else {
             event.setCancelled(isAfk(defender) || godMode(defender) || pve(defender));
         }
     }
 
-    private boolean pvp(final SaveablePlayer attacker, final SaveablePlayer defender) {
-        return !attacker.hasPvp() || !defender.hasPvp() || defender.hasGodMode() || defender.isAfk() || !(attacker.isInClan() && defender.isInClan()) || attacker.getClan().equals(defender.getClan()) || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
+    private boolean pvp(final Member attacker, final Member defender) {
+        try {
+            return attacker.getClan().equals(defender.getClan());
+        } catch (NoMetadataSetException ex) {
+            return !attacker.hasPvp() || !defender.hasPvp() || defender.hasGodMode() || defender.isAfk() || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
+        }
     }
 
     private boolean isAfk(final Entity defender) {
-        return defender instanceof Player && PlayerUtils.getOnlinePlayer(((Player)defender).getName()).isAfk();
+        return defender instanceof Player && PlayerUtils.getOnlinePlayer((Player)defender).isAfk();
     }
 
     private boolean godMode(final Entity defender) {
-        return defender instanceof Player && PlayerUtils.getOnlinePlayer(((Player)defender).getName()).hasGodMode();
+        return defender instanceof Player && PlayerUtils.getOnlinePlayer((Player)defender).hasGodMode();
     }
 
     private boolean pve(final Entity defender) {

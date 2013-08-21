@@ -12,8 +12,8 @@ import org.bukkit.event.player.*;
  */
 public class PlayerRespawn extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final PlayerRespawnEvent event) {
-        final SaveablePlayer player = PlayerUtils.getOnlinePlayer(event.getPlayer().getName());
+    public void onEvent(final PlayerRespawnEvent event) {
+        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
         if(player.getBedSpawnLocation() == null || !player.getBedSpawnLocation().getWorld().equals(player.getWorld())) {
             final Region home = RegionUtils.getRegion(RegionType.HOME, player.getName() + "home");
             if(home != null && home.getWorld().equals(player.getWorld())) {

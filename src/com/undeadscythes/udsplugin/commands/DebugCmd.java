@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import org.bukkit.entity.*;
 
 /**
@@ -11,7 +12,7 @@ public class DebugCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(this.numArgsHelp(1)) {
-            if(arg(0).equalsIgnoreCase("dragon")) {
+            if(args[0].equalsIgnoreCase("dragon")) {
                 for(Entity entity : player().getWorld().getEntitiesByClass(EnderDragon.class)) {
                     ((EnderDragon)entity).setHealth(1);
                 }

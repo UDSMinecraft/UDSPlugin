@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.entity.*;
 
@@ -13,7 +14,7 @@ public class ButcherCmd extends CommandHandler {
     public final void playerExecute() {
         if(maxArgsHelp(1)) {
             boolean all = false;
-            if(argsLength() == 1 && (arg(0).equals("a") || arg(0).equals("all"))) {
+            if(args.length == 1 && (args[0].equals("a") || args[0].equals("all"))) {
                 all = true;
             }
             int count = 0;

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -11,7 +12,7 @@ import com.undeadscythes.udsplugin.*;
 public class ACmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(argsLength() == 0) {
+        if(args.length == 0) {
             if(player().toggleChannel(ChatChannel.ADMIN)) {
                 player().sendNormal("You are now talking in admin chat.");
             } else {

@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import java.io.*;
 import org.bukkit.*;
@@ -15,7 +16,7 @@ import org.bukkit.util.*;
 public class WECmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(argsLength() == 1) {
+        if(args.length == 1) {
             if(subCmdEquals("undo")) {
                 undo();
             } else if(subCmdEquals("copy")) {
@@ -31,23 +32,23 @@ public class WECmd extends CommandHandler {
             } else {
                 subCmdHelp();
             }
-        } else if(argsLength() == 2) {
+        } else if(args.length == 2) {
             if(subCmdEquals("set")) {
                 set();
             } else if(subCmdEquals("ext")) {
-                final int range = getInteger(arg(1));
+                final int range = getInteger(args[1]);
                 if(range > -1) {
                     ext(range);
                 }
             } else if(subCmdEquals("drain")) {
-                final int range = getInteger(arg(1));
+                final int range = getInteger(args[1]);
                 if(range > -1) {
                     drain(range);
                 }
             } else if(subCmdEquals("save")) {
-                save(subCmd());
+                save(subCmd);
             } else if(subCmdEquals("load")) {
-                load(arg(1));
+                load(args[1]);
             } else {
                 subCmdHelp();
             }
@@ -161,7 +162,7 @@ public class WECmd extends CommandHandler {
         if(hasPerm(Perm.WE_SET)) {
             final EditSession session = player().forceSession();
             if(hasTwoPoints(session)) {
-                final ItemStack item = getItem(arg(1));
+                final ItemStack item = getItem(args[1]);
                 if(item != null) {
                     final Vector v1 = session.getV1();
                     final Vector v2 = session.getV2();
@@ -209,9 +210,9 @@ public class WECmd extends CommandHandler {
                 final Vector v1 = session.getV1();
                 final Vector v2 = session.getV2();
                 if(session.getVolume() <= Config.EDIT_RANGE) {
-                    if(argsLength() == 3) {
-                        final ItemStack itemFrom = getItem(arg(1));
-                        final ItemStack itemTo = getItem(arg(2));
+                    if(args.length == 3) {
+                        final ItemStack itemFrom = getItem(args[1]);
+                        final ItemStack itemTo = getItem(args[2]);
                         if(itemFrom != null && itemTo != null) {
                             final World world = player().getWorld();
                             final Vector min = Vector.getMinimum(v1, v2);
@@ -241,7 +242,7 @@ public class WECmd extends CommandHandler {
 
     private void move() {
         if(hasPerm(Perm.WE_MOVE)) {
-            final int distance = getInteger(arg(2));
+            final int distance = getInteger(args[2]);
             if(distance > -1) {
                 if(distance <= Config.MOVE_RANGE) {
                     final EditSession session = player().forceSession();
@@ -249,7 +250,7 @@ public class WECmd extends CommandHandler {
                         final Vector v1 = session.getV1();
                         final Vector v2 = session.getV2();
                         if(session.getVolume() <= Config.EDIT_RANGE) {
-                            Direction direction = getDirection(arg(1));
+                            Direction direction = getDirection(args[1]);
                             if(direction != null) {
                                 if(direction == Direction.UP || direction == Direction.EAST || direction == Direction.SOUTH) {
                                     final Vector min = Vector.getMinimum(v1, v2);

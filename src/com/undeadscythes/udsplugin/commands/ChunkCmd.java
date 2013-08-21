@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import java.text.*;
 import java.util.*;
@@ -14,7 +15,7 @@ public class ChunkCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         if(numArgsHelp(1)) {
-            if(arg(0).equalsIgnoreCase("info")) {
+            if(args[0].equalsIgnoreCase("info")) {
                 final Chunk chunk = player().getLocation().getChunk();
                 final EnumMap<Material, Integer> blockDistro = new EnumMap<Material, Integer>(Material.class);
                 int blockCount = 0;

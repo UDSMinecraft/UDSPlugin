@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsplugin.commands.*;
-import com.undeadscythes.udsplugin.eventhandlers.*;
+import com.undeadscythes.udsmeta.*;
 import com.undeadscythes.udsplugin.timers.*;
+import com.undeadscythes.udsplugin.eventhandlers.*;
+import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import java.util.*;
@@ -16,10 +17,11 @@ import org.bukkit.scheduler.*;
 import org.bukkit.util.Vector;
 
 /**
- * The main plugin. The heart of UDSPlugin.
  * @author UndeadScythe
  */
 public class UDSPlugin extends JavaPlugin {
+    public static UDSPlugin PLUGIN;
+    public static Server SERVER;
     public static final int BUILD_LIMIT = 255;
     public static final String INT_REGEX = "[0-9][0-9]*";
     public static final File DATA_PATH = new File("plugins/UDSPlugin/data");
@@ -33,7 +35,6 @@ public class UDSPlugin extends JavaPlugin {
     private static final HashMap<String, ChatRoom> CHAT_ROOMS = new HashMap<String, ChatRoom>(0);
     private static final HashMap<String, Request> REQUESTS = new HashMap<String, Request>(0);
     private static final HashMap<String, EditSession> SESSIONS = new HashMap<String, EditSession>(0);
-    private static UDSPlugin plugin;
     private static AfkCheck afkCheck = new AfkCheck();
     private static AutoSave autoSave = new AutoSave();
     private static DragonRespawn dragonRespawn = new DragonRespawn();
@@ -46,21 +47,12 @@ public class UDSPlugin extends JavaPlugin {
     private static boolean serverLockedDown = false;
     private static final YamlConfig worldFlags = new YamlConfig(DATA_PATH + "/worlds.yml");
 
-    /**
-     * Used for testing in NetBeans. Woo! NetBeans!
-     * @param args Blah.
-     */
     public static void main(final String[] args) {}
 
-    /**
-     * Saves all the listed objects to file.
-     * @return Number of individual data records written.
-     * @throws IOException When a file can't be opened.
-     */
     public static int saveFiles() throws IOException {
         data.saveData();
         worldFlags.save();
-        PlayerUtils.savePlayers(DATA_PATH);
+        PlayerUtils.savePlayers();
         WarpUtils.saveWarps(DATA_PATH);
         ClanUtils.saveClans(DATA_PATH);
         RegionUtils.saveRegions(DATA_PATH);
@@ -68,15 +60,10 @@ public class UDSPlugin extends JavaPlugin {
         return ClanUtils.numClans() + RegionUtils.numRegions() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
     }
 
-    public static Request getRequest(final SaveablePlayer player) {
+    public static Request getRequest(final Member player) {
         return REQUESTS.get(player.getName());
     }
 
-    /**
-     * Grab and cast the sessions map.
-     * @param name Name of player.
-     * @return Sessions map.
-     */
     public static EditSession getSession(final String name) {
         return SESSIONS.get(name);
     }
@@ -89,10 +76,6 @@ public class UDSPlugin extends JavaPlugin {
         return REQUESTS.entrySet().iterator();
     }
 
-    /**
-     *
-     * @return
-     */
     public static Data getData() {
         return data;
     }
@@ -118,7 +101,7 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     public static String getVersion() {
-        return plugin.getDescription().getVersion();
+        return PLUGIN.getDescription().getVersion();
     }
 
     public static boolean checkWorldFlag(final World world, final Flag flag) {
@@ -202,17 +185,20 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     public static UDSPlugin getPlugin() {
-        return plugin;
+        return PLUGIN;
     }
 
     @Override
-    public final void onEnable() {
-        UDSPlugin.plugin = this;
-        if(DATA_PATH.mkdirs()) {
-            getLogger().info("Created data directory tree.");
-        }
-        if(BLOCKS_PATH.mkdirs()) {
-            getLogger().info("Created blocks directory tree.");
+    public void onEnable() {
+        PLUGIN = this;
+        SERVER = getServer();
+        DATA_PATH.mkdirs();
+        BLOCKS_PATH.mkdirs();
+        try {
+            MetaCore.loadMeta(DATA_PATH + "/players.yml", MetaType.values(), PlayerKey.values());
+        } catch (IOException ex) {
+            getLogger().severe("Could not load players. Shutting down.");
+            getServer().shutdown();
         }
         Config.init();
         UDSPlugin.TRANSPARENT_BLOCKS.clear();
@@ -221,17 +207,13 @@ public class UDSPlugin extends JavaPlugin {
                 TRANSPARENT_BLOCKS.add((byte)material.getId());
             }
         }
-        getLogger().info("Config loaded.");
         data = new Data(this);
         data.reloadData();
         data.saveDefaultData();
         data.saveData();
-        getLogger().info("Data loaded.");
         loadWorlds();
         data.reloadData();
-        getLogger().info("Worlds loaded.");
         worldFlags.load();
-        getLogger().info("Flags loaded.");
         try {
             loadFiles();
         } catch (IOException ex) {
@@ -246,23 +228,17 @@ public class UDSPlugin extends JavaPlugin {
         sched.scheduleSyncRepeatingTask(this, quarryRefill, TimeUtils.HOUR / TimeUtils.TICK, TimeUtils.DAY / TimeUtils.TICK);
         sched.scheduleSyncRepeatingTask(this, requestTimeOut, TimeUtils.MINUTE / TimeUtils.TICK, TimeUtils.SECOND * 15 / TimeUtils.TICK);
         sched.scheduleSyncRepeatingTask(this, vipSpawns, TimeUtils.HOUR / TimeUtils.TICK, TimeUtils.DAY / TimeUtils.TICK);
-        getLogger().info("Timers started.");
         setCommandExecutors();
-        getLogger().info("Commands registered.");
         registerEvents();
-        getLogger().info("Events registered.");
         addRecipes();
-        getLogger().info("Recipes added.");
         Censor.initCensor();
-        getLogger().info("Censor online.");
         MinecartCheck.findMinecarts();
-        getLogger().info("Tracking minecarts.");
         final String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
-        getLogger().info(message); // Looks a bit like the Sims loading screen right?
+        getLogger().info(message);
     }
 
     @Override
-    public final void onDisable() {
+    public void onDisable() {
         try {
             getLogger().info(saveFiles() + " server objects saved.");
         } catch (IOException ex) {
@@ -279,37 +255,14 @@ public class UDSPlugin extends JavaPlugin {
         }
     }
 
-    /**
-     * Loads the listed files from file.
-     * @throws FileNotFoundException When a file can't be accessed.
-     * @throws IOException When a file can't be read from.
-     */
     private void loadFiles() throws IOException {
         PlayerUtils.loadPlayers(DATA_PATH);
-        if(PlayerUtils.numPlayers() > 0) {
-            getLogger().info("Loaded " + PlayerUtils.numPlayers() + " players.");
-        }
         RegionUtils.loadRegions(DATA_PATH);
-        if(RegionUtils.numRegions() > 0) {
-            getLogger().info("Loaded " + RegionUtils.numRegions() + " regions.");
-        }
         WarpUtils.loadWarps(DATA_PATH);
-        if(WarpUtils.numWarps() > 0) {
-            getLogger().info("Loaded " + WarpUtils.numWarps() + " warps.");
-        }
         ClanUtils.loadClans(DATA_PATH);
-        if(ClanUtils.numClans() > 0) {
-            getLogger().info("Loaded " + ClanUtils.numClans() + " clans.");
-        }
         PortalUtils.loadPortals(DATA_PATH);
-        if(PortalUtils.numPortals() > 0) {
-            getLogger().info("Loaded " + PortalUtils.numPortals() + " portals.");
-        }
     }
 
-    /**
-     * Connects the commands with their executors.
-     */
     private void setCommandExecutors() {
         getCommand("a").setExecutor(new ACmd());
         getCommand("acceptrules").setExecutor(new AcceptRulesCmd());

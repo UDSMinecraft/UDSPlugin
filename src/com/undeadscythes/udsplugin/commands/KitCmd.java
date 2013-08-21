@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.inventory.*;
 
@@ -11,7 +12,7 @@ import org.bukkit.inventory.*;
 public class KitCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(argsLength() == 0) {
+        if(args.length == 0) {
             player().sendNormal("--- Available Kits ---");
             for(Kit kit : Config.KITS) {
                 String contents = "";
@@ -23,7 +24,7 @@ public class KitCmd extends CommandHandler {
         } else if(numArgsHelp(1)) {
             boolean given = false;
             for(Kit kit : Config.KITS) {
-                if(kit.getName().equalsIgnoreCase(arg(0)) && canAfford(kit.getPrice())) {
+                if(kit.getName().equalsIgnoreCase(args[0]) && canAfford(kit.getPrice())) {
                     for(ItemStack item : kit.getItems()) {
                         player().giveAndDrop(item);
                     }

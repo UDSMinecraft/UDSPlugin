@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
@@ -15,9 +16,9 @@ import org.bukkit.util.Vector;
 public class PlotCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(argsLength() == 0) {
+        if(args.length == 0) {
             list();
-        } else if(argsLength() == 1) {
+        } else if(args.length == 1) {
             if(subCmdEquals("claim")) {
                 claim();
             } else if(subCmdEquals("like")) {
@@ -30,22 +31,22 @@ public class PlotCmd extends CommandHandler {
             } else {
                 subCmdHelp();
             }
-        } else if(argsLength() == 2) {
+        } else if(args.length == 2) {
             if(subCmdEquals("tp")) {
                 tp();
             } else if(subCmdEquals("name")) {
                 Region plot;
                 if((plot = getPlot()) != null) {
-                    name(plot.getName(), arg(1));
+                    name(plot.getName(), args[1]);
                 }
             } else if(subCmdEquals("remove")) {
-                remove(arg(1));
+                remove(args[1]);
             } else {
                 subCmdHelp();
             }
         } else if(numArgsHelp(3)) {
             if(subCmdEquals("name")) {
-                name(arg(1), arg(2));
+                name(args[1], args[2]);
             } else{
                 subCmdHelp();
             }
@@ -168,7 +169,7 @@ public class PlotCmd extends CommandHandler {
     
     private void tp() {
         Region plot;
-        if((plot = plotExists(arg(1))) != null) {
+        if((plot = plotExists(args[1])) != null) {
             player().teleport(plot.getWarp());
         }
     }

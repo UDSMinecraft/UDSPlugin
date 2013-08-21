@@ -4,9 +4,6 @@ import java.io.*;
 import java.util.*;
 
 /**
- * A LinkedHashMap whose contents can be matched with partials.
- * 
- * @param <V> the type of the values stored in this map.
  * @author UndeadScythes
  */
 @SuppressWarnings("serial")
@@ -60,7 +57,7 @@ public class SaveableHashMap<V extends Saveable> extends HashMap<String, V> {
         remove(oldKey);
         put(newKey, object);
     }
-    
+
     public final void save(final String path) throws IOException {
         final BufferedWriter file = new BufferedWriter(new FileWriter(path));
         for(Saveable value : this.values()) {

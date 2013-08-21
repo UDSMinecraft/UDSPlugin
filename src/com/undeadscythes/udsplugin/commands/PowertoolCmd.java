@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+
 /**
  * Set up a powertool.
  * 
@@ -8,7 +10,7 @@ package com.undeadscythes.udsplugin.commands;
 public class PowertoolCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
-        if(argsLength() >= 1 && getItemInHand() != null) {
+        if(args.length >= 1 && getItemInHand() != null) {
             player().setPowertoolID(player().getItemInHand().getTypeId());
             player().setPowertool(argsToMessage().replaceFirst("/", ""));
             player().sendNormal("Powertool set.");

@@ -1,23 +1,23 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsmeta.*;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.inventory.*;
 
 /**
- * Spawn items into the players inventory.
- * 
  * @author UndeadScythes
  */
 public class ICmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(minArgsHelp(1) && maxArgsHelp(2)) {
             ItemStack item;
-            if((item = getItem(arg(0))) != null) {
+            if((item = getItem(args[0])) != null) {
                 int amount;
-                if(argsLength() == 1) {
+                if(args.length == 1) {
                     item.setAmount(item.getMaxStackSize());
-                } else if((amount = getInteger(arg(1))) != -1) {
+                } else if((amount = getInteger(args[1])) != -1) {
                     item.setAmount(amount);
                 }
                 if(player().hasPerm(Perm.I_ADMIN)) {
@@ -27,9 +27,11 @@ public class ICmd extends CommandHandler {
                         if(item.getAmount() > player().getVIPSpawns()) {
                             item.setAmount(player().getVIPSpawns());
                         }
-                        if(player().useVIPSpawns(item.getAmount()) == 0) {
-                            player().sendNormal("You have just used up your last spawns for today.");
-                        }
+                        try {
+                            if(player().useVIPSpawns(item.getAmount()) == 0) {
+                                player().sendNormal("You have just used up your last spawns for today.");
+                            }
+                        } catch (NoMetadataSetException ex) {}
                         player().getInventory().addItem(item);
                     } else {
                         player().sendError("Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");

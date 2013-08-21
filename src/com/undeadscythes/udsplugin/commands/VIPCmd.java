@@ -1,19 +1,19 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
 /**
- * Rent VIP rank and perform other tasks.
- *
  * @author UndeadScythes
  */
 public class VIPCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
-        if(argsLength() == 0) {
+    public void playerExecute() {
+        if(args.length == 0) {
             if(player().hasPerm(Perm.VIP_RANK)) {
                 player().sendNormal("You have " + player().getVIPTimeString() + " left in VIP.");
             } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
@@ -25,20 +25,22 @@ public class VIPCmd extends CommandHandler {
             }
         } else if(maxArgsHelp(2)) {
             if(subCmdEquals("spawns")) {
-                if(argsLength() != 2) {
+                if(args.length != 2) {
                     sendPage(1, player());
                 } else {
-                    final int page = getInteger(arg(1));
+                    final int page = getInteger(args[1]);
                     if(page != -1) {
                         sendPage(page, player());
                     }
                 }
             } else if(player().hasPerm(Perm.VIP_FOR_LIFE)) {
-                SaveablePlayer target;
-                if((target = matchPlayer(arg(0))) != null) {
+                Member target;
+                if((target = matchPlayer(args[0])) != null) {
                     target.setRank(PlayerRank.VIP);
                     target.setVipForLife(true);
-                    target.sendNormal("You have been granted VIP for life.");
+                    try {
+                        PlayerUtils.getOnlinePlayer(target).sendNormal("You have been granted VIP for life.");
+                    } catch (PlayerNotOnlineException ex) {}
                     player().sendNormal(target.getNick() + " has been granted VIP for life.");
                 }
             } else {
@@ -47,7 +49,7 @@ public class VIPCmd extends CommandHandler {
         }
     }
 
-    private void sendPage(final int page, final SaveablePlayer player) {
+    private void sendPage(final int page, final Member player) {
         final int pages = (Config.VIP_WHITELIST.size() + 8) / 9;
         if(pages == 0) {
             player.sendNormal("There are no currently whitelisted items.");

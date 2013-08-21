@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
+import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 
@@ -12,7 +13,7 @@ public class DelWarpCmd extends CommandHandler {
     @Override
     public final void playerExecute() {
         Warp warp;
-        if(numArgsHelp(1) && (warp = matchWarp(arg(0))) != null) {
+        if(numArgsHelp(1) && (warp = matchWarp(args[0])) != null) {
             WarpUtils.removeWarp(warp);
             player().sendNormal("Warp removed.");
         }
