@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
-import com.undeadscythes.udsmeta.*;
+
+import com.undeadscythes.udsmeta.exceptions.*;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.inventory.*;
 
@@ -20,24 +20,24 @@ public class ICmd extends CommandHandler {
                 } else if((amount = getInteger(args[1])) != -1) {
                     item.setAmount(amount);
                 }
-                if(player().hasPerm(Perm.I_ADMIN)) {
-                    player().getInventory().addItem(item);
-                } else if(player().getVIPSpawns() > 0) {
+                if(player.hasPerm(Perm.I_ADMIN)) {
+                    player.getInventory().addItem(item);
+                } else if(player.getVIPSpawns() > 0) {
                     if(Config.VIP_WHITELIST.contains(item.getType())) {
-                        if(item.getAmount() > player().getVIPSpawns()) {
-                            item.setAmount(player().getVIPSpawns());
+                        if(item.getAmount() > player.getVIPSpawns()) {
+                            item.setAmount(player.getVIPSpawns());
                         }
                         try {
-                            if(player().useVIPSpawns(item.getAmount()) == 0) {
-                                player().sendNormal("You have just used up your last spawns for today.");
+                            if(player.useVIPSpawns(item.getAmount()) == 0) {
+                                player.sendNormal("You have just used up your last spawns for today.");
                             }
-                        } catch (NoMetadataSetException ex) {}
-                        player().getInventory().addItem(item);
+                        } catch(NoMetadataSetException ex) {}
+                        player.getInventory().addItem(item);
                     } else {
-                        player().sendError("Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");
+                        player.sendError("Sorry, " + item.getType().name().toLowerCase().replace("_", " ") + " is not a whitelisted item.");
                     }
                 } else {
-                    player().sendError("You are out of spawns for today.");
+                    player.sendError("You are out of spawns for today.");
                 }
             }
         }

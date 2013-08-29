@@ -1,11 +1,11 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.members;
 
 import com.undeadscythes.udsmeta.*;
 
 /**
  * @author UndeadScythes
  */
-public enum PlayerKey implements MetadataKey {
+public enum MemberKey implements MetadataKey {
     GODMODE,
     LOCKDOWN_PASS,
     AFK,
@@ -50,11 +50,11 @@ public enum PlayerKey implements MetadataKey {
 
     private boolean persistent;
 
-    PlayerKey() {
+    MemberKey() {
         persistent = false;
     }
 
-    PlayerKey(boolean persistent) {
+    MemberKey(boolean persistent) {
         this.persistent = persistent;
     }
 

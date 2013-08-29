@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.timers;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
@@ -23,7 +24,7 @@ public class MinecartCheck implements Runnable {
         return false;
     }
 
-    public static void addMinecart(final Minecart minecart, final Member owner) {
+    public static void addMinecart(final Minecart minecart, final OfflineMember owner) {
         for(OwnedMinecart listed : MINECARTS) {
             if(listed.getUUID().equals(minecart.getUniqueId())) {
                 listed.setOwner(owner);
@@ -33,7 +34,7 @@ public class MinecartCheck implements Runnable {
         MINECARTS.add(new OwnedMinecart(minecart, owner));
     }
 
-    public static void tagMinecart(final Member player, final Location location) {
+    public static void tagMinecart(final OfflineMember player, final Location location) {
         addMinecart(location.getWorld().spawn(location.clone().add(0.5, 0.5, 0.5), Minecart.class), player);
     }
 

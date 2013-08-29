@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.timers;
 
-import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsmeta.exceptions.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 
@@ -14,7 +15,7 @@ public class PlayerChecks implements Runnable {
 
     @Override
     public void run() {
-        for(Member player : PlayerUtils.getOnlinePlayers()) {
+        for(Member player : MemberUtils.getOnlineMembers()) {
             vipStatus(player);
             jailStatus(player);
             godMode(player);
@@ -28,7 +29,7 @@ public class PlayerChecks implements Runnable {
             if(player.getKills() > 0 && player.getPvpTime() + TimeUtils.HOUR < System.currentTimeMillis()) {
                     player.removeKill();
             }
-        } catch (NoMetadataSetException ex) {}
+        } catch(NoMetadataSetException ex) {}
     }
 
     private void checkLocation(final Member player) {
@@ -52,16 +53,17 @@ public class PlayerChecks implements Runnable {
                 player.release();
                 player.sendNormal("You have served your time.");
             }
-        } catch (NoMetadataSetException ex) {}
+        } catch(NoMetadataSetException ex) {}
     }
 
     private void vipStatus(final Member player) {
         try {
             if(player.hasPerm(Perm.VIP_RANK) && !player.isVipForLife() && player.getVIPTime() + Config.VIP_TIME < System.currentTimeMillis()) {
                 player.setVIPTime(0);
-                player.setRank(PlayerRank.MEMBER);
+                player.setRank(MemberRank.MEMBER);
                 player.sendNormal("Your time as a VIP has come to an end.");
+                MemberUtils.saveMember(player);
             }
-        } catch (NoMetadataSetException ex) {}
+        } catch(NoMetadataSetException ex) {}
     }
 }

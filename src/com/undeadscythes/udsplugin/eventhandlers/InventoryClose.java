@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
@@ -17,7 +18,7 @@ import org.bukkit.inventory.*;
 public class InventoryClose extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final InventoryCloseEvent event) {
-        final Member shopper = PlayerUtils.getOnlinePlayer((Player)event.getPlayer());
+        final Member shopper = MemberUtils.getOnlineMember((Player)event.getPlayer());
         if(shopper.isShopping()) {
             final ItemStack handItem = event.getView().getCursor();
             if(!handItem.getType().equals(Material.AIR)) {
@@ -35,7 +36,7 @@ public class InventoryClose extends ListenerWrapper implements Listener {
                 if(shopper.canAfford(totalDue)) {
                     shopper.sendNormal("You spent " + totalDue + " " + Config.CURRENCIES + ".");
                     shopper.debit(totalDue);
-                    final Member player = findShopOwner(block.getLocation());
+                    final OfflineMember player = findShopOwner(block.getLocation());
                     if(player != null) {
                         player.credit(totalDue);
                     }

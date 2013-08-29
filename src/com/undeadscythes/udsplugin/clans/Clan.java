@@ -1,39 +1,46 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.clans;
 
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.exceptions.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 
 /**
- * A group of players, used for handling PVP.
- *
  * @author UndeadScythes
  */
 public class Clan implements Saveable {
     private String name;
-    private Member leader;
-    private final HashMap<Member, ClanRank> members;
+    private OfflineMember leader;
+    private final HashMap<OfflineMember, ClanRank> members;
 
     private int kills = 0;
     private int deaths = 0;
 
-    public Clan(final String name, final Member leader) {
+    public Clan(final String name, final OfflineMember leader) {
         this.name = name;
         this.leader = leader;
-        members = new HashMap<Member, ClanRank>(1);
+        members = new HashMap<OfflineMember, ClanRank>(1);
         members.put(leader, ClanRank.LEADER);
     }
 
     public Clan(final String record) {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
-        leader = PlayerUtils.getPlayer(recordSplit[1]);
+        try {
+            leader = MemberUtils.getMember(recordSplit[1]);
+        } catch(NoPlayerFoundException ex) {
+            throw new UnexpectedException("bad leader on clan load:" + recordSplit[1] + "," + name);
+        }
         kills = Integer.parseInt(recordSplit[2]);
         deaths = Integer.parseInt(recordSplit[3]);
-        members = new HashMap<Member, ClanRank>(recordSplit[4].split(",").length);
+        members = new HashMap<OfflineMember, ClanRank>(recordSplit[4].split(",").length);
         for(String member : recordSplit[4].split(",")) {
-            members.put(PlayerUtils.getPlayer(member.split(":")[0]), member.split(":").length > 1 ? ClanRank.valueOf(member.split(":")[1]) : ClanRank.RECRUIT);
+            try {
+                members.put(MemberUtils.getMember(member.split(":")[0]), member.split(":").length > 1 ? ClanRank.valueOf(member.split(":")[1]) : ClanRank.RECRUIT);
+            } catch(NoPlayerFoundException ex) {
+                throw new UnexpectedException("bad member on clan load:" + member + "," + name);
+            }
         }
         members.put(leader, ClanRank.LEADER);
     }
@@ -46,9 +53,9 @@ public class Clan implements Saveable {
         record.add(Integer.toString(kills));
         record.add(Integer.toString(deaths));
         final List<String> memberList = new ArrayList<String>(members.size());
-        final Iterator<Map.Entry<Member, ClanRank>> i = members.entrySet().iterator();
+        final Iterator<Map.Entry<OfflineMember, ClanRank>> i = members.entrySet().iterator();
         while(i.hasNext()) {
-            Map.Entry<Member, ClanRank> pair = i.next();
+            Map.Entry<OfflineMember, ClanRank> pair = i.next();
             memberList.add(pair.getKey().getName() + ":" + pair.getValue().name());
         }
         record.add(StringUtils.join(memberList, ","));
@@ -56,7 +63,7 @@ public class Clan implements Saveable {
     }
 
     public void linkMembers() {
-        for(Member member : members.keySet()) {
+        for(OfflineMember member : members.keySet()) {
             if(member != null) {
                 member.setClan(this);
             }
@@ -65,23 +72,23 @@ public class Clan implements Saveable {
 
     public Set<Member> getOnlineMembers() {
         final Set<Member> Members = new HashSet<Member>(members.size());
-        for(Member member : members.keySet()) {
+        for(OfflineMember member : members.keySet()) {
             try {
-                Members.add(PlayerUtils.getOnlinePlayer(member));
-            } catch (PlayerNotOnlineException ex) {}
+                Members.add(MemberUtils.getOnlineMember(member));
+            } catch(PlayerNotOnlineException ex) {}
         }
         return Members;
     }
 
-    public Set<Member> getMembers() {
+    public Set<OfflineMember> getMembers() {
         return members.keySet();
     }
 
-    public Set<Member> getRankMembers(final ClanRank rank) {
-        final Set<Member> ranked = new HashSet<Member>(members.size());
-        final Iterator<Map.Entry<Member, ClanRank>> i = members.entrySet().iterator();
+    public Set<OfflineMember> getRankMembers(final ClanRank rank) {
+        final Set<OfflineMember> ranked = new HashSet<OfflineMember>(members.size());
+        final Iterator<Map.Entry<OfflineMember, ClanRank>> i = members.entrySet().iterator();
         while(i.hasNext()) {
-            Map.Entry<Member, ClanRank> pair = i.next();
+            Map.Entry<OfflineMember, ClanRank> pair = i.next();
             if(pair.getValue().equals(rank)) {
                 ranked.add(pair.getKey());
             }
@@ -113,11 +120,11 @@ public class Clan implements Saveable {
         this.name = name;
     }
 
-    public Member getLeader() {
+    public OfflineMember getLeader() {
         return leader;
     }
 
-    public boolean changeLeader(final Member player) {
+    public boolean changeLeader(final OfflineMember player) {
         if(members.containsKey(player)) {
             leader = player;
             return true;
@@ -134,17 +141,17 @@ public class Clan implements Saveable {
         }
     }
 
-    public void addMember(final Member player) {
+    public void addMember(final OfflineMember player) {
         members.put(player, ClanRank.RECRUIT);
     }
 
-    public boolean delMember(final Member player) {
+    public boolean delMember(final OfflineMember player) {
         members.remove(player);
         if(leader.equals(player)) {
             if(members.isEmpty()) {
                 return false;
             } else {
-                leader = members.keySet().toArray(new Member[members.size()])[0];
+                leader = members.keySet().toArray(new OfflineMember[members.size()])[0];
                 return true;
             }
         } else {
@@ -153,28 +160,28 @@ public class Clan implements Saveable {
     }
 
     public void sendMessage(final String message) {
-        for(Member member : getMembers()) {
+        for(Member member : getOnlineMembers()) {
             member.sendClan("[" + name + "] " + message);
         }
     }
 
-    public boolean promote(final Member member) {
+    public boolean promote(final OfflineMember member) {
         ClanRank prev = members.get(member);
         members.put(member, prev.next());
         return !members.get(member).equals(prev);
     }
 
-    public boolean demote(final Member member) {
+    public boolean demote(final OfflineMember member) {
         ClanRank prev = members.get(member);
         members.put(member, prev.prev());
         return !members.get(member).equals(prev);
     }
 
-    public boolean hasClanRank(final Member player) {
+    public boolean hasClanRank(final OfflineMember player) {
         return members.get(player).compareTo(ClanRank.RECRUIT) > 0;
     }
 
-    public String getRankOf(final Member player) {
+    public String getRankOf(final OfflineMember player) {
         return members.get(player).toString();
     }
 }

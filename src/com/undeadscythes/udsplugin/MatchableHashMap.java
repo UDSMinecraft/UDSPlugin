@@ -1,13 +1,15 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.exceptions.*;
 import java.util.*;
 
 /**
+ * @param <V>
  * @author UndeadScythes
  */
 @SuppressWarnings("serial")
-public class SortableHashMap<V extends Object> extends HashMap<String, V> {
-    public List<V> getKeyMatches(final String partial) {
+public class MatchableHashMap<V extends Object> extends HashMap<String, V> {
+    public List<V> getKeyMatches(final String partial) throws NoKeyFoundException {
         final String lowPartial = partial.toLowerCase();
         final ArrayList<V> matches = new ArrayList<V>(1);
         for(Map.Entry<String, V> entry : super.entrySet()) {
@@ -15,18 +17,18 @@ public class SortableHashMap<V extends Object> extends HashMap<String, V> {
                 matches.add(entry.getValue());
             }
         }
+        if(matches.isEmpty()) throw new NoKeyFoundException(partial);
         return matches;
     }
 
-    public V matchKey(final String partial) {
+    public V matchKey(final String partial) throws NoKeyFoundException {
         final String lowPartial = partial.toLowerCase();
         for(Map.Entry<String, V> entry : super.entrySet()) {
             if(entry.getKey().toLowerCase().contains(lowPartial)) {
                 return entry.getValue();
             }
         }
-        return null;
-
+        throw new NoKeyFoundException(partial);
     }
 
     @Override
@@ -34,7 +36,8 @@ public class SortableHashMap<V extends Object> extends HashMap<String, V> {
         return super.put(key.toLowerCase(), object);
     }
 
-    public V get(final String key) {
+    public V get(final String key) throws NoKeyFoundException {
+        if(!super.containsKey(key.toLowerCase())) throw new NoKeyFoundException(key);
         return super.get(key.toLowerCase());
     }
 

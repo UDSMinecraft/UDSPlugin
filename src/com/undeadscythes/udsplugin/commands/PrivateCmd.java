@@ -1,28 +1,26 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
 import com.undeadscythes.udsplugin.*;
 
 /**
- * Set up a private chat room.
- * 
  * @author UndeadScythes
  */
 public class PrivateCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(numArgsHelp(1)) {
             final ChatRoom chatRoom = UDSPlugin.getChatRoom(args[0]);
             if(chatRoom == null) {
-                UDSPlugin.addChatRoom(args[0], new ChatRoom(player(), args[0]));
-                player().sendNormal("Private chat room created.");
+                UDSPlugin.addChatRoom(args[0], new ChatRoom(player.getOfflineMember(), args[0]));
+                player.sendNormal("Private chat room created.");
             } else {
-                if(chatRoom.isMember(player())) {
-                    chatRoom.delMember(player());
-                    chatRoom.sendMessage(player().getNick() + " has left.");
+                if(chatRoom.isMember(player.getOfflineMember())) {
+                    chatRoom.delMember(player.getOfflineMember());
+                    chatRoom.sendMessage(player.getNick() + " has left.");
                 } else {
-                    chatRoom.addMember(player());
-                    chatRoom.sendMessage(player().getNick() + " has joined.");
+                    chatRoom.addMember(player.getOfflineMember());
+                    chatRoom.sendMessage(player.getNick() + " has joined.");
                 }
             }
         }

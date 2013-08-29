@@ -1,4 +1,7 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.regions;
+
+import com.undeadscythes.udsplugin.Flag;
+import com.undeadscythes.udsplugin.Flag;
 
 /**
  * Region flags.

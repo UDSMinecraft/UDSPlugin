@@ -1,7 +1,11 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.regions;
 
+import com.undeadscythes.udsplugin.Cuboid;
+import com.undeadscythes.udsplugin.EditableWorld;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
-import java.io.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
@@ -16,14 +20,14 @@ import org.bukkit.util.Vector;
 public class Region extends Cuboid implements Saveable {
     private String name;
     private Location warp;
-    private Member owner;
-    private HashSet<Member> members = new HashSet<Member>(0);
+    private OfflineMember owner;
+    private HashSet<OfflineMember> members = new HashSet<OfflineMember>(0);
     private String data;
     private EnumSet<RegionFlag> flags = EnumSet.noneOf(RegionFlag.class);
     private RegionType type;
-    private PlayerRank rank;
+    private MemberRank rank;
 
-    public Region(final String name, final Vector v1, final Vector v2, final Location warp, final Member owner, final String data, final RegionType type) {
+    public Region(final String name, final Vector v1, final Vector v2, final Location warp, final OfflineMember owner, final String data, final RegionType type) {
         this.name = name;
         setV1(VectorUtils.getFlooredVector(Vector.getMinimum(v1, v2)));
         setV2(VectorUtils.getFlooredVector(Vector.getMaximum(v1, v2)));
@@ -39,18 +43,26 @@ public class Region extends Cuboid implements Saveable {
         this.type = type;
     }
 
-    public Region(final String record) throws IOException {
+    public Region(final String record) {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         setV1(VectorUtils.getVector(recordSplit[1]));
         setV2(VectorUtils.getVector(recordSplit[2]));
         warp = LocationUtils.parseLocation(recordSplit[3]);
         setWorld(warp.getWorld());
-        owner = PlayerUtils.getPlayer(recordSplit[4]);
-        members = new HashSet<Member>(0);
+        try {
+            owner = MemberUtils.getMember(recordSplit[4]);
+        } catch(NoPlayerFoundException ex) {
+            owner = null;
+        }
+        members = new HashSet<OfflineMember>(0);
         if(!recordSplit[5].isEmpty()) {
             for(String member : recordSplit[5].split(",")) {
-                members.add(PlayerUtils.getPlayer(member));
+                try {
+                    members.add(MemberUtils.getMember(member));
+                } catch(NoPlayerFoundException ex) {
+                    throw new UnexpectedException("no member on region load:" + name + "," + member);
+                }
             }
         }
         data = recordSplit[6];
@@ -60,7 +72,11 @@ public class Region extends Cuboid implements Saveable {
             }
         }
         type = RegionType.getByName(recordSplit[8]);
-        rank = PlayerRank.getByName(recordSplit[9]);
+        try {
+            rank = MemberRank.getByName(recordSplit[9]);
+        } catch(NoEnumFoundException ex) {
+            rank = MemberRank.NEWBIE;
+        }
     }
 
     @Override
@@ -72,7 +88,7 @@ public class Region extends Cuboid implements Saveable {
         record.add(LocationUtils.getString(warp));
         record.add(owner == null ? "null" : owner.getName());
         final ArrayList<String> memberList = new ArrayList<String>(0);
-        for(Member member : members) {
+        for(OfflineMember member : members) {
             memberList.add(member.getName());
         }
         record.add(StringUtils.join(memberList, ","));
@@ -84,15 +100,15 @@ public class Region extends Cuboid implements Saveable {
     }
 
     public void clearMembers() {
-        members = new HashSet<Member>(0);
+        members = new HashSet<OfflineMember>(0);
     }
 
-    public void changeOwner(final Member owner) {
+    public void changeOwner(final OfflineMember owner) {
         this.owner = owner;
         rank = null;
     }
 
-    public Set<Member> getMembers() {
+    public Set<OfflineMember> getMembers() {
         return members; //TODO: Check calls to this method and add methods for each one.
     }
 
@@ -104,13 +120,13 @@ public class Region extends Cuboid implements Saveable {
         return owner == null ? "" : owner.getNick();
     }
 
-    public boolean isOwnedBy(final Member player) {
+    public boolean isOwnedBy(final OfflineMember player) {
         return player != null && player.equals(owner);
     }
 
     public String getMemberList() {
         String membersString = "";
-        for(Member member : members) {
+        for(OfflineMember member : members) {
             membersString = membersString.concat(", " + member.getName());
         }
         return membersString.replaceFirst(", ", "");
@@ -133,11 +149,11 @@ public class Region extends Cuboid implements Saveable {
         player.sendText("Volume: " + getVolume());
     }
 
-    public PlayerRank getRank() {
+    public MemberRank getRank() {
         return rank;
     }
 
-    public void setRank(final PlayerRank rank) {
+    public void setRank(final MemberRank rank) {
         this.rank = rank;
         owner = null;
     }
@@ -178,7 +194,7 @@ public class Region extends Cuboid implements Saveable {
         warp = location;
     }
 
-    public Member getOwner() {
+    public OfflineMember getOwner() {
         return owner;
     }
 
@@ -198,15 +214,15 @@ public class Region extends Cuboid implements Saveable {
         return LocationUtils.findSafePlace(warp);
     }
 
-    public boolean hasMember(final Member player) {
+    public boolean hasMember(final OfflineMember player) {
         return members.contains(player);
     }
 
-    public boolean addMember(final Member player) {
+    public boolean addMember(final OfflineMember player) {
         return members.add(player);
     }
 
-    public boolean delMember(final Member player) {
+    public boolean delMember(final OfflineMember player) {
         return members.remove(player);
     }
 

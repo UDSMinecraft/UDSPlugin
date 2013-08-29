@@ -1,5 +1,12 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -9,8 +16,6 @@ import org.bukkit.material.*;
 import org.bukkit.util.Vector;
 
 /**
- * Provides checks for listeners.
- *
  * @author UndeadScythes
  */
 public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
@@ -58,18 +63,22 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         final String shopLine = lines[1];                                                           //
         final String ownerLine = lines[0];                                                          //
         final String priceLine = lines[3];                                                          //
-        return (shopLine.equalsIgnoreCase(Color.SIGN + "shop")                                      //
-                || shopLine.equalsIgnoreCase("shop"))                                               //
-            && ((PlayerUtils.getPlayer(ownerLine.replace(Color.SIGN.toString(), "")) != null   // Update hack fix TODO: FIX MEH!
-                || "".equals(ownerLine)                                                             //
-                || (Color.SIGN + "server").equalsIgnoreCase(ownerLine)))                            //
-            && findItem(lines[2]) != null                                                           //
-            && priceLine.contains(":")                                                              //
-            && priceLine.split(":")[0].replace("B ", "").matches("[0-9][0-9]*")                     //
-            && priceLine.split(":")[1].replace(" S", "").matches("[0-9][0-9]*");                    //
+        try {
+            return (shopLine.equalsIgnoreCase(Color.SIGN + "shop")                                      //
+                    || shopLine.equalsIgnoreCase("shop"))                                               //
+                && ((MemberUtils.getMember(ownerLine.replace(Color.SIGN.toString(), "")) != null   // Update hack fix TODO: FIX MEH!
+                    || "".equals(ownerLine)                                                             //
+                    || (Color.SIGN + "server").equalsIgnoreCase(ownerLine)))                            //
+                && findItem(lines[2]) != null                                                           //
+                && priceLine.contains(":")                                                              //
+                && priceLine.split(":")[0].replace("B ", "").matches("[0-9][0-9]*")                     //
+                && priceLine.split(":")[1].replace(" S", "").matches("[0-9][0-9]*");                    //
+        } catch(NoPlayerFoundException ex) {
+            return false;
+        }
     }
 
-    public final Member findShopOwner(final Location location) {
+    public OfflineMember findShopOwner(final Location location) {
         for(Region shop : RegionUtils.getRegions(RegionType.SHOP)) {
             if(location.toVector().isInAABB(shop.getV1(), shop.getV2())) {
                 return shop.getOwner();
@@ -78,14 +87,14 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         return null;
     }
 
-    public final Entity getAbsoluteEntity(final Entity entity) {
+    public Entity getAbsoluteEntity(final Entity entity) {
         if(entity instanceof Arrow) {
             return ((Arrow)entity).getShooter();
         }
         return entity;
     }
 
-    public final boolean hasFlag(final Location location, final RegionFlag flag) {
+    public boolean hasFlag(final Location location, final RegionFlag flag) {
         boolean openSpace = true;
         for(Region region : RegionUtils.getRegions()) {
             if(location.getWorld().equals(region.getWorld()) && location.toVector().isInAABB(region.getV1(), region.getV2())) {
@@ -96,7 +105,7 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         return openSpace && UDSPlugin.checkWorldFlag(location.getWorld(), flag);
     }
 
-    public final boolean regionsContain(final List<Region> regions, final Location location) {
+    public boolean regionsContain(final List<Region> regions, final Location location) {
         for(Region region : regions) {
             if(regionContains(region, location)) {
                 return true;
@@ -109,7 +118,7 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         return region != null && location.toVector().isInAABB(region.getV1(), region.getV2());
     }
 
-    public final boolean isInQuarry(final Location location) {
+    public boolean isInQuarry(final Location location) {
         for(Region quarry : RegionUtils.getRegions(RegionType.QUARRY)) {
             if(location.toVector().isInAABB(quarry.getV1(), quarry.getV2())) {
                 return true;
@@ -118,7 +127,7 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         return false;
     }
 
-    public final boolean crossesBoundary(final List<Region> regionsA, final List<Region> regionsB) {
+    public boolean crossesBoundary(final List<Region> regionsA, final List<Region> regionsB) {
         for(Region regionA : regionsA) {
             if(!regionA.hasFlag(RegionFlag.PISTON)) {
                 for(Region regionB : regionsB) {
@@ -131,7 +140,7 @@ public class ListenerWrapper { //TODO: This is dumb, make a new class or summat.
         return false;
     }
 
-    public final Portal findPortal(final Location location) {
+    public Portal findPortal(final Location location) {
         for(Portal portal : PortalUtils.getPortals()) {
             if(location.toVector().isInAABB(portal.getV1().clone().add(new Vector(-1.5, -1.5, -1.5)), portal.getV2().clone().add(new Vector(1.5, 1.5, 1.5)))) {
                 return portal;

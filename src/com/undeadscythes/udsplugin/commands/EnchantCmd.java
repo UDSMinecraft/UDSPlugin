@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.enchantments.*;
 
@@ -13,25 +14,20 @@ public class EnchantCmd extends CommandHandler {
         int level;
         Enchantment enchantment;
         if(args.length == 0) {
-            sendPage(1, player());
+            sendPage(1, player);
         } else if(args.length == 1) {
             if(args[0].matches("[0-9][0-9]*")) {
-                sendPage(Integer.parseInt(args[0]), player());
+                sendPage(Integer.parseInt(args[0]), player);
             } else {
                 if((enchantment = getEnchantment(args[0])) != null) {
-                    player().getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
+                    player.getItemInHand().addEnchantment(enchantment, enchantment.getMaxLevel());
                 }
             }
-        } else if(numArgsHelp(2) && (enchantment = getEnchantment(args[0])) != null && (level = getInteger(args[1])) != 0 && goodEnchantLevel(enchantment, level) && isEnchantable(enchantment, player().getItemInHand())) {
-            player().getItemInHand().addEnchantment(enchantment, level);
+        } else if(numArgsHelp(2) && (enchantment = getEnchantment(args[0])) != null && (level = getInteger(args[1])) != 0 && goodEnchantLevel(enchantment, level) && isEnchantable(enchantment, player.getItemInHand())) {
+            player.getItemInHand().addEnchantment(enchantment, level);
         }
     }
 
-    /**
-     * Sends a full page of enchantments to the player.
-     * @param page Page to send.
-     * @param player Player to send page to.
-     */
     private void sendPage(final int page, final Member player) {
         final Enchantment[] enchantments = Enchantment.values();
         final int pages = (enchantments.length + 8) / 9;

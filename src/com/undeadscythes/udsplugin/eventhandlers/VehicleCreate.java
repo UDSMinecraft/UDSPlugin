@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.timers.MinecartCheck;
-import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.vehicle.*;
@@ -13,7 +13,7 @@ import org.bukkit.event.vehicle.*;
  */
 public class VehicleCreate extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final VehicleCreateEvent event) {
+    public void onEvent(final VehicleCreateEvent event) {
         if(event.getVehicle() instanceof Minecart) {
             MinecartCheck.addMinecart((Minecart)event.getVehicle(), null);
         }

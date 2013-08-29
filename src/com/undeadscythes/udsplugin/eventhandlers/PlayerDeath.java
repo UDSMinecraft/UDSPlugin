@@ -1,8 +1,10 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.clans.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsmeta.exceptions.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
@@ -15,15 +17,15 @@ import org.bukkit.inventory.meta.*;
  */
 public class PlayerDeath extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final PlayerDeathEvent event) {
-        final Member victim = PlayerUtils.getOnlinePlayer(event.getEntity());
+    public void onEvent(final PlayerDeathEvent event) throws NoPlayerFoundException {
+        final Member victim = MemberUtils.getOnlineMember(event.getEntity());
         final String victimName = victim.getName();
         event.setDeathMessage(event.getDeathMessage().replace(victimName, victim.getNick()));
         if(victim.hasPerm(Perm.BACK_ON_DEATH)) {
             victim.setBackPoint(victim.getLocation());
         }
         if(victim.getKiller() != null) {
-            final Member killer = PlayerUtils.getOnlinePlayer(victim.getKiller());
+            final Member killer = MemberUtils.getOnlineMember(victim.getKiller());
             if(killer != null) {
                 pvp(killer, victim);
             } else {
@@ -31,28 +33,28 @@ public class PlayerDeath extends ListenerWrapper implements Listener {
             }
         }
         dropItems(victim);
-        PlayerUtils.saveInventory(victim);
+        MemberUtils.saveInventory(victim);
         event.getDrops().clear();
         event.setNewTotalExp(9 * victim.getTotalExp() / 10);
         event.setDroppedExp(victim.getTotalExp() / 10);
     }
 
-    private void clanKill(final Member killer, final Member victim) throws NoMetadataSetException {
-        final Clan victimClan = PlayerUtils.getPlayer(victim.getName()).getClan();
-        final Clan killerClan = PlayerUtils.getPlayer(killer.getName()).getClan();
+    private void clanKill(final Member killer, final Member victim) throws NoMetadataSetException, NoPlayerFoundException {
+        final Clan victimClan = MemberUtils.getMember(victim.getName()).getClan();
+        final Clan killerClan = MemberUtils.getMember(killer.getName()).getClan();
         if(!killerClan.getName().equals(victimClan.getName())) {
             killerClan.newKill();
         }
         victimClan.newDeath();
     }
 
-    private void pvp(final Member killer, final Member victim) {
+    private void pvp(final Member killer, final Member victim) throws NoPlayerFoundException {
         if(victim.getBounty() > 0) {
                     bountyKill(killer, victim);
         }
         try {
             clanKill(killer, victim);
-        } catch (NoMetadataSetException ex) {}
+        } catch(NoMetadataSetException ex) {}
         dropHead(victim);
         killer.addKill();
     }

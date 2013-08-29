@@ -1,23 +1,42 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 
 /**
  * @author UndeadScythes
  */
 public class PromoteCmd extends CommandHandler {
+    private OfflineMember target;
+
+    @Override
+    public boolean executeCheck() throws TargetMatchesSenderException, NoPlayerFoundException {
+        if(numArgsHelp(1)) {
+            target = matchOtherPlayer(args[0]);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void playerExecute() {
-        Member target;
-        if(numArgsHelp(1) && (target = matchOnlinePlayer(args[0])) != null && notSelf(target)) {
-            PlayerRank rank;
-            if(player().outRanks(target) && (rank = target.promote()) != null) {
-                player().sendNormal(target.getNick() + " has been promoted to " + rank.toString() + ".");
-                target.sendNormal("You have been promoted to " + rank.toString() + ".");
-            } else {
-                player().sendError("You can't promote this player any further.");
-            }
+        if(player.outRanks(target)) promote();
+    }
+
+    @Override
+    public void consoleExecute() {
+        promote();
+    }
+
+    private void promote() {
+        MemberRank rank;
+        if((rank = target.promote()) != null) {
+            sender.sendNormal(target.getNick() + " has been promoted to " + rank.toString() + ".");
+            target.sendNormal("You have been promoted to " + rank.toString() + ".");
+        } else {
+            sender.sendError("You can't promote this player any further.");
         }
+        MemberUtils.saveMember(target);
     }
 }

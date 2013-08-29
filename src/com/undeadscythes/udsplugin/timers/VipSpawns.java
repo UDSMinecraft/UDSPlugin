@@ -1,8 +1,8 @@
 package com.undeadscythes.udsplugin.timers;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.exceptions.*;
-import com.undeadscythes.udsplugin.utilities.*;
 
 /**
  * @author UndeadScythes
@@ -12,11 +12,11 @@ public class VipSpawns implements Runnable {
 
     @Override
     public void run() {
-        for(Member vip : PlayerUtils.getVips()) {
+        for(OfflineMember vip : MemberUtils.getVips()) {
             vip.setVIPSpawns(Config.VIP_SPAWNS);
             try {
-                PlayerUtils.getOnlinePlayer(vip).sendNormal("Your daily item spawns have been refilled.");
-            } catch (PlayerNotOnlineException ex) {}
+                MemberUtils.getOnlineMember(vip).sendNormal("Your daily item spawns have been refilled.");
+            } catch(PlayerNotOnlineException ex) {}
         }
     }
 }

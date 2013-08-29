@@ -1,4 +1,4 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.requests;
 
 /**
  * A request type.

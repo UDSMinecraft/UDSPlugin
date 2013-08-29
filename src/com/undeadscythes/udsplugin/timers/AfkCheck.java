@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.timers;
 
-import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsmeta.exceptions.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
@@ -14,7 +15,7 @@ import org.bukkit.util.Vector;
 public class AfkCheck implements Runnable {
     @Override
     public void run() {
-        Iterator<Member> i = PlayerUtils.getOnlinePlayers().iterator();
+        Iterator<Member> i = MemberUtils.getOnlineMembers().iterator();
         while(i.hasNext()) {
             Member player = i.next();
             if(player.hasPerm(Perm.UNKICKABLE)) continue;
@@ -26,7 +27,8 @@ public class AfkCheck implements Runnable {
                 } else {
                     player.setLastVector(vector);
                 }
-            } catch (NoMetadataSetException ex) {}
+            } catch(NoMetadataSetException ex) {}
         }
+        MemberUtils.updateMembers();
     }
 }

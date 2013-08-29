@@ -1,26 +1,23 @@
 package com.undeadscythes.udsplugin.timers;
 
-import com.undeadscythes.udsplugin.UDSPlugin;
-import com.undeadscythes.udsplugin.Config;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.*;
 
 /**
- * Scheduled task that allows the Ender Dragon to respawn after a certain time.
- * 
  * @author UndeadScythes
  */
 public class DragonRespawn implements Runnable {
     public DragonRespawn() {}
 
     @Override
-    public final void run() {
-        if(UDSPlugin.getData().getLastEnderDeath() > -1 && UDSPlugin.getData().getLastEnderDeath() + Config.DRAGON_RESPAWN < System.currentTimeMillis()) {
+    public void run() {
+        if(UDSPlugin.getData().enderDeath > -1 && UDSPlugin.getData().enderDeath + Config.DRAGON_RESPAWN < System.currentTimeMillis()) {
             for(World world : Bukkit.getWorlds()) {
                 if(world.getEnvironment().equals(World.Environment.THE_END) && world.getEntitiesByClass(EnderDragon.class).isEmpty()) {
                     world.spawnEntity(new Location(world, 0, world.getHighestBlockYAt(0, 0) + 20, 0), EntityType.ENDER_DRAGON);
-                    UDSPlugin.getData().setLastEnderDeath(-1);
+                    UDSPlugin.getData().enderDeath = -1;
                     Block block;
                     for(int x = -100; x < 100; x++) {
                         for(int z = -100; z < 100; z++) {

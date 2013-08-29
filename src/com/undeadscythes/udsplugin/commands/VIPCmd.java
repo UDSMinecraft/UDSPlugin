@@ -1,10 +1,9 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.exceptions.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
 /**
@@ -12,37 +11,36 @@ import org.bukkit.*;
  */
 public class VIPCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public void playerExecute() throws NoPlayerFoundException {
         if(args.length == 0) {
-            if(player().hasPerm(Perm.VIP_RANK)) {
-                player().sendNormal("You have " + player().getVIPTimeString() + " left in VIP.");
+            if(player.hasPerm(Perm.VIP_RANK)) {
+                player.sendNormal("You have " + player.getVIPTimeString() + " left in VIP.");
             } else if(canAfford(Config.VIP_COST) && notJailed() && hasPerm(Perm.VIP_BUY)) {
-                player().setRank(PlayerRank.VIP);
-                player().setVIPTime(System.currentTimeMillis());
-                player().setVIPSpawns(Config.VIP_SPAWNS);
-                player().debit(Config.VIP_COST);
-                player().sendNormal("Welcome to the elite, enjoy your VIP status.");
+                player.setRank(MemberRank.VIP);
+                player.setVIPTime(System.currentTimeMillis());
+                player.setVIPSpawns(Config.VIP_SPAWNS);
+                player.debit(Config.VIP_COST);
+                player.sendNormal("Welcome to the elite, enjoy your VIP status.");
+                MemberUtils.saveMember(player);
             }
         } else if(maxArgsHelp(2)) {
             if(subCmdEquals("spawns")) {
                 if(args.length != 2) {
-                    sendPage(1, player());
+                    sendPage(1, player);
                 } else {
                     final int page = getInteger(args[1]);
                     if(page != -1) {
-                        sendPage(page, player());
+                        sendPage(page, player);
                     }
                 }
-            } else if(player().hasPerm(Perm.VIP_FOR_LIFE)) {
-                Member target;
-                if((target = matchPlayer(args[0])) != null) {
-                    target.setRank(PlayerRank.VIP);
-                    target.setVipForLife(true);
-                    try {
-                        PlayerUtils.getOnlinePlayer(target).sendNormal("You have been granted VIP for life.");
-                    } catch (PlayerNotOnlineException ex) {}
-                    player().sendNormal(target.getNick() + " has been granted VIP for life.");
-                }
+            } else if(player.hasPerm(Perm.VIP_FOR_LIFE)) {
+                OfflineMember target = matchPlayer(args[0]);
+                target.setRank(MemberRank.VIP);
+                target.setVipForLife(true);
+                try {
+                    MemberUtils.getOnlineMember(target).sendNormal("You have been granted VIP for life.");
+                } catch(PlayerNotOnlineException ex) {}
+                player.sendNormal(target.getNick() + " has been granted VIP for life.");
             } else {
                 subCmdHelp();
             }

@@ -1,8 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.Member;
-import com.undeadscythes.udsplugin.utilities.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.members.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -16,7 +15,7 @@ public class InventoryClick extends ListenerWrapper implements Listener {
     @EventHandler
     @SuppressWarnings("deprecation")
     public void onEvent(final InventoryClickEvent event) {
-        final Member shopper = PlayerUtils.getOnlinePlayer((Player)event.getWhoClicked());
+        final Member shopper = MemberUtils.getOnlineMember((Player)event.getWhoClicked());
         if(shopper.isShopping() && event.getSlot() == -999) {
             final ItemStack item = event.getCursor();
             event.setResult(Event.Result.DENY);

@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.regions.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -15,17 +16,17 @@ public class WorldCmd extends CommandHandler {
     public void playerExecute() {
         if(args.length == 1) {
             if(subCmdEquals("list")) {
-                player().sendNormal("Available worlds:");
+                player.sendNormal("Available worlds:");
                 String worldList = "";
                 for(World world : Bukkit.getWorlds()) {
                     worldList = worldList.concat(", " + world.getName());
                 }
-                player().sendText(worldList.substring(2));
+                player.sendText(worldList.substring(2));
             } else if(subCmdEquals("setspawn")) {
-                UDSPlugin.setWorldSpawn(player().getLocation());
-                player().sendNormal("Spawn location of world " + player().getWorld().getName() + " set.");
+                UDSPlugin.setWorldSpawn(player.getLocation());
+                player.sendNormal("Spawn location of world " + player.getWorld().getName() + " set.");
             } else if(subCmdEquals("info")) {
-                sendInfo(player().getWorld());
+                sendInfo(player.getWorld());
             } else {
                 subCmdHelp();
             }
@@ -33,44 +34,44 @@ public class WorldCmd extends CommandHandler {
             if(subCmdEquals("tp")) {
                 final World world = Bukkit.getWorld(args[1]);
                 if(world != null) {
-                    player().teleport(UDSPlugin.getWorldSpawn(world));
+                    player.teleport(UDSPlugin.getWorldSpawn(world));
                 } else {
-                    player().sendError("That world does not exist.");
+                    player.sendError("That world does not exist.");
                 }
             } else if(subCmdEquals("create")) {
                 if(noBadLang(args[1]) && noWorldExists(args[1])) {
-                    player().sendNormal("Generating spawn area...");
+                    player.sendNormal("Generating spawn area...");
                     Bukkit.createWorld(new WorldCreator(args[1]));
-                    UDSPlugin.getData().newWorld(args[1]);
-                    player().sendNormal("World created.");
+                    UDSPlugin.getData().worlds.add(args[1]);
+                    player.sendNormal("World created.");
                 }
             } else if(subCmdEquals("forget")) {
                 if(args[1].equals(Config.MAIN_WORLD)) {
-                    player().sendError("This world cannot be forgotten.");
+                    player.sendError("This world cannot be forgotten.");
                 }
                 final World world = getWorld(args[1]);
                 if(world != null) {
-                    UDSPlugin.getData().getWorlds().remove(args[1]);
-                    player().sendNormal("World forgotten.");
+                    UDSPlugin.getData().worlds.remove(args[1]);
+                    player.sendNormal("World forgotten.");
                 }
             } else if(subCmdEquals("delete")) {
                 if(args[1].equals(Config.MAIN_WORLD)) {
-                    player().sendError("This world cannot be deleted.");
+                    player.sendError("This world cannot be deleted.");
                 }
                 final World world = getWorld(args[1]);
                 if(world != null) {
                     for(Player worldPlayer : world.getPlayers()) {
-                        PlayerUtils.getOnlinePlayer(worldPlayer).sendNormal("That world is no longer safe.");
-                        worldPlayer.teleport(UDSPlugin.getData().getSpawn());
+                        MemberUtils.getOnlineMember(worldPlayer).sendNormal("That world is no longer safe.");
+                        worldPlayer.teleport(UDSPlugin.getData().spawn);
                     }
-                    UDSPlugin.getData().getWorlds().remove(args[1]);
+                    UDSPlugin.getData().worlds.remove(args[1]);
                     final String worldName = world.getName();
                     Bukkit.unloadWorld(worldName, false);
                     final File file = new File(worldName);
                     if(deleteFile(file)) {
-                        player().sendNormal("World deleted.");
+                        player.sendNormal("World deleted.");
                     } else {
-                        player().sendError("World files could not be completely removed.");
+                        player.sendError("World files could not be completely removed.");
                     }
                 }
             } else if(subCmdEquals("info")) {
@@ -79,9 +80,9 @@ public class WorldCmd extends CommandHandler {
                     sendInfo(world);
                 }
             } else if(subCmdEquals("flag")) {
-                setFlag(player().getWorld(), args[1]);
+                setFlag(player.getWorld(), args[1]);
             } else if(subCmdEquals("mode")) {
-                setMode(player().getWorld(), args[1]);
+                setMode(player.getWorld(), args[1]);
             } else {
                 subCmdHelp();
             }
@@ -103,8 +104,8 @@ public class WorldCmd extends CommandHandler {
     }
 
     private void sendInfo(final World world) {
-        player().sendNormal("World " + world.getName() + " info:");
-        player().sendText("Game mode: " + UDSPlugin.getWorldMode(world).toString().toLowerCase());
+        player.sendNormal("World " + world.getName() + " info:");
+        player.sendText("Game mode: " + UDSPlugin.getWorldMode(world).toString().toLowerCase());
         String flagString = "";
         for(WorldFlag test : WorldFlag.values()) {
             if(UDSPlugin.checkWorldFlag(world, test)) {
@@ -117,16 +118,16 @@ public class WorldCmd extends CommandHandler {
             }
         }
         if("".equals(flagString)) {
-            player().sendText("No flags.");
+            player.sendText("No flags.");
         } else {
-            player().sendText("Flags: " + flagString.substring(0, flagString.length() - 2));
+            player.sendText("Flags: " + flagString.substring(0, flagString.length() - 2));
         }
     }
 
     private void setFlag(final World world, final String flagName) {
         final Flag flag = getWorldFlag(flagName);
         if(flag != null) {
-            player().sendNormal(world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
+            player.sendNormal(world.getName() + " flag " + flag.toString() + " now set to " + UDSPlugin.toggleWorldFlag(world, flag) + ".");
         }
     }
 
@@ -134,7 +135,7 @@ public class WorldCmd extends CommandHandler {
         final GameMode mode = getGameMode(modeName);
         if(mode != null) {
             UDSPlugin.changeWorldMode(world, mode);
-            player().sendNormal(world.getName() + " game mode now set to " + mode.toString() + ".");
+            player.sendNormal(world.getName() + " game mode now set to " + mode.toString() + ".");
         }
     }
 
@@ -153,7 +154,7 @@ public class WorldCmd extends CommandHandler {
 
     private boolean noWorldExists(final String name) {
         if(Bukkit.getWorld(name) != null) {
-            player().sendError("A world already exists with that name.");
+            player.sendError("A world already exists with that name.");
             return false;
         } else {
             return true;
@@ -163,7 +164,7 @@ public class WorldCmd extends CommandHandler {
     private World getWorld(final String name) {
         final World world = Bukkit.getWorld(name);
         if(world == null) {
-            player().sendError("That world does not exist.");
+            player.sendError("That world does not exist.");
         }
         return world;
     }
@@ -179,7 +180,7 @@ public class WorldCmd extends CommandHandler {
             }
         }
         if(mode == null) {
-            player().sendError("That is not a valid game mode.");
+            player.sendError("That is not a valid game mode.");
         }
         return mode;
     }

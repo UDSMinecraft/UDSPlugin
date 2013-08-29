@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.exceptions.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 
 /**
@@ -9,11 +9,11 @@ import java.util.*;
  */
 public class ChatRoom {
     private final String name;
-    private final HashSet<Member> members;
+    private final HashSet<OfflineMember> members;
 
-    public ChatRoom (final Member player, final String name) {
+    public ChatRoom (final OfflineMember player, final String name) {
         this.name = name;
-        members = new HashSet<Member>(Arrays.asList(player));
+        members = new HashSet<OfflineMember>(Arrays.asList(player));
     }
 
     public String getName() {
@@ -21,13 +21,13 @@ public class ChatRoom {
     }
 
     public Set<Member> getMembers() {
-        final HashSet<Member> Members = new HashSet<Member>(members.size());
-        for(Member member : members) {
+        final HashSet<Member> onlineMembers = new HashSet<Member>(members.size());
+        for(OfflineMember member : members) {
             try {
-                Members.add(PlayerUtils.getOnlinePlayer(member));
-            } catch (PlayerNotOnlineException ex) {}
+                onlineMembers.add(MemberUtils.getOnlineMember(member));
+            } catch(PlayerNotOnlineException ex) {}
         }
-        return Members;
+        return onlineMembers;
 
     }
 
@@ -36,15 +36,15 @@ public class ChatRoom {
         return name;
     }
 
-    public void addMember(final Member player) {
+    public void addMember(final OfflineMember player) {
         members.add(player);
     }
 
-    public boolean isMember(final Member player) {
+    public boolean isMember(final OfflineMember player) {
         return members.contains(player);
     }
 
-    public void delMember(final Member player) {
+    public void delMember(final OfflineMember player) {
         members.remove(player);
     }
 

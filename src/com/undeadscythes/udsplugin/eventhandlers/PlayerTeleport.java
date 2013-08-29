@@ -1,9 +1,10 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.UDSPlugin;
-import com.undeadscythes.udsplugin.Config;
-import com.undeadscythes.udsplugin.Perm;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -24,17 +25,20 @@ public class PlayerTeleport extends ListenerWrapper implements Listener {
             event.setCancelled(true);
             return;
         }
-        if(!from.equals(to)) {// && !PlayerUtils.getOnlinePlayer(event.getPlayer().getName()).hasPerm(Perm.SHAREDINV)) {
-            for(String string : Config.SHARES) {
-                List<String> shares = Arrays.asList(string.split(","));
-                if(!shares.contains(from.getName()) || !shares.contains(to.getName())) {
-                    PlayerUtils.saveInventory(PlayerUtils.getOnlinePlayer(event.getPlayer()), from);
-                    PlayerUtils.loadInventory(PlayerUtils.getOnlinePlayer(event.getPlayer()), to);
+        if(!from.equals(to)) {
+            MemberUtils.updateMembers();
+            if(!MemberUtils.getOnlineMember(event.getPlayer()).hasPerm(Perm.SHAREDINV)) {
+                for(String string : Config.SHARES) {
+                    List<String> shares = Arrays.asList(string.split(","));
+                    if(!shares.contains(from.getName()) || !shares.contains(to.getName())) {
+                        MemberUtils.saveInventory(MemberUtils.getOnlineMember(event.getPlayer()), from);
+                        MemberUtils.loadInventory(MemberUtils.getOnlineMember(event.getPlayer()), to);
+                    }
                 }
-            }
-            GameMode mode = UDSPlugin.getWorldMode(to);
-            if(mode != null && !PlayerUtils.getOnlinePlayer(event.getPlayer()).hasPerm(Perm.ANYMODE)) {
-                event.getPlayer().setGameMode(mode);
+                GameMode mode = UDSPlugin.getWorldMode(to);
+                if(mode != null && !MemberUtils.getOnlineMember(event.getPlayer()).hasPerm(Perm.ANYMODE)) {
+                    event.getPlayer().setGameMode(mode);
+                }
             }
         }
     }

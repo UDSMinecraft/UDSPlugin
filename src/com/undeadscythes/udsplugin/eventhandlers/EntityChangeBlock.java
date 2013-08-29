@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
@@ -13,7 +13,7 @@ import org.bukkit.event.entity.*;
  */
 public class EntityChangeBlock extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final EntityChangeBlockEvent event) {
+    public void onEvent(final EntityChangeBlockEvent event) {
         final Entity entity = event.getEntity();
         event.setCancelled((entity instanceof Enderman || entity instanceof Silverfish || entity instanceof Wither) && hasFlag(event.getBlock().getLocation(), RegionFlag.PROTECTION));
     }

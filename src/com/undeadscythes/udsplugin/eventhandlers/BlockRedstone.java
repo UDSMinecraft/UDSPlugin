@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
@@ -14,7 +14,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockRedstone extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final BlockRedstoneEvent event) {
+    public void onEvent(final BlockRedstoneEvent event) {
         final Block block = event.getBlock();
         if(block.getType().equals(Material.REDSTONE_LAMP_ON) && hasFlag(block.getLocation(), RegionFlag.LAMP)) {
             event.setNewCurrent(5);

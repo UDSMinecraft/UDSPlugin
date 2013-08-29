@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
@@ -14,7 +14,7 @@ import org.bukkit.event.entity.*;
  */
 public class EntityInteract extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final EntityInteractEvent event) {
+    public void onEvent(final EntityInteractEvent event) {
         final Block block = event.getBlock();
         event.setCancelled(hasFlag(block.getLocation(), RegionFlag.PROTECTION) && block.getType() == Material.SOIL);
     }

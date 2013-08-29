@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
@@ -15,7 +15,7 @@ import org.bukkit.inventory.*;
  */
 public class ItemDespawn extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final ItemDespawnEvent event) {
+    public void onEvent(final ItemDespawnEvent event) {
         final ItemStack item = event.getEntity().getItemStack();
         if(item.getType().equals(Material.SAPLING)) {
             final Location location = event.getLocation();

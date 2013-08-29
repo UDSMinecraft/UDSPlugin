@@ -1,4 +1,4 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.clans;
 
 /**
  * Ranks for players within clans.

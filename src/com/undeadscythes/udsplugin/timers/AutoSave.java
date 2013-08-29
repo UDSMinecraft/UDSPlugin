@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.timers;
 
-import com.undeadscythes.udsplugin.UDSPlugin;
+import com.undeadscythes.udsplugin.*;
 import java.io.*;
 import java.util.logging.*;
 
@@ -16,7 +16,7 @@ public class AutoSave implements Runnable {
     public final void run() {
         try {
             UDSPlugin.saveFiles();
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             Logger.getLogger(AutoSave.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -1,21 +1,19 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
+import com.undeadscythes.udsplugin.regions.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
 import org.bukkit.util.Vector;
 
 /**
- * Handles the various creative plot tools.
- * 
  * @author UndeadScythes
  */
 public class PlotCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(args.length == 0) {
             list();
         } else if(args.length == 1) {
@@ -52,34 +50,34 @@ public class PlotCmd extends CommandHandler {
             }
         }
     }
-    
+
     private void claim() {
         if(getPlot() == null && numPlots()) {
-            final int x = player().getLocation().getBlockX();
-            final int z = player().getLocation().getBlockZ();
+            final int x = player.getLocation().getBlockX();
+            final int z = player.getLocation().getBlockZ();
             Vector v1 = new Vector((x / 50) * 50, 0, (z / 50) * 50);
             final Vector v2 = v1.clone().add(new Vector(46, UDSPlugin.BUILD_LIMIT, 46));
             v1.add(new Vector(3, 0, 3));
             int next = nextPlot();
             String name;
             do {
-                name = player().getName() + "Plot" + next;
+                name = player.getName() + "Plot" + next;
                 next++;
             } while(RegionUtils.getRegion(RegionType.PLOT, name) != null);
-            final Region plot = new Region(name, v1, v2, player().getLocation(), player(), "", RegionType.PLOT);
+            final Region plot = new Region(name, v1, v2, player.getLocation(), player.getOfflineMember(), "", RegionType.PLOT);
             RegionUtils.addRegion(plot);
             square(v1.clone().subtract(new Vector(3, 0, 3)), v2.clone().add(new Vector(4, 0, 4)), 3, Material.QUARTZ_BLOCK);
             square(v1.clone().subtract(new Vector(1, 0, 1)), v2.clone().add(new Vector(2, 0, 2)), 3, Material.NETHER_BRICK);
             square(v1.clone(), v2.clone().add(new Vector(1, 0 ,1)), 3, Material.GRASS);
-            player().sendNormal("Plot claimed.");
+            player.sendNormal("Plot claimed.");
         } else {
-            player().sendError("This plot has already been claimed.");
+            player.sendError("This plot has already been claimed.");
         }
     }
-    
+
     private void remove(final String plotName) {
         Region plot;
-        if(player().hasPerm(Perm.PLOT_REMOVE)) {
+        if(player.hasPerm(Perm.PLOT_REMOVE)) {
             plot = plotExists(plotName);
         } else {
             plot = ownsPlot(plotName);
@@ -97,19 +95,19 @@ public class PlotCmd extends CommandHandler {
             }
             square(v1, v2, 0, Material.BEDROCK);
             RegionUtils.removeRegion(plot);
-            player().sendNormal(plot.getName() + " removed.");
+            player.sendNormal(plot.getName() + " removed.");
         }
     }
-    
+
     private void square(final Vector v1, final Vector v2, final int y, final Material m) {
-        final World world = player().getWorld();
+        final World world = player.getWorld();
         for(int x = v1.getBlockX(); x < v2.getBlockX(); x++) {
             for(int z = v1.getBlockZ(); z < v2.getBlockZ(); z++) {
                 world.getBlockAt(x, y, z).setType(m);
             }
         }
     }
-    
+
     private void like() {
         Region plot;
         if((plot = getPlot()) != null) {
@@ -119,82 +117,82 @@ public class PlotCmd extends CommandHandler {
             } else {
                 plot.setData("" + (Integer.parseInt(cur) + 1));
             }
-            player().sendNormal("You liked this plot.");
+            player.sendNormal("You liked this plot.");
         } else {
-            player().sendError("You are not in a plot.");
+            player.sendError("You are not in a plot.");
         }
     }
-    
+
     private Region getPlot() {
         for(Region plot : RegionUtils.getRegions(RegionType.PLOT)) {
-            if(plot.contains(player().getLocation())) {
+            if(plot.contains(player.getLocation())) {
                 return plot;
             }
         }
         return null;
     }
-    
+
     private boolean numPlots() {
-        if(nextPlot() > 4 && !player().hasPerm(Perm.PLOT_MANY)) { // Limit hardcoded for speed right now
-            player().sendError("You have reached the maximum number of plots you can own.");
+        if(nextPlot() > 4 && !player.hasPerm(Perm.PLOT_MANY)) { // Limit hardcoded for speed right now
+            player.sendError("You have reached the maximum number of plots you can own.");
             return false;
         }
         return true;
     }
-    
+
     private int nextPlot() {
         int count = 1;
         for(Region plot : RegionUtils.getRegions(RegionType.PLOT)) {
-            if(plot.getOwner().equals(player())) {
+            if(plot.getOwner().equals(player)) {
                 count++;
             }
         }
         return count;
     }
-    
+
     private void list() {
         List<String> plots = new ArrayList<String>(4);
         for(Region plot : RegionUtils.getRegions(RegionType.PLOT)) {
-            if(plot.getOwner().equals(player())) {
+            if(plot.getOwner().equals(player)) {
                 plots.add(plot.getName());
             }
         }
         if(!plots.isEmpty()) {
-            player().sendNormal("Your creative plots:");
-            player().sendText(StringUtils.join(plots, ", "));
+            player.sendNormal("Your creative plots:");
+            player.sendText(StringUtils.join(plots, ", "));
         } else {
-            player().sendNormal("You do not have any creative plots.");
+            player.sendNormal("You do not have any creative plots.");
         }
     }
-    
+
     private void tp() {
         Region plot;
         if((plot = plotExists(args[1])) != null) {
-            player().teleport(plot.getWarp());
+            player.teleport(plot.getWarp());
         }
     }
-    
+
     private void name(final String plotName, final String name) {
         Region plot;
         if((plot = ownsPlot(plotName)) != null && noBadLang(name)) {
             RegionUtils.renameRegion(plot, name);
-            player().sendNormal("Plot renamed to " + name + ".");
+            player.sendNormal("Plot renamed to " + name + ".");
         }
     }
-    
+
     private Region ownsPlot(final String name) {
         final Region plot;
-        if((plot = plotExists(name)) != null && !plot.getOwner().equals(player())) {
-            player().sendError("You do not own that plot.");
+        if((plot = plotExists(name)) != null && !plot.getOwner().equals(player)) {
+            player.sendError("You do not own that plot.");
             return null;
         }
         return plot;
     }
-    
+
     private Region plotExists(final String name) {
         final Region plot = RegionUtils.getRegion(RegionType.PLOT, name);
         if(plot == null) {
-            player().sendError("No plot exists by that name.");
+            player.sendError("No plot exists by that name.");
         }
         return plot;
     }

@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
@@ -12,7 +12,7 @@ import org.bukkit.event.block.*;
 public class BlockPlace extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final BlockPlaceEvent event) {
-        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
+        final Member player = MemberUtils.getOnlineMember(event.getPlayer());
         if(!player.canBuildHere(event.getBlock().getLocation())) {
             player.sendMessage(Message.CANT_BUILD_HERE);
             event.setCancelled(true);

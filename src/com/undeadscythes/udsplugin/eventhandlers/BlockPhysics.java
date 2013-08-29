@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.event.*;
@@ -13,7 +13,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockPhysics extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final BlockPhysicsEvent event) {
+    public void onEvent(final BlockPhysicsEvent event) {
         final Block block = event.getBlock();
         if(isInQuarry(block.getLocation())) {
             event.setCancelled(true);

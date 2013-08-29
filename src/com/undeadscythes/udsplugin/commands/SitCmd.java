@@ -1,17 +1,15 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.block.*;
 
 /**
- * Lets a player 'sit' on stair blocks.
- * 
  * @author UndeadScythes
  */
 public class SitCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
-        player().sendNormal("Sorry this command is currently unavailable.");
+    public void playerExecute() {
+        player.sendNormal("Sorry this command is currently unavailable.");
 //        if(!player.isInsideVehicle()) { //TODO: Fix the sit command!
 //            final Block target = player.getTargetBlock(null, 3);
 //            if((isStairs(target)) && target.getRelative(BlockFace.DOWN).getTypeId() != 0) {

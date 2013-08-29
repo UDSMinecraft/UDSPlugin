@@ -1,7 +1,8 @@
 package com.undeadscythes.udsplugin.utilities;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.comparators.SortByID;
+import com.undeadscythes.udsplugin.comparators.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.inventory.*;

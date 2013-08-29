@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -26,11 +26,11 @@ public class EntityDeath extends ListenerWrapper implements Listener {
         } else if(victim instanceof Wither) {
             witherKill(killer, event.getEntity().getLocation());
         } else if(killer instanceof Player) {
-            payReward(PlayerUtils.getOnlinePlayer((Player)killer), victim);
+            payReward(MemberUtils.getOnlineMember((Player)killer), victim);
         } else if(killer instanceof Tameable) {
             final Tameable pet = (Tameable)killer;
             if(pet.isTamed()) {
-                payReward(PlayerUtils.getOnlinePlayer((Player)(pet.getOwner())), victim);
+                payReward(MemberUtils.getOnlineMember((Player)(pet.getOwner())), victim);
             }
         }
     }
@@ -60,17 +60,17 @@ public class EntityDeath extends ListenerWrapper implements Listener {
     }
 
     private void enderKill(final Entity killer, final Location location) {
-        UDSPlugin.getData().setLastEnderDeath(System.currentTimeMillis());
+        UDSPlugin.getData().enderDeath = System.currentTimeMillis();
         if(killer instanceof Player) {
-            final Member player = PlayerUtils.getOnlinePlayer((Player)killer);
+            final Member player = MemberUtils.getOnlineMember((Player)killer);
             UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Ender Dragon!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
         final List<Member> killers = new ArrayList<Member>(1);
         for(Player endPlayer : players) {
-            PlayerUtils.getOnlinePlayer(endPlayer).sendNormal("You can use commands such as /spawn to return to the overworld.");
+            MemberUtils.getOnlineMember(endPlayer).sendNormal("You can use commands such as /spawn to return to the overworld.");
             if(endPlayer.getLocation().distance(location) < 100) {
-                Member endKiller = PlayerUtils.getOnlinePlayer(endPlayer);
+                Member endKiller = MemberUtils.getOnlineMember(endPlayer);
                 if(endKiller.getGameMode().equals(GameMode.SURVIVAL) && !endKiller.hasGodMode()) {
                     killers.add(endKiller);
                 }
@@ -89,14 +89,14 @@ public class EntityDeath extends ListenerWrapper implements Listener {
 
     private void witherKill(final Entity killer, final Location location) {
         if(killer instanceof Player) {
-            final Member player = PlayerUtils.getOnlinePlayer((Player)killer);
+            final Member player = MemberUtils.getOnlineMember((Player)killer);
             UDSPlugin.sendBroadcast(player.getNick() + " has dealt the killing blow to the Wither!");
         }
         final Collection<Player> players = location.getWorld().getEntitiesByClass(Player.class);
         final List<Member> killers = new ArrayList<Member>(1);
         for(Player witherPlayer : players) {
             if(witherPlayer.getLocation().distance(location) < 100) {
-                Member witherKiller = PlayerUtils.getOnlinePlayer(witherPlayer);
+                Member witherKiller = MemberUtils.getOnlineMember(witherPlayer);
                 if(witherKiller.getGameMode().equals(GameMode.SURVIVAL) && !witherKiller.hasGodMode()) {
                     killers.add(witherKiller);
                 }

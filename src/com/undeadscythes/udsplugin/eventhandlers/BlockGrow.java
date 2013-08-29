@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 
@@ -12,7 +12,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockGrow extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final BlockGrowEvent event) {
+    public void onEvent(final BlockGrowEvent event) {
         if(!hasFlag(event.getNewState().getLocation(), RegionFlag.VINES)) {
             event.setCancelled(true);
         }

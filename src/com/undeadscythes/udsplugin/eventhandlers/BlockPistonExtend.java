@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.Region;
-import com.undeadscythes.udsplugin.Config;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -22,7 +23,7 @@ import org.bukkit.util.Vector;
  */
 public class BlockPistonExtend extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final BlockPistonExtendEvent event) {
+    public void onEvent(final BlockPistonExtendEvent event) {
         final List<Region> pistonRegions = RegionUtils.getRegionsHere(event.getBlock().getLocation());
         final List<Block> blocks = new ArrayList<Block>(event.getBlocks());
         if(!blocks.isEmpty()) {

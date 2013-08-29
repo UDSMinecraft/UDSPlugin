@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.Flag;
+
 /**
  * Various flags to denote various features of individual worlds.
  * 

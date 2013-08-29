@@ -1,15 +1,13 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsplugin.*;
 
 /**
- * Allows players to use /mod help.
- * 
  * @author UndeadScythes
  */
 public class ModCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(args.length == 0) {
             sendHelp(1);
         } else {

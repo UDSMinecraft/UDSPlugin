@@ -1,7 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
@@ -18,7 +20,7 @@ public class SignChange extends ListenerWrapper implements Listener {
         final String line0 = event.getLine(0);
         final String line1 = event.getLine(1);
         final String line2 = event.getLine(2);
-        player = PlayerUtils.getOnlinePlayer(event.getPlayer());
+        player = MemberUtils.getOnlineMember(event.getPlayer());
         block = event.getBlock();
         if(line0.equalsIgnoreCase("[shop]") && checkPerm(Perm.SHOP_SIGN) && (player.hasPerm(Perm.SHOP_ANYWHERE) || checkShop())) {
             if(line1.matches(UDSPlugin.INT_REGEX)) {

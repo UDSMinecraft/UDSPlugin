@@ -1,6 +1,8 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.Direction;
 import com.undeadscythes.udsplugin.*;
 import java.io.*;
 import org.bukkit.*;
@@ -15,7 +17,7 @@ import org.bukkit.util.*;
  */
 public class WECmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(args.length == 1) {
             if(subCmdEquals("undo")) {
                 undo();
@@ -65,7 +67,7 @@ public class WECmd extends CommandHandler {
 
     private void save(final String name) {
         if(hasPerm(Perm.WE_SAVE)) {
-            final EditSession session = player().forceSession();
+            final EditSession session = player.forceSession();
             if(hasTwoPoints(session)) {
                 final int volume = session.getVolume();
                 if(volume <= Config.EDIT_RANGE) {
@@ -73,7 +75,7 @@ public class WECmd extends CommandHandler {
                         final BufferedWriter out = new BufferedWriter(new FileWriter(UDSPlugin.getBlocksPath() + File.separator + name + ".blocks"));
                         final Vector min = Vector.getMinimum(session.getV1(), session.getV2());
                         final Vector max = Vector.getMaximum(session.getV1(), session.getV2());
-                        final World world = player().getWorld();
+                        final World world = player.getWorld();
                         out.write(min.toString() + "\t" + max.toString() + "\t" + world.getName() + "\t" + volume);
                         out.newLine();
                         for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
@@ -84,9 +86,9 @@ public class WECmd extends CommandHandler {
                             }
                         }
                         out.close();
-                        player().sendNormal("Saved " + volume + " blocks to disk.");
-                    } catch (IOException ex) {
-                        player().sendError("Error writing file.");
+                        player.sendNormal("Saved " + volume + " blocks to disk.");
+                    } catch(IOException ex) {
+                        player.sendError("Error writing file.");
                     }
                 }
             }
@@ -113,9 +115,9 @@ public class WECmd extends CommandHandler {
                     }
                 }
                 in.close();
-                player().sendNormal("Loaded " + volume + " blocks from disk.");
-            } catch (IOException ex) {
-                player().sendError("Error reading file.");
+                player.sendNormal("Loaded " + volume + " blocks from disk.");
+            } catch(IOException ex) {
+                player.sendError("Error reading file.");
             }
         }
     }
@@ -123,15 +125,15 @@ public class WECmd extends CommandHandler {
     private void drain(final int range) {
         if(hasPerm(Perm.WE_DRAIN)) {
             if(range <= Config.DRAIN_RANGE) {
-                final EditSession session = player().forceSession();
-                final Location location = player().getLocation();
+                final EditSession session = player.forceSession();
+                final Location location = player.getLocation();
                 final Vector v1 = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
                 final Vector v2 = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
                 final Vector min = Vector.getMinimum(v1, v2);
                 final Vector max = Vector.getMaximum(v1, v2);
                 int count = 0;
-                final World world = player().getWorld();
-                session.save(new BlockBox(world, v1, v2, player().getLocation().toVector()));
+                final World world = player.getWorld();
+                session.save(new BlockBox(world, v1, v2, player.getLocation().toVector()));
                 for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
                     for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
                         for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
@@ -151,16 +153,16 @@ public class WECmd extends CommandHandler {
                         }
                     }
                 }
-                player().sendNormal("Drained " + count + " blocks.");
+                player.sendNormal("Drained " + count + " blocks.");
             }
         } else {
-            player().sendError("Value is out of range.");
+            player.sendError("Value is out of range.");
         }
     }
 
     private void set() {
         if(hasPerm(Perm.WE_SET)) {
-            final EditSession session = player().forceSession();
+            final EditSession session = player.forceSession();
             if(hasTwoPoints(session)) {
                 final ItemStack item = getItem(args[1]);
                 if(item != null) {
@@ -171,8 +173,8 @@ public class WECmd extends CommandHandler {
                         if(item.getType().isBlock()) {
                             final Vector min = Vector.getMinimum(v1, v2);
                             final Vector max = Vector.getMaximum(v1, v2);
-                            final World world = player().getWorld();
-                            session.save(new BlockBox(world, min, max, player().getLocation().toVector()));
+                            final World world = player.getWorld();
+                            session.save(new BlockBox(world, min, max, player.getLocation().toVector()));
                             final byte itemData = item.getData().getData();
                             final int itemId = item.getTypeId();
                             for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
@@ -182,12 +184,12 @@ public class WECmd extends CommandHandler {
                                     }
                                 }
                             }
-                            player().sendNormal("Set " + volume + " blocks.");
+                            player.sendNormal("Set " + volume + " blocks.");
                         } else {
-                            player().sendError("You have selected a bad block.");
+                            player.sendError("You have selected a bad block.");
                         }
                     } else {
-                        player().sendError("You have selected too many blocks.");
+                        player.sendError("You have selected too many blocks.");
                     }
                 }
             }
@@ -195,17 +197,17 @@ public class WECmd extends CommandHandler {
     }
 
     private void undo() {
-        final EditSession session = player().forceSession();
+        final EditSession session = player.forceSession();
         if(hasUndo(session) && hasPerm(Perm.WE_UNDO)) {
             final BlockBox undo = session.load();
             undo.revert();
-            player().sendNormal("Undone " + undo.getVolume() + " blocks.");
+            player.sendNormal("Undone " + undo.getVolume() + " blocks.");
         }
     }
 
     private void replace() {
         if(hasPerm(Perm.WE_REPLACE)) {
-            final EditSession session = player().forceSession();
+            final EditSession session = player.forceSession();
             if(hasTwoPoints(session)) {
                 final Vector v1 = session.getV1();
                 final Vector v2 = session.getV2();
@@ -214,10 +216,10 @@ public class WECmd extends CommandHandler {
                         final ItemStack itemFrom = getItem(args[1]);
                         final ItemStack itemTo = getItem(args[2]);
                         if(itemFrom != null && itemTo != null) {
-                            final World world = player().getWorld();
+                            final World world = player.getWorld();
                             final Vector min = Vector.getMinimum(v1, v2);
                             final Vector max = Vector.getMaximum(v1, v2);
-                            session.save(new BlockBox(world, min, max, player().getLocation().toVector()));
+                            session.save(new BlockBox(world, min, max, player.getLocation().toVector()));
                             int count = 0;
                             for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
                                 for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
@@ -230,11 +232,11 @@ public class WECmd extends CommandHandler {
                                     }
                                 }
                             }
-                            player().sendNormal("Replaced " + count + " blocks.");
+                            player.sendNormal("Replaced " + count + " blocks.");
                         }
                     }
                 } else {
-                    player().sendError("You have selected too many blocks.");
+                    player.sendError("You have selected too many blocks.");
                 }
             }
         }
@@ -245,7 +247,7 @@ public class WECmd extends CommandHandler {
             final int distance = getInteger(args[2]);
             if(distance > -1) {
                 if(distance <= Config.MOVE_RANGE) {
-                    final EditSession session = player().forceSession();
+                    final EditSession session = player.forceSession();
                     if(hasTwoPoints(session)) {
                         final Vector v1 = session.getV1();
                         final Vector v2 = session.getV2();
@@ -255,33 +257,33 @@ public class WECmd extends CommandHandler {
                                 if(direction == Direction.UP || direction == Direction.EAST || direction == Direction.SOUTH) {
                                     final Vector min = Vector.getMinimum(v1, v2);
                                     final Vector max = Vector.getMaximum(v1, v2);
-                                    final World world = player().getWorld();
-                                    BlockBox cuboid = new BlockBox(world, min, max, player().getLocation().toVector());
+                                    final World world = player.getWorld();
+                                    BlockBox cuboid = new BlockBox(world, min, max, player.getLocation().toVector());
                                     int volume = cuboid.getVolume();
-                                    session.save(new BlockBox(world, min, max.clone().add(direction.toVector().clone().multiply(distance)), player().getLocation().toVector()));
+                                    session.save(new BlockBox(world, min, max.clone().add(direction.toVector().clone().multiply(distance)), player.getLocation().toVector()));
                                     put(world, min, max, Material.AIR);
                                     min.add(direction.toVector().clone().multiply(distance));
                                     cuboid.place(world, min);
-                                    player().sendNormal("Moved " + volume + " blocks.");
+                                    player.sendNormal("Moved " + volume + " blocks.");
                                 } else if(direction == Direction.DOWN || direction == Direction.WEST || direction == Direction.NORTH) {
                                     final Vector min = Vector.getMinimum(v1, v2);
                                     final Vector max = Vector.getMaximum(v1, v2);
-                                    final World world = player().getWorld();
-                                    BlockBox cuboid = new BlockBox(world, min, max, player().getLocation().toVector());
+                                    final World world = player.getWorld();
+                                    BlockBox cuboid = new BlockBox(world, min, max, player.getLocation().toVector());
                                     int volume = cuboid.getVolume();
-                                    session.save(new BlockBox(world, min.clone().add(direction.toVector().clone().multiply(distance)), max, player().getLocation().toVector()));
+                                    session.save(new BlockBox(world, min.clone().add(direction.toVector().clone().multiply(distance)), max, player.getLocation().toVector()));
                                     put(world, min, max, Material.AIR);
                                     min.add((direction.toVector().clone().multiply(distance)));
                                     cuboid.place(world, min);
-                                    player().sendNormal("Moved " + volume + " blocks.");
+                                    player.sendNormal("Moved " + volume + " blocks.");
                                 }
                             }
                         } else {
-                            player().sendError("The area you have selected is too large.");
+                            player.sendError("The area you have selected is too large.");
                         }
                     }
                 } else {
-                    player().sendError("That value is out of range.");
+                    player.sendError("That value is out of range.");
                 }
             }
         }
@@ -290,42 +292,42 @@ public class WECmd extends CommandHandler {
     }
 
     private void copy() {
-        final EditSession session = player().forceSession();
+        final EditSession session = player.forceSession();
         if(hasTwoPoints(session) && hasPerm(Perm.WE_COPY)) {
-            session.setClipboard(new BlockBox(player().getWorld(), session.getV1(), session.getV2(), player().getLocation().toVector()));
-            player().sendNormal("Copied " + session.getClipboard().getVolume() + " blocks.");
+            session.setClipboard(new BlockBox(player.getWorld(), session.getV1(), session.getV2(), player.getLocation().toVector()));
+            player.sendNormal("Copied " + session.getClipboard().getVolume() + " blocks.");
         }
     }
 
     private void paste() {
-        final EditSession session = player().forceSession();
+        final EditSession session = player.forceSession();
         if(session.hasClipboard() && hasPerm(Perm.WE_PASTE)) {
             final BlockBox clipboard = session.getClipboard();
-            session.save(clipboard.offset(player().getWorld(), player().getLocation().toVector()));
-            player().sendNormal("Pasted " + clipboard.getVolume() + " blocks.");
+            session.save(clipboard.offset(player.getWorld(), player.getLocation().toVector()));
+            player.sendNormal("Pasted " + clipboard.getVolume() + " blocks.");
         } else {
-            player().sendError("You have nothing to paste.");
+            player.sendError("You have nothing to paste.");
         }
     }
 
     private void regen() {
         if(hasPerm(Perm.WE_REGEN)) {
-            final Chunk chunk = player().getLocation().getChunk();
-            final World world = player().getWorld();
+            final Chunk chunk = player.getLocation().getChunk();
+            final World world = player.getWorld();
             world.regenerateChunk(chunk.getX(), chunk.getZ());
         }
     }
 
     private void ext(final int range) {
-        final EditSession session = player().forceSession();
+        final EditSession session = player.forceSession();
         if(hasPerm(Perm.WE_EXT)) {
             if(range <= Config.DRAIN_RANGE) {
-                final Location location = player().getLocation();
+                final Location location = player.getLocation();
                 final Vector max = new Vector(location.getX() + (range), location.getY() + (range), location.getZ() + (range));
                 final Vector min = new Vector(location.getX() - (range), location.getY() - (range), location.getZ() - (range));
-                session.save(new BlockBox(player().getWorld(), min, max, player().getLocation().toVector()));
+                session.save(new BlockBox(player.getWorld(), min, max, player.getLocation().toVector()));
                 int count = 0;
-                final World world = player().getWorld();
+                final World world = player.getWorld();
                 for(int x = min.getBlockX(); x <= max.getBlockX(); x++) {
                     for(int y = min.getBlockY(); y <= max.getBlockY(); y++) {
                         for(int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
@@ -337,9 +339,9 @@ public class WECmd extends CommandHandler {
                         }
                     }
                 }
-                player().sendNormal("Extinguished " + count + " fires.");
+                player.sendNormal("Extinguished " + count + " fires.");
             } else {
-                player().sendError("That value is out of range.");
+                player.sendError("That value is out of range.");
             }
         }
     }

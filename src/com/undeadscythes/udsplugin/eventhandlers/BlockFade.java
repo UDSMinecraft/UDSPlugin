@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.RegionFlag;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
 import org.bukkit.block.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
@@ -13,7 +13,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockFade extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final BlockFadeEvent event) {
+    public void onEvent(final BlockFadeEvent event) {
         final Block block = event.getBlock();
         if(!hasFlag(block.getLocation(), RegionFlag.SNOW)) {
             event.setCancelled(true);

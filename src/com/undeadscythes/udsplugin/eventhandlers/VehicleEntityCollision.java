@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.vehicle.*;
@@ -12,7 +12,7 @@ import org.bukkit.event.vehicle.*;
  */
 public class VehicleEntityCollision extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final VehicleEntityCollisionEvent event) {
+    public void onEvent(final VehicleEntityCollisionEvent event) {
         final Vehicle vehicle = event.getVehicle();
         if(vehicle instanceof Minecart) {
             final Minecart cart = (Minecart)vehicle;

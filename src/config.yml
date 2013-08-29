@@ -1,15 +1,10 @@
-# The Minecraft name of the server owner, this is more than likely you.
 server-owner: Player
-# The name of the default world.
 world-name: world
-# The time in seconds before empty minecarts will despawn.
 minecart:
   life: 15
-# The name of in-game currency.
 currency:
   plural: credits
   singular: credit
-# The cost in in-game currency of various commands.
 cost:
   build: 3000
   city: 300000
@@ -20,22 +15,16 @@ cost:
   clan: 10000
   base: 100000
   expand: 1000
-# The time in seconds before requests timeout.
 request-timeout: 30
-# The time interval in minutes between auto-saves of configs and data.
 auto-save: 15
-# The number of free item spawns a VIP player has and how long in days their membership lasts.
 vip:
   spawns: 1000
   time: 7
-# The items that a VIP player can spawn daily.
 item-whitelist: [1,2,3,4,12,13,17,18,31,35,50,58,61,65,82,87,88,106,111,283,284,285,286,294,314,315,316,317,357]
-# The various welcome messages and the new player gift.
 welcome:
   message: Welcome to the server. Type /help in chat for a list of commands.
   admin: As a member of staff be helpful, be polite and lead by example.
   gift: emerald
-# The ranges in blocks of various tools and commands in game.
 range:
   undo: 10
   world: 10000
@@ -44,21 +33,15 @@ range:
   drain: 50
   move: 50
   edit: 10000
-# The amount of time in seconds before a player can teleport after attacking another player.
 pvp-time: 5
-# The amount of experience dropped by a mob spawner.
 exp:
   spawner: 3
-# The amount of time in minutes the game waits before respawning the Ender Dragon.
 respawn-dragon: 60
-# The kits availabe through the /kit command. (name, cost, rank, items...)
 kits:
-- Stone,100,default,274,273,275
-- Iron,2000,default,257,256,258
-- Diamond,3600,default,278,277,279
-# The map number to give a player when using the /map command.
+- Stone,100,newbie,274,273,275
+- Iron,2000,member,257,256,258
+- Diamond,3600,member,278,277,279
 map-data: 0
-# The rules displayed in the /rules command.
 server-rules:
 - No swearing/flaming/racism
 - No griefing
@@ -67,14 +50,12 @@ server-rules:
 - No advertising
 - No hacks
 - No alt accounts
-# Stop block damage from various creatures and explosions.
 block:
   creeper: true
   tnt: true
   wither: true
   enderman: true
   silverfish: true
-# The in-game cash reward for killing different monsters.
 mob-rewards:
   spiderjockey: 10000
   cavespider: 110
@@ -102,7 +83,6 @@ mob-rewards:
   blaze: 80
   pig: 10
   horse: 5
-# The flag settings for the global region.
 global-flags:
   protection: false
   mobs: true
@@ -119,14 +99,10 @@ global-flags:
   weather: true
   time: true
   build: true
-# The power of pistons.
 piston-power: 10
-# GMail email address to send tickets to.
 gmail:
   email: email@gmail.com
   password: password
-# Worlds that should share an inventory.
 inventory-shares:
   - world,world_nether,world_the_end
-# Chance for a mob head to drop on death.
 head-drop-chance: 0.01

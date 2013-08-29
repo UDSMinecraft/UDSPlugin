@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
+import com.undeadscythes.udsplugin.Direction;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
@@ -13,7 +14,7 @@ import org.bukkit.util.*;
  */
 public class PortalCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(args.length == 1) {
             if(subCmdEquals("list")) {
                 list();
@@ -54,10 +55,10 @@ public class PortalCmd extends CommandHandler {
             list = list.concat(test.getName() + (test.getWarpName() == null ? ", " : ("(" + test.getWarpName() + "), ")));
         }
         if(list.isEmpty()) {
-            player().sendNormal("There are no portals.");
+            player.sendNormal("There are no portals.");
         } else {
-            player().sendNormal("Portals(Warp):");
-            player().sendText(list.substring(0, list.length() - 2));
+            player.sendNormal("Portals(Warp):");
+            player.sendText(list.substring(0, list.length() - 2));
         }
     }
     
@@ -66,7 +67,7 @@ public class PortalCmd extends CommandHandler {
         Direction dir;
         if(portal != null && (dir = getCardinalDirection(args[2])) != null) {
             portal.setExit(dir);
-            player().sendNormal("Portal now points " + dir.toString() + ".");
+            player.sendNormal("Portal now points " + dir.toString() + ".");
         }
     }
     
@@ -75,17 +76,17 @@ public class PortalCmd extends CommandHandler {
         if(portal != null) {
             PortalUtils.removePortal(portal);
             replace(portal, true);
-            player().sendNormal("Portal removed.");
+            player.sendNormal("Portal removed.");
         }
     }
         
     private void set(final Warp warp) {
-        final EditSession session = player().forceSession();
+        final EditSession session = player.forceSession();
         if(session != null && selectionIs2D(session) && noPortalExists(args[1]) && noBadLang(args[1])) {
             final Portal portal = new Portal(args[1], warp, session.getWorld(), session.getV1(), session.getV2());
             PortalUtils.addPortal(portal);
             replace(portal, false);
-            player().sendNormal("Portal " + portal.getName() + " set.");
+            player.sendNormal("Portal " + portal.getName() + " set.");
         }
     }
     
@@ -115,7 +116,7 @@ public class PortalCmd extends CommandHandler {
         final Warp target = matchWarp(args[2]);
         if(portal != null && target != null) {
             portal.setWarp(target);
-            player().sendNormal(portal.getName() + " now warps to " + target.getName() + ".");
+            player.sendNormal(portal.getName() + " now warps to " + target.getName() + ".");
         }
     }
     
@@ -124,7 +125,7 @@ public class PortalCmd extends CommandHandler {
         final Portal target = getPortal(args[2]);
         if(portal != null && target != null) {
             portal.setPortal(target);
-            player().sendNormal(portal.getName() + " now portals to " + target.getName() + ".");
+            player.sendNormal(portal.getName() + " now portals to " + target.getName() + ".");
         }
     }
 }

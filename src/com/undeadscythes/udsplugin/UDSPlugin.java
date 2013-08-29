@@ -1,11 +1,15 @@
 package com.undeadscythes.udsplugin;
 
 import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.requests.*;
+import com.undeadscythes.udsplugin.clans.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.timers.*;
 import com.undeadscythes.udsplugin.eventhandlers.*;
-import com.undeadscythes.udsplugin.commands.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.io.*;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
 import org.bukkit.*;
@@ -46,21 +50,22 @@ public class UDSPlugin extends JavaPlugin {
     private static Data data;
     private static boolean serverLockedDown = false;
     private static final YamlConfig worldFlags = new YamlConfig(DATA_PATH + "/worlds.yml");
+    private static boolean reboot = false;
 
     public static void main(final String[] args) {}
 
     public static int saveFiles() throws IOException {
         data.saveData();
+        MemberUtils.saveMembers();
         worldFlags.save();
-        PlayerUtils.savePlayers();
         WarpUtils.saveWarps(DATA_PATH);
         ClanUtils.saveClans(DATA_PATH);
         RegionUtils.saveRegions(DATA_PATH);
         PortalUtils.savePortals(DATA_PATH);
-        return ClanUtils.numClans() + RegionUtils.numRegions() + WarpUtils.numWarps() + PortalUtils.numPortals() + PlayerUtils.numPlayers();
+        return ClanUtils.numClans() + RegionUtils.numRegions() + WarpUtils.numWarps() + PortalUtils.numPortals() + MemberUtils.countMembers();
     }
 
-    public static Request getRequest(final Member player) {
+    public static Request getRequest(final OfflineMember player) {
         return REQUESTS.get(player.getName());
     }
 
@@ -110,7 +115,7 @@ public class UDSPlugin extends JavaPlugin {
         if(flags.contains(path)) {
             return flags.getBoolean(path);
         }
-        final boolean def = flag.isDefaulted();
+        final boolean def = Config.GLOBAL_FLAGS.get(flag);
         flags.set(path, def);
         return def;
     }
@@ -191,14 +196,29 @@ public class UDSPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         PLUGIN = this;
+        if(DATA_PATH.mkdirs()) {
+            Config.init();
+            getLogger().info("\n\n        ################################################"
+                             + "\n        # This is appears to be the first time you've  #"
+                             + "\n        # run the UDSPlugin. A configuration file has  #"
+                             + "\n        # been created in plugins/UDSPlugin/config.yml #"
+                             + "\n        # and you may want to change some settings     #"
+                             + "\n        # before you run the server again. For that    #"
+                             + "\n        # reason we are shutting your server down.     #"
+                             + "\n        # Happy crafting!                         -UDS #"
+                             + "\n        ################################################\n");
+            reboot = true;
+            getServer().shutdown();
+            return;
+        }
         SERVER = getServer();
-        DATA_PATH.mkdirs();
         BLOCKS_PATH.mkdirs();
         try {
-            MetaCore.loadMeta(DATA_PATH + "/players.yml", MetaType.values(), PlayerKey.values());
-        } catch (IOException ex) {
+            MetaCore.loadMeta(DATA_PATH + "/players.yml", MetaType.values(), MemberKey.values());
+        } catch(IOException ex) {
             getLogger().severe("Could not load players. Shutting down.");
             getServer().shutdown();
+            return;
         }
         Config.init();
         UDSPlugin.TRANSPARENT_BLOCKS.clear();
@@ -207,16 +227,29 @@ public class UDSPlugin extends JavaPlugin {
                 TRANSPARENT_BLOCKS.add((byte)material.getId());
             }
         }
-        data = new Data(this);
-        data.reloadData();
-        data.saveDefaultData();
+        File old = new File("plugins/UDSPlugin/data.yml");
+        if(old.exists()) { // Begin back-compat with < 2.49.4
+            Data oldData = new Data(old.getPath());
+            data = new Data(DATA_PATH + "/data.yml");
+            data.enderDeath = oldData.enderDeath;
+            data.lastDaily = oldData.lastDaily;
+            data.worlds = oldData.worlds;
+                        oldData.load();
+            data.spawn = oldData.spawn;
+        } else {
+            data = new Data(DATA_PATH + "/data.yml");
+
+        }  // End back-compat with < 2.49.4
         data.saveData();
-        loadWorlds();
-        data.reloadData();
         worldFlags.load();
         try {
+            SQLUtils.init(DATA_PATH + "/udsmc.db");
+        } catch (SQLException ex) {
+            Bukkit.getLogger().info("Could not initialize database. " + ex.getErrorCode());
+        }
+        try {
             loadFiles();
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
         final BukkitScheduler sched = Bukkit.getScheduler();
@@ -233,30 +266,25 @@ public class UDSPlugin extends JavaPlugin {
         addRecipes();
         Censor.initCensor();
         MinecartCheck.findMinecarts();
-        final String message = getName() + " version " + this.getDescription().getVersion() + " enabled.";
+        final String message = getName() + " enabled.";
         getLogger().info(message);
     }
 
     @Override
     public void onDisable() {
+        if(reboot) return;
         try {
             getLogger().info(saveFiles() + " server objects saved.");
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             Logger.getLogger(UDSPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
+        MemberUtils.updateMembers();
         final String message = getName() + " disabled.";
         getLogger().info(message);
     }
 
-    public void loadWorlds() {
-        for(String world : data.getWorlds()) {
-            final WorldCreator creator = new WorldCreator(world);
-            creator.createWorld();
-        }
-    }
-
     private void loadFiles() throws IOException {
-        PlayerUtils.loadPlayers(DATA_PATH);
+        MemberUtils.loadMembers(DATA_PATH);
         RegionUtils.loadRegions(DATA_PATH);
         WarpUtils.loadWarps(DATA_PATH);
         ClanUtils.loadClans(DATA_PATH);
@@ -264,91 +292,17 @@ public class UDSPlugin extends JavaPlugin {
     }
 
     private void setCommandExecutors() {
-        getCommand("a").setExecutor(new ACmd());
-        getCommand("acceptrules").setExecutor(new AcceptRulesCmd());
-        getCommand("admin").setExecutor(new AdminCmd());
-        getCommand("afk").setExecutor(new AfkCmd());
-        getCommand("back").setExecutor(new BackCmd());
-        getCommand("ban").setExecutor(new BanCmd());
-        getCommand("bounty").setExecutor(new BountyCmd());
-        getCommand("broadcast").setExecutor(new BroadcastCmd());
-        getCommand("butcher").setExecutor(new ButcherCmd());
-        getCommand("c").setExecutor(new CCmd());
-        getCommand("call").setExecutor(new CallCmd());
-        getCommand("challenge").setExecutor(new ChallengeCmd());
-        getCommand("chat").setExecutor(new ChatCmd());
-        getCommand("check").setExecutor(new CheckCmd());
-        getCommand("chunk").setExecutor(new ChunkCmd());
-        getCommand("ci").setExecutor(new CiCmd());
-        getCommand("city").setExecutor(new CityCmd());
-        getCommand("clan").setExecutor(new ClanCmd());
-        getCommand("day").setExecutor(new DayCmd());
-        getCommand("debug").setExecutor(new DebugCmd());
-        getCommand("delwarp").setExecutor(new DelWarpCmd());
-        getCommand("demote").setExecutor(new DemoteCmd());
-        getCommand("enchant").setExecutor(new EnchantCmd());
-        getCommand("face").setExecutor(new FaceCmd());
-        getCommand("gift").setExecutor(new GiftCmd());
-        getCommand("god").setExecutor(new GodCmd());
-        getCommand("heal").setExecutor(new HealCmd());
-        getCommand("help").setExecutor(new HelpCmd());
-        getCommand("home").setExecutor(new HomeCmd());
-        getCommand("i").setExecutor(new ICmd());
-        getCommand("ignore").setExecutor(new IgnoreCmd());
-        getCommand("invsee").setExecutor(new InvSeeCmd());
-        getCommand("jail").setExecutor(new JailCmd());
-        getCommand("kick").setExecutor(new KickCmd());
-        getCommand("kit").setExecutor(new KitCmd());
-        getCommand("lockdown").setExecutor(new LockdownCmd());
-        getCommand("map").setExecutor(new MapCmd());
-        getCommand("me").setExecutor(new MeCmd());
-        getCommand("mod").setExecutor(new ModCmd());
-        getCommand("money").setExecutor(new MoneyCmd());
-        getCommand("n").setExecutor(new NCmd());
-        getCommand("nick").setExecutor(new NickCmd());
-        getCommand("night").setExecutor(new NightCmd());
-        getCommand("p").setExecutor(new PCmd());
-        getCommand("paybail").setExecutor(new PayBailCmd());
-        getCommand("pet").setExecutor(new PetCmd());
-        getCommand("plot").setExecutor(new PlotCmd());
-        getCommand("portal").setExecutor(new PortalCmd());
-        getCommand("powertool").setExecutor(new PowertoolCmd());
-        getCommand("private").setExecutor(new PrivateCmd());
-        getCommand("promote").setExecutor(new PromoteCmd());
-        getCommand("pvp").setExecutor(new PvpCmd());
-        getCommand("r").setExecutor(new RCmd());
-        getCommand("rain").setExecutor(new RainCmd());
-        getCommand("region").setExecutor(new RegionCmd());
-        getCommand("rules").setExecutor(new RulesCmd());
-        getCommand("scuba").setExecutor(new ScubaCmd());
-        getCommand("server").setExecutor(new ServerCmd());
-        getCommand("setwarp").setExecutor(new SetWarpCmd());
-        getCommand("shop").setExecutor(new ShopCmd());
-        getCommand("signs").setExecutor(new SignsCmd());
-        getCommand("sit").setExecutor(new SitCmd());
-        getCommand("spawn").setExecutor(new SpawnCmd());
-        getCommand("spawner").setExecutor(new SpawnerCmd());
-        getCommand("stack").setExecutor(new StackCmd());
-        getCommand("stats").setExecutor(new StatsCmd());
-        getCommand("storm").setExecutor(new StormCmd());
-        getCommand("sun").setExecutor(new SunCmd());
-        getCommand("tp").setExecutor(new TPCmd());
-        getCommand("tell").setExecutor(new TellCmd());
-        getCommand("ticket").setExecutor(new TicketCmd());
-        getCommand("tgm").setExecutor(new TGMCmd());
-        getCommand("unban").setExecutor(new UnBanCmd());
-        getCommand("unjail").setExecutor(new UnJailCmd());
-        getCommand("vanish").setExecutor(new VanishCmd());
-        getCommand("vip").setExecutor(new VIPCmd());
-        getCommand("we").setExecutor(new WECmd());
-        getCommand("warden").setExecutor(new WardenCmd());
-        getCommand("warp").setExecutor(new WarpCmd());
-        getCommand("where").setExecutor(new WhereCmd());
-        getCommand("who").setExecutor(new WhoCmd());
-        getCommand("whois").setExecutor(new WhoIsCmd());
-        getCommand("world").setExecutor(new WorldCmd());
-        getCommand("xp").setExecutor(new XPCmd());
-        getCommand("y").setExecutor(new YCmd());
+        for(String cmd : getDescription().getCommands().keySet()) {
+            try {
+                getCommand(cmd).setExecutor((CommandHandler)Class.forName("com.undeadscythes.udsplugin.commands." + cmd + "Cmd").newInstance());
+            } catch(ClassNotFoundException ex) {
+                getLogger().severe("Could not find class " + cmd + ".");
+            } catch(InstantiationException ex) {
+                getLogger().severe("Could not instantiate class " + cmd + ".");
+            } catch(IllegalAccessException ex) {
+                getLogger().severe("Illegal access on class " + cmd + ".");
+            }
+        }
     }
 
     private void registerEvents() {

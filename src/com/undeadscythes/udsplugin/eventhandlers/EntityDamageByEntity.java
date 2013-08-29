@@ -1,8 +1,9 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsmeta.exceptions.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.entity.*;
@@ -16,7 +17,7 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
         final Entity attacker = getAbsoluteEntity(event.getDamager());
         final Entity defender = event.getEntity();
         if(attacker instanceof Player && defender instanceof Player) {
-            event.setCancelled(pvp(PlayerUtils.getOnlinePlayer((Player)attacker), PlayerUtils.getOnlinePlayer((Player)defender)));
+            event.setCancelled(pvp(MemberUtils.getOnlineMember((Player)attacker), MemberUtils.getOnlineMember((Player)defender)));
         } else {
             event.setCancelled(isAfk(defender) || godMode(defender) || pve(defender));
         }
@@ -25,17 +26,17 @@ public class EntityDamageByEntity extends ListenerWrapper implements Listener {
     private boolean pvp(final Member attacker, final Member defender) {
         try {
             return attacker.getClan().equals(defender.getClan());
-        } catch (NoMetadataSetException ex) {
+        } catch(NoMetadataSetException ex) {
             return !attacker.hasPvp() || !defender.hasPvp() || defender.hasGodMode() || defender.isAfk() || !hasFlag(attacker.getLocation(), RegionFlag.PVP) || !hasFlag(defender.getLocation(), RegionFlag.PVP);
         }
     }
 
     private boolean isAfk(final Entity defender) {
-        return defender instanceof Player && PlayerUtils.getOnlinePlayer((Player)defender).isAfk();
+        return defender instanceof Player && MemberUtils.getOnlineMember((Player)defender).isAfk();
     }
 
     private boolean godMode(final Entity defender) {
-        return defender instanceof Player && PlayerUtils.getOnlinePlayer((Player)defender).hasGodMode();
+        return defender instanceof Player && MemberUtils.getOnlineMember((Player)defender).hasGodMode();
     }
 
     private boolean pve(final Entity defender) {

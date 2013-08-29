@@ -11,7 +11,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerLogin implements Listener {
     @EventHandler
-    public final void onEvent(final PlayerLoginEvent event) {
+    public void onEvent(final PlayerLoginEvent event) {
         if(Bukkit.hasWhitelist() && !event.getPlayer().isWhitelisted()) {
             event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, "The server is currently whitelisted while we make major improvements. Thank you for your patience.");
         }

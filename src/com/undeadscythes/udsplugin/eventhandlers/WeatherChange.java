@@ -1,8 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.WorldFlag;
-import com.undeadscythes.udsplugin.UDSPlugin;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.event.*;
 import org.bukkit.event.weather.*;
 
@@ -13,7 +13,7 @@ import org.bukkit.event.weather.*;
  */
 public class WeatherChange extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final WeatherChangeEvent event) {
+    public void onEvent(final WeatherChangeEvent event) {
         if(!UDSPlugin.checkWorldFlag(event.getWorld(), WorldFlag.WEATHER)) {
             event.setCancelled(true);
         }

@@ -1,19 +1,21 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsmeta.exceptions.*;
 import com.undeadscythes.udsplugin.Color;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.timers.MinecartCheck;
+import com.undeadscythes.udsplugin.timers.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.material.*;
+import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
 /**
@@ -22,7 +24,7 @@ import org.bukkit.util.Vector;
 public class PlayerInteract extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final PlayerInteractEvent event) {
-        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
+        final Member player = MemberUtils.getOnlineMember(event.getPlayer());
         final Material inHand = player.getItemInHand().getType();
         final Block block = event.getClickedBlock();
         switch(event.getAction()) {
@@ -61,7 +63,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                             activatePowertool(player);
                             event.setCancelled(true);
                         }
-                    } catch (NoMetadataSetException ex) {
+                    } catch(NoMetadataSetException ex) {
                         event.setCancelled(expBlocked(player));
                     }
                 }
@@ -95,7 +97,7 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                             activatePowertool(player);
                             event.setCancelled(true);
                         }
-                    } catch (NoMetadataSetException ex) {
+                    } catch(NoMetadataSetException ex) {
                         event.setCancelled(blockLocked(block, player) || bonemealBlocked(block, player) || expBlocked(player));
                     }
                 }
@@ -217,9 +219,9 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
                 for(Region region : testRegions) {
                     if(region.getOwner() == null) {
                         player.sendNormal("This area is protected.");
-                    } else if(region.getOwner().equals(player)) {
+                    } else if(region.getOwner().equals(player.getOfflineMember())) {
                         player.sendNormal("You own this block.");
-                    } else if(region.getMembers().contains(player)) {
+                    } else if(region.getMembers().contains(player.getOfflineMember())) {
                         player.sendNormal("Your room mate owns this block.");
                     } else {
                         player.sendNormal("Somebody else owns this block.");
@@ -310,6 +312,6 @@ public class PlayerInteract extends ListenerWrapper implements Listener {
     }
 
     private void minecartPlaced(final Member player, final Location location) {
-        MinecartCheck.tagMinecart(player, location);
+        MinecartCheck.tagMinecart(player.getOfflineMember(), location);
     }
 }

@@ -1,7 +1,11 @@
 package com.undeadscythes.udsplugin;
 
-import com.undeadscythes.udsmeta.*;
+import com.undeadscythes.udsplugin.requests.*;
+import com.undeadscythes.udsplugin.clans.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsmeta.exceptions.*;
 import com.undeadscythes.udsplugin.exceptions.*;
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.*;
@@ -14,26 +18,16 @@ import org.bukkit.material.*;
  * @author UndeadScythes
  */
 public abstract class Validator {
-    private Member player;
+    protected Member player;
 
-    protected Member player() {
-        return player;
-    }
-
-    protected void setPlayer(final Member player) {
-        this.player = player;
-    }
-
-    protected PlayerRank getRank(final String name) {
-        final PlayerRank rank = PlayerRank.getByName(name);
-        if(rank == null) player.sendError("You have not entered a valid rank.");
-        return rank;
+    protected MemberRank getRank(final String name) throws NoEnumFoundException {
+        return MemberRank.getByName(name);
     }
 
     protected UUID getPetId() {
         try {
             return player.getSelectedPet();
-        } catch (NoMetadataSetException ex) {
+        } catch(NoMetadataSetException ex) {
             player.sendError("Right click a pet while sneaking to select it first.");
             return null;
         }
@@ -45,7 +39,7 @@ public abstract class Validator {
         return shop;
     }
 
-    protected Region getShop(final Member target) {
+    protected Region getShop(final OfflineMember target) {
         final Region shop = RegionUtils.getRegion(RegionType.SHOP, target.getName() + "shop");
         if(shop == null) player.sendError("That player does not own a shop.");
         return shop;
@@ -53,8 +47,8 @@ public abstract class Validator {
 
     protected Member getWhisperer() {
         try {
-            return PlayerUtils.getOnlinePlayer(player.getWhisperer());
-        } catch (NoMetadataSetException ex) {} catch (PlayerNotOnlineException ex) {}
+            return MemberUtils.getOnlineMember(player.getWhisperer());
+        } catch(NoMetadataSetException ex) {} catch (PlayerNotOnlineException ex) {}
         player.sendError("There is no one to send this message to.");
         return null;
     }
@@ -91,7 +85,7 @@ public abstract class Validator {
     }
 
     protected Request getRequest() {
-        final Request request = UDSPlugin.getRequest(player);
+        final Request request = UDSPlugin.getRequest(player.getOfflineMember());
         if(request == null) player.sendError("You have no pending requests.");
         return request;
     }
@@ -127,7 +121,7 @@ public abstract class Validator {
     protected Clan getClan() {
         try {
             return player.getClan();
-        } catch (NoMetadataSetException ex) {
+        } catch(NoMetadataSetException ex) {
             player.sendError("You are not in a clan.");
             return null;
         }
@@ -141,13 +135,8 @@ public abstract class Validator {
         return region;
     }
 
-    protected Member matchOtherPlayer(final String name) {
-        final Member target = matchPlayer(name);
-        if(target != null && notSelf(target)) {
-            return target;
-        } else {
-            return null;
-        }
+    protected OfflineMember matchOtherPlayer(final String name) throws TargetMatchesSenderException, NoPlayerFoundException {
+        return notSelf(matchPlayer(name));
     }
 
     protected ItemStack getItem(final String name) {
@@ -195,7 +184,7 @@ public abstract class Validator {
     protected Region getCurrentCity() {
         try {
             return player.getCurrentRegion(RegionType.CITY);
-        } catch (NoRegionFoundException ex) {
+        } catch(NoRegionFoundException ex) {
             player.sendError("You are not in a city.");
             return null;
         }
@@ -204,13 +193,13 @@ public abstract class Validator {
     protected Region getCurrentShop() {
         try {
             return player.getCurrentRegion(RegionType.SHOP);
-        } catch (NoRegionFoundException ex) {
+        } catch(NoRegionFoundException ex) {
             player.sendError("You must be stood inside a shop to buy it.");
             return null;
         }
     }
 
-    protected Region getHome(final Member target) {
+    protected Region getHome(final OfflineMember target) {
         final Region home = RegionUtils.getRegion(RegionType.HOME, target.getName() + "home");
         if(home == null) {
             player.sendError("That player does not have a home.");
@@ -228,93 +217,75 @@ public abstract class Validator {
 
     protected Region getCity(final String cityName) {
         final Region city = matchCity(cityName);
-        if(city != null && !city.isOwnedBy(player)) {
+        if(city != null && !city.isOwnedBy(player.getOfflineMember())) {
             player.sendError("You are not the mayor of that city.");
             return null;
         }
         return city;
     }
 
-    protected Member matchOtherOnlinePlayer(final String name) {
-        final Member target = matchOnlinePlayer(name);
-        if(target != null && notSelf(target)) {
-            return target;
-        } else {
-            return null;
-        }
+    protected Member matchOtherOnlinePlayer(final String name) throws TargetMatchesSenderException, PlayerNotOnlineException {
+        Member member = matchOnlinePlayer(name);
+        notSelf(matchOnlinePlayer(name).getOfflineMember());
+        return member;
     }
 
-    protected Member matchPlayer(final String partial) {
+    protected OfflineMember matchPlayer(final String partial) throws NoPlayerFoundException {
         final String lowPartial = partial.toLowerCase();
-        Member target;
         try {
-            target = PlayerUtils.getOnlinePlayer(lowPartial);
-            return target;
-        } catch (PlayerNotOnlineException ex) {
-            for(Member test : PlayerUtils.getOnlinePlayers()) {
-                if(test.getNick().equalsIgnoreCase(lowPartial)) {
-                    return test;
-                }
-            }
-            target = PlayerUtils.matchOnlinePlayer(lowPartial);
-            if(target != null) {
-                return target;
-            } else {
-                for(Member test : PlayerUtils.getOnlinePlayers()) {
-                    if(test.getNick().toLowerCase().contains(lowPartial)) {
-                        return test;
-                    }
-                }
-                target = PlayerUtils.getPlayer(lowPartial);
-                if(target != null) {
-                    return target;
-                } else {
-                    for(Member test : PlayerUtils.getPlayers()) {
-                        if(test.getNick().equalsIgnoreCase(lowPartial)) {
-                            return test;
-                        }
-                    }
-                    target = PlayerUtils.matchPlayer(lowPartial);
-                    if(target != null) {
-                        return target;
-                    } else {
-                        for(Member test : PlayerUtils.getPlayers()) {
-                            if(test.getNick().toLowerCase().contains(lowPartial)) {
-                                return test;
-                            }
-                        }
-                    }
-                    player.sendError("Cannot find a player by that name.");
-                    return null;
-                }
+            return MemberUtils.getOnlineMember(lowPartial).getOfflineMember();
+        } catch(PlayerNotOnlineException ex) {}
+        for(Member test : MemberUtils.getOnlineMembers()) {
+            if(test.getNick().equalsIgnoreCase(lowPartial)) {
+                return test.getOfflineMember();
             }
         }
+        try {
+            return MemberUtils.matchOnlineMember(lowPartial).getOfflineMember();
+        } catch(NoPlayerFoundException ex) {}
+        for(Member test : MemberUtils.getOnlineMembers()) {
+            if(test.getNick().toLowerCase().contains(lowPartial)) {
+                return test.getOfflineMember();
+            }
+        }
+        try {
+            return MemberUtils.getMember(lowPartial);
+        } catch(NoPlayerFoundException ex) {}
+        for(OfflineMember test : MemberUtils.getMembers()) {
+            if(test.getNick().equalsIgnoreCase(lowPartial)) {
+                return test;
+            }
+        }
+        try {
+            return MemberUtils.matchMember(lowPartial);
+        } catch(NoPlayerFoundException ex) {}
+        for(OfflineMember test : MemberUtils.getMembers()) {
+            if(test.getNick().toLowerCase().contains(lowPartial)) {
+                return test;
+            }
+        }
+        throw new NoPlayerFoundException(partial);
     }
 
-    protected Member matchOnlinePlayer(final String partial) {
+    protected Member matchOnlinePlayer(final String partial) throws PlayerNotOnlineException {
         final String lowPartial = partial.toLowerCase();
-        Member target;
         try {
-            return PlayerUtils.getOnlinePlayer(lowPartial);
-        } catch (PlayerNotOnlineException ex) {
-            for(Member test : PlayerUtils.getOnlinePlayers()) {
-                if(test.getNick().equalsIgnoreCase(lowPartial)) {
-                    return test;
-                }
-            }
-            target = PlayerUtils.matchOnlinePlayer(lowPartial);
-            if(target != null) {
-                return target;
-            } else {
-                for(Member test : PlayerUtils.getOnlinePlayers()) {
-                    if(test.getNick().contains(lowPartial)) {
-                        return test;
-                    }
-                }
-                player.sendError("Cannot find that player.");
-                return null;
+            return MemberUtils.getOnlineMember(lowPartial);
+        } catch(PlayerNotOnlineException ex) {}
+        for(Member test : MemberUtils.getOnlineMembers()) {
+            if(test.getNick().equalsIgnoreCase(lowPartial)) {
+                return test;
             }
         }
+        try {
+            return MemberUtils.matchOnlineMember(lowPartial);
+        } catch(NoPlayerFoundException ex) {}
+        for(Member test : MemberUtils.getOnlineMembers()) {
+            if(test.getNick().contains(lowPartial)) {
+                return test;
+            }
+        }
+        throw new PlayerNotOnlineException(partial);
     }
 
     protected Warp matchWarp(final String partial) {
@@ -352,8 +323,8 @@ public abstract class Validator {
         return false;
     }
 
-    protected boolean notIgnoredBy(final Member target) {
-        if(target.isIgnoringPlayer(player)) {
+    protected boolean notIgnoredBy(final OfflineMember target) {
+        if(target.isIgnoringPlayer(player.getOfflineMember())) {
             player.sendError("This player can't be reached at this time.");
             return false;
         } else {
@@ -362,20 +333,24 @@ public abstract class Validator {
     }
 
     protected boolean canRequestTo(final Member target) {
-        if(UDSPlugin.getRequest(target) != null) {
+        if(UDSPlugin.getRequest(target.getOfflineMember()) != null) {
             player.sendError("That player already has a request pending.");
             return false;
         }
         return true;
     }
 
-    protected boolean notJailed(final Member target) { //TODO: Rename this method to be of the form 'PLAYER' can/is whatever 'TARGET'
+    protected boolean notJailed(final OfflineMember target) { //TODO: Rename this method to be of the form 'PLAYER' can/is whatever 'TARGET'
         if(target.isJailed()) {
             player.sendError("You cannot do this while that player is in jail.");
             return false;
         } else {
             return true;
         }
+    }
+
+    protected boolean notJailed(final Member target) { //TODO: Rename this method to be of the form 'PLAYER' can/is whatever 'TARGET'
+        return notJailed(target.getOfflineMember());
     }
 
     protected boolean notJailed() {
@@ -393,7 +368,7 @@ public abstract class Validator {
                 player.sendError("You can't do that at this time.");
                 return false;
             }
-        } catch (NoMetadataSetException ex) {}
+        } catch(NoMetadataSetException ex) {}
         return true;
     }
 
@@ -425,6 +400,10 @@ public abstract class Validator {
     }
 
     protected boolean isJailed(final Member target) {
+        return isJailed(target.getOfflineMember());
+    }
+
+    protected boolean isJailed(final OfflineMember target) {
         if(target.isJailed()) {
             return true;
         } else {
@@ -433,7 +412,7 @@ public abstract class Validator {
         }
     }
 
-    protected boolean hasRank(final PlayerRank rank) {
+    protected boolean hasRank(final MemberRank rank) {
         if(player.hasRank(rank)) {
             return true;
         } else {
@@ -443,7 +422,7 @@ public abstract class Validator {
     }
 
     protected boolean isRoomie(final Region home) {
-        if(home.hasMember(player)) {
+        if(home.hasMember(player.getOfflineMember())) {
             return true;
         } else {
             player.sendError("You are not that players room mate.");
@@ -451,7 +430,7 @@ public abstract class Validator {
         }
     }
 
-    protected boolean isWorker(final Member target, final Region shop) {
+    protected boolean isWorker(final OfflineMember target, final Region shop) {
         if(shop.hasMember(target)) {
             return true;
         } else {
@@ -461,7 +440,7 @@ public abstract class Validator {
     }
 
     protected boolean isClanLeader(final Clan clan) {
-        if(clan.getLeader().equals(player)) {
+        if(clan.getLeader().equals(player.getOfflineMember())) {
             return true;
         } else {
             player.sendError("You must be clan leader to do this.");
@@ -493,7 +472,7 @@ public abstract class Validator {
     }
 
     protected boolean canRequest(final Member target) {
-        return canRequestTo(target) && notIgnoredBy(target) && notAfk(target);
+        return canRequestTo(target) && notIgnoredBy(target.getOfflineMember()) && notAfk(target);
     }
 
     protected boolean canTeleport() {
@@ -515,7 +494,7 @@ public abstract class Validator {
     protected ChatRoom getChatRoom() {
         try {
             return player.getChatRoom();
-        } catch (NoMetadataSetException ex) {
+        } catch(NoMetadataSetException ex) {
             player.sendError("You are not in any private chat rooms.");
             return null;
         }
@@ -535,7 +514,7 @@ public abstract class Validator {
         return false;
     }
 
-    protected boolean isBanned(final Member target) {
+    protected boolean isBanned(final OfflineMember target) {
         if(target.isBanned()) return true;
         player.sendError("That player is not banned.");
         return false;
@@ -558,17 +537,17 @@ public abstract class Validator {
             player.getClan();
             player.sendError("You are already in a clan.");
             return false;
-        } catch (NoMetadataSetException ex) {
+        } catch(NoMetadataSetException ex) {
             return true;
         }
     }
 
-    protected boolean isInClan(final Member target, final Clan clan) {
+    protected boolean isInClan(final OfflineMember target, final Clan clan) {
         try {
             if(target.getClan().equals(clan)) {
                 return true;
             }
-        } catch (NoMetadataSetException ex) {}
+        } catch(NoMetadataSetException ex) {}
         player.sendError("That player is not in your clan.");
         return false;
     }
@@ -591,7 +570,7 @@ public abstract class Validator {
         }
     }
 
-    protected boolean isRoomie(final Member target, final Region home) {
+    protected boolean isRoomie(final OfflineMember target, final Region home) {
         if(home.hasMember(target)) {
             return true;
         } else {
@@ -619,7 +598,7 @@ public abstract class Validator {
     }
 
     protected boolean notMayor(final Region city) {
-        if(city.isOwnedBy(player)) {
+        if(city.isOwnedBy(player.getOfflineMember())) {
             player.sendError("You cannot do that while you are the mayor.");
             return false;
         } else {
@@ -662,7 +641,7 @@ public abstract class Validator {
         }
     }
 
-    protected boolean outRanks(final Member target) {
+    protected boolean outRanks(final OfflineMember target) {
         if(!player.outRanks(target)) {
             player.sendMessage("You do not out rank this player.");
             return false;
@@ -691,13 +670,9 @@ public abstract class Validator {
         return -1;
     }
 
-    protected boolean notSelf(final Member target) {
-        if(target.equals(player)) {
-            player.sendError("You cannot use that command on yourself.");
-            return false;
-        } else {
-            return true;
-        }
+    protected OfflineMember notSelf(final OfflineMember target) throws TargetMatchesSenderException {
+        if(target.equals(player.getOfflineMember())) throw new TargetMatchesSenderException(target);
+        return target;
     }
 
     protected boolean noPortalExists(final String name) {

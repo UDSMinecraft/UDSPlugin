@@ -1,5 +1,8 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
@@ -9,8 +12,6 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 
 /**
- * Collection of values taken from the plugin's configuration file.
- * 
  * @author UndeadScythes
  */
 public class Config {
@@ -57,35 +58,35 @@ public class Config {
     public static ArrayList<Kit> KITS;
     public static EnumMap<EntityType, Integer> MOB_REWARDS;
     public static double PISTON_POWER;
-    public static EnumMap<RegionFlag, Boolean> GLOBAL_FLAGS;
+    public static HashMap<Flag, Boolean> GLOBAL_FLAGS;
     public static List<String> SHARES;
     public static String GMAIL_ADDRESS;
     public static double SKULL;
     public static String GMAIL_PASSWORD;
-    
+
     public static void saveDefaults() {
         UDSPlugin.getPlugin().saveDefaultConfig();
     }
-    
+
     public static void copyDefaults() {
         UDSPlugin.getPlugin().getConfig().options().copyDefaults(true);
     }
-    
+
     public static void save() {
         UDSPlugin.getPlugin().saveConfig();
     }
-    
+
     public static void init() {
         saveDefaults();
         copyDefaults();
         save();
         VIP_WHITELIST = new ArrayList<Material>(29);
         MOB_REWARDS = new EnumMap<EntityType, Integer>(EntityType.class);
-        GLOBAL_FLAGS = new EnumMap<RegionFlag, Boolean>(RegionFlag.class);
+        GLOBAL_FLAGS = new HashMap<Flag, Boolean>(15);
         KITS = new ArrayList<Kit>(3);
         load();
     }
-    
+
     public static void load() {
         final FileConfiguration config = UDSPlugin.getPlugin().getConfig();
         BLOCK_CREEPERS = config.getBoolean("block.creeper");
@@ -144,7 +145,11 @@ public class Config {
             for(Object item : ArrayUtils.subarray(kitSplit, 3, kitSplit.length -1)) {
                 items.add(new ItemStack(Material.getMaterial(Integer.parseInt((String)item))));
             }
-            KITS.add(new Kit(kitSplit[0], Integer.parseInt(kitSplit[1]), items, PlayerRank.getByName(kitSplit[2])));
+            try {
+                KITS.add(new Kit(kitSplit[0], Integer.parseInt(kitSplit[1]), items, MemberRank.getByName(kitSplit[2])));
+            } catch(NoEnumFoundException ex) {
+                throw new UnexpectedException("bad rank on kit load:" + kitSplit[2] + "," + kitSplit[0]);
+            }
         }
         MOB_REWARDS.clear();
         for(EntityType entityType : EntityType.values()) {
@@ -155,16 +160,20 @@ public class Config {
             }
         }
         GLOBAL_FLAGS.clear();
-        for(RegionFlag flag : RegionFlag.values()) {
+        for(Flag flag : RegionFlag.values()) {
+            final String flagname = "global-flags." + flag.toString().toLowerCase();
+            GLOBAL_FLAGS.put(flag, config.getBoolean(flagname));
+        }
+        for(Flag flag : WorldFlag.values()) {
             final String flagname = "global-flags." + flag.toString().toLowerCase();
             GLOBAL_FLAGS.put(flag, config.getBoolean(flagname));
         }
     }
-    
+
     public static void reload() {
         UDSPlugin.getPlugin().reloadConfig();
         load();
     }
-    
+
     private Config() {}
 }

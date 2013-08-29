@@ -1,7 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.Region;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.bukkit.event.*;
@@ -14,7 +15,7 @@ import org.bukkit.event.block.*;
  */
 public class BlockFromTo extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final BlockFromToEvent event) {
+    public void onEvent(final BlockFromToEvent event) {
         final List<Region> regions = RegionUtils.getRegionsHere(event.getToBlock().getLocation());
         if(!regions.isEmpty() && !regionsContain(regions, event.getBlock().getLocation())) {
             event.setCancelled(true);

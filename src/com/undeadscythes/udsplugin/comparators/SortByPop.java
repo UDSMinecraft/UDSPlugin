@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.comparators;
 
+import com.undeadscythes.udsplugin.regions.*;
 import com.undeadscythes.udsplugin.*;
 import java.util.*;
 

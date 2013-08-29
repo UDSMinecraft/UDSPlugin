@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
@@ -13,24 +13,24 @@ import org.apache.commons.lang.*;
  */
 public class WarpCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         Warp warp;
         if(args.length == 0) {
             final Set<String> warps = new TreeSet<String>();
             for(Warp test : WarpUtils.getWarps()) {
-                if(player().hasRank(test.getRank())) {
+                if(player.hasRank(test.getRank())) {
                     warps.add(test.getName() + (test.getPrice() > 0 ? " (" + test.getPrice() + ")" : ""));
                 }
             }
             if(warps.isEmpty()) {
-                player().sendNormal("You don't have access to any warps.");
+                player.sendNormal("You don't have access to any warps.");
             } else {
-                player().sendNormal("Available warps (with prices):");
-                player().sendText(StringUtils.join(warps.toArray(), ", "));
+                player.sendNormal("Available warps (with prices):");
+                player.sendText(StringUtils.join(warps.toArray(), ", "));
             }
         } else if(numArgsHelp(1) && (warp = matchWarp(args[0])) != null && hasRank(warp.getRank()) && canAfford(warp.getPrice())) {
-            player().debit(warp.getPrice());
-            player().teleport(warp.getLocation());
+            player.debit(warp.getPrice());
+            player.teleport(warp.getLocation());
         }
     }
 }

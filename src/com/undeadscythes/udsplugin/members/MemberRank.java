@@ -1,11 +1,12 @@
-package com.undeadscythes.udsplugin;
+package com.undeadscythes.udsplugin.members;
 
+import com.undeadscythes.udsplugin.exceptions.*;
 import org.bukkit.*;
 
 /**
  * @author UndeadScythes
  */
-public enum PlayerRank {
+public enum MemberRank {
     NEWBIE(ChatColor.WHITE, 0),
     MEMBER(ChatColor.GREEN, 1),
     VIP(ChatColor.DARK_PURPLE, 1),
@@ -17,7 +18,9 @@ public enum PlayerRank {
     private final ChatColor color;
     protected final int ranking;
 
-    PlayerRank(final ChatColor color, final int rank) {
+    private static final String NAME = "Player Rank";
+
+    MemberRank(final ChatColor color, final int rank) {
         this.color = color;
         this.ranking = rank;
     }
@@ -26,8 +29,8 @@ public enum PlayerRank {
         return color;
     }
 
-    public static PlayerRank getByRanking(final int ranking) {
-        for(PlayerRank rank : values()) {
+    public static MemberRank getByRanking(final int ranking) {
+        for(MemberRank rank : values()) {
             if(rank.ranking == ranking) {
                 return rank;
             }
@@ -35,21 +38,26 @@ public enum PlayerRank {
         return null;
     }
 
-    public static PlayerRank getAbove(final PlayerRank rank) {
+    public static MemberRank getAbove(final MemberRank rank) {
         return getByRanking(rank.ranking + 1);
     }
 
-    public static PlayerRank getBelow(final PlayerRank rank) {
+    public static MemberRank getBelow(final MemberRank rank) {
         return getByRanking(rank.ranking - 1);
     }
 
-    public static PlayerRank getByName(final String string) {
-        for(PlayerRank rank : values()) {
-            if(rank.name().equals(string.toUpperCase())) {
+    public static MemberRank getByName(final String name) throws NoEnumFoundException {
+        if(name.equals("default")) return NEWBIE; // For back-compat with < 2.43
+        for(MemberRank rank : values()) {
+            if(rank.name().equals(name.toUpperCase())) {
                 return rank;
             }
         }
-        return null;
+        throw new NoEnumFoundException(NAME, name);
+    }
+
+    public int getID() {
+        return ranking;
     }
 
     @Override

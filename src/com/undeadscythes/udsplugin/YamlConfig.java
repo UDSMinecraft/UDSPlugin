@@ -5,8 +5,6 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.*;
 
 /**
- * A YAML configuration file with various accessors.
- *
  * @author UndeadScythes
  */
 public class YamlConfig {
@@ -18,12 +16,16 @@ public class YamlConfig {
         file = new File(path);
     }
 
+    public boolean fileExists() {
+        return file.exists();
+    }
+
     public void load() {
         if(!file.exists()) {
             file.getParentFile().mkdirs();
             try {
                 file.createNewFile();
-            } catch (IOException ex) {
+            } catch(IOException ex) {
                 Bukkit.getLogger().info("Could not create config file " + file.getName() + ".");
             }
         }
@@ -37,7 +39,7 @@ public class YamlConfig {
         }
         try {
             config.save(file);
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             Bukkit.getLogger().info("Could not save config file " + file.getName() + ".");
         }
     }

@@ -26,7 +26,7 @@ public class PortalUtils {
                 PORTALS.put(nextLine.split("\t")[0], new Portal(nextLine));
             }
             file.close();
-        } catch (FileNotFoundException ex) {}
+        } catch(FileNotFoundException ex) {}
         for(Portal portal : PORTALS.values()) {
             portal.linkPortal();
         }

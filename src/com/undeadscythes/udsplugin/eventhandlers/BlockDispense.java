@@ -1,8 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
-import com.undeadscythes.udsplugin.RegionFlag;
-import com.undeadscythes.udsplugin.UDSPlugin;
+import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.regions.*;
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -26,7 +26,7 @@ public class BlockDispense extends ListenerWrapper implements Listener {
     }
 
     @EventHandler
-    public final void onEvent(final BlockDispenseEvent event) {
+    public void onEvent(final BlockDispenseEvent event) {
         if(hasFlag(event.getBlock().getLocation(), RegionFlag.DISPENSER)) {
             final BlockFace blockFace = ((Dispenser)event.getBlock().getState().getData()).getFacing();
             Location location = event.getBlock().getRelative(blockFace).getLocation().add(0.5, 0.5, 0.5);

@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
 import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.material.*;
@@ -12,10 +12,10 @@ import org.bukkit.material.*;
  */
 public class MapCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(canAfford(Config.MAP_COST)) {
             final MaterialData map = new MaterialData(Material.MAP, Config.MAP_DATA);
-            player().giveAndDrop(map.toItemStack(1));
+            player.giveAndDrop(map.toItemStack(1));
         }
     }
 }

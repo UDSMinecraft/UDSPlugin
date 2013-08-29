@@ -1,22 +1,22 @@
 package com.undeadscythes.udsplugin;
 
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.bukkit.*;
 
 /**
- * A warp point used for player teleportation.
- * 
  * @author UndeadScythes
  */
 public class Warp implements Saveable {
     private final String name;
     private final Location location;
-    private final PlayerRank rank;
+    private final MemberRank rank;
     private final int price;
 
-    public Warp(final String name, final Location location, final PlayerRank rank, final int price) {
+    public Warp(final String name, final Location location, final MemberRank rank, final int price) {
         this.name = name;
         this.location = location;
         this.rank = rank;
@@ -27,12 +27,16 @@ public class Warp implements Saveable {
         final String[] recordSplit = record.split("\t");
         name = recordSplit[0];
         location = LocationUtils.parseLocation(recordSplit[1]);
-        rank = PlayerRank.getByName(recordSplit[2]);
+        try {
+            rank = MemberRank.getByName(recordSplit[2]);
+        } catch(NoEnumFoundException ex) {
+            throw new UnexpectedException("bad rank on warp load:" + recordSplit[2] + "," + name);
+        }
         price = Integer.parseInt(recordSplit[3]);
     }
 
     @Override
-    public final String getRecord() {
+    public String getRecord() {
         final ArrayList<String> record = new ArrayList<String>(4);
         record.add(name);
         record.add(LocationUtils.getString(location));
@@ -41,19 +45,19 @@ public class Warp implements Saveable {
         return StringUtils.join(record, "\t");
     }
 
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
-    public final int getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public final PlayerRank getRank() {
+    public MemberRank getRank() {
         return rank;
     }
 
-    public final Location getLocation() {
+    public Location getLocation() {
         return LocationUtils.findSafePlace(location);
     }
 }

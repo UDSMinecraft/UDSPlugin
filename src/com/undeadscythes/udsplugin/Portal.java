@@ -8,8 +8,6 @@ import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
 /**
- * A nether portal that goes elsewhere.
- * 
  * @author UndeadScythes
  */
 public class Portal implements Saveable {
@@ -28,7 +26,7 @@ public class Portal implements Saveable {
         this.min = VectorUtils.getFlooredVector(Vector.getMinimum(v1, v2));
         this.max = VectorUtils.getFlooredVector(Vector.getMaximum(v1, v2));
     }
-    
+
     @SuppressWarnings("fallthrough")
     public Portal(final String record) {
         final String[] recordSplit = record.split("\t");
@@ -46,7 +44,7 @@ public class Portal implements Saveable {
     }
 
     @Override
-    public final String getRecord() {
+    public String getRecord() {
         final ArrayList<String> record = new ArrayList<String>(7);
         record.add(name);
         record.add(warp == null ? "null" : warp.getName());
@@ -57,15 +55,15 @@ public class Portal implements Saveable {
         record.add(exit == null ? "null" : exit.toString());
         return StringUtils.join(record, "\t");
     }
-    
-    public final boolean hasWarp() {
+
+    public boolean hasWarp() {
         if(warp != null || portal != null) {
             return true;
         }
         return false;
     }
-    
-    public final String getWarpName() {
+
+    public String getWarpName() {
         if(warp == null) {
             if(portal != null) {
                 return portal.getName() + "*";
@@ -75,33 +73,33 @@ public class Portal implements Saveable {
         }
         return warp.getName();
     }
-    
-    public final void setWarp(final Warp warp) {
+
+    public void setWarp(final Warp warp) {
         this.warp = warp;
     }
-    
-    public final void setPortal(final Portal portal) {
+
+    public void setPortal(final Portal portal) {
         warp = null;
         this.portal = portal;
     }
-    
-    public final String getName() {
+
+    public String getName() {
         return name;
     }
-    
-    public final Vector getV1() {
+
+    public Vector getV1() {
         return min;
     }
-    
-    public final Vector getV2() {
+
+    public Vector getV2() {
         return max;
     }
-    
-    public final World getWorld() {
+
+    public World getWorld() {
         return world;
     }
-    
-    public final void warp(final Player player) {
+
+    public void warp(final Player player) {
         if(warp == null) {
             if(portal != null) {
                 final Vector half = portal.getV2().clone().subtract(portal.getV1()).multiply(0.5);
@@ -115,8 +113,8 @@ public class Portal implements Saveable {
             player.teleport(warp.getLocation());
         }
     }
-    
-    public final void warp(final Entity entity) {
+
+    public void warp(final Entity entity) {
         if(warp == null) {
             if(portal != null) {
                 final Vector half = portal.getV2().clone().subtract(portal.getV1()).multiply(0.5);
@@ -127,8 +125,8 @@ public class Portal implements Saveable {
             entity.teleport(warp.getLocation());
         }
     }
-    
-    public final boolean crossWorld() {
+
+    public boolean crossWorld() {
         if(warp == null) {
             if(portal != null && world.equals(portal.getWorld())) {
                 return false;
@@ -141,18 +139,18 @@ public class Portal implements Saveable {
             return true;
         }
     }
-    
-    public final void linkPortal() {
+
+    public void linkPortal() {
         if(!portalLink.isEmpty()) {
             setPortal(PortalUtils.getPortal(portalLink));
         }
     }
-    
-    public final float getYaw() {
+
+    public float getYaw() {
         return exit == null ? 0 : exit.getYaw();
     }
-    
-    public final void setExit(final Direction exit) {
+
+    public void setExit(final Direction exit) {
         this.exit = exit;
     }
 }

@@ -1,7 +1,8 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import org.bukkit.*;
 import org.bukkit.inventory.*;
 
@@ -10,7 +11,7 @@ import org.bukkit.inventory.*;
  */
 public class GiftCmd extends CommandHandler {
     @Override
-    public void playerExecute() {
+    public void playerExecute() throws PlayerNotOnlineException {
         final Member target;
         final ItemStack gift;
         if(minArgsHelp(1) && (target = matchOnlinePlayer(args[0])) != null && canGift(target) && (gift = getItemInHand().clone()) != null) {
@@ -20,8 +21,8 @@ public class GiftCmd extends CommandHandler {
             }
             target.sendNormal(message);
             target.giveAndDrop(gift);
-            player().setItemInHand(new ItemStack(Material.AIR));
-            player().sendNormal("Gift sent.");
+            player.setItemInHand(new ItemStack(Material.AIR));
+            player.sendNormal("Gift sent.");
         }
     }
 }

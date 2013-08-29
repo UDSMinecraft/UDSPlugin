@@ -1,5 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.regions.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.event.*;
@@ -13,7 +15,7 @@ import org.bukkit.event.player.*;
 public class PlayerRespawn extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final PlayerRespawnEvent event) {
-        final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
+        final Member player = MemberUtils.getOnlineMember(event.getPlayer());
         if(player.getBedSpawnLocation() == null || !player.getBedSpawnLocation().getWorld().equals(player.getWorld())) {
             final Region home = RegionUtils.getRegion(RegionType.HOME, player.getName() + "home");
             if(home != null && home.getWorld().equals(player.getWorld())) {
@@ -25,6 +27,6 @@ public class PlayerRespawn extends ListenerWrapper implements Listener {
         if(player.hasPerm(Perm.BACK_ON_DEATH)) {
             player.sendNormal("Use /back to return to where you died.");
         }
-        PlayerUtils.loadInventory(player);
+        MemberUtils.loadInventory(player);
     }
 }

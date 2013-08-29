@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.Portal;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -13,7 +13,7 @@ import org.bukkit.event.entity.*;
  */
 public class EntityPortal extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final EntityPortalEvent event) {
+    public void onEvent(final EntityPortalEvent event) {
         final Entity entity = event.getEntity();
         final Portal portal = findPortal(entity.getLocation());
         if(portal != null) {

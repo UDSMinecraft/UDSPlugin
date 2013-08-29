@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
 import com.undeadscythes.udsplugin.*;
 
 /**
@@ -10,9 +10,9 @@ import com.undeadscythes.udsplugin.*;
  */
 public class SpawnCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(notPinned() && notJailed()) {
-            player().teleport(UDSPlugin.getWorldSpawn(player().getWorld()));
+            player.teleport(UDSPlugin.getWorldSpawn(player.getWorld()));
         }
     }
 }

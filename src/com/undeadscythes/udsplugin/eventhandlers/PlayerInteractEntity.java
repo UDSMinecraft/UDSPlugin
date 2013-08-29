@@ -1,7 +1,8 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
-import com.undeadscythes.udsplugin.utilities.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
@@ -11,7 +12,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerInteractEntity extends ListenerWrapper implements Listener {
     @EventHandler
-    public void onEvent(final PlayerInteractEntityEvent event) {
+    public void onEvent(final PlayerInteractEntityEvent event) throws NoPlayerFoundException {
         final Entity entity = event.getRightClicked();
         if(entity instanceof Tameable) {
             final Tameable pet = (Tameable)entity;
@@ -19,17 +20,17 @@ public class PlayerInteractEntity extends ListenerWrapper implements Listener {
                 final String ownerName = pet.getOwner().getName();
                 if(ownerName.equals(event.getPlayer().getName())) {
                     if(event.getPlayer().isSneaking()) {
-                        PlayerUtils.getPlayer(event.getPlayer().getName()).selectPet(entity.getUniqueId());
-                        PlayerUtils.getOnlinePlayer(event.getPlayer()).sendNormal("Pet selected.");
+                        MemberUtils.getMember(event.getPlayer().getName()).selectPet(entity.getUniqueId());
+                        MemberUtils.getOnlineMember(event.getPlayer()).sendNormal("Pet selected.");
                         event.setCancelled(true);
                     }
                 } else {
-                    PlayerUtils.getOnlinePlayer(event.getPlayer()).sendNormal("This animal belongs to " + PlayerUtils.getPlayer(ownerName).getNick());
+                    MemberUtils.getOnlineMember(event.getPlayer()).sendNormal("This animal belongs to " + MemberUtils.getMember(ownerName).getNick());
                     event.setCancelled(true);
                 }
             }
         } else if(entity instanceof ItemFrame) {
-            final Member player = PlayerUtils.getOnlinePlayer(event.getPlayer());
+            final Member player = MemberUtils.getOnlineMember(event.getPlayer());
             if(!(player.canBuildHere(entity.getLocation()))) {
                 event.setCancelled(true);
                 player.sendNormal(Message.CANT_BUILD_HERE);

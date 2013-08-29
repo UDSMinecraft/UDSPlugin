@@ -1,7 +1,8 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
+import com.undeadscythes.udsplugin.exceptions.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
 
@@ -32,10 +33,10 @@ public class JailCmd extends CommandHandler {
     }
 
     @Override
-    public void playerExecute() {
-        Member target;
+    public void playerExecute() throws TargetMatchesSenderException, PlayerNotOnlineException {
         if(minArgsHelp(1) && maxArgsHelp(3)) {
-            if((target = matchOnlinePlayer(args[0])) != null && notSelf(target) && notJailed(target)) {
+            Member target = matchOtherOnlinePlayer(args[0]);
+            if(notJailed(target)) {
                 long sentence = 5;
                 int bail = 1000;
                 if(args.length > 1) {
@@ -49,7 +50,7 @@ public class JailCmd extends CommandHandler {
                         target.sendNormal("You have been jailed for breaking the rules.");
                         UDSPlugin.sendBroadcast(target.getNick() + " has been jailed for breaking the rules.");
                     } else {
-                        player().sendError("There are no jail points set.");
+                        player.sendError("There are no jail points set.");
                     }
                 }
             }

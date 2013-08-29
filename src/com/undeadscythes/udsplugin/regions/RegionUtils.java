@@ -1,8 +1,8 @@
-package com.undeadscythes.udsplugin.utilities;
+package com.undeadscythes.udsplugin.regions;
 
-import com.undeadscythes.udsplugin.RegionType;
+import com.undeadscythes.udsplugin.regions.*;
 import com.undeadscythes.udsplugin.SaveableHashMap;
-import com.undeadscythes.udsplugin.Region;
+import com.undeadscythes.udsplugin.regions.*;
 import java.io.*;
 import java.util.*;
 import org.bukkit.*;
@@ -38,7 +38,7 @@ public class RegionUtils {
                 REGIONS.get(region.getType()).put(region.getName(), region);
             }
             file.close();
-        } catch (FileNotFoundException ex) {}
+        } catch(FileNotFoundException ex) {}
     }
     
     public static int numRegions() {

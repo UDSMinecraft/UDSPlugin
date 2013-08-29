@@ -1,20 +1,18 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
 import com.undeadscythes.udsplugin.Color;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 
 /**
- * Send an action.
- * 
  * @author UndeadScythes
  */
 public class MeCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         final String action = argsToMessage();
         if(minArgsHelp(1) && noBadLang(action)) {
-            Bukkit.broadcastMessage(Color.TEXT + "*" + player().getNick() + " " + action);
+            Bukkit.broadcastMessage(Color.TEXT + "*" + player.getNick() + " " + action);
         }
     }
 }

@@ -1,10 +1,8 @@
 package com.undeadscythes.udsplugin;
 
 /**
-* Chat channel for in-game chat.
-* 
-* @author UndeadScythes
-*/
+ * @author UndeadScythes
+ */
 public enum ChatChannel {
     PUBLIC,
     CLAN,

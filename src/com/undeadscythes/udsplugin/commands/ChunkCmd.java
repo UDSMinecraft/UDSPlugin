@@ -1,6 +1,6 @@
 package com.undeadscythes.udsplugin.commands;
 
-import com.undeadscythes.udsplugin.CommandHandler;
+
 import com.undeadscythes.udsplugin.*;
 import java.text.*;
 import java.util.*;
@@ -13,10 +13,10 @@ import org.bukkit.*;
  */
 public class ChunkCmd extends CommandHandler {
     @Override
-    public final void playerExecute() {
+    public void playerExecute() {
         if(numArgsHelp(1)) {
             if(args[0].equalsIgnoreCase("info")) {
-                final Chunk chunk = player().getLocation().getChunk();
+                final Chunk chunk = player.getLocation().getChunk();
                 final EnumMap<Material, Integer> blockDistro = new EnumMap<Material, Integer>(Material.class);
                 int blockCount = 0;
                 for(int x = 0; x < 15; x++) {
@@ -34,10 +34,10 @@ public class ChunkCmd extends CommandHandler {
                         }
                     }
                 }
-                player().sendNormal("Chunk contents:");
+                player.sendNormal("Chunk contents:");
                 DecimalFormat df = new DecimalFormat("###.##");
                 for(Map.Entry<Material, Integer> entry : blockDistro.entrySet()) {
-                    player().sendListItem(entry.getKey().toString() + ": " + entry.getValue() + ", " + df.format(((double)entry.getValue() * 100) / (double)blockCount) + "%", "");
+                    player.sendListItem(entry.getKey().toString() + ": " + entry.getValue() + ", " + df.format(((double)entry.getValue() * 100) / (double)blockCount) + "%", "");
                 }
             }
         }

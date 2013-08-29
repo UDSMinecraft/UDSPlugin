@@ -1,6 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
-import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.members.*;
+import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
@@ -12,7 +13,7 @@ import org.bukkit.event.player.*;
  */
 public class PlayerBucketFill extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final PlayerBucketFillEvent event) {
-        event.setCancelled(!PlayerUtils.getOnlinePlayer(event.getPlayer()).canBuildHere(event.getBlockClicked().getLocation()));
+    public void onEvent(final PlayerBucketFillEvent event) {
+        event.setCancelled(!MemberUtils.getOnlineMember(event.getPlayer()).canBuildHere(event.getBlockClicked().getLocation()));
     }
 }

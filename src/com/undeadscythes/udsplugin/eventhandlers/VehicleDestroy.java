@@ -1,7 +1,7 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
 import com.undeadscythes.udsplugin.timers.MinecartCheck;
-import com.undeadscythes.udsplugin.ListenerWrapper;
+import com.undeadscythes.udsplugin.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -15,7 +15,7 @@ import org.bukkit.inventory.*;
  */
 public class VehicleDestroy extends ListenerWrapper implements Listener {
     @EventHandler
-    public final void onEvent(final VehicleDestroyEvent event) {
+    public void onEvent(final VehicleDestroyEvent event) {
         final Vehicle vehicle = event.getVehicle();
         if(vehicle instanceof Boat) {
             if(event.getAttacker() != null) {

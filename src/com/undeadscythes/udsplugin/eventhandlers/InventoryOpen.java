@@ -1,5 +1,6 @@
 package com.undeadscythes.udsplugin.eventhandlers;
 
+import com.undeadscythes.udsplugin.members.*;
 import com.undeadscythes.udsplugin.*;
 import com.undeadscythes.udsplugin.utilities.*;
 import org.bukkit.*;
@@ -18,7 +19,7 @@ public class InventoryOpen extends ListenerWrapper implements Listener {
     @EventHandler
     public void onEvent(final InventoryOpenEvent event) {
         final InventoryHolder holder = event.getInventory().getHolder();
-        final Member player = PlayerUtils.getOnlinePlayer((Player)event.getPlayer());
+        final Member player = MemberUtils.getOnlineMember((Player)event.getPlayer());
         if(holder instanceof DoubleChest) {
             if(isShop(((DoubleChest)holder).getLeftSide())) {
                 startShopping(((Chest)((DoubleChest)holder).getLeftSide()).getLocation(), player);

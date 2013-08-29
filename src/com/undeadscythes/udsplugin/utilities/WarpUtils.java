@@ -30,7 +30,7 @@ public class WarpUtils {
                 WARPS.put(nextLine.split("\t")[0], new Warp(nextLine));
             }
             file.close();
-        } catch (FileNotFoundException ex) {}
+        } catch(FileNotFoundException ex) {}
     }
     
     public static Collection<Warp> getWarps() {
