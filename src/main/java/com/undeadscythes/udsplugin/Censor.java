@@ -1,11 +1,11 @@
 package com.undeadscythes.udsplugin;
 
 import java.util.*;
-import org.apache.commons.lang.*;
+import org.apache.commons.lang3.*;
 
 /**
  * A chat censor.
- * 
+ *
  * @author UndeadScythes
  */
 public class Censor {

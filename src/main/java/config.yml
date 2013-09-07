@@ -1,0 +1,108 @@
+server-owner: Player
+world-name: world
+minecart:
+  life: 15
+currency:
+  plural: credits
+  singular: credit
+cost:
+  build: 3000
+  city: 300000
+  map: 100
+  home: 1000
+  shop: 25000
+  vip: 30000
+  clan: 10000
+  base: 100000
+  expand: 1000
+request-timeout: 30
+auto-save: 15
+vip:
+  spawns: 1000
+  time: 7
+item-whitelist: [1,2,3,4,12,13,17,18,31,35,50,58,61,65,82,87,88,106,111,283,284,285,286,294,314,315,316,317,357]
+welcome:
+  message: Welcome to the server. Type /help in chat for a list of commands.
+  admin: As a member of staff be helpful, be polite and lead by example.
+  gift: emerald
+range:
+  undo: 10
+  world: 10000
+  butcher: 50
+  compass: 100
+  drain: 50
+  move: 50
+  edit: 10000
+pvp-time: 5
+exp:
+  spawner: 3
+respawn-dragon: 60
+kits:
+- Stone,100,newbie,274,273,275
+- Iron,2000,member,257,256,258
+- Diamond,3600,member,278,277,279
+map-data: 0
+server-rules:
+- No swearing/flaming/racism
+- No griefing
+- No pet killing
+- No bug exploits
+- No advertising
+- No hacks
+- No alt accounts
+block:
+  creeper: true
+  tnt: true
+  wither: true
+  enderman: true
+  silverfish: true
+mob-rewards:
+  spiderjockey: 10000
+  cavespider: 110
+  spider: 115
+  pigzombie: 120
+  zombie: 60
+  skeleton: 80
+  silverfish: 95
+  creeper: 150
+  enderman: 170
+  giant: 10000
+  chicken: 5
+  mushroomcow: 50
+  cow: 20
+  sheep: 15
+  ocelot: 10
+  wolf: 10
+  squid: 10
+  lavaslime: 125
+  slime: 50
+  ghast: 200
+  enderdragon: 10000
+  witch: 500
+  witherboss: 10000
+  blaze: 80
+  pig: 10
+  horse: 5
+global-flags:
+  protection: false
+  mobs: true
+  pve: true
+  lock: false
+  vines: true
+  food: true
+  fire: false
+  snow: true
+  pvp: true
+  dispenser: false
+  piston: true
+  power: true
+  weather: true
+  time: true
+  build: true
+piston-power: 10
+gmail:
+  email: email@gmail.com
+  password: password
+inventory-shares:
+  - world,world_nether,world_the_end
+head-drop-chance: 0.01
